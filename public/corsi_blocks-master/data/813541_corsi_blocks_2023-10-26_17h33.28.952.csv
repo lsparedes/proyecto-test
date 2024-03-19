@@ -1,0 +1,6 @@
+﻿instructions.started,instructions.stopped,key_resp.keys,mouse.x,mouse.y,mouse.leftButton,mouse.midButton,mouse.rightButton,mouse.time,participant,session,date,expName,psychopyVersion,OS,frameRate,ISI.started,positions,ISI.stopped,corsi_present.started,corsi_present.stopped,block_sequence.thisRepN,block_sequence.thisTrialN,block_sequence.thisN,block_sequence.thisIndex,block_sequence.ran,corsi_respond.started,corsi_task.thisRepN,corsi_task.thisTrialN,corsi_task.thisN,corsi_task.thisIndex,corsi_task.ran,corsi_task.order
+0.0011,1.0748,,0.050000014,-0.073148162,1,0,0,1.0688,813541,001,2023-10-26_17h33.28.952,corsi_blocks,2023.2.2,Win32,60.23370678,,,,,,,,,,,,,,,,,
+,,,,,,,,,813541,001,2023-10-26_17h33.28.952,corsi_blocks,2023.2.2,Win32,60.23370678,1.0841,"[[0.4125,-0.1325],[0.54,0.03625],[0.19375,-0.17125],[-0.485,0.34625],[0.62875,-0.1825],[0.16625,0.3825],[-0.55125,-0.13375],[-0.675,0.29875],[0.1925,-0.295]]",1.5801,1.584,3.1189,0,0,0,0,1,,,,,,,
+,,,,,,,,,813541,001,2023-10-26_17h33.28.952,corsi_blocks,2023.2.2,Win32,60.23370678,,,,3.1193,3.1203,1,0,1,0,1,,,,,,,
+,,,,,,,,,813541,001,2023-10-26_17h33.28.952,corsi_blocks,2023.2.2,Win32,60.23370678,,,,3.1206,3.1209,2,0,2,0,1,,,,,,,
+,,,,,,,,,813541,001,2023-10-26_17h33.28.952,corsi_blocks,2023.2.2,Win32,60.23370678,,,,,,,,,,,3.1211,0,0,0,0,1,999

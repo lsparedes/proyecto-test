@@ -1,0 +1,5 @@
+﻿instructions.started,instructions.stopped,key_resp.keys,key_resp.rt,key_resp.duration,mouse.x,mouse.y,mouse.leftButton,mouse.midButton,mouse.rightButton,mouse.time,participant,session,date,expName,psychopyVersion,OS,frameRate,ISI.started,positions,ISI.stopped,corsi_present.started,corsi_present.stopped,block_sequence.thisRepN,block_sequence.thisTrialN,block_sequence.thisN,block_sequence.thisIndex,block_sequence.ran
+0.0004,6.627,N/A,6.6003,,,,,,,,268310,001,2024-01-17_22h16.03.257,corsi_blocks,2023.2.2,Win32,61.72839506,,,,,,,,,,
+,,,,,,,,,,,268310,001,2024-01-17_22h16.03.257,corsi_blocks,2023.2.2,Win32,61.72839506,6.6553,"[[-0.45875,-0.3],[-0.24625,0.04375],[0.54,0.03625],[0.1925,-0.295],[0.22,0.2425],[-0.485,0.34625],[0.16625,0.3825],[0.62875,-0.1825],[-0.3575,-0.05625]]",7.1301,7.1333,7.6279,0,0,0,0,1
+,,,,,,,,,,,268310,001,2024-01-17_22h16.03.257,corsi_blocks,2023.2.2,Win32,61.72839506,,,,7.6316,8.1428,1,0,1,0,1
+,,,,,,,,,,,268310,001,2024-01-17_22h16.03.257,corsi_blocks,2023.2.2,Win32,61.72839506,,,,8.1446,8.6363,2,0,2,0,1

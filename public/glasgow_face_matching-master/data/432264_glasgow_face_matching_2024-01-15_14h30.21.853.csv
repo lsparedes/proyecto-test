@@ -1,0 +1,8 @@
+﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trial.stopped,resp.keys,resp.corr,resp.rt,resp.duration,feedback.started,feedback.stopped,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,imageFile,corrAns,sameOrDiff
+0,15.536,432264,001,2024-01-15_14h30.21.853,glasgow_face_matching,2023.2.2,Win32,60.0240096,,,,,,,,,,,,,,,,
+,,432264,001,2024-01-15_14h30.21.853,glasgow_face_matching,2023.2.2,Win32,60.0240096,15.547,16.619,right,1,1.041,,16.619,17.619,0,0,0,7,1,different/019_074_L.jpg,right,different
+,,432264,001,2024-01-15_14h30.21.853,glasgow_face_matching,2023.2.2,Win32,60.0240096,17.621,18.52,right,0,0.871,,18.52,19.519,0,1,1,1,1,same/139_DV_C2.jpg,left,same
+,,432264,001,2024-01-15_14h30.21.853,glasgow_face_matching,2023.2.2,Win32,60.0240096,19.519,20.669,left,0,1.124,,20.669,21.669,0,2,2,6,1,different/013_235_R.jpg,right,different
+,,432264,001,2024-01-15_14h30.21.853,glasgow_face_matching,2023.2.2,Win32,60.0240096,21.669,22.853,left,1,1.162,,22.853,23.852,0,3,3,5,1,same/303_DV_C2.jpg,left,same
+,,432264,001,2024-01-15_14h30.21.853,glasgow_face_matching,2023.2.2,Win32,60.0240096,23.852,24.985,left,0,1.103,,24.985,25.986,0,4,4,10,1,different/076_109_R.jpg,right,different
+,,432264,001,2024-01-15_14h30.21.853,glasgow_face_matching,2023.2.2,Win32,60.0240096,25.988,27.302,left,1,1.284,,27.302,28.302,0,5,5,2,1,same/168_C2_DV.jpg,left,same

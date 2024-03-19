@@ -1,0 +1,4 @@
+﻿key_resp.keys,key_resp.rt,digitLoop.thisRepN,digitLoop.thisTrialN,digitLoop.thisN,digitLoop.thisIndex,digitLoop.ran,participant,session,date,expName,psychopyVersion,OS,frameRate
+space,1.3882,0,0,0,0,1,,001,2022-01-20_19h35.37.523,Digit Span Task,2021.2.3,Win32,60.24822268
+,,1,0,1,0,1,,001,2022-01-20_19h35.37.523,Digit Span Task,2021.2.3,Win32,60.24822268
+,,2,0,2,0,1,,001,2022-01-20_19h35.37.523,Digit Span Task,2021.2.3,Win32,60.24822268

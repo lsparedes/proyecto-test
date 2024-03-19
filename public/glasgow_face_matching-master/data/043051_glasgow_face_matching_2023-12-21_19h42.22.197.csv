@@ -1,0 +1,14 @@
+﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trial.stopped,resp.keys,resp.corr,resp.rt,resp.duration,feedback.started,feedback.stopped,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,imageFile,corrAns,sameOrDiff
+0.0003,21.5607,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,,,,,,,,,,,,,,,,
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,21.59,34.6942,right,0,13.0608,,34.7029,35.693,0,0,0,4,1,same/235_C2_DV.jpg,left,same
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,35.6934,37.1723,left,0,1.4379,,37.1724,38.1757,0,1,1,6,1,different/013_235_R.jpg,right,different
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,38.1761,43.4552,left,0,5.2566,,43.4553,44.4533,0,2,2,9,1,different/049_218_L.jpg,right,different
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,44.4541,46.5572,right,0,2.081,,46.5573,47.5525,0,3,3,1,1,same/139_DV_C2.jpg,left,same
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,47.5532,50.4899,right,0,2.9144,,50.49,51.4886,0,4,4,0,1,same/136_C2_DV.jpg,left,same
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,51.489,65.0981,right,1,13.5823,,65.0983,66.098,0,5,5,8,1,different/025_235_L.jpg,right,different
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,66.0985,69.947,left,1,3.8232,,69.9471,70.9462,0,6,6,3,1,same/170_DV_C2.jpg,left,same
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,70.9469,81.3148,right,1,10.3444,,81.3149,82.3101,0,7,7,11,1,different/077_133_R.jpg,right,different
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,82.3108,84.7431,right,1,2.4051,,84.7432,85.7423,0,8,8,10,1,different/076_109_R.jpg,right,different
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,85.7431,87.1968,left,1,1.4321,,87.1968,88.1917,0,9,9,5,1,same/303_DV_C2.jpg,left,same
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,88.1925,89.825,left,1,1.6052,,89.8252,90.8245,0,10,10,2,1,same/168_C2_DV.jpg,left,same
+,,043051,001,2023-12-21_19h42.22.197,glasgow_face_matching,2023.2.2,Win32,59.88023952,90.8251,92.1285,right,1,1.2822,,92.1285,93.1242,0,11,11,7,1,different/019_074_L.jpg,right,different

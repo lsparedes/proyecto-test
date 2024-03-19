@@ -1,0 +1,8 @@
+﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trial.stopped,resp.keys,resp.corr,resp.rt,resp.duration,feedback.started,feedback.stopped,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,imageFile,corrAns,sameOrDiff
+0.0003,4.4154,283433,001,2023-12-27_14h42.17.444,glasgow_face_matching,2023.2.2,MacIntel,59.88023952,,,,,,,,,,,,,,,,
+,,283433,001,2023-12-27_14h42.17.444,glasgow_face_matching,2023.2.2,MacIntel,59.88023952,4.425,12.6013,left,1,8.1617,,12.6014,13.5964,0,0,0,5,1,same/303_DV_C2.jpg,left,same
+,,283433,001,2023-12-27_14h42.17.444,glasgow_face_matching,2023.2.2,MacIntel,59.88023952,13.5969,14.71,right,0,1.0944,,14.71,15.7073,0,1,1,3,1,same/170_DV_C2.jpg,left,same
+,,283433,001,2023-12-27_14h42.17.444,glasgow_face_matching,2023.2.2,MacIntel,59.88023952,15.7078,16.9751,left,1,1.2564,,16.9751,17.9777,0,2,2,1,1,same/139_DV_C2.jpg,left,same
+,,283433,001,2023-12-27_14h42.17.444,glasgow_face_matching,2023.2.2,MacIntel,59.88023952,17.9783,18.7538,left,1,0.752,,18.7538,19.7478,0,3,3,0,1,same/136_C2_DV.jpg,left,same
+,,283433,001,2023-12-27_14h42.17.444,glasgow_face_matching,2023.2.2,MacIntel,59.88023952,19.7482,20.5124,left,0,0.7564,,20.5125,21.514,0,4,4,7,1,different/019_074_L.jpg,right,different
+,,283433,001,2023-12-27_14h42.17.444,glasgow_face_matching,2023.2.2,MacIntel,59.88023952,21.5143,22.3803,left,0,0.8549,,22.3803,23.3795,0,5,5,8,1,different/025_235_L.jpg,right,different

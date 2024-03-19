@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Reconocimiento de Emociones</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1><span id="pageTitle">Facial emotion recognition (from mini-SEA)</span></h1>
+    <div class="center-content">
+        <p id="instructionText">En este test, se presentarán caras, una por una, que expresan una emoción diferente:
+            alegría, sorpresa, tristeza, miedo, disgusto/asco, rabia o neutro cuando ninguna emoción es expresada. Debe
+            mirar cada cara atentamente y decirme qué emoción está expresada sobre la cara. No es un test de rapidez,
+            pero trate de ser relativamente rápido. Cada cara se presentará en un máximo de 12 segundos o puede
+            presionar flecha derecha para pasar a la siguiente cara</p>
+        <button id="startButton">Comenzar</button>
+        <button id="fullscreenButton">Pantalla completa</button> <!-- Nuevo botón para pantalla completa -->
+    </div>
+    <div id="imageContainer" style="display: none;">
+        <img src="" alt="Imagen de Emoción" id="emotionImage">
+        <ul id="emotionsList"></ul> <!-- Mueve este ul dentro del div imageContainer -->
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

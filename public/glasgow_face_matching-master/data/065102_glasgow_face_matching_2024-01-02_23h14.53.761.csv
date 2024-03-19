@@ -1,0 +1,14 @@
+﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trial.stopped,resp.keys,resp.corr,resp.rt,resp.duration,feedback.started,feedback.stopped,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,imageFile,corrAns,sameOrDiff
+0,32.205,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,,,,,,,,,,,,,,,,
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,32.224,52.406,right,1,20.159,,52.408,53.406,0,0,0,10,1,different/076_109_R.jpg,right,different
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,53.409,64.819,left,1,11.392,,64.82,65.82,0,1,1,4,1,same/235_C2_DV.jpg,left,same
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,65.821,79.484,left,1,13.642,,79.486,80.479,0,2,2,5,1,same/303_DV_C2.jpg,left,same
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,80.483,108.554,right,1,28.05,,108.556,109.556,0,3,3,7,1,different/019_074_L.jpg,right,different
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,109.559,124.525,left,1,14.94,,124.525,125.52,0,4,4,0,1,same/136_C2_DV.jpg,left,same
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,125.521,162.519,right,1,36.966,,162.521,163.517,0,5,5,11,1,different/077_133_R.jpg,right,different
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,163.52,186.422,left,1,22.883,,186.425,187.416,0,6,6,2,1,same/168_C2_DV.jpg,left,same
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,187.419,200.756,left,1,13.317,,200.757,201.761,0,7,7,3,1,same/170_DV_C2.jpg,left,same
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,201.762,218.679,left,1,16.899,,218.682,219.678,0,8,8,1,1,same/139_DV_C2.jpg,left,same
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,219.682,245.447,right,1,25.746,,245.45,246.455,0,9,9,6,1,different/013_235_R.jpg,right,different
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,246.458,252.772,right,1,6.295,,252.773,253.768,0,10,10,8,1,different/025_235_L.jpg,right,different
+,,065102,001,2024-01-02_23h14.53.761,glasgow_face_matching,2023.2.2,Linux x86_64,135.8695652,253.77,260.756,right,1,6.965,,260.756,261.763,0,11,11,9,1,different/049_218_L.jpg,right,different

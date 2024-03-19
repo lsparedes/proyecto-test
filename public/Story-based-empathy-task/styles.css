@@ -1,0 +1,133 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    max-width: 750px;
+    /* Ancho máximo del texto */
+    margin: auto;
+    /* Centra horizontalmente */
+}
+
+#imageContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: auto; /* Ancho automático según el tamaño de la imagen */
+    height: auto; /* Alto automático según el tamaño de la imagen */
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    margin: 2rem auto; /* Aumenta el margen arriba y abajo para separarlo del título y del final de la página */
+}
+
+
+h1 {
+    margin-top: 81px;
+    /* Reducir el margen superior del título */
+}
+
+#pageTitle {
+    padding: 0;
+    /* Eliminar el relleno del título */
+    font-size: 40px;
+}
+
+#instructionText {
+    /* Reducir el espacio entre el texto y el botón */
+    font-size: 23px;
+    text-align: justify;
+    margin-bottom: 150px;
+}
+
+img {
+    max-width: 100%;
+    /* Ajusta el tamaño máximo de la imagen */
+    max-height: 100%;
+    /* Ajusta el tamaño máximo de la imagen */
+    display: block;
+    margin: auto;
+
+    width: 100%;
+    /* Hace que la imagen ocupe todo el ancho del contenedor */
+    height: auto;
+    /* Mantiene la proporción de la imagen */
+    object-fit: contain;
+    /* Asegura que la imagen se ajuste bien dentro del contenedor sin recortarse */
+
+}
+
+#startButton {
+
+    padding: 15px 30px;
+    /* Ajusta el tamaño del botón */
+    font-size: 18px;
+    /* Aumenta el tamaño de la fuente para que el texto sea más grande */
+    color: white;
+    /* Color del texto */
+    background-color: #007bff;
+    /* Color de fondo del botón */
+    border: none;
+    /* Elimina el borde */
+    border-radius: 5px;
+    /* Borde redondeado para un aspecto más suave */
+    cursor: pointer;
+    /* Cambia el cursor para indicar que es clickeable */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Suaviza la transición de color y añade efecto al presionar */
+}
+
+#startButton:hover {
+    background-color: #0056b3;
+    /* Cambia el color al pasar el mouse para indicar interactividad */
+}
+
+#startButton:active {
+    transform: scale(0.98);
+    /* Efecto de presión al hacer clic */
+}
+
+#fullscreenButton {
+    margin-top: 10px;
+    padding: 15px 30px;
+    /* Ajusta el tamaño del botón */
+    font-size: 18px;
+    /* Aumenta el tamaño de la fuente para que el texto sea más grande */
+    color: rgb(0, 0, 0);
+    /* Color del texto */
+    background-color: #c7c7c7;
+    /* Color de fondo del botón */
+    border: none;
+    /* Elimina el borde */
+    border-radius: 5px;
+    /* Borde redondeado para un aspecto más suave */
+    cursor: pointer;
+    /* Cambia el cursor para indicar que es clickeable */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Suaviza la transición de color y añade efecto al presionar */
+}
+
+#fullscreenButton:hover {
+    background-color: #8f8f8f;
+    /* Cambia el color al pasar el mouse para indicar interactividad */
+}
+
+#fullscreenButton:active {
+    transform: scale(0.98);
+    /* Efecto de presión al hacer clic */
+}

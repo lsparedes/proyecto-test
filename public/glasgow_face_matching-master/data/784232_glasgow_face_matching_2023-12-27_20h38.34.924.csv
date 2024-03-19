@@ -1,0 +1,6 @@
+﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trial.stopped,resp.keys,resp.corr,resp.rt,resp.duration,feedback.started,feedback.stopped,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,imageFile,corrAns,sameOrDiff,trials.order
+0,6.359,784232,001,2023-12-27_20h38.34.924,glasgow_face_matching,2023.2.2,MacIntel,83.33333333,,,,,,,,,,,,,,,,,
+,,784232,001,2023-12-27_20h38.34.924,glasgow_face_matching,2023.2.2,MacIntel,83.33333333,6.388,17.992,right,1,11.565,,17.995,18.992,0,0,0,8,1,different/025_235_L.jpg,right,different,
+,,784232,001,2023-12-27_20h38.34.924,glasgow_face_matching,2023.2.2,MacIntel,83.33333333,18.992,20.124,left,0,1.109,,20.125,21.125,0,1,1,11,1,different/077_133_R.jpg,right,different,
+,,784232,001,2023-12-27_20h38.34.924,glasgow_face_matching,2023.2.2,MacIntel,83.33333333,21.126,21.608,right,0,0.452,,21.608,22.609,0,2,2,3,1,same/170_DV_C2.jpg,left,same,
+,,784232,001,2023-12-27_20h38.34.924,glasgow_face_matching,2023.2.2,MacIntel,83.33333333,22.609,,,,,,,,0,3,3,7,1,different/019_074_L.jpg,right,different,11

@@ -1,0 +1,16 @@
+instructionPractice,audioInstru,endInstru
+"INSTRUCTIONS
+
+Nous aimerions maintenant que vous disiez à haute voix tous les mots auxquels vous pouvez penser qui correspondent à une certaine catégorie. Ces mots peuvent commencer par n'importe quelle lettre. Nous vous montrerons un exemple avec la catégorie ""fournitures de bureau"", mais vous pourriez être amené à dire des mots appartenant à d'autres catégories. Des mots similaires avec des terminaisons différentes (""stylo"" et ""stylos"") ne compteront que pour une seule réponse, sauf s'ils se réfèrent à un objet différent (""crayon"").
+
+Après avoir appuyé sur le bouton FLÈCHE, une catégorie vous sera donnée et vous pourrez commencer à parler dès que le microphone vert clignotant apparaîtra. La tâche durera 1 minute, et vous devriez continuer à essayer de penser à de nouveaux mots pendant ce temps. Vous ne pouvez pas utiliser de sources externes pour trouver des mots. Votre temps est écoulé lorsque le microphone devient rouge et cesse de clignoter.
+
+Appuyez sur le bouton FLÈCHE pour commencer la tâche.",stimuli/audio/instructions-letter-fr.wav,"Félicitations, vous avez terminé
+cette tâche."
+"INSTRUCTIONS
+We would now like you to say out loud all the words that you can think of that fit within a certain category. These words can start with any letter. We will show you an example with the category ""office supplies"", but you could be asked to say words within other categories. Similar words with different endings (""pen"" and ""pens"") will only count as 1 response unless they refer to a different object (""pencil"").
+
+After you press the ARROW button, you will be given a category and you can begin speaking once the green, flashing microphone appears. The task will last for 1 minute, and you should keep trying to think of new words during that time. You cannot use external sources to come up with words. Your time is up when the microphone turns red and stops flashing.
+
+Press the ARROW button to start the task.",stimuli/audio/instructions-category-fr.mp4,"Félicitations, vous avez terminé
+cette tâche."

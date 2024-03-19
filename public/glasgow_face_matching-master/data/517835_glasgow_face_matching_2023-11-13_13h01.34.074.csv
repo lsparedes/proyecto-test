@@ -1,0 +1,14 @@
+﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trial.stopped,resp.keys,resp.corr,resp.rt,resp.duration,feedback.started,feedback.stopped,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,imageFile,corrAns,sameOrDiff
+9.99999E-05,17.5509,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,,,,,,,,,,,,,,,,
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,17.5687,31.1504,left,1,13.5614,,31.158,32.1496,0,0,0,5,1,same/303_DV_C2.jpg,left,same
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,32.1505,34.2842,right,1,2.1079,,34.2843,35.2842,0,1,1,6,1,different/013_235_R.jpg,right,different
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,35.285,37.3996,left,1,2.0888,,37.3997,38.4009,0,2,2,4,1,same/235_C2_DV.jpg,left,same
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,38.4016,40.5829,left,1,2.159,,40.583,41.5847,0,3,3,0,1,same/136_C2_DV.jpg,left,same
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,41.5855,44.2679,right,1,2.6617,,44.268,45.2665,0,4,4,10,1,different/076_109_R.jpg,right,different
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,45.2672,46.8821,right,1,1.5932,,46.8822,47.8836,0,5,5,7,1,different/019_074_L.jpg,right,different
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,47.8843,52.3842,left,1,4.4744,,52.3843,53.3846,0,6,6,1,1,same/139_DV_C2.jpg,left,same
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,53.3853,56.733,left,1,3.3208,,56.7331,57.7344,0,7,7,3,1,same/170_DV_C2.jpg,left,same
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,57.7351,58.9161,right,1,1.1648,,58.9162,59.9162,0,8,8,11,1,different/077_133_R.jpg,right,different
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,59.9168,61.5013,left,1,1.5546,,61.5014,62.4997,0,9,9,2,1,same/168_C2_DV.jpg,left,same
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,62.5003,64.5522,left,0,2.0206,,64.5522,65.5484,0,10,10,9,1,different/049_218_L.jpg,right,different
+,,517835,001,2023-11-13_13h01.34.074,glasgow_face_matching,2023.2.2,MacIntel,60.0024001,65.5499,67.2996,right,1,1.7024,,67.2996,68.3012,0,11,11,8,1,different/025_235_L.jpg,right,different

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Story based empathy task</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1><span id="pageTitle">Story based empathy task</span></h1>
+    <div class="center-content">
+        <p id="instructionText">El siguiente test se divide en 3 etapaas: Atribución de intención (SET-IA), Inferencia causal
+            (SET-CI) y Atribución de emociones (SET-EA). En esta prueba verás aparecer una historia contado en
+            tres viñetas. Su tarea es
+            describir lo que les está sucediendo a los protagonistas
+            de la historia e intentar imaginar un posible final.
+            Más adelante te mostraremos tres posibles finales y su tarea será elegir cuál es el final sólo para
+            completar la historia.
+            Para pasar a la siguiente imagen presione la flecha derecha del teclado.</p>
+        <button id="startButton">Comenzar</button>
+        <button id="fullscreenButton">Pantalla completa</button> <!-- Nuevo botón para pantalla completa -->
+    </div>
+    <div id="imageContainer" style="display: none;">
+        <img src="" alt="Imagen de historia" id="storyImage">
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

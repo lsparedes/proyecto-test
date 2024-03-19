@@ -1,0 +1,39 @@
+﻿title,language,condition,prompt,audioPrompt,txtInstructions,videoInstructions,instructionTrial,reminderTrial,press
+TROUVEZ LES MOTS!,fr,letter,F,stimuli/audio/F-fr.wav,"
+INSTRUCTIONS
+
+Nous aimerions maintenant que vous disiez à haute voix tous les mots que vous pouvez penser qui commencent par une lettre de l'alphabet. Nous vous montrerons un exemple avec la lettre ""Z"", mais vous pourriez être amené à dire des mots commençant par d'autres lettres. Vous ne pouvez pas dire de noms de personnes (""Zelda""), de lieux (""Zurich"") ou de nombres (""zéro""). Des mots similaires avec des terminaisons différentes (""zoo"" et ""zoos"") ne compteront que pour une réponse. Les mots composés (""zookeeper"") sont acceptables.
+
+Après avoir appuyé sur le bouton FLÈCHE, une lettre vous sera donnée et vous pourrez commencer à parler dès que le microphone vert clignotant apparaît. La tâche durera 1 minute, et vous devriez continuer à penser à de nouveaux mots pendant ce temps. Vous ne pouvez pas utiliser de sources externes pour trouver des mots. Votre temps est écoulé lorsque le microphone devient rouge et cesse de clignoter.
+
+Appuyez sur le bouton FLÈCHE pour commencer la tâche.",stimuli/video/instructions-letter-fr.mp4,Vous avez 1 minute pour dire à haute voix tous les mots en relation avec la lettre à laquelle vous pensez.,Veuillez continuer à essayer de penser à des mots liés à la lettre à haute voix.,Appuyez ici
+TROUVEZ LES MOTS!,fr,letter,L,stimuli/audio/L-fr.wav,"
+INSTRUCTIONS
+
+Nous aimerions maintenant que vous disiez à haute voix tous les mots que vous pouvez penser qui commencent par une lettre de l'alphabet. Nous vous montrerons un exemple avec la lettre ""Z"", mais vous pourriez être amené à dire des mots commençant par d'autres lettres. Vous ne pouvez pas dire de noms de personnes (""Zelda""), de lieux (""Zurich"") ou de nombres (""zéro""). Des mots similaires avec des terminaisons différentes (""zoo"" et ""zoos"") ne compteront que pour une réponse. Les mots composés (""zookeeper"") sont acceptables.
+
+Après avoir appuyé sur le bouton FLÈCHE, une lettre vous sera donnée et vous pourrez commencer à parler dès que le microphone vert clignotant apparaît. La tâche durera 1 minute, et vous devriez continuer à penser à de nouveaux mots pendant ce temps. Vous ne pouvez pas utiliser de sources externes pour trouver des mots. Votre temps est écoulé lorsque le microphone devient rouge et cesse de clignoter.
+
+Appuyez sur le bouton FLÈCHE pour commencer la tâche.",stimuli/video/instructions-letter-fr.mp4,Vous avez 1 minute pour dire à haute voix tous les mots en relation avec la lettre à laquelle vous pensez.,Veuillez continuer à essayer de penser à des mots liés à la lettre à haute voix.,Appuyez ici
+TROUVEZ LES MOTS!,fr,letter,S,stimuli/audio/S-fr.wav,"
+INSTRUCTIONS
+
+Nous aimerions maintenant que vous disiez à haute voix tous les mots que vous pouvez penser qui commencent par une lettre de l'alphabet. Nous vous montrerons un exemple avec la lettre ""Z"", mais vous pourriez être amené à dire des mots commençant par d'autres lettres. Vous ne pouvez pas dire de noms de personnes (""Zelda""), de lieux (""Zurich"") ou de nombres (""zéro""). Des mots similaires avec des terminaisons différentes (""zoo"" et ""zoos"") ne compteront que pour une réponse. Les mots composés (""zookeeper"") sont acceptables.
+
+Après avoir appuyé sur le bouton FLÈCHE, une lettre vous sera donnée et vous pourrez commencer à parler dès que le microphone vert clignotant apparaît. La tâche durera 1 minute, et vous devriez continuer à penser à de nouveaux mots pendant ce temps. Vous ne pouvez pas utiliser de sources externes pour trouver des mots. Votre temps est écoulé lorsque le microphone devient rouge et cesse de clignoter.
+
+Appuyez sur le bouton FLÈCHE pour commencer la tâche.",stimuli/video/instructions-letter-fr.mp4,Vous avez 1 minute pour dire à haute voix tous les mots en relation avec la lettre à laquelle vous pensez.,Veuillez continuer à essayer de penser à des mots liés à la lettre à haute voix.,Appuyez ici
+TROUVEZ LES MOTS!,fr,category,ANIMAUX,stimuli/audio/animaux-fr.wav,"INSTRUCTIONS
+
+Nous aimerions maintenant que vous disiez à haute voix tous les mots auxquels vous pouvez penser qui correspondent à une certaine catégorie. Ces mots peuvent commencer par n'importe quelle lettre. Nous vous montrerons un exemple avec la catégorie ""fournitures de bureau"", mais vous pourriez être amené à dire des mots appartenant à d'autres catégories. Des mots similaires avec des terminaisons différentes (""stylo"" et ""stylos"") ne compteront que pour une seule réponse, sauf s'ils se réfèrent à un objet différent (""crayon"").
+
+Après avoir appuyé sur le bouton FLÈCHE, une catégorie vous sera donnée et vous pourrez commencer à parler dès que le microphone vert clignotant apparaîtra. La tâche durera 1 minute, et vous devriez continuer à penser à de nouveaux mots pendant ce temps. Vous ne pouvez pas utiliser de sources externes pour trouver des mots. Votre temps est écoulé lorsque le microphone devient rouge et cesse de clignoter.
+
+Appuyez sur le bouton FLÈCHE pour commencer la tâche.",stimuli/video/instructions-category-fr.mp4,Vous avez 1 minute pour dire à haute voix tous les mots en relation avec la catégorie à laquelle vous pensez.,Veuillez continuer à essayer de penser à des mots liés à la catégorie à haute voix.,Appuyez ici
+TROUVEZ LES MOTS!,fr,category,VÊTEMENTS,stimuli/audio/vetements-fr.wav,"INSTRUCTIONS
+
+Nous aimerions maintenant que vous disiez à haute voix tous les mots auxquels vous pouvez penser qui correspondent à une certaine catégorie. Ces mots peuvent commencer par n'importe quelle lettre. Nous vous montrerons un exemple avec la catégorie ""fournitures de bureau"", mais vous pourriez être amené à dire des mots appartenant à d'autres catégories. Des mots similaires avec des terminaisons différentes (""stylo"" et ""stylos"") ne compteront que pour une seule réponse, sauf s'ils se réfèrent à un objet différent (""crayon"").
+
+Après avoir appuyé sur le bouton FLÈCHE, une catégorie vous sera donnée et vous pourrez commencer à parler dès que le microphone vert clignotant apparaîtra. La tâche durera 1 minute, et vous devriez continuer à penser à de nouveaux mots pendant ce temps. Vous ne pouvez pas utiliser de sources externes pour trouver des mots. Votre temps est écoulé lorsque le microphone devient rouge et cesse de clignoter.
+
+Appuyez sur le bouton FLÈCHE pour commencer la tâche.",stimuli/video/instructions-category-fr.mp4,Vous avez 1 minute pour dire à haute voix tous les mots en relation avec la catégorie à laquelle vous pensez.,Veuillez continuer à essayer de penser à des mots liés à la catégorie à haute voix.,Appuyez ici
