@@ -17,5 +17,7 @@ class TipoTest extends Model
         'descripcion_test',
         'instruccion_test',
         'audio_instruccion',
+        'fuente'.
+        'icono',
     ];
 }

@@ -34,8 +34,10 @@ class TipoTestController extends Controller
         $tipo_test->descripcion = $data['descripcion'];
         $tipo_test->descripcion_test = $data['descripcion_test'];
         $tipo_test->instruccion_test = $data['instruccion_test'];
+        $tipo_test->fuente = $data['fuente'];
+        $tipo_test->icono = $data['icono'];
 
-        if ($request->hasfile('audio_instruccion')) {
+        if ($request->hasFile('audio_instruccion')) {
             $file = $request->file('audio_instruccion');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->move('uploads/', $filename);
@@ -63,8 +65,10 @@ class TipoTestController extends Controller
         $tipo_test->descripcion = $data['descripcion'];
         $tipo_test->descripcion_test = $data['descripcion_test'];
         $tipo_test->instruccion_test = $data['instruccion_test'];
+        $tipo_test->fuente = $data['fuente']; // Actualizando la fuente
+        $tipo_test->icono = $data['icono']; // Actualizando el icono
 
-        if ($request->hasfile('audio_instruccion')) {
+        if ($request->hasFile('audio_instruccion')) {
 
             $destination = 'uploads/' . $tipo_test->audio_instruccion;
             if (File::exists($destination)) {
@@ -77,8 +81,9 @@ class TipoTestController extends Controller
             $tipo_test->audio_instruccion = $filename;
         }
 
-        $tipo_test->update();
-        return redirect('admin/tipotest')->with('message', 'Successfully Update');
+        $tipo_test->save(); 
+
+        return redirect('admin/tipotest')->with('message', 'Successfully Updated');
     }
 
     public function destroy($tipo_test_id)

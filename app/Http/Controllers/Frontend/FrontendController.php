@@ -27,7 +27,7 @@ class FrontendController extends Controller
 
         // Comprobar si el test existe
         if (!$test) {
-            abort(404); // O cualquier otra lógica que desees aplicar para manejar tests no encontrados
+            abort(404); 
         }
 
         // Obtener información adicional si es necesario, por ejemplo, el tipo de test

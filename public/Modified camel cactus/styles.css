@@ -1,0 +1,180 @@
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    margin: 0;
+}
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    max-width: 750px;
+    /* Ancho máximo del texto */
+    margin: auto;
+    /* Centra horizontalmente */
+    margin-top: 80px;
+}
+
+#imageContainer {
+    width: auto;
+    height: auto;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    max-width: 60%; /* Ajusta el ancho máximo según sea necesario */
+    margin: 5px auto; /* Margen superior e inferior */
+    text-align: center;
+    margin: 0;
+}
+
+h1 {
+    margin-top: 5vh; /* Ejemplo: 5% de la altura de la ventana */
+    margin-bottom: 2vh; /* Ejemplo: 2% de la altura de la ventana */
+    font-size: 3vw; /* Ejemplo: 3% del ancho de la ventana */
+}
+#pageTitle {
+    padding: 0;
+    font-size: 40px;
+    margin: 50px;
+}
+
+
+#instructionText {
+    /* Reducir el espacio entre el texto y el botón */
+    font-size: 25px;
+    text-align: justify;
+    margin-bottom: 170px;
+    margin-top: 90px;
+}
+
+img {
+    max-width: 100%;
+    /* Ajusta el tamaño máximo de la imagen */
+    height: auto;
+    /* Mantiene la proporción de la imagen */
+    object-fit: contain;
+    /* Asegura que la imagen se ajuste bien dentro del contenedor sin recortarse */
+    margin: 0;
+    /* Elimina el margen de la imagen */
+    max-height: calc(100vh - 250px);
+    /* Limita la altura máxima de la imagen al 100% de la altura de la ventana menos 250px */
+}
+
+#startButton {
+    padding: 15px 30px;
+    /* Ajusta el tamaño del botón */
+    font-size: 18px;
+    /* Aumenta el tamaño de la fuente para que el texto sea más grande */
+    color: white;
+    /* Color del texto */
+    background-color: #007bff;
+    /* Color de fondo del botón */
+    border: none;
+    /* Elimina el borde */
+    border-radius: 5px;
+    /* Borde redondeado para un aspecto más suave */
+    cursor: pointer;
+    /* Cambia el cursor para indicar que es clickeable */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Suaviza la transición de color y añade efecto al presionar */
+}
+
+#startButton:hover {
+    background-color: #0056b3;
+    /* Cambia el color al pasar el mouse para indicar interactividad */
+}
+
+#startButton:active {
+    transform: scale(0.98);
+    /* Efecto de presión al hacer clic */
+}
+
+#fullscreenButton {
+    margin-top: 10px;
+    padding: 15px 30px;
+    /* Ajusta el tamaño del botón */
+    font-size: 18px;
+    /* Aumenta el tamaño de la fuente para que el texto sea más grande */
+    color: rgb(0, 0, 0);
+    /* Color del texto */
+    background-color: #c7c7c7;
+    /* Color de fondo del botón */
+    border: none;
+    /* Elimina el borde */
+    border-radius: 5px;
+    /* Borde redondeado para un aspecto más suave */
+    cursor: pointer;
+    /* Cambia el cursor para indicar que es clickeable */
+    transition: background-color 0.3s, transform 0.2s;
+    /* Suaviza la transición de color y añade efecto al presionar */
+
+}
+
+#fullscreenButton:hover {
+    background-color: #8f8f8f;
+    /* Cambia el color al pasar el mouse para indicar interactividad */
+}
+
+#fullscreenButton:active {
+    transform: scale(0.98);
+    /* Efecto de presión al hacer clic */
+}
+
+#optionsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 100%; /* Utiliza el ancho máximo disponible */
+    margin: auto;
+    margin-bottom: 5px;
+}
+
+.option {
+    max-width: calc(24% - 15px); /* Ejemplo: 20% menos 10px de margen */
+    margin: 8px; /* Añade margen entre las imágenes */
+}
+.option:hover {
+    border: 2px solid #007bff; /* Cambia el borde al pasar el mouse */
+    transform: scale(1.1); /* Aumenta el tamaño de la imagen al pasar el mouse */
+}
+.option:hover {
+    cursor: pointer;
+}
+#storyImage {
+    max-width: 100%; /* Utiliza el ancho máximo disponible */
+    max-height: 40vh; /* Limita la altura máxima para evitar que la imagen sea demasiado grande */
+    object-fit: contain; /* Ajusta la imagen dentro del contenedor manteniendo la proporción */
+    margin: 0 auto 8px auto; /* Añade margen a la parte inferior */
+    display: block; /* Asegura que la imagen se muestre correctamente */
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 9999;
+}
+
+.notification-img {
+    position: absolute;
+    display: none;
+}
+
+
+
+

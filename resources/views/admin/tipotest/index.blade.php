@@ -32,19 +32,19 @@
                 <table id="myDataTable" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Numero test</th>
+                            <th>N° test</th>
                             <th>Tipo Test</th>
                             <th>Descripcion</th>
                             <th>Instrucciones</th>
                             <th>Audio Instrucciones</th>
+                            <th>Fuente</th>
+                            <th>Icono</th> 
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($tipo_test as $item)
                             <tr>
-                                <td>{{ $item->id }}</td>
                                 <td>{{ $item->num_test }}</td>
                                 <td>{{ $item->descripcion }}</td>
                                 <td>{{ $item->descripcion_test }}</td>
@@ -54,7 +54,8 @@
                                         <source src="{{ asset('uploads/' . $item->audio_instruccion) }}" type="audio/mpeg">
                                     </audio>
                                 </td>
-
+                                <td>{{ $item->fuente }}</td> <!-- Mostrar fuente -->
+                                <td><i class="{{ $item->icono }}"></i></td> <!-- Mostrar icono con clase dinámica -->
 
                                 <td>
                                     @can('edit-tipotest')
@@ -67,7 +68,6 @@
                                                 class="fas fa-trash-can"></i> Eliminar</a>
                                     @endcan
                                 </td>
-
                             </tr>
                         @endforeach
                     </tbody>

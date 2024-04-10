@@ -1,0 +1,68 @@
+8.8705 	WARNING 	User requested fullscreen with size [1440  900], but screen is actually [1920, 1080]. Using actual size
+9.6011 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=True, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x0000017CEA275CD0>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x0000017CEA275C70>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x0000017CEA275AF0>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x0000017CEA614400>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=8, stereo=False, title='PsychoPy', units='norm', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+9.6012 	EXP 	window1: mouseVisible = True
+9.6012 	EXP 	window1: backgroundImage = ''
+9.6013 	EXP 	window1: backgroundFit = 'none'
+9.6031 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+9.6031 	EXP 	window1: recordFrameIntervals = False
+9.7341 	EXP 	window1: recordFrameIntervals = True
+9.8812 	EXP 	Screen (0) actual frame rate measured at 74.95Hz
+9.8812 	EXP 	window1: recordFrameIntervals = False
+9.8813 	EXP 	window1: mouseVisible = False
+12.6342 	EXP 	GFMT_short: status = STARTED
+12.6345 	EXP 	window1: mouseVisible = True
+12.7799 	EXP 	Created background = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='background.jpg', interpolate=True, mask=None, maskParams=None, name='background', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([1.55, 1.  ]), texRes=128.0, units='norm', win=Window(...))
+12.7803 	EXP 	window1: mouseVisible = True
+12.7804 	EXP 	window1: mouseVisible = True
+12.7810 	EXP 	window1: mouseVisible = True
+12.7816 	EXP 	window1: mouseVisible = True
+12.9038 	EXP 	window1: mouseVisible = True
+12.9040 	EXP 	window1: mouseVisible = True
+12.9046 	EXP 	window1: mouseVisible = True
+12.9052 	EXP 	window1: mouseVisible = True
+12.9134 	EXP 	window1: mouseVisible = True
+12.9162 	EXP 	Created background_2 = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image=None, interpolate=True, mask=None, maskParams=None, name='background_2', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([1.55, 1.  ]), texRes=128.0, units='norm', win=Window(...))
+12.9163 	EXP 	window1: mouseVisible = True
+12.9293 	EXP 	Created faces = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='faces', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.26666667, 0.47407407]), texRes=128, units='norm', win=Window(...))
+12.9296 	EXP 	window1: mouseVisible = True
+12.9297 	EXP 	window1: mouseVisible = True
+12.9304 	EXP 	window1: mouseVisible = True
+12.9310 	EXP 	window1: mouseVisible = True
+12.9356 	EXP 	window1: mouseVisible = True
+12.9357 	EXP 	window1: mouseVisible = True
+12.9365 	EXP 	window1: mouseVisible = True
+12.9372 	EXP 	window1: mouseVisible = True
+12.9418 	EXP 	window1: mouseVisible = True
+13.0908 	EXP 	Created background_3 = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='background.jpg', interpolate=True, mask=None, maskParams=None, name='background_3', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([1.55, 1.  ]), texRes=128.0, units='norm', win=Window(...))
+13.0911 	EXP 	window1: mouseVisible = True
+13.0913 	EXP 	window1: mouseVisible = True
+13.0920 	EXP 	window1: mouseVisible = True
+13.0927 	EXP 	window1: mouseVisible = True
+13.0976 	EXP 	window1: mouseVisible = True
+13.0979 	EXP 	window1: mouseVisible = True
+13.0988 	EXP 	window1: mouseVisible = True
+13.0996 	EXP 	window1: mouseVisible = True
+13.1040 	EXP 	window1: mouseVisible = True
+13.2795 	EXP 	Created background_4 = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='background.jpg', interpolate=True, mask=None, maskParams=None, name='background_4', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([1.55, 1.  ]), texRes=128.0, units='norm', win=Window(...))
+13.2797 	EXP 	window1: mouseVisible = True
+13.2799 	EXP 	window1: mouseVisible = True
+13.2808 	EXP 	window1: mouseVisible = True
+13.2815 	EXP 	window1: mouseVisible = True
+13.2863 	EXP 	window1: mouseVisible = True
+13.2866 	EXP 	window1: mouseVisible = True
+13.2874 	EXP 	window1: mouseVisible = True
+13.2880 	EXP 	window1: mouseVisible = True
+0.0012 	DATA 	Mouse: Left button down, pos=(848,590)
+0.0014 	DATA 	Mouse:  Left button up, pos=(848,585)
+0.0039 	EXP 	instructionstxt: autoLog = True
+0.0039 	EXP 	trial_counter: autoLog = True
+0.0039 	EXP 	textbox: autoLog = True
+0.0039 	EXP 	endmsg: autoLog = True
+0.0164 	EXP 	background: autoDraw = True
+0.0164 	EXP 	instructionstxt: autoDraw = True
+1.9135 	DATA 	Keypress: escape
+1.9913 	EXP 	GFMT_short: status = STOPPED
+2.0039 	EXP 	background: autoDraw = False
+2.0039 	EXP 	instructionstxt: autoDraw = False
+2.0039 	EXP 	GFMT_short: status = STOPPED
+2.0625 	EXP 	window1: mouseVisible = True

@@ -31,6 +31,14 @@
 
                 <div class="sb-sidenav-menu-heading">Administracion</div>
 
+
+                @can('users')
+                    <a class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}" href="{{ route('admin.users') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
+                        Usuarios
+                    </a>
+                @endcan
+
                 @can('persons')
                     <a class="nav-link {{ Request::is('admin/persons') ? 'active' : '' }}"
                         href="{{ route('admin.persons') }}">
@@ -44,14 +52,6 @@
                         href="{{ route('admin.examinador-persona-test') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
                         Examinador Persona
-                    </a>
-                @endcan
-
-                @can('users')
-                    <a class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}"
-                        href="{{ route('admin.users') }}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-users"></i></div>
-                        Usuarios
                     </a>
                 @endcan
 
@@ -73,14 +73,6 @@
 
                 <div class="sb-sidenav-menu-heading">Aplicacion</div>
 
-                @can('tests')
-                    <a class="nav-link {{ Request::is('admin/tests') ? 'active' : '' }}"
-                        href="{{ route('admin.tests') }}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
-                        Test
-                    </a>
-                @endcan
-
                 @can('tipotest')
                     <a class="nav-link {{ Request::is('admin/tipotest') ? 'active' : '' }}"
                         href="{{ route('admin.tipotest') }}">
@@ -88,6 +80,14 @@
                         Tipo Test
                     </a>
                 @endcan
+
+                @can('tests')
+                <a class="nav-link {{ Request::is('admin/tests') ? 'active' : '' }}"
+                    href="{{ route('admin.tests') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
+                    Test
+                </a>
+            @endcan
 
                 @can('pregunta')
                     <a class="nav-link {{ Request::is('admin/pregunta') ? 'active' : '' }}"

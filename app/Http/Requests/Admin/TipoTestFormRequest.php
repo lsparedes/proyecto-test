@@ -29,7 +29,9 @@ class TipoTestFormRequest extends FormRequest
             'num_test' => 'required|numeric',
             'descripcion_test' => 'required|string',
             'instruccion_test' => 'required|string',
-            'audio_instruccion' => 'nullable|max:9000|mimes:mp3,mp4'
+            'audio_instruccion' => 'nullable|max:9000|mimes:mp3,mp4',
+            'fuente' => 'nullable|string|max:255',
+            'icono' => 'nullable|string|max:255',
         ];
     }
 }

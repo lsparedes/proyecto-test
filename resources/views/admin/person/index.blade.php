@@ -49,11 +49,11 @@
                                 <td>{{ $item->age }}</td>
                                 <td>{{ $item->genre }}</td>
                                 <td>
-                                    @can('edit-persons')
+                                    @can('edit-person')
                                         <a href="{{ url('admin/edit-person/' . $item->id) }}" class="btn btn-sm btn-success"><i
                                                 class="fas fa-pen"></i> Editar</a>
                                     @endcan
-                                    @can('delete-persons')
+                                    @can('delete-person')
                                         <a href="{{ url('admin/delete-person/' . $item->id) }}" class="btn btn-sm btn-danger"
                                             onclick="return confirm('¿Seguro que deseas eliminar esta persona?')"><i
                                                 class="fas fa-trash-can"></i> Eliminar</a>

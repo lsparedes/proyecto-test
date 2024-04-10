@@ -16,7 +16,6 @@
                     @csrf
                     @method('PUT')
 
-                    <!-- Aquí debes agregar los campos necesarios para editar tu pregunta -->
                     <div class="mb-3">
                         <label for="texto_pregunta">Texto de la Pregunta</label>
                         <input type="text" name="texto_pregunta" id="texto_pregunta" class="form-control"

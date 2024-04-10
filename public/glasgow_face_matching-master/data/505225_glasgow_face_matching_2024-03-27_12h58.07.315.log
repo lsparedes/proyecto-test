@@ -1,0 +1,436 @@
+24.6291 	WARNING 	User requested fullscreen with size [1440  900], but screen is actually [1920, 1080]. Using actual size
+25.3685 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=True, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x0000020AF2AF8BE0>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x0000020AF2AF8B80>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x0000020AF2AF89A0>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x0000020AF2E876A0>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=8, stereo=False, title='PsychoPy', units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+25.3686 	EXP 	window1: mouseVisible = True
+25.3687 	EXP 	window1: backgroundImage = ''
+25.3687 	EXP 	window1: backgroundFit = 'none'
+25.3712 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+25.3713 	EXP 	window1: recordFrameIntervals = False
+25.5014 	EXP 	window1: recordFrameIntervals = True
+25.6483 	EXP 	Screen (0) actual frame rate measured at 75.03Hz
+25.6483 	EXP 	window1: recordFrameIntervals = False
+25.6484 	EXP 	window1: mouseVisible = False
+28.4005 	EXP 	glasgow_face_matching: status = STARTED
+28.4008 	EXP 	window1: mouseVisible = True
+28.5930 	EXP 	Created background = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='background.jpg', interpolate=True, mask=None, maskParams=None, name='background', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([2., 1.]), texRes=128.0, units='height', win=Window(...))
+28.5933 	EXP 	window1: mouseVisible = True
+28.5934 	EXP 	window1: mouseVisible = True
+28.5940 	EXP 	window1: mouseVisible = True
+28.5945 	EXP 	window1: mouseVisible = True
+28.7410 	EXP 	window1: mouseVisible = True
+28.7411 	EXP 	window1: mouseVisible = True
+28.7417 	EXP 	window1: mouseVisible = True
+28.7422 	EXP 	window1: mouseVisible = True
+28.7521 	EXP 	window1: mouseVisible = True
+28.9490 	EXP 	Created background_2 = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='background.jpg', interpolate=True, mask=None, maskParams=None, name='background_2', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([2., 1.]), texRes=128.0, units='height', win=Window(...))
+28.9491 	EXP 	window1: mouseVisible = True
+28.9640 	EXP 	Created faces = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='faces', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([1.1, 0.8]), texRes=128, units='height', win=Window(...))
+28.9643 	EXP 	window1: mouseVisible = True
+28.9645 	EXP 	window1: mouseVisible = True
+28.9650 	EXP 	window1: mouseVisible = True
+28.9655 	EXP 	window1: mouseVisible = True
+28.9692 	EXP 	window1: mouseVisible = True
+28.9693 	EXP 	window1: mouseVisible = True
+28.9698 	EXP 	window1: mouseVisible = True
+28.9703 	EXP 	window1: mouseVisible = True
+28.9735 	EXP 	window1: mouseVisible = True
+28.9737 	EXP 	window1: mouseVisible = True
+28.9741 	EXP 	window1: mouseVisible = True
+28.9746 	EXP 	window1: mouseVisible = True
+29.0000 	EXP 	window1: mouseVisible = True
+29.0002 	EXP 	window1: mouseVisible = True
+29.0011 	EXP 	window1: mouseVisible = True
+29.0017 	EXP 	window1: mouseVisible = True
+29.0054 	EXP 	window1: mouseVisible = True
+29.2144 	EXP 	Created background_3 = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='background.jpg', interpolate=True, mask=None, maskParams=None, name='background_3', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([2., 1.]), texRes=128.0, units='height', win=Window(...))
+29.2147 	EXP 	window1: mouseVisible = True
+29.2149 	EXP 	window1: mouseVisible = True
+29.2154 	EXP 	window1: mouseVisible = True
+29.2159 	EXP 	window1: mouseVisible = True
+29.2200 	EXP 	window1: mouseVisible = True
+29.2201 	EXP 	window1: mouseVisible = True
+29.2206 	EXP 	window1: mouseVisible = True
+29.2211 	EXP 	window1: mouseVisible = True
+29.2246 	EXP 	window1: mouseVisible = True
+29.2247 	EXP 	window1: mouseVisible = True
+29.2253 	EXP 	window1: mouseVisible = True
+29.2258 	EXP 	window1: mouseVisible = True
+29.2300 	EXP 	window1: mouseVisible = True
+29.2302 	EXP 	window1: mouseVisible = True
+29.2307 	EXP 	window1: mouseVisible = True
+29.2312 	EXP 	window1: mouseVisible = True
+29.2347 	EXP 	window1: mouseVisible = True
+29.2348 	EXP 	window1: mouseVisible = True
+29.2353 	EXP 	window1: mouseVisible = True
+29.2359 	EXP 	window1: mouseVisible = True
+29.2395 	EXP 	window1: mouseVisible = True
+29.2397 	EXP 	window1: mouseVisible = True
+29.2402 	EXP 	window1: mouseVisible = True
+29.2407 	EXP 	window1: mouseVisible = True
+29.2446 	EXP 	window1: mouseVisible = True
+29.4540 	EXP 	Created background_4 = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='background.jpg', interpolate=True, mask=None, maskParams=None, name='background_4', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([2., 1.]), texRes=128.0, units='height', win=Window(...))
+29.4543 	EXP 	window1: mouseVisible = True
+29.4545 	EXP 	window1: mouseVisible = True
+29.4551 	EXP 	window1: mouseVisible = True
+29.4557 	EXP 	window1: mouseVisible = True
+29.4601 	EXP 	window1: mouseVisible = True
+29.4603 	EXP 	window1: mouseVisible = True
+29.4610 	EXP 	window1: mouseVisible = True
+29.4616 	EXP 	window1: mouseVisible = True
+0.0115 	EXP 	instructionstxt: autoLog = True
+0.0115 	EXP 	trial_counter: autoLog = True
+0.0115 	EXP 	reminder: autoLog = True
+0.0115 	EXP 	textbox: autoLog = True
+0.0115 	EXP 	reminder_2: autoLog = True
+0.0115 	EXP 	trial_counter_2: autoLog = True
+0.0115 	EXP 	endmsg: autoLog = True
+0.0376 	EXP 	background: autoDraw = True
+0.0376 	EXP 	instructionstxt: autoDraw = True
+4.5500 	DATA 	Keypress: space
+4.5689 	EXP 	Imported conditions_short.xlsx as conditions, 40 conditions, 3 params
+4.5696 	EXP 	Created sequence: random, trialTypes=40, nReps=1, seed=None
+4.5698 	EXP 	New trial (rep=0, index=0): {'imageFile': 'different/7c.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+4.6530 	EXP 	background: autoDraw = False
+4.6530 	EXP 	instructionstxt: autoDraw = False
+4.6530 	EXP 	faces: image = 'different/7c.png'
+4.6530 	EXP 	background_2: autoDraw = True
+4.6530 	EXP 	faces: autoDraw = True
+4.6530 	EXP 	trial_counter: autoDraw = True
+4.6530 	EXP 	reminder: autoDraw = True
+6.8784 	DATA 	Keypress: right
+6.8935 	EXP 	background_2: autoDraw = False
+6.8935 	EXP 	faces: autoDraw = False
+6.8935 	EXP 	trial_counter: autoDraw = False
+6.8935 	EXP 	reminder: autoDraw = False
+6.8935 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+6.8935 	EXP 	background_3: autoDraw = True
+6.8935 	EXP 	textbox: autoDraw = True
+6.8935 	EXP 	reminder_2: autoDraw = True
+6.8935 	EXP 	trial_counter_2: autoDraw = True
+7.8674 	EXP 	New trial (rep=0, index=1): {'imageFile': 'different/11b.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+7.9072 	EXP 	background_3: autoDraw = False
+7.9072 	EXP 	textbox: autoDraw = False
+7.9072 	EXP 	reminder_2: autoDraw = False
+7.9072 	EXP 	trial_counter_2: autoDraw = False
+7.9072 	EXP 	faces: image = 'different/11b.png'
+7.9072 	EXP 	background_2: autoDraw = True
+7.9072 	EXP 	faces: autoDraw = True
+7.9072 	EXP 	trial_counter: autoDraw = True
+7.9072 	EXP 	reminder: autoDraw = True
+8.6515 	DATA 	Keypress: right
+8.6675 	EXP 	background_2: autoDraw = False
+8.6675 	EXP 	faces: autoDraw = False
+8.6675 	EXP 	trial_counter: autoDraw = False
+8.6675 	EXP 	reminder: autoDraw = False
+8.6675 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+8.6675 	EXP 	background_3: autoDraw = True
+8.6675 	EXP 	textbox: autoDraw = True
+8.6675 	EXP 	reminder_2: autoDraw = True
+8.6675 	EXP 	trial_counter_2: autoDraw = True
+9.6548 	EXP 	New trial (rep=0, index=2): {'imageFile': 'different/27b.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+9.6945 	EXP 	background_3: autoDraw = False
+9.6945 	EXP 	textbox: autoDraw = False
+9.6945 	EXP 	reminder_2: autoDraw = False
+9.6945 	EXP 	trial_counter_2: autoDraw = False
+9.6945 	EXP 	faces: image = 'different/27b.png'
+9.6945 	EXP 	background_2: autoDraw = True
+9.6945 	EXP 	faces: autoDraw = True
+9.6945 	EXP 	trial_counter: autoDraw = True
+9.6945 	EXP 	reminder: autoDraw = True
+10.5128 	DATA 	Keypress: right
+10.5481 	EXP 	background_2: autoDraw = False
+10.5481 	EXP 	faces: autoDraw = False
+10.5481 	EXP 	trial_counter: autoDraw = False
+10.5481 	EXP 	reminder: autoDraw = False
+10.5481 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+10.5481 	EXP 	background_3: autoDraw = True
+10.5481 	EXP 	textbox: autoDraw = True
+10.5481 	EXP 	reminder_2: autoDraw = True
+10.5481 	EXP 	trial_counter_2: autoDraw = True
+11.5355 	EXP 	New trial (rep=0, index=3): {'imageFile': 'different/22a.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+11.5752 	EXP 	background_3: autoDraw = False
+11.5752 	EXP 	textbox: autoDraw = False
+11.5752 	EXP 	reminder_2: autoDraw = False
+11.5752 	EXP 	trial_counter_2: autoDraw = False
+11.5752 	EXP 	faces: image = 'different/22a.png'
+11.5752 	EXP 	background_2: autoDraw = True
+11.5752 	EXP 	faces: autoDraw = True
+11.5752 	EXP 	trial_counter: autoDraw = True
+11.5752 	EXP 	reminder: autoDraw = True
+12.4394 	DATA 	Keypress: right
+12.4556 	EXP 	background_2: autoDraw = False
+12.4556 	EXP 	faces: autoDraw = False
+12.4556 	EXP 	trial_counter: autoDraw = False
+12.4556 	EXP 	reminder: autoDraw = False
+12.4556 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+12.4556 	EXP 	background_3: autoDraw = True
+12.4556 	EXP 	textbox: autoDraw = True
+12.4556 	EXP 	reminder_2: autoDraw = True
+12.4556 	EXP 	trial_counter_2: autoDraw = True
+13.4430 	EXP 	New trial (rep=0, index=4): {'imageFile': 'different/4a.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+13.4826 	EXP 	background_3: autoDraw = False
+13.4826 	EXP 	textbox: autoDraw = False
+13.4826 	EXP 	reminder_2: autoDraw = False
+13.4826 	EXP 	trial_counter_2: autoDraw = False
+13.4826 	EXP 	faces: image = 'different/4a.png'
+13.4826 	EXP 	background_2: autoDraw = True
+13.4826 	EXP 	faces: autoDraw = True
+13.4826 	EXP 	trial_counter: autoDraw = True
+13.4826 	EXP 	reminder: autoDraw = True
+14.0542 	DATA 	Keypress: right
+14.0695 	EXP 	background_2: autoDraw = False
+14.0695 	EXP 	faces: autoDraw = False
+14.0695 	EXP 	trial_counter: autoDraw = False
+14.0695 	EXP 	reminder: autoDraw = False
+14.0695 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+14.0695 	EXP 	background_3: autoDraw = True
+14.0695 	EXP 	textbox: autoDraw = True
+14.0695 	EXP 	reminder_2: autoDraw = True
+14.0695 	EXP 	trial_counter_2: autoDraw = True
+15.0568 	EXP 	New trial (rep=0, index=5): {'imageFile': 'same/76b.png', 'corrAns': 'left', 'sameOrDiff': 'same'}
+15.0965 	EXP 	background_3: autoDraw = False
+15.0965 	EXP 	textbox: autoDraw = False
+15.0965 	EXP 	reminder_2: autoDraw = False
+15.0965 	EXP 	trial_counter_2: autoDraw = False
+15.0965 	EXP 	faces: image = 'same/76b.png'
+15.0965 	EXP 	background_2: autoDraw = True
+15.0965 	EXP 	faces: autoDraw = True
+15.0965 	EXP 	trial_counter: autoDraw = True
+15.0965 	EXP 	reminder: autoDraw = True
+16.0051 	DATA 	Keypress: right
+16.0169 	EXP 	background_2: autoDraw = False
+16.0169 	EXP 	faces: autoDraw = False
+16.0169 	EXP 	trial_counter: autoDraw = False
+16.0169 	EXP 	reminder: autoDraw = False
+16.0169 	EXP 	textbox: foreColor = <psychopy.colors.Color: red, alpha=1.0>
+16.0169 	EXP 	background_3: autoDraw = True
+16.0169 	EXP 	textbox: autoDraw = True
+16.0169 	EXP 	reminder_2: autoDraw = True
+16.0169 	EXP 	trial_counter_2: autoDraw = True
+17.0042 	EXP 	New trial (rep=0, index=6): {'imageFile': 'different/28b.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+17.0439 	EXP 	background_3: autoDraw = False
+17.0439 	EXP 	textbox: autoDraw = False
+17.0439 	EXP 	reminder_2: autoDraw = False
+17.0439 	EXP 	trial_counter_2: autoDraw = False
+17.0439 	EXP 	faces: image = 'different/28b.png'
+17.0439 	EXP 	background_2: autoDraw = True
+17.0439 	EXP 	faces: autoDraw = True
+17.0439 	EXP 	trial_counter: autoDraw = True
+17.0439 	EXP 	reminder: autoDraw = True
+17.5823 	DATA 	Keypress: right
+17.6175 	EXP 	background_2: autoDraw = False
+17.6175 	EXP 	faces: autoDraw = False
+17.6175 	EXP 	trial_counter: autoDraw = False
+17.6175 	EXP 	reminder: autoDraw = False
+17.6175 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+17.6175 	EXP 	background_3: autoDraw = True
+17.6175 	EXP 	textbox: autoDraw = True
+17.6175 	EXP 	reminder_2: autoDraw = True
+17.6175 	EXP 	trial_counter_2: autoDraw = True
+18.6048 	EXP 	New trial (rep=0, index=7): {'imageFile': 'different/35b.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+18.6445 	EXP 	background_3: autoDraw = False
+18.6445 	EXP 	textbox: autoDraw = False
+18.6445 	EXP 	reminder_2: autoDraw = False
+18.6445 	EXP 	trial_counter_2: autoDraw = False
+18.6445 	EXP 	faces: image = 'different/35b.png'
+18.6445 	EXP 	background_2: autoDraw = True
+18.6445 	EXP 	faces: autoDraw = True
+18.6445 	EXP 	trial_counter: autoDraw = True
+18.6445 	EXP 	reminder: autoDraw = True
+18.9093 	DATA 	Keypress: left
+18.9247 	EXP 	background_2: autoDraw = False
+18.9247 	EXP 	faces: autoDraw = False
+18.9247 	EXP 	trial_counter: autoDraw = False
+18.9247 	EXP 	reminder: autoDraw = False
+18.9247 	EXP 	textbox: foreColor = <psychopy.colors.Color: red, alpha=1.0>
+18.9247 	EXP 	background_3: autoDraw = True
+18.9247 	EXP 	textbox: autoDraw = True
+18.9247 	EXP 	reminder_2: autoDraw = True
+18.9247 	EXP 	trial_counter_2: autoDraw = True
+19.9120 	EXP 	New trial (rep=0, index=8): {'imageFile': 'different/26b.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+19.9517 	EXP 	background_3: autoDraw = False
+19.9517 	EXP 	textbox: autoDraw = False
+19.9517 	EXP 	reminder_2: autoDraw = False
+19.9517 	EXP 	trial_counter_2: autoDraw = False
+19.9517 	EXP 	faces: image = 'different/26b.png'
+19.9517 	EXP 	background_2: autoDraw = True
+19.9517 	EXP 	faces: autoDraw = True
+19.9517 	EXP 	trial_counter: autoDraw = True
+19.9517 	EXP 	reminder: autoDraw = True
+20.0961 	DATA 	Keypress: right
+20.1118 	EXP 	background_2: autoDraw = False
+20.1118 	EXP 	faces: autoDraw = False
+20.1118 	EXP 	trial_counter: autoDraw = False
+20.1118 	EXP 	reminder: autoDraw = False
+20.1118 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+20.1118 	EXP 	background_3: autoDraw = True
+20.1118 	EXP 	textbox: autoDraw = True
+20.1118 	EXP 	reminder_2: autoDraw = True
+20.1118 	EXP 	trial_counter_2: autoDraw = True
+21.0991 	EXP 	New trial (rep=0, index=9): {'imageFile': 'same/84a.png', 'corrAns': 'left', 'sameOrDiff': 'same'}
+21.1388 	EXP 	background_3: autoDraw = False
+21.1388 	EXP 	textbox: autoDraw = False
+21.1388 	EXP 	reminder_2: autoDraw = False
+21.1388 	EXP 	trial_counter_2: autoDraw = False
+21.1388 	EXP 	faces: image = 'same/84a.png'
+21.1388 	EXP 	background_2: autoDraw = True
+21.1388 	EXP 	faces: autoDraw = True
+21.1388 	EXP 	trial_counter: autoDraw = True
+21.1388 	EXP 	reminder: autoDraw = True
+21.7510 	DATA 	Keypress: right
+21.7657 	EXP 	background_2: autoDraw = False
+21.7657 	EXP 	faces: autoDraw = False
+21.7657 	EXP 	trial_counter: autoDraw = False
+21.7657 	EXP 	reminder: autoDraw = False
+21.7657 	EXP 	textbox: foreColor = <psychopy.colors.Color: red, alpha=1.0>
+21.7657 	EXP 	background_3: autoDraw = True
+21.7657 	EXP 	textbox: autoDraw = True
+21.7657 	EXP 	reminder_2: autoDraw = True
+21.7657 	EXP 	trial_counter_2: autoDraw = True
+22.7530 	EXP 	New trial (rep=0, index=10): {'imageFile': 'same/64b.png', 'corrAns': 'left', 'sameOrDiff': 'same'}
+22.7928 	EXP 	background_3: autoDraw = False
+22.7928 	EXP 	textbox: autoDraw = False
+22.7928 	EXP 	reminder_2: autoDraw = False
+22.7928 	EXP 	trial_counter_2: autoDraw = False
+22.7928 	EXP 	faces: image = 'same/64b.png'
+22.7928 	EXP 	background_2: autoDraw = True
+22.7928 	EXP 	faces: autoDraw = True
+22.7928 	EXP 	trial_counter: autoDraw = True
+22.7928 	EXP 	reminder: autoDraw = True
+23.2775 	DATA 	Keypress: right
+23.3130 	EXP 	background_2: autoDraw = False
+23.3130 	EXP 	faces: autoDraw = False
+23.3130 	EXP 	trial_counter: autoDraw = False
+23.3130 	EXP 	reminder: autoDraw = False
+23.3130 	EXP 	textbox: foreColor = <psychopy.colors.Color: red, alpha=1.0>
+23.3130 	EXP 	background_3: autoDraw = True
+23.3130 	EXP 	textbox: autoDraw = True
+23.3130 	EXP 	reminder_2: autoDraw = True
+23.3130 	EXP 	trial_counter_2: autoDraw = True
+24.3003 	EXP 	New trial (rep=0, index=11): {'imageFile': 'same/59a.png', 'corrAns': 'left', 'sameOrDiff': 'same'}
+24.3400 	EXP 	background_3: autoDraw = False
+24.3400 	EXP 	textbox: autoDraw = False
+24.3400 	EXP 	reminder_2: autoDraw = False
+24.3400 	EXP 	trial_counter_2: autoDraw = False
+24.3400 	EXP 	faces: image = 'same/59a.png'
+24.3400 	EXP 	background_2: autoDraw = True
+24.3400 	EXP 	faces: autoDraw = True
+24.3400 	EXP 	trial_counter: autoDraw = True
+24.3400 	EXP 	reminder: autoDraw = True
+24.7982 	DATA 	Keypress: right
+24.8335 	EXP 	background_2: autoDraw = False
+24.8335 	EXP 	faces: autoDraw = False
+24.8335 	EXP 	trial_counter: autoDraw = False
+24.8335 	EXP 	reminder: autoDraw = False
+24.8335 	EXP 	textbox: foreColor = <psychopy.colors.Color: red, alpha=1.0>
+24.8335 	EXP 	background_3: autoDraw = True
+24.8335 	EXP 	textbox: autoDraw = True
+24.8335 	EXP 	reminder_2: autoDraw = True
+24.8335 	EXP 	trial_counter_2: autoDraw = True
+25.8209 	EXP 	New trial (rep=0, index=12): {'imageFile': 'same/73a.png', 'corrAns': 'left', 'sameOrDiff': 'same'}
+25.8606 	EXP 	background_3: autoDraw = False
+25.8606 	EXP 	textbox: autoDraw = False
+25.8606 	EXP 	reminder_2: autoDraw = False
+25.8606 	EXP 	trial_counter_2: autoDraw = False
+25.8606 	EXP 	faces: image = 'same/73a.png'
+25.8606 	EXP 	background_2: autoDraw = True
+25.8606 	EXP 	faces: autoDraw = True
+25.8606 	EXP 	trial_counter: autoDraw = True
+25.8606 	EXP 	reminder: autoDraw = True
+27.7259 	DATA 	Keypress: right
+27.7413 	EXP 	background_2: autoDraw = False
+27.7413 	EXP 	faces: autoDraw = False
+27.7413 	EXP 	trial_counter: autoDraw = False
+27.7413 	EXP 	reminder: autoDraw = False
+27.7413 	EXP 	textbox: foreColor = <psychopy.colors.Color: red, alpha=1.0>
+27.7413 	EXP 	background_3: autoDraw = True
+27.7413 	EXP 	textbox: autoDraw = True
+27.7413 	EXP 	reminder_2: autoDraw = True
+27.7413 	EXP 	trial_counter_2: autoDraw = True
+28.7287 	EXP 	New trial (rep=0, index=13): {'imageFile': 'different/40b.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+28.7683 	EXP 	background_3: autoDraw = False
+28.7683 	EXP 	textbox: autoDraw = False
+28.7683 	EXP 	reminder_2: autoDraw = False
+28.7683 	EXP 	trial_counter_2: autoDraw = False
+28.7683 	EXP 	faces: image = 'different/40b.png'
+28.7683 	EXP 	background_2: autoDraw = True
+28.7683 	EXP 	faces: autoDraw = True
+28.7683 	EXP 	trial_counter: autoDraw = True
+28.7683 	EXP 	reminder: autoDraw = True
+29.3544 	DATA 	Keypress: right
+29.3686 	EXP 	background_2: autoDraw = False
+29.3686 	EXP 	faces: autoDraw = False
+29.3686 	EXP 	trial_counter: autoDraw = False
+29.3686 	EXP 	reminder: autoDraw = False
+29.3686 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+29.3686 	EXP 	background_3: autoDraw = True
+29.3686 	EXP 	textbox: autoDraw = True
+29.3686 	EXP 	reminder_2: autoDraw = True
+29.3686 	EXP 	trial_counter_2: autoDraw = True
+30.3561 	EXP 	New trial (rep=0, index=14): {'imageFile': 'different/3c.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+30.3956 	EXP 	background_3: autoDraw = False
+30.3956 	EXP 	textbox: autoDraw = False
+30.3956 	EXP 	reminder_2: autoDraw = False
+30.3956 	EXP 	trial_counter_2: autoDraw = False
+30.3956 	EXP 	faces: image = 'different/3c.png'
+30.3956 	EXP 	background_2: autoDraw = True
+30.3956 	EXP 	faces: autoDraw = True
+30.3956 	EXP 	trial_counter: autoDraw = True
+30.3956 	EXP 	reminder: autoDraw = True
+31.0206 	DATA 	Keypress: right
+31.0358 	EXP 	background_2: autoDraw = False
+31.0358 	EXP 	faces: autoDraw = False
+31.0358 	EXP 	trial_counter: autoDraw = False
+31.0358 	EXP 	reminder: autoDraw = False
+31.0358 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+31.0358 	EXP 	background_3: autoDraw = True
+31.0358 	EXP 	textbox: autoDraw = True
+31.0358 	EXP 	reminder_2: autoDraw = True
+31.0358 	EXP 	trial_counter_2: autoDraw = True
+32.0233 	EXP 	New trial (rep=0, index=15): {'imageFile': 'different/19b.png', 'corrAns': 'right', 'sameOrDiff': 'different'}
+32.0629 	EXP 	background_3: autoDraw = False
+32.0629 	EXP 	textbox: autoDraw = False
+32.0629 	EXP 	reminder_2: autoDraw = False
+32.0629 	EXP 	trial_counter_2: autoDraw = False
+32.0629 	EXP 	faces: image = 'different/19b.png'
+32.0629 	EXP 	background_2: autoDraw = True
+32.0629 	EXP 	faces: autoDraw = True
+32.0629 	EXP 	trial_counter: autoDraw = True
+32.0629 	EXP 	reminder: autoDraw = True
+32.6011 	DATA 	Keypress: right
+32.6365 	EXP 	background_2: autoDraw = False
+32.6365 	EXP 	faces: autoDraw = False
+32.6365 	EXP 	trial_counter: autoDraw = False
+32.6365 	EXP 	reminder: autoDraw = False
+32.6365 	EXP 	textbox: foreColor = <psychopy.colors.Color: green, alpha=1.0>
+32.6365 	EXP 	background_3: autoDraw = True
+32.6365 	EXP 	textbox: autoDraw = True
+32.6365 	EXP 	reminder_2: autoDraw = True
+32.6365 	EXP 	trial_counter_2: autoDraw = True
+33.6240 	EXP 	New trial (rep=0, index=16): {'imageFile': 'same/98a.png', 'corrAns': 'left', 'sameOrDiff': 'same'}
+33.6635 	EXP 	background_3: autoDraw = False
+33.6635 	EXP 	textbox: autoDraw = False
+33.6635 	EXP 	reminder_2: autoDraw = False
+33.6635 	EXP 	trial_counter_2: autoDraw = False
+33.6635 	EXP 	faces: image = 'same/98a.png'
+33.6635 	EXP 	background_2: autoDraw = True
+33.6635 	EXP 	faces: autoDraw = True
+33.6635 	EXP 	trial_counter: autoDraw = True
+33.6635 	EXP 	reminder: autoDraw = True
+34.0760 	DATA 	Keypress: right
+34.0903 	EXP 	background_2: autoDraw = False
+34.0903 	EXP 	faces: autoDraw = False
+34.0903 	EXP 	trial_counter: autoDraw = False
+34.0903 	EXP 	reminder: autoDraw = False
+34.0903 	EXP 	textbox: foreColor = <psychopy.colors.Color: red, alpha=1.0>
+34.0903 	EXP 	background_3: autoDraw = True
+34.0903 	EXP 	textbox: autoDraw = True
+34.0903 	EXP 	reminder_2: autoDraw = True
+34.0903 	EXP 	trial_counter_2: autoDraw = True
+34.4964 	DATA 	Keypress: escape
+34.6244 	EXP 	glasgow_face_matching: status = STOPPED
+34.6372 	EXP 	background_3: autoDraw = False
+34.6372 	EXP 	textbox: autoDraw = False
+34.6372 	EXP 	reminder_2: autoDraw = False
+34.6372 	EXP 	trial_counter_2: autoDraw = False
+34.6373 	EXP 	glasgow_face_matching: status = STOPPED
+34.7099 	EXP 	window1: mouseVisible = True

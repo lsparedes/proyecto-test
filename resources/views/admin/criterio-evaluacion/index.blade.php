@@ -34,7 +34,6 @@
                             <th>Nombre del Criterio</th>
                             <th>Descripción del Criterio</th>
                             <th>Acciones</th>
-                            <!-- Agrega más columnas si es necesario -->
                         </tr>
                     </thead>
                     <tbody>

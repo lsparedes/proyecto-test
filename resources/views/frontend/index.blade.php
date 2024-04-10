@@ -45,17 +45,18 @@
                 @endphp
                 <div class="col-md-4 mb-5">
                     <div class="card h-100">
-                        <div class="card-body">
-                            <h2 class="card-title">{{ $test->tipoTest->num_test }} {{ $test->name_test }}</h2>
+                        <!-- Aquí incluimos el ícono del test -->
+                        <div class="card-body text-center">
+                            <i class="fas {{ $test->tipoTest->icono }}" data-toggle="tooltip" title="{{ $test->tipoTest->icono === 'fa-solid fa-download' ? 'Necesita Descargar' : 'Vista Web' }}"></i>
+                            <h2 class="card-title mt-3">{{ $test->tipoTest->num_test }} {{ $test->name_test }}</h2>
                             <p class="card-text">{{ $test->tipoTest->descripcion }}</p>
                         </div>
                         <div class="card-footer">
-                            <!-- Generar la URL usando el ID del test actual -->
-                            <a class="btn btn-ind btn-md" href="{{ route('info-test', ['test_id' => $test->id]) }}">Mas Informacion <i class="fas fa-arrow-right"></i></a>
+                            <a class="btn btn-ind btn-md" href="{{ route('info-test', ['test_id' => $test->id]) }}">Más Información <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
-            @endforeach
+                @endforeach
             </div>
         </div>
     </section>

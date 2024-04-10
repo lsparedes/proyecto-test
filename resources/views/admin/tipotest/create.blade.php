@@ -45,6 +45,19 @@
                         <label for="">Audio Instrucciones (MP3)</label>
                         <input type="file" name="audio_instruccion" accept="mp3" class="form-control">
                     </div>
+                    <div class="mb-3">
+                        <label for="fuente">Fuente</label>
+                        <input type="text" class="form-control" id="fuente" name="fuente">
+                    </div>
+                    <div class="mb-3">
+                        <label for="icono">Icono</label>
+                        <select class="form-control" id="icono" name="icono">
+                            <option value="">Seleccione un Icono</option>
+                            <option value="fa-solid fa-download">Descarga</option>
+                            <option value="fa-solid fa-code">Web</option>
+                        </select>
+                    </div>
+
                     <div class="row">
                         <div class="col-md-6">
                             <button type="submit" class="btn btn-sm btn-primary">Guardar</button>

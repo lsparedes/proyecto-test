@@ -11,6 +11,7 @@
  * Copyright 2011-2022 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
+
 :root {
     --bs-blue: #0d6efd;
     --bs-indigo: #6610f2;
@@ -92,6 +93,19 @@
     }
 }
 
+/* Estilo para el contenedor colapsable */
+.collapse {
+    display: none;
+}
+
+/* Estilo para el botón que expande/cierra el contenedor colapsable */
+.btn-link {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
 
 .btn-ind:hover {
     background-color: #5c636a;
@@ -13071,6 +13085,7 @@ body {
     flex-direction: column;
     height: 100%;
     flex-wrap: nowrap;
+    width: 250px; /* Cambia este valor según tus necesidades */
 }
 
 .sb-sidenav .sb-sidenav-menu {

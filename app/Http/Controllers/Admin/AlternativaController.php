@@ -15,7 +15,6 @@ class AlternativaController extends Controller
     {
         abort_if(Gate::denies('alternativa'), 403);
         $alternativas = Alternativa::all();
-        // Puedes agregar más lógica según tus necesidades
 
         return view('admin.alternativa.index', compact('alternativas'));
     }

@@ -30,6 +30,8 @@
 
                                     <p class="lead text-white-50 mb-1" style="margin-top: 10px;"><i class="fas fa-clock"></i> Duracion estimada:
                                         {{ $test->duracion_minutos }} minutos</p>
+                                    <p class="lead text-white-50 mb-1" style="margin-top: 10px;"><i class="fa-solid fa-globe"></i> Fuente:
+                                            {{ $test->tipoTest->fuente }}</p>
                                 </div>
                                 <div style="margin-left: 50px;">
                                     <!-- Botones para cada enlace -->
@@ -43,6 +45,7 @@
                                       <span>Backward</span>  </a>
                                   @endif
                                 </div>
+
                             </div>
                         </div>
                     </div>

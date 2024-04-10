@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Modified camel cactus task</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="notification" class="notification"></div>
+    <h1><span id="pageTitle">Modified camel cactus task</span></h1>
+    <div class="center-content">
+        <p id="instructionText">En este test se mostraran 5 imágenes en la pantalla: una en la parte superior, y 4 en la parte inferior.<br><br>
+            Debe elegir cuál de las 4 imágenes de la parte inferior se empareja major con la imagen en la parte <i>superior</i>. 
+            Use el ratón del ordenador para clicar sobre la imagen.<br><br>
+            Practiquemos esta tarea.</p>
+        <button id="startButton">Comenzar</button>
+        <button id="fullscreenButton">Pantalla completa</button> 
+    </div>
+    <div id="imageContainer" style="display: none;">
+        <img src="" alt="Imagen de historia" id="storyImage">
+        <div id="optionsContainer"></div> <!-- Contenedor para las opciones de imágenes -->
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

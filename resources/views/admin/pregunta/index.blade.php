@@ -36,7 +36,6 @@
                             <th>Respuesta Correcta</th>
                             <th>Test Asociado</th>
                             <th>Acciones</th>
-                            <!-- Agrega más columnas si es necesario -->
                         </tr>
                     </thead>
                     <tbody>

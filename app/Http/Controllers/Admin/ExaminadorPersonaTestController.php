@@ -41,7 +41,6 @@ class ExaminadorPersonaTestController extends Controller
 
     public function store(ExaminadorPersonaTestFormRequest $request)
     {
-        // La validación se realizará automáticamente antes de llegar a esta función
 
         // Obtener los datos validados del formulario
         $validatedData = $request->validated();
@@ -59,8 +58,6 @@ class ExaminadorPersonaTestController extends Controller
 
         // Guardar el modelo en la base de datos
         $examinador_persona_test->save();
-
-        // Puedes redirigir a una página de éxito, por ejemplo
         return redirect('admin/examinador-persona-test')->with('message', 'Successfully Added');
     }
 

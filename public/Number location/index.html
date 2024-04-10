@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Number location test</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h1><span id="pageTitle">Number location test</span></h1>
+    <div class="center-content">
+        <p id="instructionText">Present stimulus, practice 1. "One of the numbers in the square corresponds with the position of the dot in the square; 
+            tell me the number that matches the position of the dot". If there is an erroron practice 1 or 2. The subjectshould be told the correct number and why
+        it's correct before proceeding to the next card. Do not allow patient to use their finger and/or pen to touch the stimulus page. </p>
+        <button id="startButton">Comenzar</button>
+        <button id="fullscreenButton">Pantalla completa</button> 
+    </div>
+    <div id="imageContainer" style="display: none;">
+        <img src="" alt="Imagen de historia" id="storyImage">
+        <div id="inputContainer">
+            <input type="text" id="userInput" placeholder="Ingresa tu respuesta aquí">
+            <button id="submitButton">Enviar</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>

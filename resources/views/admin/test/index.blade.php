@@ -27,7 +27,6 @@
                             <th>Nombre test</th>
                             <th>Puntaje maximo</th>
                             <th>Duracion (minutos)</th>
-                            <th>Tipo test ID</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -37,7 +36,6 @@
                                 <td>{{ $item->name_test }}</td>
                                 <td>{{ $item->points }}</td>
                                 <td>{{ $item->duracion_minutos }}</td>
-                                <td>{{ $item->tipotest_id }}</td>
                                 <td>
                                     @can('edit-tests')
                                         <a href="{{ url('admin/edit-tests/' . $item->id) }}" class="btn btn-sm btn-success"><i

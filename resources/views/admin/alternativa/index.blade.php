@@ -36,7 +36,6 @@
                             <th>¿Es Correcta?</th>
                             <th>Pregunta Asociada</th>
                             <th>Acciones</th>
-                            <!-- Agrega más columnas si es necesario -->
                         </tr>
                     </thead>
                     <tbody>

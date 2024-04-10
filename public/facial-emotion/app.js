@@ -50,6 +50,10 @@ function mostrarEmociones() {
     emocionesDisponibles.forEach(emocion => {
         const listItem = document.createElement('li');
         listItem.textContent = emocion;
+        listItem.style.cursor = 'pointer';
+        listItem.addEventListener('click', function() {
+            guardarSeleccion(emocion);
+        });
         listaEmociones.appendChild(listItem);
     });
 }
@@ -137,3 +141,6 @@ document.addEventListener('keydown', (event) => {
 window.onload = function () {
     iniciarPresentacion();
 };
+
+
+
