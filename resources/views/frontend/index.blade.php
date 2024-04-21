@@ -4,7 +4,7 @@
     <section id="features">
 
         <!-- Header-->
-        <header class="bg-dark py-5">
+        <header class="bg-dark py-5" style="margin-top: 60px;">
             <div class="container px-5">
                 <div class="row gx-5 justify-content-center">
                     <div class="col-lg-6">
@@ -24,38 +24,48 @@
 
         <div class="container px-4 px-lg-2 mt-3">
 
-            <div class="card text-black bg-light my-4 py-3 text-center">
-                <div class="card-body">
+            <div class="bg-light my-4 py-3 text-center">
+                <div>
                     <h2>Listado de Tests</h2>
                     <!-- Busqueda test-->
                     <form id="searchForm">
-                        <div class="mb-3">
+                        <div class="input-group mb-3">
+                            <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
                             <input type="text" class="form-control" id="searchInput" placeholder="Buscar Test">
                         </div>
                     </form>
                 </div>
             </div>
 
-
             <div class="row gx-4 gx-lg-" id="testContainer">
                 @foreach ($testIds as $testId)
-                @php
-                    // Obtener el test actual
-                    $test = $tests->where('id', $testId)->first();
-                @endphp
-                <div class="col-md-4 mb-5">
-                    <div class="card h-100">
-                        <!-- Aquí incluimos el ícono del test -->
-                        <div class="card-body text-center">
-                            <i class="fas {{ $test->tipoTest->icono }}" data-toggle="tooltip" title="{{ $test->tipoTest->icono === 'fa-solid fa-download' ? 'Necesita Descargar' : 'Vista Web' }}"></i>
-                            <h2 class="card-title mt-3">{{ $test->tipoTest->num_test }} {{ $test->name_test }}</h2>
-                            <p class="card-text">{{ $test->tipoTest->descripcion }}</p>
-                        </div>
-                        <div class="card-footer">
-                            <a class="btn btn-ind btn-md" href="{{ route('info-test', ['test_id' => $test->id]) }}">Más Información <i class="fas fa-arrow-right"></i></a>
-                        </div>
+                    @php
+                        $test = $tests->where('id', $testId)->first();
+                    @endphp
+                    <div class="col-md-4 mb-5">
+                        <a href="{{ route('info-test', ['test_id' => $test->id]) }}"
+                            class="card h-100 text-decoration-none ">
+
+                            <div class="card-header text-center">
+                                <i class="fas {{ $test->tipoTest->icono }}" data-toggle="tooltip"
+                                    title="{{ $test->tipoTest->icono === 'fa-solid fa-download' ? 'Necesita Descargar' : 'Vista Web' }}"></i>
+                                <p class="card-text"> {{ $test->tipoTest->implementacion}}</p>
+                            </div>
+
+                            <div class="card-body text-center">
+
+                                <h2 class="card-title mt-3">{{ $test->tipoTest->num_test }} -
+                                    {{ $test->tipoTest->descripcion }}</h2>
+                                <p class="card-text"> {{ $test->name_test }}</p>
+                                <p class="card-text"><i class="fas fa-clock"></i> Duración estimada:
+                                    {{ $test->duracion_minutos }} minutos</p>
+                                <div class="card-footer ">
+                                    <p class="card-text"><i class="fa-solid fa-globe"></i> Fuente:
+                                        {{ $test->tipoTest->fuente }}</p>
+                                </div>
+                            </div>
+                        </a>
                     </div>
-                </div>
                 @endforeach
             </div>
         </div>

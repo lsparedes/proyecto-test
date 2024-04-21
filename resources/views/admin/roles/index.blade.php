@@ -7,7 +7,7 @@
     <div class="container-fluid px-4">
 
         <div class="card mt-4">
-            <div class="card-header" style="background-color:#e1ecec">
+            <div class="card-header" style="background-color:#1d8eaa28">
                 <h4 class="card-title">Listado Roles
                     @can('roles.create')
                         <a href="{{ route('admin.roles.create') }}" class="btn btn-primary btn-sm float-end"><i

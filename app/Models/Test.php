@@ -13,11 +13,14 @@ class Test extends Model
 
     protected $fillable = [
         'name_test',
+        'nombre_espa',
         'points',
         'duracion_minutos',
         'tipotest_id',
         'url_test',
         'url_adicional',
+        'link_millisecond',
+        'link_millisecond2',
     ];
 
     // Relación con el modelo TipoTest

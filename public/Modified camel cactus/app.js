@@ -32,7 +32,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t1.png",
-        title: "Item 1",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t1.png", correct: true },
             { src: "imagenes/mcct_comp2_t1.png", correct: false },
@@ -43,7 +43,7 @@ const imagenes = [
 
     {
         src: "imagenes/mcct_target_t2.png",
-        title: "Item 2",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t2.png", correct: false },
             { src: "imagenes/mcct_comp2_t2.png", correct: false },
@@ -54,7 +54,7 @@ const imagenes = [
 
     {
         src: "imagenes/mcct_target_t3.png",
-        title: "Item 3",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t3.png", correct: false },
             { src: "imagenes/mcct_comp2_t3.png", correct: false },
@@ -65,7 +65,7 @@ const imagenes = [
 
     {
         src: "imagenes/mcct_target_t4.png",
-        title: "Item 4",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t4.png", correct: true },
             { src: "imagenes/mcct_comp2_t4.png", correct: false },
@@ -76,7 +76,7 @@ const imagenes = [
 
     {
         src: "imagenes/mcct_target_t5.png",
-        title: "Item 5",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t5.png", correct: false },
             { src: "imagenes/mcct_comp2_t5.png", correct: false },
@@ -86,7 +86,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t6.png",
-        title: "Item 6",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t6.png", correct: false },
             { src: "imagenes/mcct_comp2_t6.png", correct: true },
@@ -96,7 +96,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t7.png",
-        title: "Item 7",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t7.png", correct: false },
             { src: "imagenes/mcct_comp2_t7.png", correct: true },
@@ -106,7 +106,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t8.png",
-        title: "Item 8",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t8.png", correct: false },
             { src: "imagenes/mcct_comp2_t8.png", correct: false },
@@ -116,7 +116,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t9.png",
-        title: "Item 9",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t9.png", correct: false },
             { src: "imagenes/mcct_comp2_t9.png", correct: false },
@@ -126,7 +126,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t10.png",
-        title: "Item 10",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t10.png", correct: false },
             { src: "imagenes/mcct_comp2_t10.png", correct: true },
@@ -136,7 +136,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t11.png",
-        title: "Item 11",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t11.png", correct: false },
             { src: "imagenes/mcct_comp2_t11.png", correct: true },
@@ -146,7 +146,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t12.png",
-        title: "Item 12",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t12.png", correct: false },
             { src: "imagenes/mcct_comp2_t12.png", correct: false },
@@ -156,7 +156,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t13.png",
-        title: "Item 13",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t13.png", correct: false },
             { src: "imagenes/mcct_comp2_t13.png", correct: false },
@@ -166,7 +166,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t14.png",
-        title: "Item 14",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t14.png", correct: false },
             { src: "imagenes/mcct_comp2_t14.png", correct: false },
@@ -176,7 +176,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t15.png",
-        title: "Item 15",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t15.png", correct: false },
             { src: "imagenes/mcct_comp2_t15.png", correct: false },
@@ -186,7 +186,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t16.png",
-        title: "Item 16",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t16.png", correct: false },
             { src: "imagenes/mcct_comp2_t16.png", correct: false },
@@ -196,7 +196,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t17.png",
-        title: "Item 17",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t17.png", correct: false },
             { src: "imagenes/mcct_comp2_t17.png", correct: false },
@@ -206,7 +206,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t18.png",
-        title: "Item 18",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t18.png", correct: false },
             { src: "imagenes/mcct_comp2_t18.png", correct: false },
@@ -216,7 +216,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t19.png",
-        title: "Item 19",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t19.png", correct: true },
             { src: "imagenes/mcct_comp2_t19.png", correct: false },
@@ -226,7 +226,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t20.png",
-        title: "Item 20",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t20.png", correct: false },
             { src: "imagenes/mcct_comp2_t20.png", correct: false },
@@ -236,7 +236,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t21.png",
-        title: "Item 21",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t21.png", correct: false },
             { src: "imagenes/mcct_comp2_t21.png", correct: true },
@@ -246,7 +246,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t22.png",
-        title: "Item 22",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t22.png", correct: false },
             { src: "imagenes/mcct_comp2_t22.png", correct: true },
@@ -256,7 +256,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t23.png",
-        title: "Item 23",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t23.png", correct: true },
             { src: "imagenes/mcct_comp2_t23.png", correct: false },
@@ -266,7 +266,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t24.png",
-        title: "Item 24",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t24.png", correct: true },
             { src: "imagenes/mcct_comp2_t24.png", correct: false },
@@ -276,7 +276,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t25.png",
-        title: "Item 25",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t25.png", correct: true },
             { src: "imagenes/mcct_comp2_t25.png", correct: false },
@@ -286,7 +286,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t26.png",
-        title: "Item 26",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t26.png", correct: true },
             { src: "imagenes/mcct_comp2_t26.png", correct: false },
@@ -296,7 +296,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t27.png",
-        title: "Item 27",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t27.png", correct: false },
             { src: "imagenes/mcct_comp2_t27.png", correct: false },
@@ -306,7 +306,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t28.png",
-        title: "Item 28",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t28.png", correct: false },
             { src: "imagenes/mcct_comp2_t28.png", correct: false },
@@ -316,7 +316,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t29.png",
-        title: "Item 29",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t29.png", correct: false },
             { src: "imagenes/mcct_comp2_t29.png", correct: false },
@@ -326,7 +326,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t30.png",
-        title: "Item 30",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t30.png", correct: true },
             { src: "imagenes/mcct_comp2_t30.png", correct: false },
@@ -336,7 +336,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t31.png",
-        title: "Item 31",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t31.png", correct: false },
             { src: "imagenes/mcct_comp2_t31.png", correct: true },
@@ -346,7 +346,7 @@ const imagenes = [
     },
     {
         src: "imagenes/mcct_target_t32.png",
-        title: "Item 32",
+        title: "",
         options: [
             { src: "imagenes/mcct_comp1_t32.png", correct: false },
             { src: "imagenes/mcct_comp2_t32.png", correct: true },

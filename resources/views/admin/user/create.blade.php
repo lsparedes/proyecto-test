@@ -7,8 +7,9 @@
     <div class="container-fluid px-4">
 
         <div class="card mt-4">
-            <div class="card-header" style="background-color:#e1ecec">
-                <h4 class="">Agregar Usuario</h4>
+            <div class="card-header" style="background-color:#1d8eaa28">
+                <h4 class=""><a href="{{ route('admin.users') }}" class="btn btn-m  mr-3"><i
+                    class="fas fa-arrow-left-long"></i></a>Agregar Usuario</h4>
             </div>
 
             <div class="card-body">

@@ -48,10 +48,13 @@ class TestController extends Controller
         // Actualiza los campos usando asignación de masas
         $test->update([
             'name_test' => $data['name_test'],
+            'nombre_espa' => $data['nombre_espa'],
             'points' => $data['points'],
             'duracion_minutos' => $data['duracion_minutos'],
             'url_test' => $data['url_test'],
             'url_adicional'=> $data['url_adicional'],
+            'link_millisecond'=> $data['link_millisecond'],
+            'link_millisecond2'=> $data['link_millisecond2'],
         ]);
 
         return redirect('admin/tests')->with('message', 'Successfully Update');
@@ -67,11 +70,14 @@ class TestController extends Controller
 
         // Asignar los valores del formulario a las propiedades del modelo
         $test->name_test = $data['name_test'];
+        $test->nombre_espa = $data['nombre_espa'];
         $test->points = $data['points'];
         $test->duracion_minutos = $data['duracion_minutos'];
         $test->tipotest_id = $data['tipotest_id'];
         $test->url_test = $data['url_test'];
         $test->url_adicional = $data['url_adicional'];
+        $test->link_millisecond = $data['link_millisecond'];
+        $test->link_millisecond2 = $data['link_millisecond2'];
 
         // Guardar el modelo en la base de datos
         $test->save();

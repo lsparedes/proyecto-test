@@ -6,8 +6,9 @@
 
     <div class="container-fluid px-4">
 
+
         <div class="card mt-4">
-            <div class="card-header" style="background-color:#e1ecec">
+            <div class="card-header" style="background-color:#1d8eaa28">
                 <h4>Listado Test
                     @can('add-tests')
                         <a href="{{ url('admin/add-tests') }}" class="btn btn-primary btn-sm float-end"><i class="fas fa-plus"></i>
@@ -25,6 +26,8 @@
                     <thead>
                         <tr>
                             <th>Nombre test</th>
+                            <th>Tipo Test</th>
+                            <th>Nombre test (español)</th>
                             <th>Puntaje maximo</th>
                             <th>Duracion (minutos)</th>
                             <th>Acciones</th>
@@ -34,6 +37,8 @@
                         @foreach ($test as $item)
                             <tr>
                                 <td>{{ $item->name_test }}</td>
+                                <td>{{ $item->tipoTest->descripcion }}</td> 
+                                <td>{{ $item->nombre_espa }}</td>
                                 <td>{{ $item->points }}</td>
                                 <td>{{ $item->duracion_minutos }}</td>
                                 <td>

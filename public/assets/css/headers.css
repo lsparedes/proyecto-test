@@ -21,7 +21,7 @@ header {
 
 /* fondo degradado al header */
 header.bg-dark {
-    background: linear-gradient(to bottom, #212529, #24434b);
+    background: linear-gradient(to bottom, #212529, #2d545e);
 }
 
 

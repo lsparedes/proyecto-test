@@ -10,7 +10,7 @@
 
         <div class="card mt-4">
 
-            <div class="card-header card-header-primary" style="background-color:#e1ecec">
+            <div class="card-header card-header-primary" style="background-color:#1d8eaa28">
 
                 <h2 class="card-title">Usuarios</h2>
                 <p class="card-text">Vista detallada del usuario: {{ $user->name }}</p>

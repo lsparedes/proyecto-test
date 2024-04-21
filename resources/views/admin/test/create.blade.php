@@ -7,8 +7,9 @@
     <div class="container-fluid px-4">
 
         <div class="card mt-4">
-            <div class="card-header" style="background-color:#e1ecec">
-                <h4 class="">Añadir Test </h4>
+            <div class="card-header" style="background-color:#1d8eaa28">
+                <h4 class=""><a href="{{ route('admin.tests') }}" class="btn btn-m  mr-3"><i
+                    class="fas fa-arrow-left-long"></i></a>Añadir Test </h4>
             </div>
             <div class="card-body">
 
@@ -18,6 +19,10 @@
                     <div class="mb-3">
                         <label for="name_test">Nombre Test</label>
                         <input type="text" name="name_test" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="nombre_espa">Nombre Test (español)</label>
+                        <input type="text" name="nombre_espa" class="form-control">
                     </div>
                     <div class="mb-3">
                         <label for="points">Puntaje Maximo</label>
@@ -36,7 +41,6 @@
                         </select>
                     </div>
 
-                    <!-- Nuevo campo para la URL -->
                     <div class="mb-3">
                         <label for="url_test">URL del Test</label>
                         <input type="text" name="url_test" class="form-control">
@@ -45,6 +49,16 @@
                     <div class="mb-3">
                         <label for="url_adicional">URL adicional del Test (opcional)</label>
                         <input type="text" name="url_adicional" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="link_millisecond">Link Millisecond (opcional)</label>
+                        <input type="text" name="link_millisecond" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="link_millisecond2">Link Millisecond 2 (opcional)</label>
+                        <input type="text" name="link_millisecond2" class="form-control">
                     </div>
 
                     <div class="row">

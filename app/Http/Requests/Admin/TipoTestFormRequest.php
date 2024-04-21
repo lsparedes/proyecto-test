@@ -29,9 +29,14 @@ class TipoTestFormRequest extends FormRequest
             'num_test' => 'required|numeric',
             'descripcion_test' => 'required|string',
             'instruccion_test' => 'required|string',
+            'instrucciones_adicionales' => 'nullable|string',
+            'enlace_descarga' => 'nullable|string|max:255',
             'audio_instruccion' => 'nullable|max:9000|mimes:mp3,mp4',
             'fuente' => 'nullable|string|max:255',
+            'link_fuente' => 'nullable|string|max:255',
             'icono' => 'nullable|string|max:255',
+            'nombre_esp' => 'nullable|string|max:255',
+            'implementacion' => 'nullable|string|max:255',
         ];
     }
 }

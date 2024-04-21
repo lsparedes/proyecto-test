@@ -16,8 +16,13 @@ class TipoTest extends Model
         'num_test',
         'descripcion_test',
         'instruccion_test',
+        'instrucciones_adicionales',
+        'enlace_descarga',
         'audio_instruccion',
-        'fuente'.
+        'fuente',
+        'link_fuente',
         'icono',
+        'nombre_esp',
+        'implementacion',
     ];
 }

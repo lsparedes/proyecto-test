@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 This experiment was created using PsychoPy3 Experiment Builder (v2023.2.3),
-    on marzo 28, 2024, at 11:24
+    on abril 21, 2024, at 15:50
 If you publish work using this script the most relevant publication is:
 
     Peirce J, Gray JR, Simpson S, MacAskill M, Höchenberger R, Sogo H, Kastman E, Lindeløv JK. (2019) 
@@ -107,7 +107,7 @@ def setupData(expInfo, dataDir=None):
     thisExp = data.ExperimentHandler(
         name=expName, version='',
         extraInfo=expInfo, runtimeInfo=None,
-        originPath='C:\\Users\\Cristofer\\Downloads\\Digitalizacion_tests-20240115T152615Z-001\\glasgow_face_matching-master\\glasgow_face_matching_lastrun.py',
+        originPath='C:\\xampp\\htdocs\\proyecto-tests\\public\\glasgow_face_matching-master\\glasgow_face_matching_lastrun.py',
         savePickle=True, saveWideText=True,
         dataFileName=dataDir + os.sep + filename, sortColumns='time'
     )
@@ -327,7 +327,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     instructionstxt = visual.TextBox2(
          win, text='On each trial, you will see a pair of faces. Your task is to use the response keys to indicate whether the images are of the same or different individuals. \n\nRespond with with the left arrow key if the faces are the same\nRespond with the right arrow key if the faces are different\n\nYou are free to view the faces for as long as needed.\n\nPress any key to continue to the main task.', placeholder='Type here...', font='Arial',
          pos=(0, 0),     letterHeight=0.05,
-         size=(1.25, 0.78), borderWidth=2.0,
+         size=(1.24, 0.77), borderWidth=2.0,
          color='black', colorSpace='rgb',
          opacity=0.8,
          bold=False, italic=False,
@@ -354,14 +354,14 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
         win=win,
         name='faces', 
         image='default.png', mask=None, anchor='center',
-        ori=0, pos=(0, 0), size=(1.25, 0.78),
+        ori=0, pos=(0, 0), size=(1.24, 0.77),
         color=[1,1,1], colorSpace='rgb', opacity=1,
-        flipHoriz=False, flipVert=False,
+        flipHoriz=True, flipVert=False,
         texRes=128, interpolate=True, depth=-1.0)
     resp = keyboard.Keyboard()
     trial_counter = visual.TextBox2(
          win, text='', placeholder='Type here...', font='Arial',
-         pos=(0, -0.426),     letterHeight=0.05,
+         pos=(0, -0.425),     letterHeight=0.05,
          size=(0.23, 0.07), borderWidth=2.0,
          color='black', colorSpace='rgb',
          opacity=0.8,
@@ -377,7 +377,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     )
     reminder = visual.TextBox2(
          win, text='Left = Same        Right = Different', placeholder='Type here...', font='Arial',
-         pos=(0, 0.426),     letterHeight=0.05,
+         pos=(0, 0.425),     letterHeight=0.05,
          size=(0.84, 0.07), borderWidth=2.0,
          color='black', colorSpace='rgb',
          opacity=0.8,
@@ -406,7 +406,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     textbox = visual.TextBox2(
          win, text='', placeholder='Type here...', font='Arial',
          pos=(0, 0),     letterHeight=0.05,
-         size=(1.25, 0.78), borderWidth=2.0,
+         size=(1.24, 0.77), borderWidth=2.0,
          color='white', colorSpace='rgb',
          opacity=0.8,
          bold=False, italic=False,
@@ -464,7 +464,7 @@ def run(expInfo, thisExp, win, inputs, globalClock=None, thisSession=None):
     endmsg = visual.TextBox2(
          win, text='', placeholder='Type here...', font='Arial',
          pos=(0, 0),     letterHeight=0.05,
-         size=(1.25, 0.78), borderWidth=2.0,
+         size=(1.24, 0.77), borderWidth=2.0,
          color='black', colorSpace='rgb',
          opacity=0.8,
          bold=False, italic=False,

@@ -7,7 +7,7 @@
     <div class="container-fluid px-4">
 
         <div class="card mt-4">
-            <div class="card-header" style="background-color:#e1ecec">
+            <div class="card-header" style="background-color:#1d8eaa28">
                 <h4>Listado de Respuestas
                     @can('add-respuesta')
                         <a href="{{ url('admin/add-respuesta') }}" class="btn btn-primary btn-sm float-end"><i

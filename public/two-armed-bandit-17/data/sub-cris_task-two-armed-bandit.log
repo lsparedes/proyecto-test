@@ -1,0 +1,12 @@
+12.6525 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000197682ABCD0>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000197682ABC70>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000197682ABA90>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x000001976864C6D0>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, title='PsychoPy', units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+12.6526 	EXP 	window1: mouseVisible = True
+12.6526 	EXP 	window1: backgroundImage = ''
+12.6526 	EXP 	window1: backgroundFit = 'none'
+12.6550 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+12.6551 	EXP 	window1: recordFrameIntervals = False
+12.7853 	EXP 	window1: recordFrameIntervals = True
+12.9322 	EXP 	Screen (0) actual frame rate measured at 74.92Hz
+12.9323 	EXP 	window1: recordFrameIntervals = False
+12.9324 	EXP 	window1: mouseVisible = False
+17.8957 	EXP 	two-armed-bandit: status = STARTED
+17.9956 	EXP 	window1: mouseVisible = True

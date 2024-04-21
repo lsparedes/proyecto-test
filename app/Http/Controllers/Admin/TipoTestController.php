@@ -34,8 +34,13 @@ class TipoTestController extends Controller
         $tipo_test->descripcion = $data['descripcion'];
         $tipo_test->descripcion_test = $data['descripcion_test'];
         $tipo_test->instruccion_test = $data['instruccion_test'];
+        $tipo_test->instrucciones_adicionales = $data['instrucciones_adicionales'];
+        $tipo_test->enlace_descarga = $data['enlace_descarga'];
         $tipo_test->fuente = $data['fuente'];
+        $tipo_test->link_fuente = $data['link_fuente'];
         $tipo_test->icono = $data['icono'];
+        $tipo_test->nombre_esp = $data['nombre_esp'];
+        $tipo_test->implementacion = $data['implementacion'];
 
         if ($request->hasFile('audio_instruccion')) {
             $file = $request->file('audio_instruccion');
@@ -65,11 +70,17 @@ class TipoTestController extends Controller
         $tipo_test->descripcion = $data['descripcion'];
         $tipo_test->descripcion_test = $data['descripcion_test'];
         $tipo_test->instruccion_test = $data['instruccion_test'];
-        $tipo_test->fuente = $data['fuente']; // Actualizando la fuente
-        $tipo_test->icono = $data['icono']; // Actualizando el icono
+        $tipo_test->instrucciones_adicionales = $data['instrucciones_adicionales'];
+        $tipo_test->enlace_descarga = $data['enlace_descarga'];
+        $tipo_test->fuente = $data['fuente'];
+        $tipo_test->link_fuente = $data['link_fuente'];
+        $tipo_test->icono = $data['icono'];
+        $tipo_test->nombre_esp = $data['nombre_esp'];
+        $tipo_test->implementacion = $data['implementacion'];
+
+        
 
         if ($request->hasFile('audio_instruccion')) {
-
             $destination = 'uploads/' . $tipo_test->audio_instruccion;
             if (File::exists($destination)) {
                 File::delete($destination);
@@ -81,7 +92,7 @@ class TipoTestController extends Controller
             $tipo_test->audio_instruccion = $filename;
         }
 
-        $tipo_test->save(); 
+        $tipo_test->save();
 
         return redirect('admin/tipotest')->with('message', 'Successfully Updated');
     }

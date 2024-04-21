@@ -19,6 +19,7 @@
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css">
 
 
 </head>
@@ -48,9 +49,18 @@
     <script src="{{ asset('assets/js/scripts.js') }}"></script>
 
     <script src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.colVis.min.js"></script>
+
 
     <script>
-        let table = new DataTable('#myDataTable');
+        $(document).ready(function() {
+            let table = $('#myDataTable').DataTable({
+                dom: 'Bfrtip',
+                buttons: ['colvis'],
+                stateSave: true
+            });
+        });
     </script>
 
     <!-- Script de busqueda de permisos en editar rol -->
