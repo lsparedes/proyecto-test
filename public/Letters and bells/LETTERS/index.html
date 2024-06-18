@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Detección de Letras A</title>
+
+</head>
+
+<body>
+    <div id="instructionsScreen">
+        <p id="instrucciones">El test consiste en seleccionar todas las letras 'A' que pueda encontrar en la siguiente
+            página.
+            Use el cursor para seleccionar las letras 'A' ¡y sólo las letras 'A'!, trabaje tan rápido como pueda.
+            Cuando crea que ha seleccionado todas las letras pulse el boton 'validar'.</p>
+
+        <audio controls>
+            <source src="letters.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+
+        <div class="button-container">
+            <button id="startButton">Comenzar</button>
+            <button id="fullscreenButton">Pantalla Completa</button>
+        </div>
+    </div>
+    <div id="mainScreen" style="display:none;">
+        <div id="container">
+            <canvas id="imageCanvas"></canvas>
+            <div id="buttons">
+                <button id="validateButton">Validar</button>
+                <button id="showButton">Mostrar Letras A</button>
+                <button id="hideButton">Ocultar Letras A</button>
+                <div id="results"></div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>

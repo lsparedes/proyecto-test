@@ -13,149 +13,180 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
-    max-width: 750px;
-    /* Ancho máximo del texto */
-    margin: auto;
-    /* Centra horizontalmente */
+    max-width: 1000px;
+    margin-top: 50px;
 }
 
 #imageContainer {
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    max-width: 800px;
-    max-height: 600px;
+    width: 120%;
+    height: 120%;
+    max-width: 1000px;
+    max-height: 700px;
     background-color: #ffffff;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-
     transition: transform 0.3s ease;
-    margin-bottom: 50px; /* Ajuste de margen */
-}
-
-
-
-
-#emotionsList li {
-    display: inline-block;
-    /* Mantiene los elementos en línea pero permite el espaciado y alineación */
-    margin: 5px 10px;
-    /* Añade un poco de espacio alrededor de cada elemento de la lista */
-    padding: 5px 10px;
-    /* Espaciado interno para hacer cada opción más grande */
-    background-color: #f0f0f0;
-    /* Fondo para hacerlo más visual */
-    border-radius: 5px;
-    /* Bordes redondeados para suavizar la apariencia */
-    cursor: pointer;
-    /* Cambia el cursor para indicar que son clickeables */
-    transition: background-color 0.3s;
-    /* Suaviza la transición de fondo al pasar el mouse */
-}
-
-#emotionsList {
-    list-style-type: none;
-    padding: 10px;
-    margin: 0 auto; /* Ajuste de margen */
-    text-align: center;
-    width: 100%;
-    font-size: 24px;
-}
-
-#emotionsList li:hover {
-    background-color: #e0e0e0;
-    /* Cambia el color al pasar el mouse para una mejor interacción visual */
-}
-
-h1 {
-    margin-top: 90px;
-    /* Reducir el margen superior del título */
-}
-
-#pageTitle {
-    padding: 0;
-    /* Eliminar el relleno del título */
-    font-size: 40px;
-}
-
-#instructionText {
-    /* Reducir el espacio entre el texto y el botón */
-    font-size: 23px;
-    text-align: justify;
-    margin-bottom: 150px;
+    margin-bottom: 10px;
+    /* Ajuste de margen */
 }
 
 img {
     max-width: 110%;
     /* Ajusta el tamaño máximo de la imagen */
-    max-height: 120%;
+    max-height: 150%;
     /* Ajusta el tamaño máximo de la imagen */
     display: block;
     margin: auto;
     object-fit: contain;
 }
 
-#startButton {
+#emotionImage {
+    width: auto; /* Ancho automático para mantener la proporción */
+    height: 70vh; /* Altura relativa al 70% de la altura de la ventana */
+    max-width: 90%; /* Máximo ancho igual al 90% del contenedor */
+    max-height: 70vh; /* Máxima altura relativa al 70% de la altura de la ventana */
+    object-fit: contain;
+    display: block;
+    margin: 0px auto 5px auto; 
+}
 
-    padding: 15px 30px;
-    /* Ajusta el tamaño del botón */
-    font-size: 18px;
-    /* Aumenta el tamaño de la fuente para que el texto sea más grande */
-    color: white;
-    /* Color del texto */
-    background-color: #007bff;
-    /* Color de fondo del botón */
-    border: none;
-    /* Elimina el borde */
-    border-radius: 5px;
-    /* Borde redondeado para un aspecto más suave */
+#emotionsList {
+    list-style-type: none;
+    padding: 5px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+#emotionsList li {
+    display: inline-block;
+    margin: 5px;
+    padding: 12px 16px;
+    background-color: #c9c9c9;
+    border-radius: 10px;
     cursor: pointer;
-    /* Cambia el cursor para indicar que es clickeable */
+    transition: background-color 0.3s;
+    font-size: 32px; 
+}
+
+#emotionsList li:hover {
+    background-color: #79a4ff9a;
+}
+
+#emotionsList li.selected {
+    background-color: #007bff;
+    color: white;
+}
+
+h1 {
+    margin-top: 60px;
+    margin-bottom: 2vh;
+    font-size: 3vw;
+}
+
+#instructionText {
+    font-size: 35px;
+    text-align: justify;
+    margin-bottom: 100px;
+    margin-top: 50px;
+}
+
+button {
+    margin: 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+#startButton {
+    padding: 15px 30px;
+    font-size: 22px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    /* Suaviza la transición de color y añade efecto al presionar */
 }
 
 #startButton:hover {
     background-color: #0056b3;
-    /* Cambia el color al pasar el mouse para indicar interactividad */
 }
 
 #startButton:active {
     transform: scale(0.98);
-    /* Efecto de presión al hacer clic */
 }
 
 #fullscreenButton {
-    margin-top: 10px;
     padding: 15px 30px;
-    /* Ajusta el tamaño del botón */
-    font-size: 18px;
-    /* Aumenta el tamaño de la fuente para que el texto sea más grande */
+    font-size: 22px;
     color: rgb(0, 0, 0);
-    /* Color del texto */
     background-color: #c7c7c7;
-    /* Color de fondo del botón */
     border: none;
-    /* Elimina el borde */
     border-radius: 5px;
-    /* Borde redondeado para un aspecto más suave */
     cursor: pointer;
-    /* Cambia el cursor para indicar que es clickeable */
     transition: background-color 0.3s, transform 0.2s;
-    /* Suaviza la transición de color y añade efecto al presionar */
 }
+
 #fullscreenButton:hover {
     background-color: #8f8f8f;
-    /* Cambia el color al pasar el mouse para indicar interactividad */
 }
 
 #fullscreenButton:active {
     transform: scale(0.98);
-    /* Efecto de presión al hacer clic */
 }
+
+.button-container {
+    display: flex;
+    justify-content: center; /* Alinea los botones horizontalmente al centro */
+    align-items: center; /* Asegura que los botones estén alineados en el eje transversal (vertical) */
+    margin-top: 20px;
+    width: 100%; /* Asegura que el contenedor ocupe el ancho completo */
+}
+
+.button-container button {
+    margin: 20px; /* Ajusta este margen según lo necesites */
+}
+
+audio {
+    margin-bottom: 20px;
+}
+
+.item-indicator {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+}
+
+#next-button {
+    display: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 90px;
+    /* Ajusta el ancho fijo */
+    height: 80px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 6%;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 5%;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+

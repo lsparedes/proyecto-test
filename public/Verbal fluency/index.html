@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Fluidez Verbal</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="container">
+        <div id="instructions">
+            <p> El test se divide en 2 etapas: Prueba Fonológica y Fluidez de Categorías. En este test, deberá
+                reproducir un audio con las instrucciones de cada ítem. Su tarea es
+                decir palabras que comiencen con la letra solicitada o palabras respecto a una categoría solicitada.
+                Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60
+                segundos
+                para cada tarea. Cada grabación puede ser descargada</p>
+
+            <audio style="margin-top: 20px;" controls>
+                <source src="verbal-fluency.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+            <div class="button-container">
+                <button id="startTestButton">Comenzar Test</button>
+                <button id="fullscreenButton">Pantalla Completa</button>
+            </div>
+        </div>
+
+        <!-- Parte 1 -->
+        <div id="testSection1" style="display: none;">
+            <h2 class="imageText">FF-1</h2>
+            <div class="audio-controls">
+                <audio id="instructionAudio1" controls></audio>
+                <button id="recButton1" style="display: none;"></button>
+                <button id="stopRecordingButton1" style="display: none;border: none;"></button>
+
+            </div>
+            <div id="timer1" class="timer"></div>
+            <a id="downloadLink1" style="display: none;">Descargar Grabación</a>
+            <button id="nextButton1" style="display: none;"></button>
+            <div id="recordingCreatedMessage1" class="recording-message">Grabación creada.</div>
+        </div>
+
+        <!-- Parte 2 -->
+        <div id="testSection2" style="display: none;">
+            <h2 class="imageText">FF-2</h2>
+            <div class="audio-controls">
+                <audio id="instructionAudio2" controls></audio>
+                <button id="recButton2" style="display: none;"></button>
+                <button id="stopRecordingButton2" style="display: none;"></button>
+
+            </div>
+            <div id="timer2" class="timer"></div>
+            <a id="downloadLink2" style="display: none;">Descargar Grabación</a>
+            <button id="nextButton2" style="display: none;"></button>
+            <div id="recordingCreatedMessage2" class="recording-message">Grabación creada.</div>
+        </div>
+
+        <!-- Fluidez de Categorías Parte 1 -->
+        <div id="categoryFluency1" style="display: none;">
+            <h2 class="imageText">FS-1</h2>
+            <div class="audio-controls">
+                <audio id="instructionAudio3" controls></audio>
+                <button id="recButton3" style="display: none;"></button>
+                <button id="stopRecordingButton3" style="display: none;"></button>
+
+            </div>
+            <div id="timer3" class="timer"></div>
+            <a id="downloadLink3" style="display: none;">Descargar Grabación</a>
+            <button id="nextButton3" style="display: none;"></button>
+            <div id="recordingCreatedMessage3" class="recording-message">Grabación creada.</div>
+        </div>
+
+        <!-- Fluidez de Categorías Parte 2 -->
+        <div id="categoryFluency2" style="display: none;">
+            <h2 class="imageText">FS-2</h2>
+            <div class="audio-controls">
+                <audio id="instructionAudio4" controls></audio>
+                <button id="recButton4" style="display: none;"></button>
+                <button id="stopRecordingButton4" style="display: none;"></button>
+
+            </div>
+            <div id="timer4" class="timer"></div>
+            <a id="downloadLink4" style="display: none;">Descargar Grabación</a>
+            <button id="nextButton4" style="display: none;"></button>
+            <div id="recordingCreatedMessage4" class="recording-message">Grabación creada.</div>
+        </div>
+
+        <!-- Fluidez de Categorías Parte 3 -->
+        <div id="categoryFluency3" style="display: none;">
+            <h2 class="imageText">FS-3</h2>
+            <div class="audio-controls">
+                <audio id="instructionAudio5" controls></audio>
+                <button id="recButton5" style="display: none;"></button>
+                <button id="stopRecordingButton5" style="display: none;"></button>
+
+            </div>
+            <div id="timer5" class="timer"></div>
+            <a id="downloadLink5" style="display: none;">Descargar Grabación</a>
+            <button id="nextButton5" style="display: none;"></button>
+            <div id="recordingCreatedMessage5" class="recording-message">Grabación creada.</div>
+        </div>
+
+        <div id="downloadLinksContainer" style="display: none;">
+            <h1 style="padding-bottom: 100px;">El test ha finalizado. ¡Gracias por sus respuestas!</h1>
+            <h2>Enlaces de Descarga:</h2>
+            <div id="downloadLinks"></div>
+            <button id="finishButton" style="display: none;">Finalizar</button>
+        </div>
+        <!-- Mensaje de Finalización -->
+        <div id="completionMessage" style="display: none;">
+
+        </div>
+
+        <script src="script.js"></script>
+</body>
+
+</html>

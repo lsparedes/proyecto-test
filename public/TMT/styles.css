@@ -1,0 +1,86 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+#instructions, #partA, #partB, #partB2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  margin-top: 100px;
+}
+
+#tmtCanvas, #tmtCanvasPartA, #tmtCanvasPartB, #tmtCanvasPartB2   {
+  border: 1px solid black;
+  display: none;
+}
+
+#instructionText, #instructionTextA, #instructionTextB1, #instructionTextB2, #instructionTextB2 {
+  font-size: 37px;
+  text-align: justify;
+  margin-bottom: 90px;
+}
+
+#startButton, #continueButton ,#continueButtonB2, #continueButtonB, #continueButtonB2{
+  padding: 15px 30px;
+  font-size: 22px;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#startButton:hover, #continueButton:hover, #continueButtonB2:hover, #continueButtonB:hover, #continueButtonB2:hover {
+  background-color: #0056b3;
+}
+
+#startButton:active, #continueButton:active, #continueButtonB2:active, #continueButtonB:active, #continueButtonB2:active {
+  transform: scale(0.98);
+}
+
+#fullscreenButton {
+  padding: 15px 30px;
+  font-size: 22px;
+  color: rgb(0, 0, 0);
+  background-color: #c7c7c7;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+#fullscreenButton:hover {
+  background-color: #8f8f8f;
+}
+
+#fullscreenButton:active {
+  transform: scale(0.98);
+}
+
+.button-container {
+  text-align: center;
+}
+
+.button-container button {
+  margin: 20px;
+}
+
+canvas {
+  display: block;  /* Eliminar cualquier espacio extra y alinear adecuadamente */
+  max-width: 99%; /* Asegura que el canvas no sea más grande que su contenedor */
+  height: auto;    /* Mantener la proporción de aspecto */
+}
+
+audio {
+  margin-bottom: 20px;
+}
+

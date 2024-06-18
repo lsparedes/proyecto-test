@@ -1,0 +1,1 @@
+Digit span backward, comienza con dos series de 2 digitos, luego dos series de 3, y asi hasta las dos series de 8 digitos

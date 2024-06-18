@@ -1,0 +1,1764 @@
+8.7283 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001E380891CD0>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001E380891C70>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001E380891AF0>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x000001E380C3D310>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, title='PsychoPy', units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+8.7284 	EXP 	window1: mouseVisible = True
+8.7284 	EXP 	window1: backgroundImage = ''
+8.7284 	EXP 	window1: backgroundFit = 'none'
+8.7301 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+8.7301 	EXP 	window1: recordFrameIntervals = False
+8.8614 	EXP 	window1: recordFrameIntervals = True
+9.0083 	EXP 	Screen (0) actual frame rate measured at 74.96Hz
+9.0083 	EXP 	window1: recordFrameIntervals = False
+9.0084 	EXP 	window1: mouseVisible = False
+11.6356 	EXP 	two-armed-bandit: status = STARTED
+11.6361 	EXP 	window1: mouseVisible = True
+11.7050 	EXP 	Created intro_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='intro_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+11.7051 	EXP 	window1: mouseVisible = True
+11.7203 	EXP 	Created instr_1 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_1', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+11.7205 	EXP 	window1: mouseVisible = True
+11.7436 	EXP 	Created instr_2 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_2', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+11.7437 	EXP 	window1: mouseVisible = True
+11.7587 	EXP 	Created instr_3 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_3', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+11.7589 	EXP 	window1: mouseVisible = True
+11.7724 	EXP 	Created read_prac = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='read_prac', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+11.7725 	EXP 	window1: mouseVisible = True
+11.7746 	EXP 	Created BlockInstr_disp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='BlockInstr_disp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+11.7747 	EXP 	window1: mouseVisible = True
+11.7769 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+11.7770 	EXP 	window1: mouseVisible = True
+11.7913 	EXP 	Created left = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+11.7914 	EXP 	window1: mouseVisible = True
+11.8044 	EXP 	Created right = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+11.8045 	EXP 	window1: mouseVisible = True
+11.8181 	EXP 	Created left_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left_feedback', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+11.8182 	EXP 	window1: mouseVisible = True
+11.8319 	EXP 	Created right_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right_feedback', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+11.8320 	EXP 	window1: mouseVisible = True
+11.8343 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+11.8344 	EXP 	window1: mouseVisible = True
+11.8364 	EXP 	Created feedback_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.1, italic=False, languageStyle='LTR', name='feedback_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+11.8364 	EXP 	window1: mouseVisible = True
+11.8459 	EXP 	Created instr_4 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_4', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+11.8460 	EXP 	window1: mouseVisible = True
+11.8557 	EXP 	Created ready_exp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='ready_exp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+11.8558 	EXP 	window1: mouseVisible = True
+11.8571 	EXP 	Created BlockInstr_disp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='BlockInstr_disp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+11.8572 	EXP 	window1: mouseVisible = True
+11.8594 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+11.8595 	EXP 	window1: mouseVisible = True
+11.8731 	EXP 	Created left = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+11.8732 	EXP 	window1: mouseVisible = True
+11.8860 	EXP 	Created right = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+11.8861 	EXP 	window1: mouseVisible = True
+11.8981 	EXP 	Created left_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left_feedback', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+11.8982 	EXP 	window1: mouseVisible = True
+11.9114 	EXP 	Created right_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right_feedback', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+11.9115 	EXP 	window1: mouseVisible = True
+11.9137 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+11.9138 	EXP 	window1: mouseVisible = True
+11.9151 	EXP 	Created feedback_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.1, italic=False, languageStyle='LTR', name='feedback_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+11.9153 	EXP 	window1: mouseVisible = True
+11.9316 	EXP 	Created end_heading = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([ 1.,  1., -1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.075, italic=False, languageStyle='LTR', name='end_heading', opacity=1.0, ori=0, pos=array([0. , 0.4]), rgb=UNKNOWN, text='Experiment complete!', units='height', win=Window(...), wrapWidth=1)
+11.9317 	EXP 	window1: mouseVisible = True
+11.9330 	EXP 	Created end_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='end_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+11.9331 	EXP 	window1: mouseVisible = True
+11.9465 	EXP 	Created text_4 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-4.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='text_4', opacity=1.0, ori=0, pos=array([ 0. , -0.4]), rgb=UNKNOWN, text='Press SPACE to exit.', units='height', win=Window(...), wrapWidth=1)
+0.0228 	EXP 	intro_text: autoDraw = True
+1.1051 	DATA 	Keypress: space
+1.1164 	EXP 	intro_text: autoDraw = False
+1.1164 	EXP 	instr_1: autoDraw = True
+1.3056 	DATA 	Keypress: space
+1.3165 	EXP 	instr_1: autoDraw = False
+1.3165 	EXP 	instr_2: autoDraw = True
+1.4920 	DATA 	Keypress: space
+1.5032 	EXP 	instr_2: autoDraw = False
+1.5032 	EXP 	instr_3: autoDraw = True
+1.7187 	DATA 	Keypress: space
+1.7299 	EXP 	instr_3: autoDraw = False
+1.7299 	EXP 	read_prac: autoDraw = True
+2.0178 	EXP 	Imported orders/prac_stim-order.csv as conditions, 16 conditions, 21 params
+2.0182 	EXP 	Created sequence: sequential, trialTypes=16, nReps=1, seed=None
+2.0184 	EXP 	New trial (rep=0, index=0): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 0), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+2.0276 	DATA 	Keypress: space
+2.0368 	EXP 	read_prac: autoDraw = False
+2.0368 	EXP 	BlockInstr_disp: height = 0.08
+2.0368 	EXP 	BlockInstr_disp: height = 0.08
+2.0368 	EXP 	BlockInstr_disp: height = 0.08
+2.0368 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+2.0368 	EXP 	BlockInstr_disp: autoDraw = True
+2.2381 	DATA 	Keypress: space
+4.6393 	DATA 	Keypress: left
+6.4533 	DATA 	Keypress: left
+7.0252 	EXP 	BlockInstr_disp: autoDraw = False
+7.0252 	EXP 	iti: autoDraw = True
+7.6121 	EXP 	iti: autoDraw = False
+7.6121 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+7.6121 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+7.6121 	EXP 	left: autoDraw = True
+7.6121 	EXP 	right: autoDraw = True
+8.1511 	DATA 	Keypress: right
+8.1593 	EXP 	left: autoDraw = False
+8.1593 	EXP 	right: autoDraw = False
+8.1593 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+8.1593 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+8.1593 	EXP 	left_feedback: autoDraw = True
+8.1593 	EXP 	right_feedback: autoDraw = True
+8.5992 	EXP 	left_feedback: autoDraw = False
+8.5992 	EXP 	right_feedback: autoDraw = False
+8.5992 	EXP 	iti: autoDraw = True
+9.1060 	EXP 	iti: autoDraw = False
+9.1060 	EXP 	feedback_text: height = 0.1
+9.1060 	EXP 	feedback_text: height = 0.1
+9.1060 	EXP 	feedback_text: height = 0.1
+9.1060 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+9.1060 	EXP 	feedback_text: autoDraw = True
+10.5868 	EXP 	New trial (rep=0, index=1): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 1), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+10.5999 	EXP 	feedback_text: autoDraw = False
+10.5999 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+10.5999 	EXP 	BlockInstr_disp: autoDraw = True
+10.5999 	EXP 	BlockInstr_disp: autoDraw = False
+10.5999 	EXP 	iti: autoDraw = True
+11.1201 	EXP 	iti: autoDraw = False
+11.1201 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+11.1201 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+11.1201 	EXP 	left: autoDraw = True
+11.1201 	EXP 	right: autoDraw = True
+11.6124 	DATA 	Keypress: left
+11.6136 	EXP 	left: autoDraw = False
+11.6136 	EXP 	right: autoDraw = False
+11.6136 	EXP 	left_feedback: image = 'stimuli/slotA_down.jpg'
+11.6136 	EXP 	right_feedback: image = 'stimuli/slotB_up.jpg'
+11.6136 	EXP 	left_feedback: autoDraw = True
+11.6136 	EXP 	right_feedback: autoDraw = True
+12.1071 	EXP 	left_feedback: autoDraw = False
+12.1071 	EXP 	right_feedback: autoDraw = False
+12.1071 	EXP 	iti: autoDraw = True
+12.6140 	EXP 	iti: autoDraw = False
+12.6140 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+12.6140 	EXP 	feedback_text: autoDraw = True
+14.0948 	EXP 	New trial (rep=0, index=2): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 2), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'left')])
+14.1079 	EXP 	feedback_text: autoDraw = False
+14.1079 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+14.1079 	EXP 	BlockInstr_disp: autoDraw = True
+14.1079 	EXP 	BlockInstr_disp: autoDraw = False
+14.1079 	EXP 	iti: autoDraw = True
+14.6280 	EXP 	iti: autoDraw = False
+14.6280 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+14.6280 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+14.6280 	EXP 	left: autoDraw = True
+14.6280 	EXP 	right: autoDraw = True
+15.1678 	DATA 	Keypress: left
+15.1749 	EXP 	left: autoDraw = False
+15.1749 	EXP 	right: autoDraw = False
+15.1749 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+15.1749 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+15.1749 	EXP 	left_feedback: autoDraw = True
+15.1749 	EXP 	right_feedback: autoDraw = True
+15.6685 	EXP 	left_feedback: autoDraw = False
+15.6685 	EXP 	right_feedback: autoDraw = False
+15.6685 	EXP 	iti: autoDraw = True
+16.1753 	EXP 	iti: autoDraw = False
+16.1753 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+16.1753 	EXP 	feedback_text: autoDraw = True
+17.6561 	EXP 	New trial (rep=0, index=3): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 3), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+17.6692 	EXP 	feedback_text: autoDraw = False
+17.6692 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+17.6692 	EXP 	BlockInstr_disp: autoDraw = True
+17.6692 	EXP 	BlockInstr_disp: autoDraw = False
+17.6692 	EXP 	iti: autoDraw = True
+18.1894 	EXP 	iti: autoDraw = False
+18.1894 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+18.1894 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+18.1894 	EXP 	left: autoDraw = True
+18.1894 	EXP 	right: autoDraw = True
+19.1809 	DATA 	Keypress: left
+19.1897 	EXP 	left: autoDraw = False
+19.1897 	EXP 	right: autoDraw = False
+19.1897 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+19.1897 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+19.1897 	EXP 	left_feedback: autoDraw = True
+19.1897 	EXP 	right_feedback: autoDraw = True
+19.6833 	EXP 	left_feedback: autoDraw = False
+19.6833 	EXP 	right_feedback: autoDraw = False
+19.6833 	EXP 	iti: autoDraw = True
+20.1901 	EXP 	iti: autoDraw = False
+20.1901 	EXP 	feedback_text: height = 0.1
+20.1901 	EXP 	feedback_text: height = 0.1
+20.1901 	EXP 	feedback_text: height = 0.1
+20.1901 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+20.1901 	EXP 	feedback_text: autoDraw = True
+21.6709 	EXP 	New trial (rep=0, index=4): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 4), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+21.6840 	EXP 	feedback_text: autoDraw = False
+21.6840 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+21.6840 	EXP 	BlockInstr_disp: autoDraw = True
+21.6840 	EXP 	BlockInstr_disp: autoDraw = False
+21.6840 	EXP 	iti: autoDraw = True
+22.2042 	EXP 	iti: autoDraw = False
+22.2042 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+22.2042 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+22.2042 	EXP 	left: autoDraw = True
+22.2042 	EXP 	right: autoDraw = True
+23.4391 	DATA 	Keypress: left
+23.4447 	EXP 	left: autoDraw = False
+23.4447 	EXP 	right: autoDraw = False
+23.4447 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+23.4447 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+23.4447 	EXP 	left_feedback: autoDraw = True
+23.4447 	EXP 	right_feedback: autoDraw = True
+23.9382 	EXP 	left_feedback: autoDraw = False
+23.9382 	EXP 	right_feedback: autoDraw = False
+23.9382 	EXP 	iti: autoDraw = True
+24.4453 	EXP 	iti: autoDraw = False
+24.4453 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+24.4453 	EXP 	feedback_text: autoDraw = True
+25.9259 	EXP 	New trial (rep=0, index=5): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 5), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+25.9389 	EXP 	feedback_text: autoDraw = False
+25.9389 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+25.9389 	EXP 	BlockInstr_disp: autoDraw = True
+25.9389 	EXP 	BlockInstr_disp: autoDraw = False
+25.9389 	EXP 	iti: autoDraw = True
+26.4591 	EXP 	iti: autoDraw = False
+26.4591 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+26.4591 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+26.4591 	EXP 	left: autoDraw = True
+26.4591 	EXP 	right: autoDraw = True
+26.9602 	DATA 	Keypress: left
+26.9660 	EXP 	left: autoDraw = False
+26.9660 	EXP 	right: autoDraw = False
+26.9660 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+26.9660 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+26.9660 	EXP 	left_feedback: autoDraw = True
+26.9660 	EXP 	right_feedback: autoDraw = True
+27.4595 	EXP 	left_feedback: autoDraw = False
+27.4595 	EXP 	right_feedback: autoDraw = False
+27.4595 	EXP 	iti: autoDraw = True
+27.9663 	EXP 	iti: autoDraw = False
+27.9663 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+27.9663 	EXP 	feedback_text: autoDraw = True
+29.4473 	EXP 	New trial (rep=0, index=6): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 6), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'left')])
+29.4602 	EXP 	feedback_text: autoDraw = False
+29.4602 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+29.4602 	EXP 	BlockInstr_disp: autoDraw = True
+29.4602 	EXP 	BlockInstr_disp: autoDraw = False
+29.4602 	EXP 	iti: autoDraw = True
+29.9805 	EXP 	iti: autoDraw = False
+29.9805 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+29.9805 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+29.9805 	EXP 	left: autoDraw = True
+29.9805 	EXP 	right: autoDraw = True
+30.4666 	DATA 	Keypress: left
+30.4740 	EXP 	left: autoDraw = False
+30.4740 	EXP 	right: autoDraw = False
+30.4740 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+30.4740 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+30.4740 	EXP 	left_feedback: autoDraw = True
+30.4740 	EXP 	right_feedback: autoDraw = True
+30.5954 	DATA 	Keypress: left
+30.9675 	EXP 	left_feedback: autoDraw = False
+30.9675 	EXP 	right_feedback: autoDraw = False
+30.9675 	EXP 	iti: autoDraw = True
+31.4743 	EXP 	iti: autoDraw = False
+31.4743 	EXP 	feedback_text: height = 0.1
+31.4743 	EXP 	feedback_text: height = 0.1
+31.4743 	EXP 	feedback_text: height = 0.1
+31.4743 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+31.4743 	EXP 	feedback_text: autoDraw = True
+32.9551 	EXP 	New trial (rep=0, index=7): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 7), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+32.9682 	EXP 	feedback_text: autoDraw = False
+32.9682 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+32.9682 	EXP 	BlockInstr_disp: autoDraw = True
+32.9682 	EXP 	BlockInstr_disp: autoDraw = False
+32.9682 	EXP 	iti: autoDraw = True
+33.4884 	EXP 	iti: autoDraw = False
+33.4884 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+33.4884 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+33.4884 	EXP 	left: autoDraw = True
+33.4884 	EXP 	right: autoDraw = True
+34.2403 	DATA 	Keypress: left
+34.2487 	EXP 	left: autoDraw = False
+34.2487 	EXP 	right: autoDraw = False
+34.2487 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+34.2487 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+34.2487 	EXP 	left_feedback: autoDraw = True
+34.2487 	EXP 	right_feedback: autoDraw = True
+34.7422 	EXP 	left_feedback: autoDraw = False
+34.7422 	EXP 	right_feedback: autoDraw = False
+34.7422 	EXP 	iti: autoDraw = True
+35.2491 	EXP 	iti: autoDraw = False
+35.2491 	EXP 	feedback_text: height = 0.1
+35.2491 	EXP 	feedback_text: height = 0.1
+35.2491 	EXP 	feedback_text: height = 0.1
+35.2491 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+35.2491 	EXP 	feedback_text: autoDraw = True
+36.7299 	EXP 	New trial (rep=0, index=8): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 8), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+36.7430 	EXP 	feedback_text: autoDraw = False
+36.7430 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+36.7430 	EXP 	BlockInstr_disp: autoDraw = True
+36.7430 	EXP 	BlockInstr_disp: autoDraw = False
+36.7430 	EXP 	iti: autoDraw = True
+37.2631 	EXP 	iti: autoDraw = False
+37.2631 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+37.2631 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+37.2631 	EXP 	left: autoDraw = True
+37.2631 	EXP 	right: autoDraw = True
+37.6826 	DATA 	Keypress: left
+37.6899 	EXP 	left: autoDraw = False
+37.6899 	EXP 	right: autoDraw = False
+37.6899 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+37.6899 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+37.6899 	EXP 	left_feedback: autoDraw = True
+37.6899 	EXP 	right_feedback: autoDraw = True
+38.1835 	EXP 	left_feedback: autoDraw = False
+38.1835 	EXP 	right_feedback: autoDraw = False
+38.1835 	EXP 	iti: autoDraw = True
+38.6903 	EXP 	iti: autoDraw = False
+38.6903 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+38.6903 	EXP 	feedback_text: autoDraw = True
+40.1712 	EXP 	New trial (rep=0, index=9): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 9), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+40.1842 	EXP 	feedback_text: autoDraw = False
+40.1842 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+40.1842 	EXP 	BlockInstr_disp: autoDraw = True
+40.1842 	EXP 	BlockInstr_disp: autoDraw = False
+40.1842 	EXP 	iti: autoDraw = True
+40.7044 	EXP 	iti: autoDraw = False
+40.7044 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+40.7044 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+40.7044 	EXP 	left: autoDraw = True
+40.7044 	EXP 	right: autoDraw = True
+42.7051 	EXP 	left: autoDraw = False
+42.7051 	EXP 	right: autoDraw = False
+42.7051 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+42.7051 	EXP 	right_feedback: image = 'stimuli/slotB_up.jpg'
+42.7051 	EXP 	left_feedback: autoDraw = True
+42.7051 	EXP 	right_feedback: autoDraw = True
+42.8129 	DATA 	Keypress: right
+43.1853 	EXP 	left_feedback: autoDraw = False
+43.1853 	EXP 	right_feedback: autoDraw = False
+43.1853 	EXP 	iti: autoDraw = True
+43.3201 	DATA 	Keypress: right
+43.6922 	EXP 	iti: autoDraw = False
+43.6922 	EXP 	feedback_text: height = 0.1
+43.6922 	EXP 	feedback_text: height = 0.1
+43.6922 	EXP 	feedback_text: height = 0.1
+43.6922 	EXP 	feedback_text: text = 'missed'
+43.6922 	EXP 	feedback_text: autoDraw = True
+45.1730 	EXP 	New trial (rep=0, index=10): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 10), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+45.1861 	EXP 	feedback_text: autoDraw = False
+45.1861 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+45.1861 	EXP 	BlockInstr_disp: autoDraw = True
+45.1861 	EXP 	BlockInstr_disp: autoDraw = False
+45.1861 	EXP 	iti: autoDraw = True
+45.7063 	EXP 	iti: autoDraw = False
+45.7063 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+45.7063 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+45.7063 	EXP 	left: autoDraw = True
+45.7063 	EXP 	right: autoDraw = True
+46.6338 	DATA 	Keypress: right
+46.6400 	EXP 	left: autoDraw = False
+46.6400 	EXP 	right: autoDraw = False
+46.6400 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+46.6400 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+46.6400 	EXP 	left_feedback: autoDraw = True
+46.6400 	EXP 	right_feedback: autoDraw = True
+47.0145 	DATA 	Keypress: right
+47.1335 	EXP 	left_feedback: autoDraw = False
+47.1335 	EXP 	right_feedback: autoDraw = False
+47.1335 	EXP 	iti: autoDraw = True
+47.6403 	EXP 	iti: autoDraw = False
+47.6403 	EXP 	feedback_text: height = 0.1
+47.6403 	EXP 	feedback_text: height = 0.1
+47.6403 	EXP 	feedback_text: height = 0.1
+47.6403 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+47.6403 	EXP 	feedback_text: autoDraw = True
+49.1212 	EXP 	New trial (rep=0, index=11): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 11), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+49.1342 	EXP 	feedback_text: autoDraw = False
+49.1342 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+49.1342 	EXP 	BlockInstr_disp: autoDraw = True
+49.1342 	EXP 	BlockInstr_disp: autoDraw = False
+49.1342 	EXP 	iti: autoDraw = True
+49.6544 	EXP 	iti: autoDraw = False
+49.6544 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+49.6544 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+49.6544 	EXP 	left: autoDraw = True
+49.6544 	EXP 	right: autoDraw = True
+50.6344 	DATA 	Keypress: right
+50.6414 	EXP 	left: autoDraw = False
+50.6414 	EXP 	right: autoDraw = False
+50.6414 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+50.6414 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+50.6414 	EXP 	left_feedback: autoDraw = True
+50.6414 	EXP 	right_feedback: autoDraw = True
+51.1350 	EXP 	left_feedback: autoDraw = False
+51.1350 	EXP 	right_feedback: autoDraw = False
+51.1350 	EXP 	iti: autoDraw = True
+51.6418 	EXP 	iti: autoDraw = False
+51.6418 	EXP 	feedback_text: height = 0.1
+51.6418 	EXP 	feedback_text: height = 0.1
+51.6418 	EXP 	feedback_text: height = 0.1
+51.6418 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+51.6418 	EXP 	feedback_text: autoDraw = True
+53.1226 	EXP 	New trial (rep=0, index=12): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 12), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'right')])
+53.1357 	EXP 	feedback_text: autoDraw = False
+53.1357 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+53.1357 	EXP 	BlockInstr_disp: autoDraw = True
+53.1357 	EXP 	BlockInstr_disp: autoDraw = False
+53.1357 	EXP 	iti: autoDraw = True
+53.2701 	DATA 	Keypress: right
+53.6559 	EXP 	iti: autoDraw = False
+53.6559 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+53.6559 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+53.6559 	EXP 	left: autoDraw = True
+53.6559 	EXP 	right: autoDraw = True
+55.0081 	DATA 	Keypress: right
+55.0164 	EXP 	left: autoDraw = False
+55.0164 	EXP 	right: autoDraw = False
+55.0164 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+55.0164 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+55.0164 	EXP 	left_feedback: autoDraw = True
+55.0164 	EXP 	right_feedback: autoDraw = True
+55.5099 	EXP 	left_feedback: autoDraw = False
+55.5099 	EXP 	right_feedback: autoDraw = False
+55.5099 	EXP 	iti: autoDraw = True
+56.0167 	EXP 	iti: autoDraw = False
+56.0167 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+56.0167 	EXP 	feedback_text: autoDraw = True
+56.8186 	DATA 	Keypress: right
+57.4976 	EXP 	New trial (rep=0, index=13): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 13), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'right')])
+57.5106 	EXP 	feedback_text: autoDraw = False
+57.5106 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+57.5106 	EXP 	BlockInstr_disp: autoDraw = True
+57.5106 	EXP 	BlockInstr_disp: autoDraw = False
+57.5106 	EXP 	iti: autoDraw = True
+58.0308 	EXP 	iti: autoDraw = False
+58.0308 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+58.0308 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+58.0308 	EXP 	left: autoDraw = True
+58.0308 	EXP 	right: autoDraw = True
+59.9853 	DATA 	Keypress: right
+59.9915 	EXP 	left: autoDraw = False
+59.9915 	EXP 	right: autoDraw = False
+59.9915 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+59.9915 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+59.9915 	EXP 	left_feedback: autoDraw = True
+59.9915 	EXP 	right_feedback: autoDraw = True
+60.4851 	EXP 	left_feedback: autoDraw = False
+60.4851 	EXP 	right_feedback: autoDraw = False
+60.4851 	EXP 	iti: autoDraw = True
+60.9920 	EXP 	iti: autoDraw = False
+60.9920 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+60.9920 	EXP 	feedback_text: autoDraw = True
+62.4728 	EXP 	New trial (rep=0, index=14): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 14), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+62.4858 	EXP 	feedback_text: autoDraw = False
+62.4858 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+62.4858 	EXP 	BlockInstr_disp: autoDraw = True
+62.4858 	EXP 	BlockInstr_disp: autoDraw = False
+62.4858 	EXP 	iti: autoDraw = True
+62.7669 	DATA 	Keypress: right
+63.0060 	EXP 	iti: autoDraw = False
+63.0060 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+63.0060 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+63.0060 	EXP 	left: autoDraw = True
+63.0060 	EXP 	right: autoDraw = True
+65.0067 	EXP 	left: autoDraw = False
+65.0067 	EXP 	right: autoDraw = False
+65.0067 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+65.0067 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+65.0067 	EXP 	left_feedback: autoDraw = True
+65.0067 	EXP 	right_feedback: autoDraw = True
+65.4869 	EXP 	left_feedback: autoDraw = False
+65.4869 	EXP 	right_feedback: autoDraw = False
+65.4869 	EXP 	iti: autoDraw = True
+65.9938 	EXP 	iti: autoDraw = False
+65.9938 	EXP 	feedback_text: height = 0.1
+65.9938 	EXP 	feedback_text: height = 0.1
+65.9938 	EXP 	feedback_text: height = 0.1
+65.9938 	EXP 	feedback_text: text = 'missed'
+65.9938 	EXP 	feedback_text: autoDraw = True
+66.2620 	DATA 	Keypress: right
+67.4747 	EXP 	New trial (rep=0, index=15): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 15), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+67.4877 	EXP 	feedback_text: autoDraw = False
+67.4877 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+67.4877 	EXP 	BlockInstr_disp: autoDraw = True
+67.4877 	EXP 	BlockInstr_disp: autoDraw = False
+67.4877 	EXP 	iti: autoDraw = True
+68.0079 	EXP 	iti: autoDraw = False
+68.0079 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+68.0079 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+68.0079 	EXP 	left: autoDraw = True
+68.0079 	EXP 	right: autoDraw = True
+70.0086 	EXP 	left: autoDraw = False
+70.0086 	EXP 	right: autoDraw = False
+70.0086 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+70.0086 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+70.0086 	EXP 	left_feedback: autoDraw = True
+70.0086 	EXP 	right_feedback: autoDraw = True
+70.4888 	EXP 	left_feedback: autoDraw = False
+70.4888 	EXP 	right_feedback: autoDraw = False
+70.4888 	EXP 	iti: autoDraw = True
+70.9957 	EXP 	iti: autoDraw = False
+70.9957 	EXP 	feedback_text: text = 'missed'
+70.9957 	EXP 	feedback_text: autoDraw = True
+72.4896 	EXP 	feedback_text: autoDraw = False
+72.4896 	EXP 	instr_4: autoDraw = True
+72.8914 	DATA 	Keypress: right
+74.5187 	DATA 	Keypress: right
+76.7779 	DATA 	Keypress: right
+77.8732 	DATA 	Keypress: space
+77.8784 	EXP 	instr_4: autoDraw = False
+77.8784 	EXP 	ready_exp: autoDraw = True
+78.3963 	EXP 	Imported orders/sub-01_stim-order.csv as conditions, 72 conditions, 21 params
+78.3982 	EXP 	Created sequence: sequential, trialTypes=72, nReps=1, seed=None
+78.3990 	EXP 	New trial (rep=0, index=0): OrderedDict([('subject', 1), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'self_win'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 0), ('stim_0', 'stimuli/slot1_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slot2_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slot1_up.jpg'), ('stim_right_name', 'stimuli/slot2_up.jpg'), ('stim_left_name_feedback', 'stimuli/slot1_down.jpg'), ('stim_right_name_feedback', 'stimuli/slot2_down.jpg'), ('optimal_stim', 'stimuli/slot1_up.jpg'), ('optimal_choice', 'left')])
+78.4049 	DATA 	Keypress: space
+78.4119 	EXP 	ready_exp: autoDraw = False
+78.4119 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+78.4119 	EXP 	BlockInstr_disp: autoDraw = True
+83.3469 	EXP 	BlockInstr_disp: autoDraw = False
+83.3469 	EXP 	iti: autoDraw = True
+83.8671 	EXP 	iti: autoDraw = False
+83.8671 	EXP 	left: image = 'stimuli/slot1_up.jpg'
+83.8671 	EXP 	right: image = 'stimuli/slot2_up.jpg'
+83.8671 	EXP 	left: autoDraw = True
+83.8671 	EXP 	right: autoDraw = True
+84.7852 	DATA 	Keypress: right
+84.7874 	EXP 	left: autoDraw = False
+84.7874 	EXP 	right: autoDraw = False
+84.7874 	EXP 	left_feedback: image = 'stimuli/slot1_up.jpg'
+84.7874 	EXP 	right_feedback: image = 'stimuli/slot2_down.jpg'
+84.7874 	EXP 	left_feedback: autoDraw = True
+84.7874 	EXP 	right_feedback: autoDraw = True
+85.2809 	EXP 	left_feedback: autoDraw = False
+85.2809 	EXP 	right_feedback: autoDraw = False
+85.2809 	EXP 	iti: autoDraw = True
+85.7878 	EXP 	iti: autoDraw = False
+85.7878 	EXP 	feedback_text: height = 0.1
+85.7878 	EXP 	feedback_text: height = 0.1
+85.7878 	EXP 	feedback_text: height = 0.1
+85.7878 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+85.7878 	EXP 	feedback_text: autoDraw = True
+86.1494 	DATA 	Keypress: left
+87.2686 	EXP 	New trial (rep=0, index=1): OrderedDict([('subject', 1), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'self_win'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 1), ('stim_0', 'stimuli/slot1_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slot2_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slot2_up.jpg'), ('stim_right_name', 'stimuli/slot1_up.jpg'), ('stim_left_name_feedback', 'stimuli/slot2_down.jpg'), ('stim_right_name_feedback', 'stimuli/slot1_down.jpg'), ('optimal_stim', 'stimuli/slot1_up.jpg'), ('optimal_choice', 'right')])
+87.2817 	EXP 	feedback_text: autoDraw = False
+87.2817 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+87.2817 	EXP 	BlockInstr_disp: autoDraw = True
+87.2817 	EXP 	BlockInstr_disp: autoDraw = False
+87.2817 	EXP 	iti: autoDraw = True
+87.8019 	EXP 	iti: autoDraw = False
+87.8019 	EXP 	left: image = 'stimuli/slot2_up.jpg'
+87.8019 	EXP 	right: image = 'stimuli/slot1_up.jpg'
+87.8019 	EXP 	left: autoDraw = True
+87.8019 	EXP 	right: autoDraw = True
+88.8724 	DATA 	Keypress: right
+88.8824 	EXP 	left: autoDraw = False
+88.8824 	EXP 	right: autoDraw = False
+88.8824 	EXP 	left_feedback: image = 'stimuli/slot2_up.jpg'
+88.8824 	EXP 	right_feedback: image = 'stimuli/slot1_down.jpg'
+88.8824 	EXP 	left_feedback: autoDraw = True
+88.8824 	EXP 	right_feedback: autoDraw = True
+89.3624 	EXP 	left_feedback: autoDraw = False
+89.3624 	EXP 	right_feedback: autoDraw = False
+89.3624 	EXP 	iti: autoDraw = True
+89.8693 	EXP 	iti: autoDraw = False
+89.8693 	EXP 	feedback_text: height = 0.1
+89.8693 	EXP 	feedback_text: height = 0.1
+89.8693 	EXP 	feedback_text: height = 0.1
+89.8693 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+89.8693 	EXP 	feedback_text: autoDraw = True
+91.3501 	EXP 	New trial (rep=0, index=2): OrderedDict([('subject', 1), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'self_win'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 2), ('stim_0', 'stimuli/slot1_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slot2_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slot2_up.jpg'), ('stim_right_name', 'stimuli/slot1_up.jpg'), ('stim_left_name_feedback', 'stimuli/slot2_down.jpg'), ('stim_right_name_feedback', 'stimuli/slot1_down.jpg'), ('optimal_stim', 'stimuli/slot1_up.jpg'), ('optimal_choice', 'right')])
+91.3632 	EXP 	feedback_text: autoDraw = False
+91.3632 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+91.3632 	EXP 	BlockInstr_disp: autoDraw = True
+91.3632 	EXP 	BlockInstr_disp: autoDraw = False
+91.3632 	EXP 	iti: autoDraw = True
+91.8446 	DATA 	Keypress: escape
+91.8834 	EXP 	iti: autoDraw = False
+91.8834 	EXP 	left: image = 'stimuli/slot2_up.jpg'
+91.8834 	EXP 	right: image = 'stimuli/slot1_up.jpg'
+91.8834 	EXP 	left: autoDraw = True
+91.8834 	EXP 	right: autoDraw = True
+91.9240 	EXP 	two-armed-bandit: status = STOPPED
+91.9367 	EXP 	left: autoDraw = False
+91.9367 	EXP 	right: autoDraw = False
+91.9368 	EXP 	two-armed-bandit: status = STOPPED
+92.0119 	EXP 	window1: mouseVisible = True
+9.5405 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000227421FEBB0>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000227421FEB50>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000227421FE970>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x000002274259A4C0>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, title='PsychoPy', units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+9.5406 	EXP 	window1: mouseVisible = True
+9.5406 	EXP 	window1: backgroundImage = ''
+9.5406 	EXP 	window1: backgroundFit = 'none'
+9.5421 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+9.5421 	EXP 	window1: recordFrameIntervals = False
+9.6736 	EXP 	window1: recordFrameIntervals = True
+9.8204 	EXP 	Screen (0) actual frame rate measured at 74.96Hz
+9.8204 	EXP 	window1: recordFrameIntervals = False
+9.8205 	EXP 	window1: mouseVisible = False
+12.5480 	EXP 	two-armed-bandit: status = STARTED
+12.5484 	EXP 	window1: mouseVisible = True
+12.6275 	EXP 	Created intro_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='intro_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+12.6276 	EXP 	window1: mouseVisible = True
+12.6417 	EXP 	Created instr_1 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_1', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+12.6419 	EXP 	window1: mouseVisible = True
+12.6629 	EXP 	Created instr_2 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_2', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+12.6631 	EXP 	window1: mouseVisible = True
+12.6759 	EXP 	Created instr_3 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_3', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+12.6761 	EXP 	window1: mouseVisible = True
+12.6879 	EXP 	Created read_prac = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='read_prac', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+12.6882 	EXP 	window1: mouseVisible = True
+12.6904 	EXP 	Created BlockInstr_disp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='BlockInstr_disp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+12.6905 	EXP 	window1: mouseVisible = True
+12.6923 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+12.6924 	EXP 	window1: mouseVisible = True
+12.7067 	EXP 	Created left = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+12.7069 	EXP 	window1: mouseVisible = True
+12.7200 	EXP 	Created right = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+12.7201 	EXP 	window1: mouseVisible = True
+12.7333 	EXP 	Created left_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left_feedback', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+12.7334 	EXP 	window1: mouseVisible = True
+12.7458 	EXP 	Created right_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right_feedback', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+12.7460 	EXP 	window1: mouseVisible = True
+12.7478 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+12.7479 	EXP 	window1: mouseVisible = True
+12.7499 	EXP 	Created feedback_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.1, italic=False, languageStyle='LTR', name='feedback_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+12.7500 	EXP 	window1: mouseVisible = True
+12.7592 	EXP 	Created instr_4 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_4', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+12.7593 	EXP 	window1: mouseVisible = True
+12.7678 	EXP 	Created ready_exp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='ready_exp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+12.7680 	EXP 	window1: mouseVisible = True
+12.7693 	EXP 	Created BlockInstr_disp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='BlockInstr_disp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+12.7694 	EXP 	window1: mouseVisible = True
+12.7712 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+12.7714 	EXP 	window1: mouseVisible = True
+12.7829 	EXP 	Created left = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+12.7831 	EXP 	window1: mouseVisible = True
+12.7965 	EXP 	Created right = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+12.7966 	EXP 	window1: mouseVisible = True
+12.8100 	EXP 	Created left_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left_feedback', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+12.8101 	EXP 	window1: mouseVisible = True
+12.8238 	EXP 	Created right_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right_feedback', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+12.8239 	EXP 	window1: mouseVisible = True
+12.8258 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+12.8259 	EXP 	window1: mouseVisible = True
+12.8274 	EXP 	Created feedback_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.1, italic=False, languageStyle='LTR', name='feedback_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+12.8275 	EXP 	window1: mouseVisible = True
+12.8436 	EXP 	Created end_heading = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([ 1.,  1., -1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.075, italic=False, languageStyle='LTR', name='end_heading', opacity=1.0, ori=0, pos=array([0. , 0.4]), rgb=UNKNOWN, text='Experiment complete!', units='height', win=Window(...), wrapWidth=1)
+12.8438 	EXP 	window1: mouseVisible = True
+12.8452 	EXP 	Created end_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='end_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+12.8454 	EXP 	window1: mouseVisible = True
+12.8590 	EXP 	Created text_4 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-4.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='text_4', opacity=1.0, ori=0, pos=array([ 0. , -0.4]), rgb=UNKNOWN, text='Press SPACE to exit.', units='height', win=Window(...), wrapWidth=1)
+0.0157 	EXP 	intro_text: autoDraw = True
+1.5654 	DATA 	Keypress: space
+1.5762 	EXP 	intro_text: autoDraw = False
+1.5762 	EXP 	instr_1: autoDraw = True
+1.8352 	DATA 	Keypress: space
+1.8430 	EXP 	instr_1: autoDraw = False
+1.8430 	EXP 	instr_2: autoDraw = True
+2.0854 	DATA 	Keypress: space
+2.0964 	EXP 	instr_2: autoDraw = False
+2.0964 	EXP 	instr_3: autoDraw = True
+2.3388 	DATA 	Keypress: space
+2.3498 	EXP 	instr_3: autoDraw = False
+2.3498 	EXP 	read_prac: autoDraw = True
+2.6652 	EXP 	Imported orders/prac_stim-order.csv as conditions, 16 conditions, 21 params
+2.6655 	EXP 	Created sequence: sequential, trialTypes=16, nReps=1, seed=None
+2.6657 	EXP 	New trial (rep=0, index=0): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 0), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+2.6765 	DATA 	Keypress: space
+2.6833 	EXP 	read_prac: autoDraw = False
+2.6833 	EXP 	BlockInstr_disp: height = 0.08
+2.6833 	EXP 	BlockInstr_disp: height = 0.08
+2.6833 	EXP 	BlockInstr_disp: height = 0.08
+2.6833 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+2.6833 	EXP 	BlockInstr_disp: autoDraw = True
+3.0451 	DATA 	Keypress: space
+7.6718 	EXP 	BlockInstr_disp: autoDraw = False
+7.6718 	EXP 	iti: autoDraw = True
+8.2453 	EXP 	iti: autoDraw = False
+8.2453 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+8.2453 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+8.2453 	EXP 	left: autoDraw = True
+8.2453 	EXP 	right: autoDraw = True
+8.8656 	DATA 	Keypress: left
+8.8725 	EXP 	left: autoDraw = False
+8.8725 	EXP 	right: autoDraw = False
+8.8725 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+8.8725 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+8.8725 	EXP 	left_feedback: autoDraw = True
+8.8725 	EXP 	right_feedback: autoDraw = True
+9.3124 	EXP 	left_feedback: autoDraw = False
+9.3124 	EXP 	right_feedback: autoDraw = False
+9.3124 	EXP 	iti: autoDraw = True
+9.8326 	EXP 	iti: autoDraw = False
+9.8326 	EXP 	feedback_text: height = 0.1
+9.8326 	EXP 	feedback_text: height = 0.1
+9.8326 	EXP 	feedback_text: height = 0.1
+9.8326 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+9.8326 	EXP 	feedback_text: autoDraw = True
+11.3001 	EXP 	New trial (rep=0, index=1): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 1), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+11.3131 	EXP 	feedback_text: autoDraw = False
+11.3131 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+11.3131 	EXP 	BlockInstr_disp: autoDraw = True
+11.3131 	EXP 	BlockInstr_disp: autoDraw = False
+11.3131 	EXP 	iti: autoDraw = True
+11.8334 	EXP 	iti: autoDraw = False
+11.8334 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+11.8334 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+11.8334 	EXP 	left: autoDraw = True
+11.8334 	EXP 	right: autoDraw = True
+12.1742 	DATA 	Keypress: right
+12.1801 	EXP 	left: autoDraw = False
+12.1801 	EXP 	right: autoDraw = False
+12.1801 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+12.1801 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+12.1801 	EXP 	left_feedback: autoDraw = True
+12.1801 	EXP 	right_feedback: autoDraw = True
+12.6736 	EXP 	left_feedback: autoDraw = False
+12.6736 	EXP 	right_feedback: autoDraw = False
+12.6736 	EXP 	iti: autoDraw = True
+13.1805 	EXP 	iti: autoDraw = False
+13.1805 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+13.1805 	EXP 	feedback_text: autoDraw = True
+14.6613 	EXP 	New trial (rep=0, index=2): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 2), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'left')])
+14.6744 	EXP 	feedback_text: autoDraw = False
+14.6744 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+14.6744 	EXP 	BlockInstr_disp: autoDraw = True
+14.6744 	EXP 	BlockInstr_disp: autoDraw = False
+14.6744 	EXP 	iti: autoDraw = True
+15.1946 	EXP 	iti: autoDraw = False
+15.1946 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+15.1946 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+15.1946 	EXP 	left: autoDraw = True
+15.1946 	EXP 	right: autoDraw = True
+15.5712 	DATA 	Keypress: right
+15.5815 	EXP 	left: autoDraw = False
+15.5815 	EXP 	right: autoDraw = False
+15.5815 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+15.5815 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+15.5815 	EXP 	left_feedback: autoDraw = True
+15.5815 	EXP 	right_feedback: autoDraw = True
+16.0616 	EXP 	left_feedback: autoDraw = False
+16.0616 	EXP 	right_feedback: autoDraw = False
+16.0616 	EXP 	iti: autoDraw = True
+16.5684 	EXP 	iti: autoDraw = False
+16.5684 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+16.5684 	EXP 	feedback_text: autoDraw = True
+18.0492 	EXP 	New trial (rep=0, index=3): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 3), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+18.0623 	EXP 	feedback_text: autoDraw = False
+18.0623 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+18.0623 	EXP 	BlockInstr_disp: autoDraw = True
+18.0623 	EXP 	BlockInstr_disp: autoDraw = False
+18.0623 	EXP 	iti: autoDraw = True
+18.5825 	EXP 	iti: autoDraw = False
+18.5825 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+18.5825 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+18.5825 	EXP 	left: autoDraw = True
+18.5825 	EXP 	right: autoDraw = True
+18.9880 	DATA 	Keypress: right
+18.9960 	EXP 	left: autoDraw = False
+18.9960 	EXP 	right: autoDraw = False
+18.9960 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+18.9960 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+18.9960 	EXP 	left_feedback: autoDraw = True
+18.9960 	EXP 	right_feedback: autoDraw = True
+19.4895 	EXP 	left_feedback: autoDraw = False
+19.4895 	EXP 	right_feedback: autoDraw = False
+19.4895 	EXP 	iti: autoDraw = True
+19.9964 	EXP 	iti: autoDraw = False
+19.9964 	EXP 	feedback_text: height = 0.1
+19.9964 	EXP 	feedback_text: height = 0.1
+19.9964 	EXP 	feedback_text: height = 0.1
+19.9964 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+19.9964 	EXP 	feedback_text: autoDraw = True
+20.3713 	DATA 	Keypress: right
+21.4772 	EXP 	New trial (rep=0, index=4): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 4), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+21.4903 	EXP 	feedback_text: autoDraw = False
+21.4903 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+21.4903 	EXP 	BlockInstr_disp: autoDraw = True
+21.4903 	EXP 	BlockInstr_disp: autoDraw = False
+21.4903 	EXP 	iti: autoDraw = True
+22.0105 	EXP 	iti: autoDraw = False
+22.0105 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+22.0105 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+22.0105 	EXP 	left: autoDraw = True
+22.0105 	EXP 	right: autoDraw = True
+22.4820 	DATA 	Keypress: right
+22.4906 	EXP 	left: autoDraw = False
+22.4906 	EXP 	right: autoDraw = False
+22.4906 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+22.4906 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+22.4906 	EXP 	left_feedback: autoDraw = True
+22.4906 	EXP 	right_feedback: autoDraw = True
+22.9842 	EXP 	left_feedback: autoDraw = False
+22.9842 	EXP 	right_feedback: autoDraw = False
+22.9842 	EXP 	iti: autoDraw = True
+23.4910 	EXP 	iti: autoDraw = False
+23.4910 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+23.4910 	EXP 	feedback_text: autoDraw = True
+24.0393 	DATA 	Keypress: right
+24.9718 	EXP 	New trial (rep=0, index=5): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 5), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+24.9849 	EXP 	feedback_text: autoDraw = False
+24.9849 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+24.9849 	EXP 	BlockInstr_disp: autoDraw = True
+24.9849 	EXP 	BlockInstr_disp: autoDraw = False
+24.9849 	EXP 	iti: autoDraw = True
+25.5051 	EXP 	iti: autoDraw = False
+25.5051 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+25.5051 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+25.5051 	EXP 	left: autoDraw = True
+25.5051 	EXP 	right: autoDraw = True
+26.0704 	DATA 	Keypress: right
+26.0786 	EXP 	left: autoDraw = False
+26.0786 	EXP 	right: autoDraw = False
+26.0786 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+26.0786 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+26.0786 	EXP 	left_feedback: autoDraw = True
+26.0786 	EXP 	right_feedback: autoDraw = True
+26.5722 	EXP 	left_feedback: autoDraw = False
+26.5722 	EXP 	right_feedback: autoDraw = False
+26.5722 	EXP 	iti: autoDraw = True
+27.0790 	EXP 	iti: autoDraw = False
+27.0790 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+27.0790 	EXP 	feedback_text: autoDraw = True
+28.5599 	EXP 	New trial (rep=0, index=6): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 6), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'left')])
+28.5730 	EXP 	feedback_text: autoDraw = False
+28.5730 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+28.5730 	EXP 	BlockInstr_disp: autoDraw = True
+28.5730 	EXP 	BlockInstr_disp: autoDraw = False
+28.5730 	EXP 	iti: autoDraw = True
+29.0931 	EXP 	iti: autoDraw = False
+29.0931 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+29.0931 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+29.0931 	EXP 	left: autoDraw = True
+29.0931 	EXP 	right: autoDraw = True
+29.5243 	DATA 	Keypress: right
+29.5332 	EXP 	left: autoDraw = False
+29.5332 	EXP 	right: autoDraw = False
+29.5332 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+29.5332 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+29.5332 	EXP 	left_feedback: autoDraw = True
+29.5332 	EXP 	right_feedback: autoDraw = True
+30.0268 	EXP 	left_feedback: autoDraw = False
+30.0268 	EXP 	right_feedback: autoDraw = False
+30.0268 	EXP 	iti: autoDraw = True
+30.5337 	EXP 	iti: autoDraw = False
+30.5337 	EXP 	feedback_text: height = 0.1
+30.5337 	EXP 	feedback_text: height = 0.1
+30.5337 	EXP 	feedback_text: height = 0.1
+30.5337 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+30.5337 	EXP 	feedback_text: autoDraw = True
+32.0145 	EXP 	New trial (rep=0, index=7): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 7), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+32.0276 	EXP 	feedback_text: autoDraw = False
+32.0276 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+32.0276 	EXP 	BlockInstr_disp: autoDraw = True
+32.0276 	EXP 	BlockInstr_disp: autoDraw = False
+32.0276 	EXP 	iti: autoDraw = True
+32.5477 	EXP 	iti: autoDraw = False
+32.5477 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+32.5477 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+32.5477 	EXP 	left: autoDraw = True
+32.5477 	EXP 	right: autoDraw = True
+32.9790 	DATA 	Keypress: right
+32.9879 	EXP 	left: autoDraw = False
+32.9879 	EXP 	right: autoDraw = False
+32.9879 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+32.9879 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+32.9879 	EXP 	left_feedback: autoDraw = True
+32.9879 	EXP 	right_feedback: autoDraw = True
+33.4814 	EXP 	left_feedback: autoDraw = False
+33.4814 	EXP 	right_feedback: autoDraw = False
+33.4814 	EXP 	iti: autoDraw = True
+33.9883 	EXP 	iti: autoDraw = False
+33.9883 	EXP 	feedback_text: height = 0.1
+33.9883 	EXP 	feedback_text: height = 0.1
+33.9883 	EXP 	feedback_text: height = 0.1
+33.9883 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+33.9883 	EXP 	feedback_text: autoDraw = True
+35.4690 	EXP 	New trial (rep=0, index=8): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 8), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+35.4822 	EXP 	feedback_text: autoDraw = False
+35.4822 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+35.4822 	EXP 	BlockInstr_disp: autoDraw = True
+35.4822 	EXP 	BlockInstr_disp: autoDraw = False
+35.4822 	EXP 	iti: autoDraw = True
+36.0023 	EXP 	iti: autoDraw = False
+36.0023 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+36.0023 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+36.0023 	EXP 	left: autoDraw = True
+36.0023 	EXP 	right: autoDraw = True
+36.4601 	DATA 	Keypress: right
+36.4691 	EXP 	left: autoDraw = False
+36.4691 	EXP 	right: autoDraw = False
+36.4691 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+36.4691 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+36.4691 	EXP 	left_feedback: autoDraw = True
+36.4691 	EXP 	right_feedback: autoDraw = True
+36.9628 	EXP 	left_feedback: autoDraw = False
+36.9628 	EXP 	right_feedback: autoDraw = False
+36.9628 	EXP 	iti: autoDraw = True
+37.4564 	EXP 	iti: autoDraw = False
+37.4564 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+37.4564 	EXP 	feedback_text: autoDraw = True
+38.9504 	EXP 	New trial (rep=0, index=9): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 9), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+38.9634 	EXP 	feedback_text: autoDraw = False
+38.9634 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+38.9634 	EXP 	BlockInstr_disp: autoDraw = True
+38.9634 	EXP 	BlockInstr_disp: autoDraw = False
+38.9634 	EXP 	iti: autoDraw = True
+39.4836 	EXP 	iti: autoDraw = False
+39.4836 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+39.4836 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+39.4836 	EXP 	left: autoDraw = True
+39.4836 	EXP 	right: autoDraw = True
+39.9562 	DATA 	Keypress: right
+39.9638 	EXP 	left: autoDraw = False
+39.9638 	EXP 	right: autoDraw = False
+39.9638 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+39.9638 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+39.9638 	EXP 	left_feedback: autoDraw = True
+39.9638 	EXP 	right_feedback: autoDraw = True
+40.4573 	EXP 	left_feedback: autoDraw = False
+40.4573 	EXP 	right_feedback: autoDraw = False
+40.4573 	EXP 	iti: autoDraw = True
+40.9642 	EXP 	iti: autoDraw = False
+40.9642 	EXP 	feedback_text: height = 0.1
+40.9642 	EXP 	feedback_text: height = 0.1
+40.9642 	EXP 	feedback_text: height = 0.1
+40.9642 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+40.9642 	EXP 	feedback_text: autoDraw = True
+41.6991 	DATA 	Keypress: right
+42.4450 	EXP 	New trial (rep=0, index=10): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 10), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+42.4581 	EXP 	feedback_text: autoDraw = False
+42.4581 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+42.4581 	EXP 	BlockInstr_disp: autoDraw = True
+42.4581 	EXP 	BlockInstr_disp: autoDraw = False
+42.4581 	EXP 	iti: autoDraw = True
+42.9783 	EXP 	iti: autoDraw = False
+42.9783 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+42.9783 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+42.9783 	EXP 	left: autoDraw = True
+42.9783 	EXP 	right: autoDraw = True
+43.1696 	DATA 	Keypress: right
+43.1784 	EXP 	left: autoDraw = False
+43.1784 	EXP 	right: autoDraw = False
+43.1784 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+43.1784 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+43.1784 	EXP 	left_feedback: autoDraw = True
+43.1784 	EXP 	right_feedback: autoDraw = True
+43.6719 	EXP 	left_feedback: autoDraw = False
+43.6719 	EXP 	right_feedback: autoDraw = False
+43.6719 	EXP 	iti: autoDraw = True
+44.1787 	EXP 	iti: autoDraw = False
+44.1787 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+44.1787 	EXP 	feedback_text: autoDraw = True
+45.6596 	EXP 	New trial (rep=0, index=11): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 11), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+45.6726 	EXP 	feedback_text: autoDraw = False
+45.6726 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+45.6726 	EXP 	BlockInstr_disp: autoDraw = True
+45.6726 	EXP 	BlockInstr_disp: autoDraw = False
+45.6726 	EXP 	iti: autoDraw = True
+46.0073 	DATA 	Keypress: right
+46.1928 	EXP 	iti: autoDraw = False
+46.1928 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+46.1928 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+46.1928 	EXP 	left: autoDraw = True
+46.1928 	EXP 	right: autoDraw = True
+46.5177 	DATA 	Keypress: right
+46.5263 	EXP 	left: autoDraw = False
+46.5263 	EXP 	right: autoDraw = False
+46.5263 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+46.5263 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+46.5263 	EXP 	left_feedback: autoDraw = True
+46.5263 	EXP 	right_feedback: autoDraw = True
+47.0198 	EXP 	left_feedback: autoDraw = False
+47.0198 	EXP 	right_feedback: autoDraw = False
+47.0198 	EXP 	iti: autoDraw = True
+47.5266 	EXP 	iti: autoDraw = False
+47.5266 	EXP 	feedback_text: height = 0.1
+47.5266 	EXP 	feedback_text: height = 0.1
+47.5266 	EXP 	feedback_text: height = 0.1
+47.5266 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+47.5266 	EXP 	feedback_text: autoDraw = True
+49.0074 	EXP 	New trial (rep=0, index=12): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 12), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'right')])
+49.0205 	EXP 	feedback_text: autoDraw = False
+49.0205 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+49.0205 	EXP 	BlockInstr_disp: autoDraw = True
+49.0205 	EXP 	BlockInstr_disp: autoDraw = False
+49.0205 	EXP 	iti: autoDraw = True
+49.5407 	EXP 	iti: autoDraw = False
+49.5407 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+49.5407 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+49.5407 	EXP 	left: autoDraw = True
+49.5407 	EXP 	right: autoDraw = True
+49.8788 	DATA 	Keypress: left
+49.8875 	EXP 	left: autoDraw = False
+49.8875 	EXP 	right: autoDraw = False
+49.8875 	EXP 	left_feedback: image = 'stimuli/slotA_down.jpg'
+49.8875 	EXP 	right_feedback: image = 'stimuli/slotB_up.jpg'
+49.8875 	EXP 	left_feedback: autoDraw = True
+49.8875 	EXP 	right_feedback: autoDraw = True
+50.3810 	EXP 	left_feedback: autoDraw = False
+50.3810 	EXP 	right_feedback: autoDraw = False
+50.3810 	EXP 	iti: autoDraw = True
+50.8879 	EXP 	iti: autoDraw = False
+50.8879 	EXP 	feedback_text: height = 0.1
+50.8879 	EXP 	feedback_text: height = 0.1
+50.8879 	EXP 	feedback_text: height = 0.1
+50.8879 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+50.8879 	EXP 	feedback_text: autoDraw = True
+52.3687 	EXP 	New trial (rep=0, index=13): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 13), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'right')])
+52.3818 	EXP 	feedback_text: autoDraw = False
+52.3818 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+52.3818 	EXP 	BlockInstr_disp: autoDraw = True
+52.3818 	EXP 	BlockInstr_disp: autoDraw = False
+52.3818 	EXP 	iti: autoDraw = True
+52.9020 	EXP 	iti: autoDraw = False
+52.9020 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+52.9020 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+52.9020 	EXP 	left: autoDraw = True
+52.9020 	EXP 	right: autoDraw = True
+53.4134 	DATA 	Keypress: right
+53.4222 	EXP 	left: autoDraw = False
+53.4222 	EXP 	right: autoDraw = False
+53.4222 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+53.4222 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+53.4222 	EXP 	left_feedback: autoDraw = True
+53.4222 	EXP 	right_feedback: autoDraw = True
+53.9157 	EXP 	left_feedback: autoDraw = False
+53.9157 	EXP 	right_feedback: autoDraw = False
+53.9157 	EXP 	iti: autoDraw = True
+54.4225 	EXP 	iti: autoDraw = False
+54.4225 	EXP 	feedback_text: height = 0.1
+54.4225 	EXP 	feedback_text: height = 0.1
+54.4225 	EXP 	feedback_text: height = 0.1
+54.4225 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+54.4225 	EXP 	feedback_text: autoDraw = True
+55.1309 	DATA 	Keypress: right
+55.9033 	EXP 	New trial (rep=0, index=14): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 14), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+55.9164 	EXP 	feedback_text: autoDraw = False
+55.9164 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+55.9164 	EXP 	BlockInstr_disp: autoDraw = True
+55.9164 	EXP 	BlockInstr_disp: autoDraw = False
+55.9164 	EXP 	iti: autoDraw = True
+56.4366 	EXP 	iti: autoDraw = False
+56.4366 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+56.4366 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+56.4366 	EXP 	left: autoDraw = True
+56.4366 	EXP 	right: autoDraw = True
+56.8278 	DATA 	Keypress: right
+56.8368 	EXP 	left: autoDraw = False
+56.8368 	EXP 	right: autoDraw = False
+56.8368 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+56.8368 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+56.8368 	EXP 	left_feedback: autoDraw = True
+56.8368 	EXP 	right_feedback: autoDraw = True
+57.3302 	EXP 	left_feedback: autoDraw = False
+57.3302 	EXP 	right_feedback: autoDraw = False
+57.3302 	EXP 	iti: autoDraw = True
+57.8372 	EXP 	iti: autoDraw = False
+57.8372 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+57.8372 	EXP 	feedback_text: autoDraw = True
+59.3180 	EXP 	New trial (rep=0, index=15): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 15), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+59.3310 	EXP 	feedback_text: autoDraw = False
+59.3310 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+59.3310 	EXP 	BlockInstr_disp: autoDraw = True
+59.3310 	EXP 	BlockInstr_disp: autoDraw = False
+59.3310 	EXP 	iti: autoDraw = True
+59.8513 	EXP 	iti: autoDraw = False
+59.8513 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+59.8513 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+59.8513 	EXP 	left: autoDraw = True
+59.8513 	EXP 	right: autoDraw = True
+60.2841 	DATA 	Keypress: left
+60.2914 	EXP 	left: autoDraw = False
+60.2914 	EXP 	right: autoDraw = False
+60.2914 	EXP 	left_feedback: image = 'stimuli/slotB_down.jpg'
+60.2914 	EXP 	right_feedback: image = 'stimuli/slotA_up.jpg'
+60.2914 	EXP 	left_feedback: autoDraw = True
+60.2914 	EXP 	right_feedback: autoDraw = True
+60.7849 	EXP 	left_feedback: autoDraw = False
+60.7849 	EXP 	right_feedback: autoDraw = False
+60.7849 	EXP 	iti: autoDraw = True
+61.2918 	EXP 	iti: autoDraw = False
+61.2918 	EXP 	feedback_text: height = 0.1
+61.2918 	EXP 	feedback_text: height = 0.1
+61.2918 	EXP 	feedback_text: height = 0.1
+61.2918 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+61.2918 	EXP 	feedback_text: autoDraw = True
+62.7856 	EXP 	feedback_text: autoDraw = False
+62.7856 	EXP 	instr_4: autoDraw = True
+64.2820 	DATA 	Keypress: space
+64.2929 	EXP 	instr_4: autoDraw = False
+64.2929 	EXP 	ready_exp: autoDraw = True
+64.7225 	EXP 	Imported orders/sub-01_stim-order.csv as conditions, 72 conditions, 21 params
+64.7230 	EXP 	Created sequence: sequential, trialTypes=72, nReps=1, seed=None
+64.7232 	EXP 	New trial (rep=0, index=0): OrderedDict([('subject', 1), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'self_win'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 0), ('stim_0', 'stimuli/slot1_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slot2_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slot1_up.jpg'), ('stim_right_name', 'stimuli/slot2_up.jpg'), ('stim_left_name_feedback', 'stimuli/slot1_down.jpg'), ('stim_right_name_feedback', 'stimuli/slot2_down.jpg'), ('optimal_stim', 'stimuli/slot1_up.jpg'), ('optimal_choice', 'left')])
+64.7247 	DATA 	Keypress: space
+64.7330 	EXP 	ready_exp: autoDraw = False
+64.7330 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+64.7330 	EXP 	BlockInstr_disp: autoDraw = True
+69.7215 	EXP 	BlockInstr_disp: autoDraw = False
+69.7215 	EXP 	iti: autoDraw = True
+70.2551 	EXP 	iti: autoDraw = False
+70.2551 	EXP 	left: image = 'stimuli/slot1_up.jpg'
+70.2551 	EXP 	right: image = 'stimuli/slot2_up.jpg'
+70.2551 	EXP 	left: autoDraw = True
+70.2551 	EXP 	right: autoDraw = True
+70.7260 	DATA 	Keypress: right
+70.7352 	EXP 	left: autoDraw = False
+70.7352 	EXP 	right: autoDraw = False
+70.7352 	EXP 	left_feedback: image = 'stimuli/slot1_up.jpg'
+70.7352 	EXP 	right_feedback: image = 'stimuli/slot2_down.jpg'
+70.7352 	EXP 	left_feedback: autoDraw = True
+70.7352 	EXP 	right_feedback: autoDraw = True
+71.2288 	EXP 	left_feedback: autoDraw = False
+71.2288 	EXP 	right_feedback: autoDraw = False
+71.2288 	EXP 	iti: autoDraw = True
+71.5366 	DATA 	Keypress: escape
+71.6560 	EXP 	two-armed-bandit: status = STOPPED
+71.6690 	EXP 	iti: autoDraw = False
+71.6690 	EXP 	two-armed-bandit: status = STOPPED
+71.7692 	EXP 	window1: mouseVisible = True
+29.5126 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001C2741E0B80>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001C2741E0B20>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x000001C2741E0940>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x000001C27457A580>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, title='PsychoPy', units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+29.5127 	EXP 	window1: mouseVisible = True
+29.5127 	EXP 	window1: backgroundImage = ''
+29.5127 	EXP 	window1: backgroundFit = 'none'
+29.5143 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+29.5144 	EXP 	window1: recordFrameIntervals = False
+29.6457 	EXP 	window1: recordFrameIntervals = True
+29.7925 	EXP 	Screen (0) actual frame rate measured at 75.08Hz
+29.7926 	EXP 	window1: recordFrameIntervals = False
+29.7926 	EXP 	window1: mouseVisible = False
+33.5224 	EXP 	two-armed-bandit: status = STARTED
+33.5229 	EXP 	window1: mouseVisible = True
+33.7395 	EXP 	Created intro_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='intro_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+33.7397 	EXP 	window1: mouseVisible = True
+33.7598 	EXP 	Created instr_1 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_1', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+33.7600 	EXP 	window1: mouseVisible = True
+33.8127 	EXP 	Created instr_2 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_2', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+33.8128 	EXP 	window1: mouseVisible = True
+33.8308 	EXP 	Created instr_3 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_3', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+33.8310 	EXP 	window1: mouseVisible = True
+33.8453 	EXP 	Created read_prac = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='read_prac', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+33.8454 	EXP 	window1: mouseVisible = True
+33.8475 	EXP 	Created BlockInstr_disp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='BlockInstr_disp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+33.8477 	EXP 	window1: mouseVisible = True
+33.8523 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+33.8525 	EXP 	window1: mouseVisible = True
+33.9722 	EXP 	Created left = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+33.9723 	EXP 	window1: mouseVisible = True
+33.9851 	EXP 	Created right = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+33.9852 	EXP 	window1: mouseVisible = True
+33.9974 	EXP 	Created left_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left_feedback', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+33.9975 	EXP 	window1: mouseVisible = True
+34.0094 	EXP 	Created right_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right_feedback', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+34.0095 	EXP 	window1: mouseVisible = True
+34.0114 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+34.0115 	EXP 	window1: mouseVisible = True
+34.0134 	EXP 	Created feedback_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.1, italic=False, languageStyle='LTR', name='feedback_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+34.0135 	EXP 	window1: mouseVisible = True
+34.0222 	EXP 	Created instr_4 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_4', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+34.0223 	EXP 	window1: mouseVisible = True
+34.0317 	EXP 	Created ready_exp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='ready_exp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+34.0319 	EXP 	window1: mouseVisible = True
+34.0331 	EXP 	Created BlockInstr_disp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='BlockInstr_disp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+34.0333 	EXP 	window1: mouseVisible = True
+34.0357 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+34.0358 	EXP 	window1: mouseVisible = True
+34.0495 	EXP 	Created left = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+34.0496 	EXP 	window1: mouseVisible = True
+34.0638 	EXP 	Created right = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+34.0639 	EXP 	window1: mouseVisible = True
+34.0779 	EXP 	Created left_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left_feedback', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+34.0780 	EXP 	window1: mouseVisible = True
+34.0911 	EXP 	Created right_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right_feedback', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+34.0912 	EXP 	window1: mouseVisible = True
+34.0934 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+34.0935 	EXP 	window1: mouseVisible = True
+34.0948 	EXP 	Created feedback_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.1, italic=False, languageStyle='LTR', name='feedback_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+34.0949 	EXP 	window1: mouseVisible = True
+34.1122 	EXP 	Created end_heading = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([ 1.,  1., -1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.075, italic=False, languageStyle='LTR', name='end_heading', opacity=1.0, ori=0, pos=array([0. , 0.4]), rgb=UNKNOWN, text='Experiment complete!', units='height', win=Window(...), wrapWidth=1)
+34.1123 	EXP 	window1: mouseVisible = True
+34.1136 	EXP 	Created end_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='end_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+34.1137 	EXP 	window1: mouseVisible = True
+34.1258 	EXP 	Created text_4 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-4.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='text_4', opacity=1.0, ori=0, pos=array([ 0. , -0.4]), rgb=UNKNOWN, text='Press SPACE to exit.', units='height', win=Window(...), wrapWidth=1)
+0.0282 	EXP 	intro_text: autoDraw = True
+1.1650 	DATA 	Keypress: space
+1.1752 	EXP 	intro_text: autoDraw = False
+1.1752 	EXP 	instr_1: autoDraw = True
+1.3773 	DATA 	Keypress: space
+1.3886 	EXP 	instr_1: autoDraw = False
+1.3886 	EXP 	instr_2: autoDraw = True
+1.5646 	DATA 	Keypress: space
+1.5754 	EXP 	instr_2: autoDraw = False
+1.5754 	EXP 	instr_3: autoDraw = True
+1.7644 	DATA 	Keypress: space
+1.7755 	EXP 	instr_3: autoDraw = False
+1.7755 	EXP 	read_prac: autoDraw = True
+2.0629 	EXP 	Imported orders/prac_stim-order.csv as conditions, 16 conditions, 21 params
+2.0936 	EXP 	Created sequence: sequential, trialTypes=16, nReps=1, seed=None
+2.0938 	EXP 	New trial (rep=0, index=0): OrderedDict([('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 0), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+2.1032 	DATA 	Keypress: space
+2.1088 	EXP 	read_prac: autoDraw = False
+2.1088 	EXP 	BlockInstr_disp: height = 0.08
+2.1088 	EXP 	BlockInstr_disp: height = 0.08
+2.1088 	EXP 	BlockInstr_disp: height = 0.08
+2.1088 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+2.1088 	EXP 	BlockInstr_disp: autoDraw = True
+2.4173 	DATA 	Keypress: space
+7.1107 	EXP 	BlockInstr_disp: autoDraw = False
+7.1107 	EXP 	iti: autoDraw = True
+7.7110 	EXP 	iti: autoDraw = False
+7.7110 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+7.7110 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+7.7110 	EXP 	left: autoDraw = True
+7.7110 	EXP 	right: autoDraw = True
+8.6242 	DATA 	Keypress: right
+8.6316 	EXP 	left: autoDraw = False
+8.6316 	EXP 	right: autoDraw = False
+8.6316 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+8.6316 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+8.6316 	EXP 	left_feedback: autoDraw = True
+8.6316 	EXP 	right_feedback: autoDraw = True
+9.0715 	EXP 	left_feedback: autoDraw = False
+9.0715 	EXP 	right_feedback: autoDraw = False
+9.0715 	EXP 	iti: autoDraw = True
+9.3927 	DATA 	Keypress: escape
+9.4454 	EXP 	two-armed-bandit: status = STOPPED
+9.4583 	EXP 	iti: autoDraw = False
+9.4584 	EXP 	two-armed-bandit: status = STOPPED
+9.5312 	EXP 	window1: mouseVisible = True
+11.2642 	EXP 	Created window1 = Window(allowGUI=True, allowStencil=False, autoLog=True, backendConf=UNKNOWN, backgroundFit=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000216C75ACCA0>, backgroundImage=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000216C75ACC40>, bitsMode=UNKNOWN, blendMode='avg', bpc=(8, 8, 8), color=array([-1, -1, -1]), colorSpace='rgb', depthBits=8, fullscr=<method-wrapper '__getattribute__' of attributeSetter object at 0x00000216C75ACA90>, gamma=None, gammaErrorPolicy='raise', lms=UNKNOWN, monitor=<psychopy.monitors.calibTools.Monitor object at 0x00000216C794B220>, multiSample=False, name='window1', numSamples=2, pos=(0, 0), screen=0, size=array([1920, 1080]), stencilBits=0, stereo=False, title='PsychoPy', units='height', useFBO=True, useRetina=False, viewOri=0.0, viewPos=None, viewScale=None, waitBlanking=True, winType='pyglet')
+11.2643 	EXP 	window1: mouseVisible = True
+11.2643 	EXP 	window1: backgroundImage = ''
+11.2643 	EXP 	window1: backgroundFit = 'none'
+11.2657 	EXP 	window1: Attempting to measure frame rate of screen (0) ...
+11.2657 	EXP 	window1: recordFrameIntervals = False
+11.3974 	EXP 	window1: recordFrameIntervals = True
+11.5443 	EXP 	Screen (0) actual frame rate measured at 74.91Hz
+11.5444 	EXP 	window1: recordFrameIntervals = False
+11.5444 	EXP 	window1: mouseVisible = False
+14.6386 	EXP 	two-armed-bandit: status = STARTED
+14.6391 	EXP 	window1: mouseVisible = True
+14.8154 	EXP 	Created intro_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='intro_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+14.8155 	EXP 	window1: mouseVisible = True
+14.8292 	EXP 	Created instr_1 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_1', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+14.8293 	EXP 	window1: mouseVisible = True
+14.8482 	EXP 	Created instr_2 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_2', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+14.8483 	EXP 	window1: mouseVisible = True
+14.8624 	EXP 	Created instr_3 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_3', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+14.8625 	EXP 	window1: mouseVisible = True
+14.8744 	EXP 	Created read_prac = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='read_prac', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+14.8745 	EXP 	window1: mouseVisible = True
+14.8761 	EXP 	Created BlockInstr_disp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='BlockInstr_disp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+14.8762 	EXP 	window1: mouseVisible = True
+14.8789 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+14.8790 	EXP 	window1: mouseVisible = True
+14.9355 	EXP 	Created left = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+14.9356 	EXP 	window1: mouseVisible = True
+14.9474 	EXP 	Created right = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+14.9475 	EXP 	window1: mouseVisible = True
+14.9591 	EXP 	Created left_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left_feedback', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+14.9592 	EXP 	window1: mouseVisible = True
+14.9706 	EXP 	Created right_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right_feedback', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+14.9706 	EXP 	window1: mouseVisible = True
+14.9727 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+14.9728 	EXP 	window1: mouseVisible = True
+14.9744 	EXP 	Created feedback_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.1, italic=False, languageStyle='LTR', name='feedback_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+14.9745 	EXP 	window1: mouseVisible = True
+14.9828 	EXP 	Created instr_4 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='instr_4', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+14.9829 	EXP 	window1: mouseVisible = True
+14.9908 	EXP 	Created ready_exp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='ready_exp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text=str(...), units='height', win=Window(...), wrapWidth=1)
+14.9909 	EXP 	window1: mouseVisible = True
+14.9920 	EXP 	Created BlockInstr_disp = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='BlockInstr_disp', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+14.9921 	EXP 	window1: mouseVisible = True
+14.9937 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+14.9937 	EXP 	window1: mouseVisible = True
+15.0054 	EXP 	Created left = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=0.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+15.0055 	EXP 	window1: mouseVisible = True
+15.0175 	EXP 	Created right = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+15.0176 	EXP 	window1: mouseVisible = True
+15.0291 	EXP 	Created left_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='left_feedback', opacity=1.0, ori=0.0, pos=array([-0.4,  0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+15.0292 	EXP 	window1: mouseVisible = True
+15.0407 	EXP 	Created right_feedback = ImageStim(__class__=<class 'psychopy.visual.image.ImageStim'>, anchor=('center', 'center'), autoLog=True, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, image='default.png', interpolate=True, mask=None, maskParams=None, name='right_feedback', opacity=1.0, ori=0.0, pos=array([0.4, 0. ]), size=array([0.4, 0.4]), texRes=128, units='height', win=Window(...))
+15.0408 	EXP 	window1: mouseVisible = True
+15.0427 	EXP 	Created iti = ShapeStim(__class__=<class 'psychopy.visual.shape.ShapeStim'>, anchor=('center', 'center'), autoDraw=False, autoLog=True, closeShape=True, color=method-wrapper(...), colorSpace='rgb', contrast=None, depth=0.0, draggable=False, fillColor=array([1, 1, 1]), fillColorSpace='rgb', fillRGB=array([1, 1, 1]), interpolate=True, lineColor=array([1., 1., 1.]), lineColorSpace='rgb', lineRGB=array([1, 1, 1]), lineWidth=1, name='iti', opacity=1.0, ori=0.0, pos=array([0., 0.]), size=array([0.05, 0.05]), units='height', vertices=ndarray(...), win=Window(...), windingRule=None)
+15.0428 	EXP 	window1: mouseVisible = True
+15.0440 	EXP 	Created feedback_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.1, italic=False, languageStyle='LTR', name='feedback_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+15.0441 	EXP 	window1: mouseVisible = True
+15.0590 	EXP 	Created end_heading = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([ 1.,  1., -1.]), colorSpace='rgb', contrast=1.0, depth=-1.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.075, italic=False, languageStyle='LTR', name='end_heading', opacity=1.0, ori=0, pos=array([0. , 0.4]), rgb=UNKNOWN, text='Experiment complete!', units='height', win=Window(...), wrapWidth=1)
+15.0591 	EXP 	window1: mouseVisible = True
+15.0602 	EXP 	Created end_text = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-2.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.05, italic=False, languageStyle='LTR', name='end_text', opacity=1.0, ori=0, pos=array([0., 0.]), rgb=UNKNOWN, text='', units='height', win=Window(...), wrapWidth=1)
+15.0603 	EXP 	window1: mouseVisible = True
+15.0705 	EXP 	Created text_4 = TextStim(__class__=<class 'psychopy.visual.text.TextStim'>, alignHoriz=method-wrapper(...), alignText='center', alignVert=method-wrapper(...), anchorHoriz='center', anchorVert='center', antialias=True, autoDraw=False, autoLog=True, bold=False, color=array([1., 1., 1.]), colorSpace='rgb', contrast=1.0, depth=-4.0, draggable=False, flipHoriz=False, flipVert=False, font='Arial', fontFiles=[], height=0.08, italic=False, languageStyle='LTR', name='text_4', opacity=1.0, ori=0, pos=array([ 0. , -0.4]), rgb=UNKNOWN, text='Press SPACE to exit.', units='height', win=Window(...), wrapWidth=1)
+0.0214 	EXP 	intro_text: autoDraw = True
+2.2508 	DATA 	Keypress: space
+2.2622 	EXP 	intro_text: autoDraw = False
+2.2622 	EXP 	instr_1: autoDraw = True
+2.7312 	DATA 	Keypress: space
+2.7425 	EXP 	instr_1: autoDraw = False
+2.7425 	EXP 	instr_2: autoDraw = True
+3.0773 	DATA 	Keypress: space
+3.1025 	EXP 	instr_2: autoDraw = False
+3.1025 	EXP 	instr_3: autoDraw = True
+3.5847 	DATA 	Keypress: space
+3.5961 	EXP 	instr_3: autoDraw = False
+3.5961 	EXP 	read_prac: autoDraw = True
+4.0581 	EXP 	Imported orders/prac_stim-order.csv as conditions, 16 conditions, 22 params
+4.0593 	EXP 	Created sequence: sequential, trialTypes=16, nReps=1, seed=None
+4.0595 	EXP 	New trial (rep=0, index=0): OrderedDict([('Column1', 0), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 0), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+4.0675 	DATA 	Keypress: space
+4.0763 	EXP 	read_prac: autoDraw = False
+4.0763 	EXP 	BlockInstr_disp: height = 0.08
+4.0763 	EXP 	BlockInstr_disp: height = 0.08
+4.0763 	EXP 	BlockInstr_disp: height = 0.08
+4.0763 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+4.0763 	EXP 	BlockInstr_disp: autoDraw = True
+9.0647 	EXP 	BlockInstr_disp: autoDraw = False
+9.0647 	EXP 	iti: autoDraw = True
+9.6917 	EXP 	iti: autoDraw = False
+9.6917 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+9.6917 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+9.6917 	EXP 	left: autoDraw = True
+9.6917 	EXP 	right: autoDraw = True
+11.0391 	DATA 	Keypress: right
+11.0526 	EXP 	left: autoDraw = False
+11.0526 	EXP 	right: autoDraw = False
+11.0526 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+11.0526 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+11.0526 	EXP 	left_feedback: autoDraw = True
+11.0526 	EXP 	right_feedback: autoDraw = True
+11.4923 	EXP 	left_feedback: autoDraw = False
+11.4923 	EXP 	right_feedback: autoDraw = False
+11.4923 	EXP 	iti: autoDraw = True
+11.9992 	EXP 	iti: autoDraw = False
+11.9992 	EXP 	feedback_text: height = 0.1
+11.9992 	EXP 	feedback_text: height = 0.1
+11.9992 	EXP 	feedback_text: height = 0.1
+11.9992 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+11.9992 	EXP 	feedback_text: autoDraw = True
+13.4800 	EXP 	New trial (rep=0, index=1): OrderedDict([('Column1', 1), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 1), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+13.4930 	EXP 	feedback_text: autoDraw = False
+13.4930 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+13.4930 	EXP 	BlockInstr_disp: autoDraw = True
+13.4930 	EXP 	BlockInstr_disp: autoDraw = False
+13.4930 	EXP 	iti: autoDraw = True
+14.0132 	EXP 	iti: autoDraw = False
+14.0132 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+14.0132 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+14.0132 	EXP 	left: autoDraw = True
+14.0132 	EXP 	right: autoDraw = True
+14.4310 	DATA 	Keypress: right
+14.4401 	EXP 	left: autoDraw = False
+14.4401 	EXP 	right: autoDraw = False
+14.4401 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+14.4401 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+14.4401 	EXP 	left_feedback: autoDraw = True
+14.4401 	EXP 	right_feedback: autoDraw = True
+14.9336 	EXP 	left_feedback: autoDraw = False
+14.9336 	EXP 	right_feedback: autoDraw = False
+14.9336 	EXP 	iti: autoDraw = True
+15.4405 	EXP 	iti: autoDraw = False
+15.4405 	EXP 	feedback_text: height = 0.1
+15.4405 	EXP 	feedback_text: height = 0.1
+15.4405 	EXP 	feedback_text: height = 0.1
+15.4405 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+15.4405 	EXP 	feedback_text: autoDraw = True
+16.9214 	EXP 	New trial (rep=0, index=2): OrderedDict([('Column1', 2), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 2), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'left')])
+16.9344 	EXP 	feedback_text: autoDraw = False
+16.9344 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+16.9344 	EXP 	BlockInstr_disp: autoDraw = True
+16.9344 	EXP 	BlockInstr_disp: autoDraw = False
+16.9344 	EXP 	iti: autoDraw = True
+17.4545 	EXP 	iti: autoDraw = False
+17.4545 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+17.4545 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+17.4545 	EXP 	left: autoDraw = True
+17.4545 	EXP 	right: autoDraw = True
+17.8863 	DATA 	Keypress: right
+17.8947 	EXP 	left: autoDraw = False
+17.8947 	EXP 	right: autoDraw = False
+17.8947 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+17.8947 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+17.8947 	EXP 	left_feedback: autoDraw = True
+17.8947 	EXP 	right_feedback: autoDraw = True
+18.3882 	EXP 	left_feedback: autoDraw = False
+18.3882 	EXP 	right_feedback: autoDraw = False
+18.3882 	EXP 	iti: autoDraw = True
+18.8951 	EXP 	iti: autoDraw = False
+18.8951 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+18.8951 	EXP 	feedback_text: autoDraw = True
+20.3760 	EXP 	New trial (rep=0, index=3): OrderedDict([('Column1', 3), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 3), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+20.3889 	EXP 	feedback_text: autoDraw = False
+20.3889 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+20.3889 	EXP 	BlockInstr_disp: autoDraw = True
+20.3889 	EXP 	BlockInstr_disp: autoDraw = False
+20.3889 	EXP 	iti: autoDraw = True
+20.9092 	EXP 	iti: autoDraw = False
+20.9092 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+20.9092 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+20.9092 	EXP 	left: autoDraw = True
+20.9092 	EXP 	right: autoDraw = True
+21.1403 	DATA 	Keypress: right
+21.1493 	EXP 	left: autoDraw = False
+21.1493 	EXP 	right: autoDraw = False
+21.1493 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+21.1493 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+21.1493 	EXP 	left_feedback: autoDraw = True
+21.1493 	EXP 	right_feedback: autoDraw = True
+21.6428 	EXP 	left_feedback: autoDraw = False
+21.6428 	EXP 	right_feedback: autoDraw = False
+21.6428 	EXP 	iti: autoDraw = True
+22.1496 	EXP 	iti: autoDraw = False
+22.1496 	EXP 	feedback_text: height = 0.1
+22.1496 	EXP 	feedback_text: height = 0.1
+22.1496 	EXP 	feedback_text: height = 0.1
+22.1496 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+22.1496 	EXP 	feedback_text: autoDraw = True
+23.6305 	EXP 	New trial (rep=0, index=4): OrderedDict([('Column1', 4), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 4), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+23.6435 	EXP 	feedback_text: autoDraw = False
+23.6435 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+23.6435 	EXP 	BlockInstr_disp: autoDraw = True
+23.6435 	EXP 	BlockInstr_disp: autoDraw = False
+23.6435 	EXP 	iti: autoDraw = True
+24.1638 	EXP 	iti: autoDraw = False
+24.1638 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+24.1638 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+24.1638 	EXP 	left: autoDraw = True
+24.1638 	EXP 	right: autoDraw = True
+24.5171 	DATA 	Keypress: right
+24.5238 	EXP 	left: autoDraw = False
+24.5238 	EXP 	right: autoDraw = False
+24.5238 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+24.5238 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+24.5238 	EXP 	left_feedback: autoDraw = True
+24.5238 	EXP 	right_feedback: autoDraw = True
+25.0174 	EXP 	left_feedback: autoDraw = False
+25.0174 	EXP 	right_feedback: autoDraw = False
+25.0174 	EXP 	iti: autoDraw = True
+25.5242 	EXP 	iti: autoDraw = False
+25.5242 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+25.5242 	EXP 	feedback_text: autoDraw = True
+26.2592 	DATA 	Keypress: right
+27.0050 	EXP 	New trial (rep=0, index=5): OrderedDict([('Column1', 5), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 5), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+27.0181 	EXP 	feedback_text: autoDraw = False
+27.0181 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+27.0181 	EXP 	BlockInstr_disp: autoDraw = True
+27.0181 	EXP 	BlockInstr_disp: autoDraw = False
+27.0181 	EXP 	iti: autoDraw = True
+27.5383 	EXP 	iti: autoDraw = False
+27.5383 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+27.5383 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+27.5383 	EXP 	left: autoDraw = True
+27.5383 	EXP 	right: autoDraw = True
+28.2463 	DATA 	Keypress: right
+28.2852 	EXP 	left: autoDraw = False
+28.2852 	EXP 	right: autoDraw = False
+28.2852 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+28.2852 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+28.2852 	EXP 	left_feedback: autoDraw = True
+28.2852 	EXP 	right_feedback: autoDraw = True
+28.7787 	EXP 	left_feedback: autoDraw = False
+28.7787 	EXP 	right_feedback: autoDraw = False
+28.7787 	EXP 	iti: autoDraw = True
+29.2856 	EXP 	iti: autoDraw = False
+29.2856 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+29.2856 	EXP 	feedback_text: autoDraw = True
+30.7665 	EXP 	New trial (rep=0, index=6): OrderedDict([('Column1', 6), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 6), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'left')])
+30.7795 	EXP 	feedback_text: autoDraw = False
+30.7795 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+30.7795 	EXP 	BlockInstr_disp: autoDraw = True
+30.7795 	EXP 	BlockInstr_disp: autoDraw = False
+30.7795 	EXP 	iti: autoDraw = True
+31.2997 	EXP 	iti: autoDraw = False
+31.2997 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+31.2997 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+31.2997 	EXP 	left: autoDraw = True
+31.2997 	EXP 	right: autoDraw = True
+31.9176 	DATA 	Keypress: right
+31.9266 	EXP 	left: autoDraw = False
+31.9266 	EXP 	right: autoDraw = False
+31.9266 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+31.9266 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+31.9266 	EXP 	left_feedback: autoDraw = True
+31.9266 	EXP 	right_feedback: autoDraw = True
+32.4201 	EXP 	left_feedback: autoDraw = False
+32.4201 	EXP 	right_feedback: autoDraw = False
+32.4201 	EXP 	iti: autoDraw = True
+32.9270 	EXP 	iti: autoDraw = False
+32.9270 	EXP 	feedback_text: height = 0.1
+32.9270 	EXP 	feedback_text: height = 0.1
+32.9270 	EXP 	feedback_text: height = 0.1
+32.9270 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+32.9270 	EXP 	feedback_text: autoDraw = True
+34.4078 	EXP 	New trial (rep=0, index=7): OrderedDict([('Column1', 7), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 7), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+34.4209 	EXP 	feedback_text: autoDraw = False
+34.4209 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+34.4209 	EXP 	BlockInstr_disp: autoDraw = True
+34.4209 	EXP 	BlockInstr_disp: autoDraw = False
+34.4209 	EXP 	iti: autoDraw = True
+34.9411 	EXP 	iti: autoDraw = False
+34.9411 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+34.9411 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+34.9411 	EXP 	left: autoDraw = True
+34.9411 	EXP 	right: autoDraw = True
+35.7859 	DATA 	Keypress: right
+35.7947 	EXP 	left: autoDraw = False
+35.7947 	EXP 	right: autoDraw = False
+35.7947 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+35.7947 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+35.7947 	EXP 	left_feedback: autoDraw = True
+35.7947 	EXP 	right_feedback: autoDraw = True
+36.2883 	EXP 	left_feedback: autoDraw = False
+36.2883 	EXP 	right_feedback: autoDraw = False
+36.2883 	EXP 	iti: autoDraw = True
+36.7951 	EXP 	iti: autoDraw = False
+36.7951 	EXP 	feedback_text: height = 0.1
+36.7951 	EXP 	feedback_text: height = 0.1
+36.7951 	EXP 	feedback_text: height = 0.1
+36.7951 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+36.7951 	EXP 	feedback_text: autoDraw = True
+37.6635 	DATA 	Keypress: right
+38.2759 	EXP 	New trial (rep=0, index=8): OrderedDict([('Column1', 8), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 8), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+38.2890 	EXP 	feedback_text: autoDraw = False
+38.2890 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+38.2890 	EXP 	BlockInstr_disp: autoDraw = True
+38.2890 	EXP 	BlockInstr_disp: autoDraw = False
+38.2890 	EXP 	iti: autoDraw = True
+38.8091 	EXP 	iti: autoDraw = False
+38.8091 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+38.8091 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+38.8091 	EXP 	left: autoDraw = True
+38.8091 	EXP 	right: autoDraw = True
+40.2942 	DATA 	Keypress: right
+40.3031 	EXP 	left: autoDraw = False
+40.3031 	EXP 	right: autoDraw = False
+40.3031 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+40.3031 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+40.3031 	EXP 	left_feedback: autoDraw = True
+40.3031 	EXP 	right_feedback: autoDraw = True
+40.7965 	EXP 	left_feedback: autoDraw = False
+40.7965 	EXP 	right_feedback: autoDraw = False
+40.7965 	EXP 	iti: autoDraw = True
+41.3034 	EXP 	iti: autoDraw = False
+41.3034 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+41.3034 	EXP 	feedback_text: autoDraw = True
+41.6248 	DATA 	Keypress: right
+42.7842 	EXP 	New trial (rep=0, index=9): OrderedDict([('Column1', 9), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 9), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+42.7973 	EXP 	feedback_text: autoDraw = False
+42.7973 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+42.7973 	EXP 	BlockInstr_disp: autoDraw = True
+42.7973 	EXP 	BlockInstr_disp: autoDraw = False
+42.7973 	EXP 	iti: autoDraw = True
+43.3175 	EXP 	iti: autoDraw = False
+43.3175 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+43.3175 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+43.3175 	EXP 	left: autoDraw = True
+43.3175 	EXP 	right: autoDraw = True
+44.0289 	DATA 	Keypress: right
+44.0378 	EXP 	left: autoDraw = False
+44.0378 	EXP 	right: autoDraw = False
+44.0378 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+44.0378 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+44.0378 	EXP 	left_feedback: autoDraw = True
+44.0378 	EXP 	right_feedback: autoDraw = True
+44.5313 	EXP 	left_feedback: autoDraw = False
+44.5313 	EXP 	right_feedback: autoDraw = False
+44.5313 	EXP 	iti: autoDraw = True
+45.0382 	EXP 	iti: autoDraw = False
+45.0382 	EXP 	feedback_text: height = 0.1
+45.0382 	EXP 	feedback_text: height = 0.1
+45.0382 	EXP 	feedback_text: height = 0.1
+45.0382 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+45.0382 	EXP 	feedback_text: autoDraw = True
+46.4401 	DATA 	Keypress: right
+46.5190 	EXP 	New trial (rep=0, index=10): OrderedDict([('Column1', 10), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 10), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'left')])
+46.5320 	EXP 	feedback_text: autoDraw = False
+46.5320 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+46.5320 	EXP 	BlockInstr_disp: autoDraw = True
+46.5320 	EXP 	BlockInstr_disp: autoDraw = False
+46.5320 	EXP 	iti: autoDraw = True
+47.0522 	EXP 	iti: autoDraw = False
+47.0522 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+47.0522 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+47.0522 	EXP 	left: autoDraw = True
+47.0522 	EXP 	right: autoDraw = True
+48.5791 	DATA 	Keypress: right
+48.5861 	EXP 	left: autoDraw = False
+48.5861 	EXP 	right: autoDraw = False
+48.5861 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+48.5861 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+48.5861 	EXP 	left_feedback: autoDraw = True
+48.5861 	EXP 	right_feedback: autoDraw = True
+49.0796 	EXP 	left_feedback: autoDraw = False
+49.0796 	EXP 	right_feedback: autoDraw = False
+49.0796 	EXP 	iti: autoDraw = True
+49.5865 	EXP 	iti: autoDraw = False
+49.5865 	EXP 	feedback_text: text = 'YOU\n\n0 points'
+49.5865 	EXP 	feedback_text: autoDraw = True
+51.0673 	EXP 	New trial (rep=0, index=11): OrderedDict([('Column1', 11), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 11), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+51.0804 	EXP 	feedback_text: autoDraw = False
+51.0804 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+51.0804 	EXP 	BlockInstr_disp: autoDraw = True
+51.0804 	EXP 	BlockInstr_disp: autoDraw = False
+51.0804 	EXP 	iti: autoDraw = True
+51.6006 	EXP 	iti: autoDraw = False
+51.6006 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+51.6006 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+51.6006 	EXP 	left: autoDraw = True
+51.6006 	EXP 	right: autoDraw = True
+52.2856 	DATA 	Keypress: right
+52.2941 	EXP 	left: autoDraw = False
+52.2941 	EXP 	right: autoDraw = False
+52.2941 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+52.2941 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+52.2941 	EXP 	left_feedback: autoDraw = True
+52.2941 	EXP 	right_feedback: autoDraw = True
+52.7877 	EXP 	left_feedback: autoDraw = False
+52.7877 	EXP 	right_feedback: autoDraw = False
+52.7877 	EXP 	iti: autoDraw = True
+53.2946 	EXP 	iti: autoDraw = False
+53.2946 	EXP 	feedback_text: height = 0.1
+53.2946 	EXP 	feedback_text: height = 0.1
+53.2946 	EXP 	feedback_text: height = 0.1
+53.2946 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+53.2946 	EXP 	feedback_text: autoDraw = True
+54.7753 	EXP 	New trial (rep=0, index=12): OrderedDict([('Column1', 12), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 12), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'right')])
+54.7884 	EXP 	feedback_text: autoDraw = False
+54.7884 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+54.7884 	EXP 	BlockInstr_disp: autoDraw = True
+54.7884 	EXP 	BlockInstr_disp: autoDraw = False
+54.7884 	EXP 	iti: autoDraw = True
+55.3086 	EXP 	iti: autoDraw = False
+55.3086 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+55.3086 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+55.3086 	EXP 	left: autoDraw = True
+55.3086 	EXP 	right: autoDraw = True
+56.3133 	DATA 	Keypress: right
+56.3224 	EXP 	left: autoDraw = False
+56.3224 	EXP 	right: autoDraw = False
+56.3224 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+56.3224 	EXP 	right_feedback: image = 'stimuli/slotB_down.jpg'
+56.3224 	EXP 	left_feedback: autoDraw = True
+56.3224 	EXP 	right_feedback: autoDraw = True
+56.8158 	EXP 	left_feedback: autoDraw = False
+56.8158 	EXP 	right_feedback: autoDraw = False
+56.8158 	EXP 	iti: autoDraw = True
+57.3227 	EXP 	iti: autoDraw = False
+57.3227 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+57.3227 	EXP 	feedback_text: autoDraw = True
+58.8036 	EXP 	New trial (rep=0, index=13): OrderedDict([('Column1', 13), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 13), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 0), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 1), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slotA_up.jpg'), ('stim_right_name', 'stimuli/slotB_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotA_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotB_down.jpg'), ('optimal_stim', 'stimuli/slotB_up.jpg'), ('optimal_choice', 'right')])
+58.8166 	EXP 	feedback_text: autoDraw = False
+58.8166 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+58.8166 	EXP 	BlockInstr_disp: autoDraw = True
+58.8166 	EXP 	BlockInstr_disp: autoDraw = False
+58.8166 	EXP 	iti: autoDraw = True
+58.8176 	DATA 	Keypress: right
+59.3368 	EXP 	iti: autoDraw = False
+59.3368 	EXP 	left: image = 'stimuli/slotA_up.jpg'
+59.3368 	EXP 	right: image = 'stimuli/slotB_up.jpg'
+59.3368 	EXP 	left: autoDraw = True
+59.3368 	EXP 	right: autoDraw = True
+61.3375 	EXP 	left: autoDraw = False
+61.3375 	EXP 	right: autoDraw = False
+61.3375 	EXP 	left_feedback: image = 'stimuli/slotA_up.jpg'
+61.3375 	EXP 	right_feedback: image = 'stimuli/slotB_up.jpg'
+61.3375 	EXP 	left_feedback: autoDraw = True
+61.3375 	EXP 	right_feedback: autoDraw = True
+61.8177 	EXP 	left_feedback: autoDraw = False
+61.8177 	EXP 	right_feedback: autoDraw = False
+61.8177 	EXP 	iti: autoDraw = True
+62.2723 	DATA 	Keypress: right
+62.3246 	EXP 	iti: autoDraw = False
+62.3246 	EXP 	feedback_text: height = 0.1
+62.3246 	EXP 	feedback_text: height = 0.1
+62.3246 	EXP 	feedback_text: height = 0.1
+62.3246 	EXP 	feedback_text: text = 'missed'
+62.3246 	EXP 	feedback_text: autoDraw = True
+63.8054 	EXP 	New trial (rep=0, index=14): OrderedDict([('Column1', 14), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 14), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+63.8185 	EXP 	feedback_text: autoDraw = False
+63.8185 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+63.8185 	EXP 	BlockInstr_disp: autoDraw = True
+63.8185 	EXP 	BlockInstr_disp: autoDraw = False
+63.8185 	EXP 	iti: autoDraw = True
+64.3387 	EXP 	iti: autoDraw = False
+64.3387 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+64.3387 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+64.3387 	EXP 	left: autoDraw = True
+64.3387 	EXP 	right: autoDraw = True
+64.6646 	DATA 	Keypress: right
+64.6721 	EXP 	left: autoDraw = False
+64.6721 	EXP 	right: autoDraw = False
+64.6721 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+64.6721 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+64.6721 	EXP 	left_feedback: autoDraw = True
+64.6721 	EXP 	right_feedback: autoDraw = True
+65.1656 	EXP 	left_feedback: autoDraw = False
+65.1656 	EXP 	right_feedback: autoDraw = False
+65.1656 	EXP 	iti: autoDraw = True
+65.6725 	EXP 	iti: autoDraw = False
+65.6725 	EXP 	feedback_text: height = 0.1
+65.6725 	EXP 	feedback_text: height = 0.1
+65.6725 	EXP 	feedback_text: height = 0.1
+65.6725 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+65.6725 	EXP 	feedback_text: autoDraw = True
+67.1534 	EXP 	New trial (rep=0, index=15): OrderedDict([('Column1', 15), ('subject', 14), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'practice'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 15), ('stim_0', 'stimuli/slotA_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slotB_up.jpg'), ('stim_1_value', 0), ('position_changed', 1), ('stim_left', 2), ('stim_right', 1), ('stim_left_name', 'stimuli/slotB_up.jpg'), ('stim_right_name', 'stimuli/slotA_up.jpg'), ('stim_left_name_feedback', 'stimuli/slotB_down.jpg'), ('stim_right_name_feedback', 'stimuli/slotA_down.jpg'), ('optimal_stim', 'stimuli/slotA_up.jpg'), ('optimal_choice', 'right')])
+67.1664 	EXP 	feedback_text: autoDraw = False
+67.1664 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+67.1664 	EXP 	BlockInstr_disp: autoDraw = True
+67.1664 	EXP 	BlockInstr_disp: autoDraw = False
+67.1664 	EXP 	iti: autoDraw = True
+67.3011 	DATA 	Keypress: right
+67.6865 	EXP 	iti: autoDraw = False
+67.6865 	EXP 	left: image = 'stimuli/slotB_up.jpg'
+67.6865 	EXP 	right: image = 'stimuli/slotA_up.jpg'
+67.6865 	EXP 	left: autoDraw = True
+67.6865 	EXP 	right: autoDraw = True
+68.2915 	DATA 	Keypress: right
+68.3002 	EXP 	left: autoDraw = False
+68.3002 	EXP 	right: autoDraw = False
+68.3002 	EXP 	left_feedback: image = 'stimuli/slotB_up.jpg'
+68.3002 	EXP 	right_feedback: image = 'stimuli/slotA_down.jpg'
+68.3002 	EXP 	left_feedback: autoDraw = True
+68.3002 	EXP 	right_feedback: autoDraw = True
+68.7936 	EXP 	left_feedback: autoDraw = False
+68.7936 	EXP 	right_feedback: autoDraw = False
+68.7936 	EXP 	iti: autoDraw = True
+69.3005 	EXP 	iti: autoDraw = False
+69.3005 	EXP 	feedback_text: text = 'YOU\n\n+100 points'
+69.3005 	EXP 	feedback_text: autoDraw = True
+70.7944 	EXP 	feedback_text: autoDraw = False
+70.7944 	EXP 	instr_4: autoDraw = True
+71.0894 	DATA 	Keypress: right
+75.0509 	DATA 	Keypress: right
+78.7193 	DATA 	Keypress: space
+78.7307 	EXP 	instr_4: autoDraw = False
+78.7307 	EXP 	ready_exp: autoDraw = True
+79.2932 	EXP 	Imported orders/sub-01_stim-order.csv as conditions, 72 conditions, 22 params
+79.2938 	EXP 	Created sequence: sequential, trialTypes=72, nReps=1, seed=None
+79.2940 	EXP 	New trial (rep=0, index=0): OrderedDict([('Column1', 0), ('subject', 1), ('type', 0), ('condition', 'self'), ('goal', 'win'), ('block', 'self_win'), ('block_num', 1), ('block_instr_text', 'Play to WIN points'), ('trial_num', 0), ('stim_0', 'stimuli/slot1_up.jpg'), ('stim_0_value', 1), ('stim_1', 'stimuli/slot2_up.jpg'), ('stim_1_value', 0), ('position_changed', 0), ('stim_left', 1), ('stim_right', 2), ('stim_left_name', 'stimuli/slot1_up.jpg'), ('stim_right_name', 'stimuli/slot2_up.jpg'), ('stim_left_name_feedback', 'stimuli/slot1_down.jpg'), ('stim_right_name_feedback', 'stimuli/slot2_down.jpg'), ('optimal_stim', 'stimuli/slot1_up.jpg'), ('optimal_choice', 'left')])
+79.2956 	DATA 	Keypress: space
+79.3042 	EXP 	ready_exp: autoDraw = False
+79.3042 	EXP 	BlockInstr_disp: text = 'Play to WIN points'
+79.3042 	EXP 	BlockInstr_disp: autoDraw = True
+84.2927 	EXP 	BlockInstr_disp: autoDraw = False
+84.2927 	EXP 	iti: autoDraw = True
+84.8129 	EXP 	iti: autoDraw = False
+84.8129 	EXP 	left: image = 'stimuli/slot1_up.jpg'
+84.8129 	EXP 	right: image = 'stimuli/slot2_up.jpg'
+84.8129 	EXP 	left: autoDraw = True
+84.8129 	EXP 	right: autoDraw = True
+86.8137 	EXP 	left: autoDraw = False
+86.8137 	EXP 	right: autoDraw = False
+86.8137 	EXP 	left_feedback: image = 'stimuli/slot1_up.jpg'
+86.8137 	EXP 	right_feedback: image = 'stimuli/slot2_up.jpg'
+86.8137 	EXP 	left_feedback: autoDraw = True
+86.8137 	EXP 	right_feedback: autoDraw = True
+87.0682 	DATA 	Keypress: right
+87.2938 	EXP 	left_feedback: autoDraw = False
+87.2938 	EXP 	right_feedback: autoDraw = False
+87.2938 	EXP 	iti: autoDraw = True
+87.8007 	EXP 	iti: autoDraw = False
+87.8007 	EXP 	feedback_text: height = 0.1
+87.8007 	EXP 	feedback_text: height = 0.1
+87.8007 	EXP 	feedback_text: height = 0.1
+87.8007 	EXP 	feedback_text: text = 'missed'
+87.8007 	EXP 	feedback_text: autoDraw = True
+88.6023 	DATA 	Keypress: escape
+88.7081 	EXP 	two-armed-bandit: status = STOPPED
+88.7211 	EXP 	feedback_text: autoDraw = False
+88.7211 	EXP 	two-armed-bandit: status = STOPPED
+88.8466 	EXP 	window1: mouseVisible = True

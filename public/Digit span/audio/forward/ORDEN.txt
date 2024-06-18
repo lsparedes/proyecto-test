@@ -1,0 +1,1 @@
+Digit span forward, comienza con dos series de 3 digitos, luego dos series de 4, y asi hasta las dos series de 9 digitos

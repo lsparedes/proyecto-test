@@ -59,7 +59,6 @@
                                         <a href="{{ $test->link_millisecond }}" target="_blank"
                                             class="circular-button additional">
                                             <i class="fas fa-play"></i>
-                                            <span>Millisecond</span>
                                         </a>
                                     @endif
                                     @if (!empty($test->link_millisecond2))

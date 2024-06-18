@@ -3,27 +3,51 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Reconocimiento de Emociones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Reconocimiento de emociones faciales</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <h1><span id="pageTitle">Facial emotion recognition (from mini-SEA)</span></h1>
-    <div class="center-content">
-        <p id="instructionText">En este test, se presentarán caras, una por una, que expresan una emoción diferente:
-            alegría, sorpresa, tristeza, miedo, disgusto/asco, rabia o neutro cuando ninguna emoción es expresada. Debe
-            mirar cada cara atentamente y decirme qué emoción está expresada sobre la cara. No es un test de rapidez,
-            pero trate de ser relativamente rápido. Cada cara se presentará en un máximo de 12 segundos o puede
-            presionar flecha derecha para pasar a la siguiente cara</p>
-        <button id="startButton">Comenzar</button>
-        <button id="fullscreenButton">Pantalla completa</button> <!-- Nuevo botón para pantalla completa -->
-    </div>
-    <div id="imageContainer" style="display: none;">
-        <img src="" alt="Imagen de Emoción" id="emotionImage">
-        <ul id="emotionsList"></ul> <!-- Mueve este ul dentro del div imageContainer -->
+
+    <div id="instrucciones" class="center-content">
+        <p id="instructionText">A continuacion se presentarán imagenes de caras.
+            Se mostrarán una por una, las cuales expresan distintas emociónes, tales como:
+            alegría, sorpresa, tristeza, miedo, asco, rabia o neutro cuando ninguna emoción es expresada,
+            debe mirar cada cara atentamente y seleccionar que emoción está expresada sobre la cara.
+            No es un test de rapidez, pero trate de ser relativamente rápido.
+        </p>
+
+        <audio controls>
+            <source src="facial-emotion.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+
+        <div class="button-container">
+            <button id="startButton" onclick="iniciarTest()">Comenzar</button>
+            <button id="fullscreenButton">Pantalla completa</button>
+        </div>
     </div>
 
+    <div id="imagenNumero" class="item-indicator" style="display: none;"></div>
+    <div id="imageContainer" style="display: none;">
+        <img src="" alt="Imagen de Emoción" id="emotionImage">
+        <ul id="emotionsList"></ul>
+        <ul id="emocionesSeleccionadas"></ul>
+    </div>
+    <button id="next-button" style="display: none;"></button>
+
+    <script>
+        function iniciarTest() {
+            document.getElementById('instrucciones').style.display = 'none';
+            document.getElementById('imageContainer').style.display = 'block';
+            iniciarPresentacion(); // Llamar a iniciarPresentacion para iniciar el test
+        }
+    </script>
+
     <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
 </body>
 
 </html>

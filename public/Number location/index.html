@@ -3,28 +3,52 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Number location test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Number Location</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
 <body>
-    <h1><span id="pageTitle">Number location test</span></h1>
-    <div class="center-content">
-        <p id="instructionText">Present stimulus, practice 1. "One of the numbers in the square corresponds with the position of the dot in the square; 
-            tell me the number that matches the position of the dot". If there is an erroron practice 1 or 2. The subjectshould be told the correct number and why
-        it's correct before proceeding to the next card. Do not allow patient to use their finger and/or pen to touch the stimulus page. </p>
-        <button id="startButton">Comenzar</button>
-        <button id="fullscreenButton">Pantalla completa</button> 
-    </div>
-    <div id="imageContainer" style="display: none;">
-        <img src="" alt="Imagen de historia" id="storyImage">
-        <div id="inputContainer">
-            <input type="text" id="userInput" placeholder="Ingresa tu respuesta aquí">
-            <button id="submitButton">Enviar</button>
+    <div id="start-screen" class="screen">
+        <p>Uno de los números del cuadrado corresponde con la posición del punto en el cuadrado, debe decir el número
+            que coincide con la posición del punto. En la práctica 1 y 2, se le mostrará la retroalimentación de su
+            respuesta antes de pasar a la siguiente tarjeta.</p>
+
+        <audio controls>
+            <source src="number-location.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+        <div class="button-container">
+            <button id="start-btn">Comenzar</button>
+            <button id="fullscreen-btn">Pantalla Completa</button>
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <div id="stimulus-screen" class="screen" style="display: none;">
+        <h1>Estímulos</h1>
+    </div>
+
+    <div id="test-screen" class="screen" style="display: none;">
+        <div id="item-indicator" class="item-indicator"></div>
+        <div id="image-container">
+            <img id="test-image" src="" alt="Imagen de prueba">
+        </div>
+        <div id="input-container">
+            <input type="text" id="number-input" placeholder="">
+            <button id="submit-btn"><i class="fa-solid fa-arrow-rotate-right" style="color: #000000;"></i></button>
+        </div>
+        <button id="next-button" style="display: none;"></button>
+    </div>
+
+
+    <div id="feedback-message" class="feedback-message" style="display: none;"></div>
+
+    <div id="end-screen" class="screen" style="display: none;">
+        <h1>El test ha finalizado. ¡Gracias por sus respuestas!</h1>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 
 </html>

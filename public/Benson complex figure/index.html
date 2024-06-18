@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Figura Compleja de Benson</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <div id="container">
+        <div id="main-screen" class="screen">
+            <p>Este test consta de tres partes:</p>
+            <ol>
+                <li>Copiar la Figura: Se presentará una figura, la cual debe copiar lo más exacta posible</li>
+                <li>Recuerdo Diferido: Pasado un tiempo, deberá dibujar la misma figura de memoria, sin ayudas</li>
+                <li>Identificar figura: Se presentará una sección para identificar la figura dibujada</li>
+            </ol>
+
+            <audio controls>
+                <source src="benson.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+
+            <div class="button-container">
+                <button id="start-button">Comenzar</button>
+                <button id="fullscreen-button">Pantalla Completa</button>
+            </div>
+        </div>
+
+        <div id="options-screen" class="screen" style="display:none;">
+            <h2>Seleccione etapa: </h2>
+            <button class="option-button" data-option="1">1. Dibujar con Figura</button>
+            <button class="option-button" data-option="2">2. Dibujar Figura de Memoria</button>
+            <button class="option-button" data-option="3">3. Identificar Figura</button>
+        </div>
+
+        <div id="draw-with-figure-screen" class="screen" style="display:none;">
+            <div class="controls controls-left rotated-controls">
+                <span id="timer">00:00</span>
+                <i id="start-timer-button" class="fas fa-play" title="Iniciar tiempo"></i>
+                <i id="stop-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i>
+                <i id="clear-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
+                <i id="download-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
+               
+            </div>
+            <div class="drawing-container">
+                <div class="drawing-part" style="transform: rotate(90deg);">
+                    <canvas id="drawing-canvas" width="820" height="550"></canvas>
+                </div>
+                <div class="drawing-part" style="transform: rotate(90deg);">
+                    <img src="figura1.png" alt="Figura de Benson" id="figure-image">
+                </div>
+            </div>
+            <button id="finish-drawing-with-figure"></button>
+        </div>
+
+
+
+        <div id="draw-from-memory-screen" class="screen" style="display:none;">
+            <div class="controls">
+                <span id="memory-timer">00:00</span>
+                <i id="start-memory-timer-button" class="fas fa-play" title="Iniciar tiempo"></i>
+                <i id="stop-memory-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i>
+                <i id="clear-memory-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
+                <i id="download-memory-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
+            </div>
+            <canvas id="memory-canvas" width="950" height="650"></canvas>
+            <div id="finish-drawing-from-memory-container">
+                <button id="finish-drawing-from-memory"></button>
+            </div>
+        </div>
+
+        <div id="identify-figure-screen" class="screen" style="display:none;">
+            <img src="figura2.png" alt="Figura de Benson" id="identify-figure-image">
+            <div id="finish-identifying-figure-container">
+                <button id="finish-identifying-figure"></button>
+            </div>
+        </div>
+
+    </div>
+
+    <audio id="timer-sound">
+        <source src="alarma.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

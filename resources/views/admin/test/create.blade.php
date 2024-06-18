@@ -47,17 +47,17 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="url_adicional">URL adicional del Test (opcional)</label>
+                        <label for="url_adicional">URL adicional del Test backward (opcional)</label>
                         <input type="text" name="url_adicional" class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label for="link_millisecond">Link Millisecond (opcional)</label>
+                        <label for="link_millisecond">URL test (opcional)</label>
                         <input type="text" name="link_millisecond" class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label for="link_millisecond2">Link Millisecond 2 (opcional)</label>
+                        <label for="link_millisecond2">Link Millisecond (opcional)</label>
                         <input type="text" name="link_millisecond2" class="form-control">
                     </div>
 

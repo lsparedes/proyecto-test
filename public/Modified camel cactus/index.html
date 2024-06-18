@@ -3,29 +3,48 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Modified camel cactus task</title>
+    <title>Test modificado de camellos y cactus</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-    <div id="notification" class="notification"></div>
-    <h1><span id="pageTitle">Modified camel cactus task</span></h1>
-    <div class="center-content">
-        <p id="instructionText">En este test se mostraran 5 imágenes en la pantalla: una en la parte superior, y 4 en la parte inferior.<br><br>
-            Debe elegir cuál de las 4 imágenes de la parte inferior se empareja major con la imagen en la parte <i>superior</i>. 
+
+    <div id="instrucciones" class="center-content">
+        <p id="instructionText">Se mostrarán 5 imágenes en la pantalla: una en la parte superior, y 4 en la parte
+            inferior.<br><br>
+            Debe elegir cuál de las 4 imágenes de la parte inferior se empareja mejor con la imagen en la parte
+            <i>superior</i>.
             Use el ratón del ordenador para clicar sobre la imagen.<br><br>
-            Practiquemos esta tarea.</p>
-        <button id="startButton">Comenzar</button>
-        <button id="fullscreenButton">Pantalla completa</button> 
-    </div>
-    <div id="imageContainer" style="display: none;">
-        <img src="" alt="Imagen de historia" id="storyImage">
-        <div id="optionsContainer"></div> <!-- Contenedor para las opciones de imágenes -->
+            Habrán 3 ítems de practica y luego se comienza con el test.
+        </p>
+
+        <audio controls>
+            <source src="camel-cactus.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+
+        <div class="button-container">
+            <button id="startButton" onclick="iniciarTest()">Comenzar</button>
+            <button id="fullscreenButton">Pantalla completa</button>
+        </div>
     </div>
 
+    <div id="imageContainer" style="display: none;">
+        <img src="" alt="Imagen de historia" id="storyImage">
+        <div id="optionsContainer" class="options-container"></div> <!-- Contenedor para las opciones de imágenes -->
+    </div>
+    <button id="nextButton" class="next-button" style="display: none;"></button>
+
+
     <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+
+    <script>
+        function iniciarTest() {
+            document.getElementById('instrucciones').style.display = 'none';
+            document.getElementById('imageContainer').style.display = 'block';
+        }
+    </script>
 </body>
 
 </html>

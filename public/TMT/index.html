@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TMT Test</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="instructions">
+    <p id="instructionText">En este test hay 2 partes. La primera es la Parte A, en esta parte habrán números dentro de
+      unos círculos. Haga una línea de un número a otro, en orden. Empiece en el 1, luego vaya al 2, luego vaya al 3, y
+      así sucesivamente. Por favor, trate de hacer una sola línea de un número a otro. En la parte B, tendrá números y
+      letras, los cuales deberá unir en orden.
+      Trabaje lo más rápido que pueda. Partiremos por la muestra A.</p>
+    <audio controls>
+      <source src="TMT.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+
+
+    <div class="button-container">
+      <button id="startButton">Comenzar</button>
+      <button id="fullscreenButton">Pantalla Completa</button>
+    </div>
+  </div>
+
+  <div id="partA" style="display:none;">
+    <p id="instructionTextA">Continuamos con la Parte A. En esta parte hay más números dentro de unos círculos. Por
+      favor, haga una línea de un círculo a otro, en orden. Empiece en el 1 y termine en el 25. Trabaje lo más rápido
+      que pueda.</p>
+
+    <audio controls>
+      <source src="TMT-ParteA.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <div class="button-container">
+      <button id="continueButton">Comenzar</button>
+    </div>
+  </div>
+
+  <div id="partB" style="display:none;">
+    <p id="instructionTextB1">Ahora comienza la Parte B, partiremos con una muestra, en esta parte hay números y letras
+      dentro de unos círculos. Por
+      favor, haga una línea de un círculo a otro, alternando el orden entre números y letras. Empiece en el número 1, y
+      luego vaya
+      a la primera letra, A, siga al próximo número, 2, y luego a la próxima letra, B, y así sucesivamente. Trabaje lo
+      más rápido que pueda.</p>
+
+    <audio controls>
+      <source src="TMT-MuestraB.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <div class="button-container">
+      <button id="continueButtonB">Comenzar</button>
+    </div>
+  </div>
+
+  <div id="partB2" style="display:none;">
+    <p id="instructionTextB2">Continuamos con la Parte B, en esta página hay más números y letras dentro de unos
+      círculos. Por
+      favor, haga una línea de un círculo a otro, alternando el orden entre números y las letras. Empiece en el número 1
+      y termine en el 13. Trabaje lo más rápido que pueda.</p>
+
+    <audio controls>
+      <source src="TMT-ParteB.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <div class="button-container">
+      <button id="continueButtonB2">Comenzar</button>
+    </div>
+  </div>
+
+
+
+  <canvas id="tmtCanvas" width="1000" height="800"></canvas>
+  <canvas id="tmtCanvasPartA" width="850" height="1300" style="display:none;transform: rotate(90deg);"></canvas>
+
+  <canvas id="tmtCanvasPartB" style="display:none;" width="1000" height="800"></canvas>
+  <canvas id="tmtCanvasPartB2" width="900" height="1300" style="display:none;transform: rotate(90deg);"></canvas>
+
+
+
+  <script src="script.js"></script>
+  <script src="app.js"></script>
+</body>
+
+</html>

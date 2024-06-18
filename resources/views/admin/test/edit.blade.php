@@ -54,17 +54,17 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="">URL adicional del Test (opcional)</label>
+                        <label for="">URL del Test backward (opcional)</label>
                         <input type="text" name="url_adicional" value="{{ $test->url_adicional }}" class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label for="">Link Millisecond (opcional)</label>
+                        <label for="">URL del test (opcional)</label>
                         <input type="text" name="link_millisecond" value="{{ $test->link_millisecond }}" class="form-control">
                     </div>
 
                     <div class="mb-3">
-                        <label for="">Link Millisecond 2 (opcional)</label>
+                        <label for="">Link Millisecond (opcional)</label>
                         <input type="text" name="link_millisecond2" value="{{ $test->link_millisecond2 }}" class="form-control">
                     </div>
 
