@@ -17,6 +17,7 @@ Route::post('/password/update', [App\Http\Controllers\Auth\PasswordController::c
 
 Route::group(['middleware' => 'auth'], function () {
 
+
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordController::class, 'showChangePasswordForm'])->name('password.change');
     Route::post('/password/update', [App\Http\Controllers\Auth\PasswordController::class, 'updatePassword'])->name('password.update');
     Route::resource('/admin/permissions', App\Http\Controllers\Admin\PermissionController::class);
@@ -74,6 +75,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/edit-tests/{test_id}', [App\Http\Controllers\Admin\TestController::class, 'edit'])->name('admin.edit-tests');
     Route::put('/admin/update-tests/{test_id}', [App\Http\Controllers\Admin\TestController::class, 'update'])->name('admin.update-tests');
     Route::get('/admin/delete-tests/{test_id}', [App\Http\Controllers\Admin\TestController::class, 'destroy'])->name('admin.delete-tests');
+
+
+    Route::get('admin/download-csv/{id}', 'App\Http\Controllers\Admin\ExaminadorPersonaTestController@downloadCSV')->name('download.csv');
+    Route::get('download/image/{id}/{image}', 'App\Http\Controllers\Admin\ExaminadorPersonaTestController@downloadImage')->name('download.image');
 
 
     Route::get('/admin/examinador-persona-test', [App\Http\Controllers\Admin\ExaminadorPersonaTestController::class, 'index'])->name('admin.examinador-persona-test');

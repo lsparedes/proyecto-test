@@ -14,6 +14,7 @@
                                 class="fas fa-plus"></i> Añadir Respuesta</a>
                     @endcan
                 </h4>
+                <p class="card-title">Agregar respuestas relevantes y asociarlas a su test.</p>
             </div>
             <div class="card-body">
                 @if (session('success'))
@@ -47,13 +48,13 @@
                                 <td>
                                     @can('edit-respuesta')
                                         <a href="{{ url('admin/edit-respuesta/' . $respuesta->id) }}"
-                                            class="btn btn-sm btn-success"><i class="fas fa-pen"></i> Editar</a>
+                                            class="btn btn-sm btn-success"><i class="fas fa-pen"></i></a>
                                     @endcan
                                     @can('delete-respuesta')
                                         <a href="{{ url('admin/delete-respuesta/' . $respuesta->id) }}"
                                             class="btn btn-sm btn-danger"
                                             onclick="return confirm('¿Seguro que deseas eliminarla?')"><i
-                                                class="fas fa-trash-can"></i> Eliminar</a>
+                                                class="fas fa-trash-can"></i></a>
                                     @endcan
                                 </td>
                             </tr>

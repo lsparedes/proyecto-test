@@ -12,7 +12,8 @@
 
             <div class="card-header card-header-primary" style="background-color:#1d8eaa28">
 
-                <h2 class="card-title">Roles</h2>
+                <h2 class="card-title"><a href="{{ route('admin.roles') }}" class="btn btn-m  mr-3"><i
+                    class="fas fa-arrow-left-long"></i></a>Roles</h2>
                 <p class="card-text">Vista detallada del rol: {{ $role->name }}</p>
             </div>
 
@@ -44,8 +45,6 @@
                             </div>
                             <div class="card-footer">
                                 <div class="button-container">
-                                    <a href="{{ route('admin.roles') }}" class="btn btn-sm  mr-3"><i
-                                            class="fas fa-arrow-left-long"></i> Volver </a>
                                     <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-sm btn-success"><i
                                             class="fas fa-pen"></i> Editar</a>
                                 </div>

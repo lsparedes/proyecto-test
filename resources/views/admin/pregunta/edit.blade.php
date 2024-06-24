@@ -8,7 +8,8 @@
 
         <div class="card mt-4">
             <div class="card-header" style="background-color:#1d8eaa28">
-                <h4 class="">Editar Pregunta</h4>
+                <h4 class=""><a href="{{ route('admin.pregunta') }}" class="btn btn-m  mr-3"><i
+                    class="fas fa-arrow-left-long"></i></a>Editar Pregunta</h4>
             </div>
             <div class="card-body">
 

@@ -14,6 +14,7 @@
                             Añadir Usuarios</a>
                     @endcan
                 </h4>
+                <p class="card-title">Agregar nuevos usuarios en la plataforma y definir su rol.</p>
             </div>
             <div class="card-body">
                 @if (session('success'))
@@ -54,16 +55,16 @@
                                 <td>
                                     @can('show-user')
                                         <a href="{{ route('admin.show-user', $user->id) }}" class="btn btn-sm btn-primary"><i
-                                                class="fas fa-eye"></i> Ver</a>
+                                                class="fas fa-eye"></i></a>
                                     @endcan
                                     @can('edit-user')
                                         <a href="{{ url('admin/edit-user/' . $user->id) }}" class="btn btn-sm btn-success"><i
-                                                class="fas fa-pen"></i> Editar</a>
+                                                class="fas fa-pen"></i></a>
                                     @endcan
                                     @can('delete-user')
                                         <a href="{{ url('admin/delete-user/' . $user->id) }}" class="btn btn-sm btn-danger"
                                             onclick="return confirm('¿Seguro que deseas eliminar este usuario?')"><i
-                                                class="fas fa-trash-can"></i> Eliminar</a>
+                                                class="fas fa-trash-can"></i></a>
                                     @endcan
                                 </td>
 

@@ -8,7 +8,8 @@
 
     <div class="card mt-4">
         <div class="card-header" style="background-color:#1d8eaa28">
-            <h4>Editar Criterio de Evaluación</h4>
+            <h4><a href="{{ route('admin.criterio-evaluacion') }}" class="btn btn-sm  mr-3"><i
+                class="fas fa-arrow-left-long"></i></a>Editar Criterio de Evaluación</h4>
         </div>
         <div class="card-body">
 

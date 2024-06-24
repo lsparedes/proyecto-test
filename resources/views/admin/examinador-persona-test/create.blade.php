@@ -8,7 +8,8 @@
 
     <div class="card mt-4">
         <div class="card-header" style="background-color:#1d8eaa28">
-            <h4 class="">Añadir Examinador Persona </h4>
+            <h4 class=""><a href="{{ route('admin.examinador-persona-test') }}" class="btn btn-m  mr-3"><i
+                class="fas fa-arrow-left-long"></i></a>Añadir Examinador Persona</h4>
         </div>
         <div class="card-body">
 
@@ -65,6 +66,16 @@
                 <div class="mb-3">
                     <label for="duracion">Duracion (minutos)</label>
                     <input type="text" name="duracion" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label for="csv_path">Archivo CSV</label>
+                    <input type="file" name="csv_path" class="form-control" accept=".csv">
+                </div>
+
+                <div class="mb-3">
+                    <label for="image_path">Imágenes</label>
+                    <input type="file" name="image_path[]" class="form-control" accept="image/*" multiple>
                 </div>
 
                 <div class="row">

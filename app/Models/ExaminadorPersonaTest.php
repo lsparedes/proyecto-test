@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Carbon\Carbon;
 
 class ExaminadorPersonaTest extends Model
 {
@@ -21,7 +21,26 @@ class ExaminadorPersonaTest extends Model
         'fecha_termino',
         'puntuacion',
         'duracion',
+        'csv_path',
+        'image_path', // Nombre de la columna en la base de datos
     ];
+
+    protected $dates = [
+        'fecha_observacion',
+        'fecha_termino',
+    ];
+
+    // Decodificar el atributo de rutas de imagen cuando se accede
+    public function getImagePathAttribute($value)
+    {
+        return json_decode($value, true) ?: [];
+    }
+
+    // Codificar el atributo de rutas de imagen cuando se guarda
+    public function setImagePathAttribute($value)
+    {
+        $this->attributes['image_path'] = json_encode($value);
+    }
 
     public function user()
     {
@@ -38,3 +57,4 @@ class ExaminadorPersonaTest extends Model
         return $this->belongsTo(Person::class, 'persons_id');
     }
 }
+

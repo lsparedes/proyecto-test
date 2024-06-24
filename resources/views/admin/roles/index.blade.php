@@ -57,16 +57,16 @@
                                 <td>
                                     @can('roles.show')
                                         <a href="{{ route('admin.roles.show', $role->id) }}" class="btn btn-sm btn-primary"><i
-                                                class="fas fa-eye"></i> Ver</a>
+                                                class="fas fa-eye"></i></a>
                                     @endcan
                                     @can('roles.edit')
                                         <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-sm btn-success"><i
-                                                class="fas fa-pen"></i> Editar </a>
+                                                class="fas fa-pen"></i></a>
                                     @endcan
                                     @can('roles.destroy')
                                         <a href="{{ route('admin.roles.destroy', $role->id) }}" class="btn btn-sm btn-danger"
                                             onclick="return confirm('¿Seguro que deseas eliminar este rol?')"><i
-                                                class="fas fa-trash-can"></i> Eliminar</a>
+                                                class="fas fa-trash-can"></i></a>
                                     @endcan
                                 </td>
                             </tr>

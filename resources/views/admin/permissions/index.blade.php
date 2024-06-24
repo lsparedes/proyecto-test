@@ -49,17 +49,17 @@
                                 <td>
                                     @can('permissions.show')
                                         <a href="{{ route('admin.permissions.show', $permission->id) }}"
-                                            class="btn btn-sm btn-primary"><i class="fas fa-eye"></i> Ver</a>
+                                            class="btn btn-sm btn-primary"><i class="fas fa-eye"></i></a>
                                     @endcan
                                     @can('permissions.edit')
                                         <a href="{{ route('admin.permissions.edit', $permission->id) }}"
-                                            class="btn btn-sm btn-success"><i class="fas fa-pen"></i> Editar</a>
+                                            class="btn btn-sm btn-success"><i class="fas fa-pen"></i></a>
                                     @endcan
                                     @can('permissions.destroy')
                                         <a href="{{ route('admin.permissions.destroy', $permission->id) }}"
                                             class="btn btn-sm btn-danger"
                                             onclick="return confirm('¿Seguro que deseas eliminarlo?')"><i
-                                                class="fas fa-trash-can"></i> Eliminar</a>
+                                                class="fas fa-trash-can"></i></a>
                                     @endcan
                                 </td>
                             </tr>

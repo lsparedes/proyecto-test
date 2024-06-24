@@ -8,7 +8,8 @@
 
     <div class="card mt-4">
         <div class="card-header" style="background-color:#1d8eaa28">
-            <h4>Crear Relación Criterio Evaluacion Test</h4>
+            <h4><a href="{{ route('admin.criterio_evaluacion_test') }}" class="btn btn-m  mr-3"><i
+                class="fas fa-arrow-left-long"></i></a>Crear Relación Criterio Evaluación Test</h4>
         </div>
         <div class="card-body">
             @if (session('message'))

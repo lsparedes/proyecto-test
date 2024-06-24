@@ -16,6 +16,7 @@
                             Test</a>
                     @endcan
                 </h4>
+                <p class="card-title">Agregar tests y vincularlos al tipo test ingresado previamente, además de agregar url del test para que se pueda ejecutar.</p>
             </div>
             <div class="card-body">
                 @if (session('message'))
@@ -37,19 +38,19 @@
                         @foreach ($test as $item)
                             <tr>
                                 <td>{{ $item->name_test }}</td>
-                                <td>{{ $item->tipoTest->descripcion }}</td> 
+                                <td>{{ $item->tipoTest->descripcion }}</td>
                                 <td>{{ $item->nombre_espa }}</td>
                                 <td>{{ $item->points }}</td>
                                 <td>{{ $item->duracion_minutos }}</td>
                                 <td>
                                     @can('edit-tests')
                                         <a href="{{ url('admin/edit-tests/' . $item->id) }}" class="btn btn-sm btn-success"><i
-                                                class="fas fa-pen"></i> Editar</a>
+                                                class="fas fa-pen"></i></a>
                                     @endcan
                                     @can('delete-tests')
                                         <a href="{{ url('admin/delete-tests/' . $item->id) }}" class="btn btn-sm btn-danger"
                                             onclick="return confirm('¿Seguro que deseas eliminar este test?')"><i
-                                                class="fas fa-trash-can"></i> Eliminar</a>
+                                                class="fas fa-trash-can"></i></a>
                                     @endcan
                                 </td>
                             </tr>

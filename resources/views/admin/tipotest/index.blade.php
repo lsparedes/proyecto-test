@@ -15,6 +15,7 @@
                             Tipo Test</a>
                     @endcan
                 </h4>
+                <p class="card-title">Agregar tests e información al respecto de los mismos.</p>
             </div>
             <div class="card-body">
                 @if (session('success'))
@@ -67,7 +68,7 @@
                                     <div class="btn-group" style="margin-right: 5px;">
                                         @can('edit-tipotest')
                                             <a href="{{ url('admin/edit-tipotest/' . $item->id) }}"
-                                                class="btn btn-sm btn-success"><i class="fas fa-pen"></i> Editar</a>
+                                                class="btn btn-sm btn-success"><i class="fas fa-pen"></i></a>
                                         @endcan
                                     </div>
                                     <div class="btn-group">
@@ -75,7 +76,7 @@
                                             <a href="{{ url('admin/delete-tipotest/' . $item->id) }}"
                                                 class="btn btn-sm btn-danger"
                                                 onclick="return confirm('¿Seguro que deseas eliminarlo?')"><i
-                                                    class="fas fa-trash-can"></i>Eliminar</a>
+                                                    class="fas fa-trash-can"></i></a>
                                         @endcan
                                     </div>
                                 </td>

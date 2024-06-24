@@ -25,13 +25,15 @@ class ExaminadorPersonaTestFormRequest extends FormRequest
     {
         return [
             'users_id' => 'required|exists:users,id',
-            'test_id' => 'required|exists:test,id',
+            'test_id' => 'required|exists:test,id', 
             'persons_id' => 'required|exists:persons,id',
             'observacion' => 'required|string',
             'fecha_observacion' => 'required|date',
-            'fecha_termino' => 'nullable|date', // Puede ser nulo
-            'puntuacion' => 'nullable|numeric', // Puede ser nulo
-            'duracion' => 'nullable|numeric', // Puede ser nulo
+            'fecha_termino' => 'nullable|date',
+            'puntuacion' => 'nullable|numeric',
+            'duracion' => 'nullable|numeric',
+            'csv_path' => 'nullable|file|mimes:csv,txt',
+            'image_path.*' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validación para múltiples archivos
         ];
     }
 }
