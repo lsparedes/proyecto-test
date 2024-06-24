@@ -56,13 +56,13 @@
                                         </a>
                                     @endif
                                     @if (!empty($test->link_millisecond))
-                                        <a href="{{ $test->link_millisecond }}" target="_blank"
+                                        <a href="/{{ $test->link_millisecond }}" target="_blank"
                                             class="circular-button additional">
                                             <i class="fas fa-play"></i>
                                         </a>
                                     @endif
                                     @if (!empty($test->link_millisecond2))
-                                        <a href="{{ $test->link_millisecond2 }}" target="_blank"
+                                        <a href="/{{ $test->link_millisecond2 }}" target="_blank"
                                             class="circular-button additional">
                                             <i class="fas fa-play"></i>
                                             <span>Millisecond</span>
