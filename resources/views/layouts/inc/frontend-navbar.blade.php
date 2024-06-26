@@ -16,19 +16,19 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 <li class="nav-item"><a class="nav-link active" aria-current="page"
-                        href="{{ url('/') }}">Inicio</a></li>
-                <li class="nav-item"><a class="nav-link" href="#!">Contacto</a></li>
+                        href="{{ url('/') }}" style="font-size: 17px;">Inicio</a></li>
+
                 @guest
                     @if (Route::has('login'))
                         <li class="nav-item ">
-                            <a class="nav-link btn btn-secondary" href="{{ route('login') }}">{{ __('Iniciar sesión') }}</a>
+                            <a class="nav-link btn btn-secondary" href="{{ route('login') }}" style="font-size: 18px;">{{ __('Iniciar sesión') }}</a>
 
                         </li>
                     @endif
                 @else
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" >
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
-                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre style="font-size: 17px;"><i class="fas fa-user fa-fw"></i>
                             {{ Auth::user()->name }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

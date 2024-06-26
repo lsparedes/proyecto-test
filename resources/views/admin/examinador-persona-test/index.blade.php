@@ -42,6 +42,7 @@
                             <th>Duracion (minutos)</th>
                             <th>CSV</th>
                             <th>Imágenes</th>
+                            <th>Audios</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -49,7 +50,7 @@
                         @foreach ($examinadorPersonaTests as $examinadorPersonaTest)
                             <tr>
                                 <td>{{ $examinadorPersonaTest->user->name }}</td>
-                                <td>{{ $examinadorPersonaTest->person->name }}</td>
+                                <td>{{ $examinadorPersonaTest->person->name }} {{ $examinadorPersonaTest->person->last_name }}</td>
                                 <td>{{ $examinadorPersonaTest->test->name_test }}</td>
                                 <td>{{ $examinadorPersonaTest->observacion }}</td>
                                 <td>{{ $examinadorPersonaTest->fecha_observacion->format('d/m/Y H:i') }}</td>
@@ -64,8 +65,17 @@
                                 <td>
                                     @if ($examinadorPersonaTest->image_path)
                                         @foreach (json_decode($examinadorPersonaTest->image_path) as $imagePath)
-                                            <a href="{{ route('download.image', ['id' => $examinadorPersonaTest->id, 'image' => $imagePath]) }}" download="{{ basename($imagePath) }}">
+                                            <a href="{{ route('download.image', ['id' => $examinadorPersonaTest->id, 'image' => basename($imagePath)]) }}" download="{{ basename($imagePath) }}">
                                                 <i class="fa-regular fa-image fa-2xl"></i>
+                                            </a>
+                                        @endforeach
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($examinadorPersonaTest->audio_path)
+                                        @foreach (json_decode($examinadorPersonaTest->audio_path) as $audioPath)
+                                            <a href="{{ route('download.audio', ['id' => $examinadorPersonaTest->id, 'audio' => basename($audioPath)]) }}" download="{{ basename($audioPath) }}">
+                                                <i class="fa-solid fa-file-audio fa-2xl"></i>
                                             </a>
                                         @endforeach
                                     @endif

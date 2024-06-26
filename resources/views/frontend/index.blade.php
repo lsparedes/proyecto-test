@@ -9,8 +9,8 @@
                 <div class="row gx-5 justify-content-center">
                     <div class="col-lg-6">
                         <div class="text-center my-5">
-                            <h1 class="display-5 fw-bolder text-white mb-2">Tests protocolo neurocognitivo</h1>
-                            <p class="lead text-white-50 mb-4">Quickly design and customize responsive mobile-first sites
+                            <h1 class="display-4 fw-bolder text-white mb-4">Tests protocolo neurocognitivo</h1>
+                            <p class="lead text-white-50 mb-3">Quickly design and customize responsive mobile-first sites
                                 with Bootstrap, the world’s most popular front-end open source toolkit!</p>
                             <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
 
@@ -75,7 +75,7 @@
     <div class="global-footer">
         <div class="container">
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-                <p class="col-md-4 mb-0 text-muted">2024 Company, Inc</p>
+                <p class="col-md-4 mb-0 text-muted">2024 NeuroTest</p>
 
                 <a href="/"
                     class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
@@ -85,8 +85,7 @@
                 </a>
 
                 <ul class="nav col-md-4 justify-content-end">
-                    <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+                    <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Inicio</a></li>
                 </ul>
             </footer>
         </div>

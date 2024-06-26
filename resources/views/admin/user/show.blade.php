@@ -12,8 +12,8 @@
 
             <div class="card-header card-header-primary" style="background-color:#1d8eaa28">
 
-                <h2 class="card-title"><a href="{{ route('admin.users') }}" class="btn btn-sm  mr-3"><i
-                    class="fas fa-arrow-left-long"></i></a>Usuarios</h2>
+                <h4 class="card-title"><a href="{{ route('admin.users') }}" class="btn btn-sm mr-3"><i
+                    class="fas fa-arrow-left-long fa-lg"></i></a>Usuario</h4>
                 <p class="card-text">Vista detallada del usuario: {{ $user->name }}</p>
             </div>
 

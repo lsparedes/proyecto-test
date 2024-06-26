@@ -12,15 +12,15 @@
                             <i class="fas fa-arrow-left"></i> Volver
                         </a>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="text-center my-5">
+                    <div class="col-lg-7">
+                        <div class="text-center my-4">
                             <div class="header-container">
 
                                 <div class="text-container">
                                     <!-- Título y descripciones -->
                                     <h1 class="display-5 fw-bolder text-white mb-2">{{ $test->name_test }}</h1>
                                     <p class="lead text-white-50 mb-4">{{ $test->tipoTest->descripcion }}</p>
-                                    <p class="lead text-white-50 mb-1">{{ $test->tipoTest->descripcion_test }}</p>
+                                    <p class="lead text-white-50 mb-5">{{ $test->tipoTest->descripcion_test }}</p>
                                     <p class="lead text-white-50 mb-1"><i class="fas fa-clock"></i> Duración estimada:
                                         {{ $test->duracion_minutos }} minutos</p>
                                     <p class="lead text-white-50 mb-1">
@@ -95,8 +95,8 @@
                                 </div>
                             @endif
                             <div class="my-4"></div>
-                            <h5 class="card-title">Instrucciones del test</h5>
-                            <p class="card-text text-justify">{{ $test->tipoTest->instruccion_test }}</p>
+                            <h5 class="card-title fw-bolder mb-5" style="text-align:center;font-size: 24px;">Instrucciones del test</h5>
+                            <p class="card-text text-justify" style="font-size: 18px;">{{ $test->tipoTest->instruccion_test }}</p>
                         </div>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                     <div class="card p-4 h-100">
                         <div class="card-body">
                             <div class="my-4"></div>
-                            <h5 class="card-title">Audio Instrucciones</h5>
+                            <h5 class="card-title fw-bolder mb-5" style="text-align:center;font-size: 24px;">Audio de Instrucciones</h5>
                             <audio class="w-100" controls>
                                 <source src="{{ asset('uploads/' . $test->tipoTest->audio_instruccion) }}"
                                     type="audio/mp3" />
@@ -120,7 +120,7 @@
     <div class="global-footer">
         <div class="container">
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
-                <p class="col-md-4 mb-0 text-muted">2024 Company, Inc</p>
+                <p class="col-md-4 mb-0 text-muted">2024 NeuroTest</p>
 
                 <a href="/"
                     class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
@@ -130,8 +130,7 @@
                 </a>
 
                 <ul class="nav col-md-4 justify-content-end">
-                    <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
-                    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+                    <li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Inicio</a></li>
                 </ul>
             </footer>
         </div>

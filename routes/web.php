@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
+use App\Http\Controllers\Admin\ExaminadorPersonaTestController;
+
 
 Auth::routes();
 
@@ -78,7 +80,10 @@ Route::group(['middleware' => 'auth'], function () {
 
 
     Route::get('admin/download-csv/{id}', 'App\Http\Controllers\Admin\ExaminadorPersonaTestController@downloadCSV')->name('download.csv');
-    Route::get('download/image/{id}/{image}', 'App\Http\Controllers\Admin\ExaminadorPersonaTestController@downloadImage')->name('download.image');
+    Route::get('admin/examinador-persona-test/download-image/{id}/{image}', 'App\Http\Controllers\Admin\ExaminadorPersonaTestController@downloadImage')->name('download.image');
+    Route::get('admin/download/audio/{id}/{audio}', 'App\Http\Controllers\Admin\ExaminadorPersonaTestController@downloadAudio')->name('download.audio');
+
+
 
 
     Route::get('/admin/examinador-persona-test', [App\Http\Controllers\Admin\ExaminadorPersonaTestController::class, 'index'])->name('admin.examinador-persona-test');

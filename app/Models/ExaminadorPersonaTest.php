@@ -23,6 +23,7 @@ class ExaminadorPersonaTest extends Model
         'duracion',
         'csv_path',
         'image_path', // Nombre de la columna en la base de datos
+        'audio_path',
     ];
 
     protected $dates = [
@@ -33,14 +34,26 @@ class ExaminadorPersonaTest extends Model
     // Decodificar el atributo de rutas de imagen cuando se accede
     public function getImagePathAttribute($value)
     {
-        return json_decode($value, true) ?: [];
+        return json_decode($value, true) ?: []; // Decodificar el JSON a un array PHP
     }
 
     // Codificar el atributo de rutas de imagen cuando se guarda
     public function setImagePathAttribute($value)
     {
-        $this->attributes['image_path'] = json_encode($value);
+        $this->attributes['image_path'] = json_encode($value); // Codificar el array PHP a JSON
     }
+
+     // Decodificar el atributo de rutas de audio cuando se accede
+     public function getAudioPathAttribute($value)
+     {
+         return json_decode($value, true) ?: [];
+     }
+
+     // Codificar el atributo de rutas de audio cuando se guarda
+     public function setAudioPathAttribute($value)
+     {
+         $this->attributes['audio_path'] = json_encode($value);
+     }
 
     public function user()
     {
@@ -57,4 +70,3 @@ class ExaminadorPersonaTest extends Model
         return $this->belongsTo(Person::class, 'persons_id');
     }
 }
-

@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header" style="background-color: #43808f; color: #fff;" >{{ __('Restablecer la contraseña') }}</div>
+                <div class="card-header" style="background-color: #43808f; color: #fff;font-size: 23px;" >{{ __('Restablecer la contraseña') }}</div>
 
                 <div class="card-body">
                     @if (session('status'))

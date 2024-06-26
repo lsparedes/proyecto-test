@@ -12,6 +12,8 @@ use App\Models\Person;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Response;
 
 class ExaminadorPersonaTestController extends Controller
 {
@@ -66,9 +68,18 @@ class ExaminadorPersonaTestController extends Controller
         if ($request->hasFile('image_path')) {
             $imagePaths = [];
             foreach ($request->file('image_path') as $image) {
-                $imagePaths[] = $image->store('images', 'public');
+                $imagePaths[] = $image->storeAs('images', $image->getClientOriginalName(), 'public');
             }
             $examinadorPersonaTest->image_path = json_encode($imagePaths);
+        }
+
+        // Manejo de audios
+        if ($request->hasFile('audio_path')) {
+            $audioPaths = [];
+            foreach ($request->file('audio_path') as $audio) {
+                $audioPaths[] = $audio->storeAs('audios', $audio->getClientOriginalName(), 'public');
+            }
+            $examinadorPersonaTest->audio_path = json_encode($audioPaths);
         }
 
         // Guardar el modelo en la base de datos
@@ -76,7 +87,6 @@ class ExaminadorPersonaTestController extends Controller
 
         return redirect('admin/examinador-persona-test')->with('success', 'Successfully Added');
     }
-
 
     public function edit($id)
     {
@@ -133,6 +143,24 @@ class ExaminadorPersonaTestController extends Controller
             $examinadorPersonaTest->image_path = json_encode($imagePaths);
         }
 
+        // Manejo de audios
+        if ($request->hasFile('audio_path')) {
+            // Eliminar los audios anteriores si existen
+            if ($examinadorPersonaTest->audio_path) {
+                $oldAudioPaths = json_decode($examinadorPersonaTest->audio_path, true);
+                foreach ($oldAudioPaths as $oldAudioPath) {
+                    Storage::disk('public')->delete($oldAudioPath);
+                }
+            }
+
+            // Guardar los nuevos audios
+            $audioPaths = [];
+            foreach ($request->file('audio_path') as $audio) {
+                $audioPaths[] = $audio->storeAs('audios', $audio->getClientOriginalName(), 'public');
+            }
+            $examinadorPersonaTest->audio_path = json_encode($audioPaths);
+        }
+
         // Guardar los cambios en la base de datos
         $examinadorPersonaTest->save();
 
@@ -157,6 +185,14 @@ class ExaminadorPersonaTestController extends Controller
             $oldImagePaths = json_decode($examinadorPersonaTest->image_path, true);
             foreach ($oldImagePaths as $oldImagePath) {
                 Storage::disk('public')->delete($oldImagePath);
+            }
+        }
+
+        // Eliminar los audios si existen
+        if ($examinadorPersonaTest->audio_path) {
+            $oldAudioPaths = json_decode($examinadorPersonaTest->audio_path, true);
+            foreach ($oldAudioPaths as $oldAudioPath) {
+                Storage::disk('public')->delete($oldAudioPath);
             }
         }
 
@@ -198,32 +234,102 @@ class ExaminadorPersonaTestController extends Controller
 
     public function downloadImage($id, $image)
     {
-        $examinadorPersonaTest = ExaminadorPersonaTest::findOrFail($id);
+        try {
+            // Buscar el ExaminadorPersonaTest por su ID
+            $examinadorPersonaTest = ExaminadorPersonaTest::findOrFail($id);
 
-        if ($examinadorPersonaTest->image_path) {
-            $imagePaths = json_decode($examinadorPersonaTest->image_path, true);
+            // Verificar si existe la propiedad image_path y si es un JSON válido
+            if ($examinadorPersonaTest->image_path) {
+                $imagePaths = json_decode($examinadorPersonaTest->image_path, true);
 
-            if (in_array($image, $imagePaths)) {
-                $pathToFile = storage_path('app/public/' . $image);
+                // Verificar si $imagePaths es un array válido y si la imagen solicitada está en la lista de imágenes
+                if (is_array($imagePaths) && in_array("images/{$image}", $imagePaths)) {
+                    // Obtener información relacionada al examinador y la imagen
+                    $nombrePersona = $examinadorPersonaTest->person->name; // Nombre de la persona
+                    $testName = $examinadorPersonaTest->test->name_test; // Nombre del test
+                    // Obtener la fecha formateada si está presente
+                    $fechaTerminoFormatted = $examinadorPersonaTest->fecha_termino ?
+                        Carbon::parse($examinadorPersonaTest->fecha_termino)->format('Y-m-d_H:i:s') :
+                        'sin_fecha';
 
-                if (file_exists($pathToFile)) {
-                    $mimeType = mime_content_type($pathToFile);
-                    $originalFilename = basename($pathToFile);
 
-                    // Construir la URL pública usando Storage::url()
-                    $url = Storage::url('public/' . $image);
+                    // Construir el nombre del archivo
+                    $originalFilename = "respuesta_{$nombrePersona}_{$testName}_{$fechaTerminoFormatted}_{$image}";
 
-                    return response()->download($pathToFile, $originalFilename, [
-                        'Content-Type' => $mimeType,
-                        'Content-Disposition' => 'attachment; filename="' . $originalFilename . '"',
-                        'url' => $url // Incluir la URL en las opciones de descarga si es necesario
-                    ]);
+                    // Construir la ruta completa del archivo
+                    $pathToFile = storage_path('app/public/' . "images/{$image}");
+
+                    // Verificar si el archivo existe
+                    if (file_exists($pathToFile)) {
+                        $mimeType = mime_content_type($pathToFile);
+
+                        // Descargar la imagen directamente usando response()->download()
+                        return response()->download($pathToFile, $originalFilename, [
+                            'Content-Type' => $mimeType,
+                            'Content-Disposition' => 'attachment; filename="' . $originalFilename . '"'
+                        ]);
+                    } else {
+                        return redirect()->back()->with('error', 'No se encontró el archivo de imagen.');
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'La imagen solicitada no pertenece a este examinador.');
                 }
+            } else {
+                return redirect()->back()->with('error', 'No se encontraron imágenes asociadas a este examinador.');
             }
+        } catch (\Exception $e) {
+            // Capturar cualquier excepción que pueda ocurrir
+            return redirect()->back()->with('error', 'Error al procesar la solicitud: ' . $e->getMessage());
         }
-
-        return redirect()->back()->with('error', 'No se encontró la imagen solicitada.');
     }
 
+    public function downloadAudio($id, $audio)
+    {
+        try {
+            // Buscar el ExaminadorPersonaTest por su ID
+            $examinadorPersonaTest = ExaminadorPersonaTest::findOrFail($id);
 
+            // Verificar si existe la propiedad audio_path y si es un JSON válido
+            if ($examinadorPersonaTest->audio_path) {
+                $audioPaths = json_decode($examinadorPersonaTest->audio_path, true);
+
+                // Verificar si $audioPaths es un array válido y si el audio solicitado está en la lista de audios
+                if (is_array($audioPaths) && in_array("audios/{$audio}", $audioPaths)) {
+                    // Obtener información relacionada al examinador y el audio
+                    $nombrePersona = $examinadorPersonaTest->person->name; // Nombre de la persona
+                    $testName = $examinadorPersonaTest->test->name_test; // Nombre del test
+                    // Obtener la fecha formateada si está presente
+                    $fechaTerminoFormatted = $examinadorPersonaTest->fecha_termino ?
+                        Carbon::parse($examinadorPersonaTest->fecha_termino)->format('Y-m-d_H:i:s') :
+                        'sin_fecha';
+
+                    // Construir el nombre del archivo
+                    $originalFilename = "respuesta_{$nombrePersona}_{$testName}_{$fechaTerminoFormatted}_{$audio}";
+
+                    // Construir la ruta completa del archivo
+                    $pathToFile = storage_path('app/public/' . "audios/{$audio}");
+
+                    // Verificar si el archivo existe
+                    if (file_exists($pathToFile)) {
+                        $mimeType = mime_content_type($pathToFile);
+
+                        // Descargar el audio directamente usando response()->download()
+                        return response()->download($pathToFile, $originalFilename, [
+                            'Content-Type' => $mimeType,
+                            'Content-Disposition' => 'attachment; filename="' . $originalFilename . '"'
+                        ]);
+                    } else {
+                        return redirect()->back()->with('error', 'No se encontró el archivo de audio.');
+                    }
+                } else {
+                    return redirect()->back()->with('error', 'El audio solicitado no pertenece a este examinador.');
+                }
+            } else {
+                return redirect()->back()->with('error', 'No se encontraron audios asociados a este examinador.');
+            }
+        } catch (\Exception $e) {
+            // Capturar cualquier excepción que pueda ocurrir
+            return redirect()->back()->with('error', 'Error al procesar la solicitud: ' . $e->getMessage());
+        }
+    }
 }
