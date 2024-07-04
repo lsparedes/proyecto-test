@@ -12,7 +12,7 @@
 
             <div class="card-header card-header-primary" style="background-color:#1d8eaa28">
 
-                <h2 class="card-title"><a href="{{ route('admin.permissions') }}" class="btn btn-sm  mr-3"><i class="fas fa-arrow-left-long"></i></a>Permisos</h2>
+                <h2 class="card-title"><a href="{{ route('admin.permissions') }}" class="btn btn-m  mr-3"><i class="fas fa-arrow-left-long"></i></a>Permisos</h2>
                 <p class="card-text">Vista detallada del permiso: {{ $permission->name }}</p>
             </div>
 
@@ -34,14 +34,13 @@
                                 </div>
                                 </p>
                                 <div class="card-description">
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam officia corporis
-                                    molestiae aliquid provident placeat.
+
                                 </div>
                             </div>
                             <div class="card-footer">
                                 <div class="button-container">
                                     <a href="{{ route('admin.permissions.edit', $permission->id) }}"
-                                        class="btn btn-sm btn-success"><i class="fas fa-pen"></i> Editar</a>
+                                        class="btn btn-m btn-success"><i class="fas fa-pen"></i> Editar</a>
                                 </div>
                             </div>
                         </div>

@@ -43,7 +43,7 @@
                                     Contraseña:</label>
                                 <input type="password" name="new_password_confirmation" class="form-control" required>
                             </div>
-                            <button type="submit" class="btn btn-sm btn-ind">Cambiar Contraseña</button>
+                            <button type="submit" class="btn btn-m btn-ind" style="margin-top: 15px">Cambiar Contraseña</button>
                         </form>
                     </div>
                 </div>

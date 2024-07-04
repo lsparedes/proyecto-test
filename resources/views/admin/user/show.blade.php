@@ -41,7 +41,7 @@
                                     </p>
                                 </div>
                                 </p>
-                                <div class="card-description">
+                                <div class="card-description mb-4">
                                     <p>- Permisos relacionados al rol:</p>
                                     @forelse ($user->roles as $role)
                                         <span class="badge rounded-pill bg-dark text-white">{{ $role->name }}</span>
@@ -52,7 +52,7 @@
                             </div>
                             <div class="card-footer">
                                 <div class="button-container">
-                                    <a href="{{ route('admin.edit-user', $user->id) }}" class="btn btn-sm btn-success"><i
+                                    <a href="{{ route('admin.edit-user', $user->id) }}" class="btn btn-m btn-success"><i
                                             class="fas fa-pen"></i> Editar</a>
                                 </div>
                             </div>

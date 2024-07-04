@@ -9,7 +9,7 @@
         <div class="card mt-4">
             <div class="card-header" style="background-color:#1d8eaa28">
                 <h4 class=""><a href="{{ route('admin.roles') }}" class="btn btn-m  mr-3"><i
-                    class="fas fa-arrow-left-long"></i></a>Agregar Rol</h4>
+                            class="fas fa-arrow-left-long"></i></a>Agregar Rol</h4>
             </div>
 
             <div class="card-body">
@@ -36,7 +36,8 @@
                     <div class="row">
                         <label for="search" class="col-sm-2 col-form-label">Buscar Permiso</label>
                         <div class="col-sm-7">
-                            <input type="text" class="form-control" id="search" placeholder="Ingrese el nombre del permiso">
+                            <input type="text" class="form-control" id="search"
+                                placeholder="Ingrese el nombre del permiso">
                         </div>
                     </div>
 
@@ -46,7 +47,7 @@
                             <div class="form-group">
                                 <div class="tab-content">
                                     <div class="tab-pane active">
-                                        <table class="table">
+                                        <table class="table" id="permissions-table">
                                             <tbody>
                                                 @foreach ($permissions as $id => $permission)
                                                     <tr>
@@ -74,7 +75,7 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                    <button type="submit" class="btn btn-m btn-primary" style="margin-top: 20px;">Guardar</button>
                 </form>
             </div>
         </div>

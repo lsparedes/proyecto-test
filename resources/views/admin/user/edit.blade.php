@@ -71,7 +71,7 @@
 
                     </div>
 
-                    <button type="submit" class="btn btn-sm btn-primary">Guardar Cambios</button>
+                    <button type="submit" class="btn btn-m btn-primary" style="margin-top: 20px;">Guardar</button>
                 </form>
             </div>
         </div>

@@ -70,7 +70,7 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-sm btn-primary">Guardar Test</button>
+                            <button type="submit" class="btn btn-m btn-primary" style="margin-top: 20px;">Guardar</button>
                         </div>
                     </div>
                 </form>

@@ -34,7 +34,7 @@
                                     </p>
                                 </div>
                                 </p>
-                                <div class="card-description">
+                                <div class="card-description" style="margin-bottom: 25px">
                                     <p>- Permisos relacionados al rol:</p>
                                     @forelse ($role->permissions as $permission)
                                         <span class="badge rounded-pill badge-info">{{ $permission->name }}</span>
@@ -45,7 +45,7 @@
                             </div>
                             <div class="card-footer">
                                 <div class="button-container">
-                                    <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-sm btn-success"><i
+                                    <a href="{{ route('admin.roles.edit', $role->id) }}" class="btn btn-m btn-success"><i
                                             class="fas fa-pen"></i> Editar</a>
                                 </div>
                             </div>

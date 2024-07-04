@@ -56,14 +56,10 @@
                         <input type="text" name="link_millisecond" class="form-control">
                     </div>
 
-                    <div class="mb-3">
-                        <label for="link_millisecond2">Link Millisecond (opcional)</label>
-                        <input type="text" name="link_millisecond2" class="form-control">
-                    </div>
 
                     <div class="row">
                         <div class="col-md-6">
-                            <button type="submit" class="btn btn-sm btn-primary">Guardar Test</button>
+                            <button type="submit" class="btn btn-m btn-primary" style="margin-top: 20px">Guardar Test</button>
                         </div>
                     </div>
 

@@ -43,8 +43,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <button type="submit" class="btn btn-sm btn-primary">Guardar Cambios</button>
-                    <a href="{{ route('admin.criterio_evaluacion_test') }}" class="btn btn-sm btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-m btn-primary" style="margin-top: 20px;">Guardar</button>
                 </div>
             </form>
         </div>

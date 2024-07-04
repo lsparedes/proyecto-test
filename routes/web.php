@@ -140,9 +140,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/metrica', [App\Http\Controllers\Admin\MetricaController::class, 'index'])->name('admin.metrica');
     Route::get('/admin/add-metrica', [App\Http\Controllers\Admin\MetricaController::class, 'create'])->name('admin.add-metrica');
     Route::post('/admin/add-metrica', [App\Http\Controllers\Admin\MetricaController::class, 'store'])->name('admin.store-metrica');
-    Route::get('/admin/edit-metrica/{id}', [App\Http\Controllers\Admin\MetricaController::class, 'edit'])->name('admin.edit-metrica');
-    Route::put('/admin/update-metrica/{id}', [App\Http\Controllers\Admin\MetricaController::class, 'update'])->name('admin.update-metrica');
-    Route::get('/admin/delete-metrica/{id}', [App\Http\Controllers\Admin\MetricaController::class, 'destroy'])->name('admin.delete-metrica');
+    Route::get('/admin/edit-metrica/{metrica}', [App\Http\Controllers\Admin\MetricaController::class, 'edit'])->name('admin.edit-metrica');
+    Route::put('/admin/update-metrica/{metrica}', [App\Http\Controllers\Admin\MetricaController::class, 'update'])->name('admin.update-metrica');
+    Route::get('/admin/delete-metrica/{metrica}', [App\Http\Controllers\Admin\MetricaController::class, 'destroy'])->name('admin.delete-metrica');
 
 
     Route::get('/admin/criterio_evaluacion_test', [App\Http\Controllers\Admin\CriterioEvaluacionTestController::class, 'index'])->name('admin.criterio_evaluacion_test');

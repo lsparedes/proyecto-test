@@ -8,7 +8,7 @@
 
     <div class="card mt-4">
         <div class="card-header" style="background-color:#1d8eaa28">
-            <h4 class=""><a href="{{ route('admin.formula') }}" class="btn btn-sm  mr-3"><i
+            <h4 class=""><a href="{{ route('admin.formula') }}" class="btn btn-m  mr-3"><i
                 class="fas fa-arrow-left-long"></i></a>Agregar Fórmula</h4>
         </div>
         <div class="card-body">
@@ -48,7 +48,7 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <button type="submit" class="btn btn-sm btn-primary">Guardar</button>
+                        <button type="submit" class="btn btn-m btn-primary" style="margin-top: 20px;">Guardar</button>
                     </div>
                 </div>
 
