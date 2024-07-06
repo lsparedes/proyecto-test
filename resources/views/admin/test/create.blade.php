@@ -40,17 +40,34 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="url_test">URL del Test</label>
-                        <input type="text" name="url_test" class="form-control">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="url_test">URL del Test</label>
+                                <input type="text" name="url_test" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="nombre_url">Nombre de la URL</label>
+                                <input type="text" name="nombre_url" class="form-control">
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label for="url_adicional">URL adicional del Test backward (opcional)</label>
-                        <input type="text" name="url_adicional" class="form-control">
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="url_adicional">URL adicional del Test (opcional)</label>
+                                <input type="text" name="url_adicional" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="nombre_url_opcional">Nombre de la URL opcional</label>
+                                <input type="text" name="nombre_url_opcional" class="form-control">
+                            </div>
+                        </div>
                     </div>
-
                     <div class="mb-3">
                         <label for="link_millisecond">URL test (opcional)</label>
                         <input type="text" name="link_millisecond" class="form-control">

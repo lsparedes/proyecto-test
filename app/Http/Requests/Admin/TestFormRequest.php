@@ -33,6 +33,8 @@ class TestFormRequest extends FormRequest
             'url_adicional'=> 'nullable|string',
             'link_millisecond'=> 'nullable|string|max:255',
             'link_millisecond2'=> 'nullable|string|max:255',
+            'nombre_url' => 'required|string|max:255',
+            'nombre_url_opcional' => 'nullable|string|max:255',
         ];
     }
 }

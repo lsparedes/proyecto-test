@@ -10,11 +10,11 @@
         <div class="card mt-4">
             <div class="card-header" style="background-color:#1d8eaa28">
                 <h4>Listado Test
-                    @can('add-tests')
+                    <!-- @can('add-tests')
                         <a href="{{ url('admin/add-tests') }}" class="btn btn-primary btn-sm float-end"><i class="fas fa-plus"></i>
                             Añadir
                             Test</a>
-                    @endcan
+                    @endcan -->
                 </h4>
                 <p class="card-title">Agregar tests y vincularlos al tipo test ingresado previamente, además de agregar url del test para que se pueda ejecutar.</p>
             </div>
