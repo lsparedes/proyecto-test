@@ -46,7 +46,7 @@ function showNextImage() {
         document.getElementById('test-screen').style.display = 'block';
         if (currentImageIndex < 2) {
             document.getElementById('submit-btn').style.display = 'block';
-            document.getElementById('next-button').style.display = 'none';
+            document.getElementById('next-button').style.display = 'block';
         } else {
             document.getElementById('submit-btn').style.display = 'none';
             document.getElementById('next-button').style.display = 'block';

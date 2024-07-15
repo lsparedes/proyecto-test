@@ -104,8 +104,8 @@ button {
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 6%; /* Ajustamos la distancia desde la parte inferior */
-    right: 10%; /* Ajustamos la distancia desde el borde derecho */
+    bottom: 15px; /* Ajustamos la distancia desde la parte inferior */
+    right: 15px; /* Ajustamos la distancia desde el borde derecho */
 }
 
 #startButton {
@@ -211,8 +211,8 @@ audio {
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 6%; /* Ajustamos la distancia desde la parte inferior */
-    right: 10%; /* Ajustamos la distancia desde el borde derecho */
+    bottom: 15px; /* Ajustamos la distancia desde la parte inferior */
+    right: 15px; /* Ajustamos la distancia desde el borde derecho */
 }
 
 .option.selected {

@@ -243,7 +243,8 @@ function mostrarImagenPrincipal() {
     const storyImage = document.getElementById('storyImage');
     const optionsContainer = document.getElementById('optionsContainer');
     const continueButton = document.getElementById('continueButton');
-
+    instructionText.style.display = 'none';
+    instrucciones.style.display = 'none';
     // Ocultar imagen preliminar y botón "Mostrar imagen principal"
     preliminaryImage.style.display = 'none';
     showMainButton.style.display = 'none';
