@@ -10,26 +10,26 @@
 
 <body>
   <div id="instructions" class="container1">
-
     <p id="instructionText">En este test, debes unir todos los puntos en cada uno de los cuadros de la imagen. Usa el
-      mouse para dibujar
-      líneas entre los puntos. Debes dibujar tantos diseños diferentes como pueda hasta que le diga que pare. Recuerde
-      usar solo cuatro líneas rectas para conectar los puntos. Trabaje lo más rápido que puedas y trate que cada diseño
-      sea diferente.</p>
-
+      mouse para dibujar líneas entre los puntos. Debes dibujar tantos diseños diferentes como pueda hasta que le diga
+      que pare. Recuerde usar solo cuatro líneas rectas para conectar los puntos. Trabaje lo más rápido que puedas y
+      trate que cada diseño sea diferente.</p>
     <audio controls>
       <source src="Design-fluency.mp3" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
-
     <div class="button-container">
       <button id="startButton">Comenzar</button>
       <button id="fullscreenButton">Pantalla Completa</button>
     </div>
   </div>
-
   <div id="canvasContainer" class="container" style="display: none;">
     <canvas id="designCanvas" width="1200" height="900"></canvas>
+    <button id="finishButton" class="finish-button"></button>
+  </div>
+  <div id="finishScreen" class="container1" style="display: none;">
+    <h1>¡Has completado el test!</h1>
+    <button id="downloadImage">Descargar Imagen</button>
   </div>
   <script src="script.js"></script>
 </body>

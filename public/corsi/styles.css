@@ -141,20 +141,25 @@ body {
 }
 
 #endSequenceButton {
-    background-color: #cecece; /* Color de fondo verde */
-    border: black; /* Sin borde */
-    color: rgb(0, 0, 0); /* Texto blanco */
-    padding: 15px 32px; /* Padding grande */
-    text-align: center; /* Centrado del texto */
-    text-decoration: none; /* Sin subrayado en el texto */
-    display: inline-block;
-    font-size: 18px; /* Tamaño de fuente */
-    margin: 4px 2px; /* Margen */
-    cursor: pointer; /* Cursor de tipo puntero */
-    border-radius: 20px; /* Bordes redondeados */
+    display: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 90px;
+    /* Ajusta el ancho fijo */
+    height: 80px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 6%;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 5%;
+    /* Ajustamos la distancia desde el borde derecho */
 }
 
-#endSequenceButton:hover {
-    background-color: #1a16d8; /* Color de fondo más oscuro al pasar el cursor */
-    color: white;
-}

@@ -25,7 +25,7 @@ canvas {
 }
 
 #buttons {
-    margin-left: 20px;
+    margin-left: 8px;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -100,10 +100,10 @@ canvas {
 #validateButton,
 #showButton,
 #hideButton {
-    font-size: 20px;
-    padding: 10px 20px;
+    font-size: 17px;
+    padding: 8px 15px;
     border-radius: 5px;
-    margin-left: 20px;
+    margin-left: 8px;
     gap: 10px;
 }
 

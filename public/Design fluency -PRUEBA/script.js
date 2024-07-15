@@ -1,4 +1,3 @@
-// script.js
 window.onload = function () {
     const canvasContainer = document.getElementById('canvasContainer');
     const canvas = document.getElementById('designCanvas');
@@ -36,6 +35,16 @@ window.onload = function () {
             element.msRequestFullscreen();
         }
     });
+
+    document.getElementById('finishButton').addEventListener('click', function () {
+        canvasContainer.style.display = 'none';
+        document.getElementById('finishScreen').style.display = 'block';
+    });
+
+    document.getElementById('downloadImage').addEventListener('click', function () {
+        downloadCanvas(canvas, 'drawing.png');
+    });
+
     // Manejar el inicio del dibujo
     canvas.addEventListener('mousedown', function (e) {
         const rect = canvas.getBoundingClientRect();
@@ -85,5 +94,15 @@ window.onload = function () {
     function isNearPoint(x1, y1, x2, y2, radius = 5) {
         const dist = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
         return dist <= radius;
+    }
+
+    function downloadCanvas(canvas, fileName) {
+        const link = document.createElement('a');
+        link.href = canvas.toDataURL();
+        link.download = fileName;
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 }

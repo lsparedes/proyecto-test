@@ -19,7 +19,6 @@ const imagenes = [
             { src: "imagenes/mcct_comp4_pr2.png", correct: false }
         ]
     },
-
     {
         src: "imagenes/mcct_target_pr3.png",
         textoDistintivo: "P3",
@@ -391,7 +390,7 @@ function mostrarFinalizacion() {
     imageContainer.style.justifyContent = 'center'; // Centra el texto horizontalmente
     imageContainer.style.flexDirection = 'column'; // Asegura que el contenido esté en una columna
     imageContainer.style.height = '100vh'; // Asegura que el contenedor ocupe toda la altura de la pantalla
-    imageContainer.style.width = 'auto'; 
+    imageContainer.style.width = 'auto';
     fullscreenButton.style.display = 'none';
 
     //generarArchivoRespuestas(); // Generar el archivo con las respuestas
@@ -489,7 +488,8 @@ function mostrarImagen(indice) {
     // Limpiar contenedor de opciones antes de mostrar nuevas imágenes
     optionsContainer.innerHTML = '';
 
-    storyImage.style.opacity = '0'; // Ocultar la imagen principal antes de cargarla
+    // Ocultar la imagen principal antes de cargarla
+    storyImage.style.opacity = '0';
 
     // Eliminar el texto distintivo anterior si existe
     const previousImageText = document.querySelector('.imageText');
@@ -500,13 +500,21 @@ function mostrarImagen(indice) {
     // Crear un preloader para la imagen principal
     const preloader = new Image();
     preloader.onload = function () {
-        // Mostrar la imagen principal con una transición suave
+        // Asignar la nueva imagen y mostrarla
+        storyImage.src = preloader.src;
+
+        // Iniciar todas las transiciones de opacidad simultáneamente
         setTimeout(() => {
-            storyImage.src = preloader.src;
-            storyImage.style.opacity = '1'; // Mostrar la imagen principal
-        }, 70); // Ajustar el tiempo según la duración de la transición CSS
+            storyImage.style.opacity = '1';
+            agregarTextoYOpciones(imagenInfo);
+        }, 0); // Sincronizar el tiempo según sea necesario
     };
     preloader.src = imagenInfo.src; // Iniciar la carga de la imagen
+}
+
+function agregarTextoYOpciones(imagenInfo) {
+    const storyImage = document.getElementById('storyImage');
+    const optionsContainer = document.getElementById('optionsContainer');
 
     // Agregar el texto distintivo
     const imageText = document.createElement('div');
@@ -514,10 +522,7 @@ function mostrarImagen(indice) {
     imageText.textContent = imagenInfo.textoDistintivo;
 
     // Mostrar el texto distintivo con una transición suave de opacidad
-    setTimeout(() => {
-        imageText.style.opacity = '1';
-    }, 70); // Ajusta el tiempo según sea necesario
-
+    imageText.style.opacity = '0';
     storyImage.parentElement.appendChild(imageText);
 
     // Mostrar las opciones
@@ -530,12 +535,18 @@ function mostrarImagen(indice) {
         optionImg.addEventListener('click', verificarRespuesta);
         optionsContainer.appendChild(optionImg);
 
-        // Mostrar cada opción con una transición suave de opacidad
+        // Inicialmente ocultar cada opción
         optionImg.style.opacity = '0';
-        setTimeout(() => {
-            optionImg.style.opacity = '1';
-        }, 70); // Ajusta el tiempo según sea necesario
     });
+
+    // Iniciar las transiciones de opacidad simultáneamente
+    setTimeout(() => {
+        imageText.style.opacity = '1';
+        const options = optionsContainer.querySelectorAll('.option');
+        options.forEach(option => {
+            option.style.opacity = '1';
+        });
+    }, 0); // Ajusta el tiempo según sea necesario
 }
 
 

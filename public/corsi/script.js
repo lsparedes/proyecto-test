@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultText = document.getElementById('resultText');
     const endSequenceButton = document.createElement('button'); // Crear el botón "Terminar"
     endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
-    endSequenceButton.innerText = 'Terminar';
     endSequenceButton.style.display = 'none'; // Ocultar el botón inicialmente
     game.appendChild(endSequenceButton);
 
