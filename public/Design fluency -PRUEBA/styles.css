@@ -102,3 +102,6 @@ audio {
   right: 8%; 
 }
 
+.red-arrow {
+  background-image: url("flecha4.png") !important;
+}

@@ -44,42 +44,46 @@
                 <i id="stop-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i>
                 <i id="clear-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
                 <i id="download-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
-               
             </div>
             <div class="drawing-container">
-                <div class="drawing-part" style="transform: rotate(90deg);">
-                    <canvas id="drawing-canvas" width="820" height="550"></canvas>
+                <div class="drawing-part" style="transform: rotate(270deg);">
+                    <img src="figura1.png" alt="Figura de Benson" id="figure-image">
                 </div>
                 <div class="drawing-part" style="transform: rotate(90deg);">
-                    <img src="figura1.png" alt="Figura de Benson" id="figure-image">
+                    <canvas id="drawing-canvas" width="820" height="550"></canvas>
                 </div>
             </div>
             <button id="finish-drawing-with-figure"></button>
         </div>
 
-
-
         <div id="draw-from-memory-screen" class="screen" style="display:none;">
-            <div class="controls">
+            <div class="controls controls-left rotated-controls" style="padding-right: 200px;">
                 <span id="memory-timer">00:00</span>
                 <i id="start-memory-timer-button" class="fas fa-play" title="Iniciar tiempo"></i>
                 <i id="stop-memory-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i>
                 <i id="clear-memory-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
                 <i id="download-memory-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
             </div>
-            <canvas id="memory-canvas" width="950" height="650"></canvas>
-            <div id="finish-drawing-from-memory-container">
-                <button id="finish-drawing-from-memory"></button>
+            <div class="drawing-container" style="padding-left: 200px;">
+                <div class="drawing-part" style="transform: rotate(90deg);">
+                    <canvas id="memory-canvas" width="820" height="550"></canvas>
+                </div>
             </div>
+            
+            <button id="finish-drawing-from-memory"></button>
         </div>
 
         <div id="identify-figure-screen" class="screen" style="display:none;">
-            <img src="figura2.png" alt="Figura de Benson" id="identify-figure-image">
+            <div id="identify-figure-grid">
+                <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image">
+                <img src="figura2-2.png" alt="Figura 2-2" class="identify-figure-image">
+                <img src="figura2-3.png" alt="Figura 2-3" class="identify-figure-image">
+                <img src="figura2-4.png" alt="Figura 2-4" class="identify-figure-image">
+            </div>
             <div id="finish-identifying-figure-container">
                 <button id="finish-identifying-figure"></button>
             </div>
         </div>
-
     </div>
 
     <audio id="timer-sound">

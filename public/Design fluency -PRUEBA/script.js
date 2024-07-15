@@ -21,6 +21,12 @@ window.onload = function () {
         image.onload = function () {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         }
+
+        setTimeout(function() {
+            const finishButton = document.getElementById('finishButton');
+            finishButton.style.backgroundImage = 'url("flecha4.png")';
+            finishButton.classList.add('red-arrow'); // Añadir clase de flecha roja
+        }, 60000);
     });
 
     document.getElementById('fullscreenButton').addEventListener('click', function () {
@@ -37,12 +43,12 @@ window.onload = function () {
     });
 
     document.getElementById('finishButton').addEventListener('click', function () {
-        canvasContainer.style.display = 'none';
-        document.getElementById('finishScreen').style.display = 'block';
+        downloadCanvas(canvas, 'Resultados Obtenidos.png');
+        goToFinishScreen();
     });
 
     document.getElementById('downloadImage').addEventListener('click', function () {
-        downloadCanvas(canvas, 'drawing.png');
+        downloadCanvas(canvas, 'Resultados Obtenidos.png');
     });
 
     // Manejar el inicio del dibujo
@@ -104,5 +110,10 @@ window.onload = function () {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    }
+
+    function goToFinishScreen() {
+        canvasContainer.style.display = 'none';
+        document.getElementById('finishScreen').style.display = 'block';
     }
 }
