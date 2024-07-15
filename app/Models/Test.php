@@ -21,7 +21,10 @@ class Test extends Model
         'url_adicional',
         'link_millisecond',
         'link_millisecond2',
+        'nombre_url',
+        'nombre_url_opcional',
     ];
+    
 
     // Relación con el modelo TipoTest
     public function tipoTest()

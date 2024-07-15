@@ -41,10 +41,10 @@ class TestController extends Controller
     public function update(TestFormRequest $request, $test_id)
     {
         $data = $request->validated();
-
+    
         // Encuentra el modelo
         $test = Test::find($test_id);
-
+    
         // Actualiza los campos usando asignación de masas
         $test->update([
             'name_test' => $data['name_test'],
@@ -55,36 +55,42 @@ class TestController extends Controller
             'url_adicional'=> $data['url_adicional'],
             'link_millisecond'=> $data['link_millisecond'],
             'link_millisecond2'=> $data['link_millisecond2'],
+            'nombre_url' => $data['nombre_url'],
+            'nombre_url_opcional' => $data['nombre_url_opcional'],
         ]);
-
+    
         return redirect('admin/tests')->with('message', 'Successfully Update');
     }
 
+
     public function store(TestFormRequest $request)
-    {
-        // Validar el formulario usando el TestFormRequest
-        $data = $request->validated();
+{
+    // Validar el formulario usando el TestFormRequest
+    $data = $request->validated();
 
-        // Crear una nueva instancia del modelo Test
-        $test = new Test;
+    // Crear una nueva instancia del modelo Test
+    $test = new Test;
 
-        // Asignar los valores del formulario a las propiedades del modelo
-        $test->name_test = $data['name_test'];
-        $test->nombre_espa = $data['nombre_espa'];
-        $test->points = $data['points'];
-        $test->duracion_minutos = $data['duracion_minutos'];
-        $test->tipotest_id = $data['tipotest_id'];
-        $test->url_test = $data['url_test'];
-        $test->url_adicional = $data['url_adicional'];
-        $test->link_millisecond = $data['link_millisecond'];
-        $test->link_millisecond2 = $data['link_millisecond2'];
+    // Asignar los valores del formulario a las propiedades del modelo
+    $test->name_test = $data['name_test'];
+    $test->nombre_espa = $data['nombre_espa'];
+    $test->points = $data['points'];
+    $test->duracion_minutos = $data['duracion_minutos'];
+    $test->tipotest_id = $data['tipotest_id'];
+    $test->url_test = $data['url_test'];
+    $test->url_adicional = $data['url_adicional'];
+    $test->link_millisecond = $data['link_millisecond'];
+    $test->link_millisecond2 = $data['link_millisecond2'];
+    $test->nombre_url = $data['nombre_url'];
+    $test->nombre_url_opcional = $data['nombre_url_opcional'];
 
-        // Guardar el modelo en la base de datos
-        $test->save();
+    // Guardar el modelo en la base de datos
+    $test->save();
 
-        // Redireccionar a alguna vista o hacer alguna acción adicional
-        return redirect('admin/tests')->with('message', 'Successfully Added');
-    }
+    // Redireccionar a alguna vista o hacer alguna acción adicional
+    return redirect('admin/tests')->with('message', 'Successfully Added');
+}
+
 
     public function destroy($test_id)
     {

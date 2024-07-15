@@ -46,13 +46,14 @@
                                     @if (!empty($test->url_test))
                                         <a href="/{{ $test->url_test }}" target="_blank" class="circular-button">
                                             <i class="fas fa-play"></i>
+                                            <span>{{$test->nombre_url}}</span>
                                         </a>
                                     @endif
                                     @if (!empty($test->url_adicional))
                                         <a href="/{{ $test->url_adicional }}" target="_blank"
                                             class="circular-button additional">
                                             <i class="fas fa-play"></i>
-                                            <span>Backward</span>
+                                            <span>{{$test->nombre_url_opcional}}</span>
                                         </a>
                                     @endif
                                     @if (!empty($test->link_millisecond))
