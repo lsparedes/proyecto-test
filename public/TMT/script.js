@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const correctPaths = []; // Para almacenar caminos correctos
     const correctPathsPartA = []; // Para almacenar caminos correctos en la parte B
 
+    const endSequenceButton = document.createElement('button'); // Crear el botón "Terminar"
+    endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
+    document.body.appendChild(endSequenceButton);
+    
+    const redLinesCount = 0; // Contador para líneas incorrectas 
+
     function drawCircle(ctx, x, y, number, circlesArray, name = "") {
         ctx.fillStyle = 'white'; // Fondo blanco
         ctx.beginPath();
@@ -141,17 +147,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // BOTON SIGUIENTE LUEGO DE DIBUJAR TODAS LAS LINEAS PRIMER CANVAS
     function drawNextButton() {
         const nextButton = document.createElement('button');
-        nextButton.textContent = 'Siguiente';
-        nextButton.style.position = 'absolute';
-        nextButton.style.bottom = '20px';
-        nextButton.style.right = '20px';
-        nextButton.style.padding = '10px 20px';
-        nextButton.style.fontSize = '16px';
-        nextButton.style.color = 'white';
-        nextButton.style.backgroundColor = 'blue';
-        nextButton.style.border = 'none';
-        nextButton.style.borderRadius = '5px';
-        nextButton.style.cursor = 'pointer';
+        // nextButton.textContent = 'Siguiente';
+        // nextButton.style.position = 'absolute';
+        // nextButton.style.bottom = '20px';
+        // nextButton.style.right = '20px';
+        // nextButton.style.padding = '10px 20px';
+        // nextButton.style.fontSize = '16px';
+        // nextButton.style.color = 'white';
+        // nextButton.style.backgroundColor = 'blue';
+        // nextButton.style.border = 'none';
+        // nextButton.style.borderRadius = '5px';
+        // nextButton.style.cursor = 'pointer';
+        nextButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
+        nextButton.style.display = 'inline-block';
 
         nextButton.addEventListener('click', () => {
             canvas.style.display = 'none'; // Ocultar el canvas actual
@@ -273,17 +281,19 @@ document.addEventListener('DOMContentLoaded', function () {
     //BOTON SIGUIENTE LUEGO DE DIBUJAR TODAS LAS LINEAS SEGUNDO CANVAS
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
-        nextButtonA.textContent = 'Siguiente';
-        nextButtonA.style.position = 'absolute';
-        nextButtonA.style.bottom = '20px';
-        nextButtonA.style.right = '20px';
-        nextButtonA.style.padding = '10px 20px';
-        nextButtonA.style.fontSize = '16px';
-        nextButtonA.style.color = 'white';
-        nextButtonA.style.backgroundColor = 'blue';
-        nextButtonA.style.border = 'none';
-        nextButtonA.style.borderRadius = '5px';
-        nextButtonA.style.cursor = 'pointer';
+        // nextButtonA.textContent = 'Siguiente';
+        // nextButtonA.style.position = 'absolute';
+        // nextButtonA.style.bottom = '20px';
+        // nextButtonA.style.right = '20px';
+        // nextButtonA.style.padding = '10px 20px';
+        // nextButtonA.style.fontSize = '16px';
+        // nextButtonA.style.color = 'white';
+        // nextButtonA.style.backgroundColor = 'blue';
+        // nextButtonA.style.border = 'none';
+        // nextButtonA.style.borderRadius = '5px';
+        // nextButtonA.style.cursor = 'pointer';
+        nextButtonA.id = 'endSequenceButton';
+        nextButtonA.style.display = 'inline-block';
 
         nextButtonA.addEventListener('click', () => {
             canvasPartA.style.display = 'none'; // Ocultar el canvas actual

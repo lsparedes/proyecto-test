@@ -145,17 +145,19 @@ canvasPartB.addEventListener('mouseup', function (event) {
 
 function drawNextButtonB() {
     const nextButtonB = document.createElement('button');
-    nextButtonB.textContent = 'Siguiente';
-    nextButtonB.style.position = 'absolute';
-    nextButtonB.style.bottom = '20px';
-    nextButtonB.style.right = '20px';
-    nextButtonB.style.padding = '10px 20px';
-    nextButtonB.style.fontSize = '16px';
-    nextButtonB.style.color = 'white';
-    nextButtonB.style.backgroundColor = 'blue';
-    nextButtonB.style.border = 'none';
-    nextButtonB.style.borderRadius = '5px';
-    nextButtonB.style.cursor = 'pointer';
+    //nextButtonB.textContent = 'Siguiente';
+    // nextButtonB.style.position = 'absolute';
+    // nextButtonB.style.bottom = '20px';
+    // nextButtonB.style.right = '20px';
+    // nextButtonB.style.padding = '10px 20px';
+    // nextButtonB.style.fontSize = '16px';
+    // nextButtonB.style.color = 'white';
+    // nextButtonB.style.backgroundColor = 'blue';
+    // nextButtonB.style.border = 'none';
+    // nextButtonB.style.borderRadius = '5px';
+    // nextButtonB.style.cursor = 'pointer';
+    nextButtonB.id = 'endSequenceButton';
+    nextButtonB.style.display = 'inline-block';
 
     nextButtonB.addEventListener('click', () => {
         canvasPartB.style.display = 'none';
@@ -280,17 +282,19 @@ canvasPartB2.addEventListener('mouseup', function (event) {
 
 function drawNextButtonB2() {
     const nextButtonB2 = document.createElement('button');
-    nextButtonB2.textContent = 'Siguiente';
-    nextButtonB2.style.position = 'absolute';
-    nextButtonB2.style.bottom = '20px';
-    nextButtonB2.style.right = '20px';
-    nextButtonB2.style.padding = '10px 20px';
-    nextButtonB2.style.fontSize = '16px';
-    nextButtonB2.style.color = 'white';
-    nextButtonB2.style.backgroundColor = 'blue';
-    nextButtonB2.style.border = 'none';
-    nextButtonB2.style.borderRadius = '5px';
-    nextButtonB2.style.cursor = 'pointer';
+    // nextButtonB2.textContent = 'Siguiente';
+    // nextButtonB2.style.position = 'absolute';
+    // nextButtonB2.style.bottom = '20px';
+    // nextButtonB2.style.right = '20px';
+    // nextButtonB2.style.padding = '10px 20px';
+    // nextButtonB2.style.fontSize = '16px';
+    // nextButtonB2.style.color = 'white';
+    // nextButtonB2.style.backgroundColor = 'blue';
+    // nextButtonB2.style.border = 'none';
+    // nextButtonB2.style.borderRadius = '5px';
+    // nextButtonB2.style.cursor = 'pointer';
+    nextButtonB2.id = 'endSequenceButton';
+    nextButtonB2.style.display = 'inline-block';
 
     nextButtonB2.addEventListener('click', () => {
         canvasPartB2.style.display = 'none';
