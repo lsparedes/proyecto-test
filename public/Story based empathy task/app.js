@@ -10,10 +10,9 @@ const imagenes = [
         ]
     },
     {
-        inicio: "imagenes/1-SET.IA/1_SET-IA.jpg",
         preliminar: "imagenes/1-SET.IA/1/1_SET-IA_item1.jpg",
         src: "imagenes/1-SET.IA/1/1_SET-IA_item1.1.jpg",
-        textoDistintivo: "SET-IA 1",
+        textoDistintivo: "IA 1",
         options: [
             { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.2.jpg", correct: false },
             { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.3.jpg", correct: false },
@@ -23,7 +22,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/2/1_SET-IA_item2.jpg",
         src: "imagenes/1-SET.IA/2/1_SET-IA_item2.1.jpg",
-        textoDistintivo: "SET-IA 2",
+        textoDistintivo: "IA 2",
         options: [
             { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.2.jpg", correct: false },
             { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.3.jpg", correct: true },
@@ -33,7 +32,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/3/1_SET-IA_item3.jpg",
         src: "imagenes/1-SET.IA/3/1_SET-IA_item3.1.jpg",
-        textoDistintivo: "SET-IA 3",
+        textoDistintivo: "IA 3",
         options: [
             { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.2.jpg", correct: false },
             { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.3.jpg", correct: true },
@@ -43,7 +42,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/4/1_SET-IA_item4.jpg",
         src: "imagenes/1-SET.IA/4/1_SET-IA_item4.1.jpg",
-        textoDistintivo: "SET-IA 4",
+        textoDistintivo: "IA 4",
         options: [
             { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.2.jpg", correct: true },
             { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.3.jpg", correct: false },
@@ -53,7 +52,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/5/1_SET-IA_item5.jpg",
         src: "imagenes/1-SET.IA/5/1_SET-IA_item5.1.jpg",
-        textoDistintivo: "SET-IA 5",
+        textoDistintivo: "IA 5",
         options: [
             { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.2.jpg", correct: true },
             { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.3.jpg", correct: false },
@@ -63,7 +62,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/6/1_SET-IA_item6.jpg",
         src: "imagenes/1-SET.IA/6/1_SET-IA_item6.1.jpg",
-        textoDistintivo: "SET-IA 6",
+        textoDistintivo: "IA 6",
         options: [
             { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.2.jpg", correct: false },
             { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.3.jpg", correct: true },
@@ -71,10 +70,9 @@ const imagenes = [
         ]
     },
     {
-        inicio: "imagenes/2-SET-CI/2_SET-CI_items_prueba_page-0001.jpg",
         preliminar: "imagenes/2-SET-CI/1/2_SET-CI_item1.jpg",
         src: "imagenes/2-SET-CI/1/2_SET-CI_item1.1.jpg",
-        textoDistintivo: "SET-CI 1",
+        textoDistintivo: "CI 1",
         options: [
             { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.2.jpg", correct: true },
             { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.3.jpg", correct: false },
@@ -84,7 +82,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/2/2_SET-CI_item2.jpg",
         src: "imagenes/2-SET-CI/2/2_SET-CI_item2.1.jpg",
-        textoDistintivo: "SET-CI 2",
+        textoDistintivo: "CI 2",
         options: [
             { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.2.jpg", correct: false },
             { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.3.jpg", correct: false },
@@ -94,7 +92,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/3/2_SET-CI_item3.jpg",
         src: "imagenes/2-SET-CI/3/2_SET-CI_item3.1.jpg",
-        textoDistintivo: "SET-CI 3",
+        textoDistintivo: "CI 3",
         options: [
             { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.2.jpg", correct: false },
             { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.3.jpg", correct: true },
@@ -104,7 +102,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/4/2_SET-CI_item4.jpg",
         src: "imagenes/2-SET-CI/4/2_SET-CI_item4.1.jpg",
-        textoDistintivo: "SET-CI 4",
+        textoDistintivo: "CI 4",
         options: [
             { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.2.jpg", correct: false },
             { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.3.jpg", correct: true },
@@ -114,7 +112,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/5/2_SET-CI_item5.jpg",
         src: "imagenes/2-SET-CI/5/2_SET-CI_item5.1.jpg",
-        textoDistintivo: "SET-CI 5",
+        textoDistintivo: "CI 5",
         options: [
             { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.2.jpg", correct: true },
             { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.3.jpg", correct: false },
@@ -124,7 +122,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/6/2_SET-CI_items_prueba_page-0012.jpg",
         src: "imagenes/2-SET-CI/6/2_SET-CI_item6.jpg",
-        textoDistintivo: "SET-CI 6",
+        textoDistintivo: "CI 6",
         options: [
             { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.1.jpg", correct: false },
             { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.2.jpg", correct: false },
@@ -132,10 +130,9 @@ const imagenes = [
         ]
     },
     {
-        inicio: "imagenes/3-SET-EA/3_SET-EA_items_prueba_page-0001.jpg",
         preliminar: "imagenes/3-SET-EA/1/3_SET-EA_items_prueba_page-0002.jpg",
         src: "imagenes/3-SET-EA/1/3_SET-EA_item1.jpg",
-        textoDistintivo: "SET-EA 1",
+        textoDistintivo: "EA 1",
         options: [
             { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.1.jpg", correct: false },
             { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.2.jpg", correct: false },
@@ -145,7 +142,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/2/3_SET-EA_items_prueba_page-0004.jpg",
         src: "imagenes/3-SET-EA/2/3_SET-EA_item2.jpg",
-        textoDistintivo: "SET-EA 2",
+        textoDistintivo: "EA 2",
         options: [
             { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.1.jpg", correct: false },
             { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.2.jpg", correct: false },
@@ -155,7 +152,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/3/3_SET-EA_items_prueba_page-0006.jpg",
         src: "imagenes/3-SET-EA/3/3_SET-EA_item3.jpg",
-        textoDistintivo: "SET-EA 3",
+        textoDistintivo: "EA 3",
         options: [
             { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.1.jpg", correct: true },
             { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.2.jpg", correct: false },
@@ -165,7 +162,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/4/3_SET-EA_items_prueba_page-0008.jpg",
         src: "imagenes/3-SET-EA/4/3_SET-EA_item4.jpg",
-        textoDistintivo: "SET-EA 4",
+        textoDistintivo: "EA 4",
         options: [
             { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.1.jpg", correct: false },
             { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.2.jpg", correct: true },
@@ -175,7 +172,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/5/3_SET-EA_items_prueba_page-0010.jpg",
         src: "imagenes/3-SET-EA/5/3_SET-EA_item5.jpg",
-        textoDistintivo: "SET-EA 5",
+        textoDistintivo: "EA 5",
         options: [
             { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.1.jpg", correct: false },
             { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.2.jpg", correct: true },
@@ -185,7 +182,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/6/3_SET-EA_items_prueba_page-0012.jpg",
         src: "imagenes/3-SET-EA/6/3_SET-EA_item6.jpg",
-        textoDistintivo: "SET-EA 6",
+        textoDistintivo: "EA 6",
         options: [
             { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.1.jpg", correct: true },
             { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.2.jpg", correct: false },
