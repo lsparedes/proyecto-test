@@ -57,7 +57,7 @@ function startTest(type) {
         beep.addEventListener('play', () => {
             setTimeout(() => {
                 startRecording(itemDiv, title);
-            }, beep.duration * 1000 - 600); // Ajusta el tiempo (en milisegundos) según la duración del beep y tu preferencia
+            }, beep.duration * 1000 - 600); 
         });
 
         const timerDiv = document.createElement('div');

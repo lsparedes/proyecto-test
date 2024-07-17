@@ -77,8 +77,8 @@ button:not(:disabled):active {
     height: 80px;
     vertical-align: middle;
     position: absolute;
-    bottom: 6%;
-    right: 10%;
+    bottom: 15px;
+    right: 15px;
 }
 
 #next-btn:hover {
@@ -214,8 +214,8 @@ button i {
 }
 
 #test-image {
-    width: 700px;
-    height: auto;
+    width: 50%;
+    height: 40%;
 }
 
 .item-indicator {
