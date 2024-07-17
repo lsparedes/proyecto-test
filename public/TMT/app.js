@@ -4,6 +4,7 @@ document.getElementById('continueButtonB').addEventListener('click', () => {
 });
 
 document.getElementById('continueButtonB2').addEventListener('click', () => {
+    reiniciarTemporizador();
     startPartB2();
 });
 
@@ -140,11 +141,11 @@ canvasPartB.addEventListener('mouseup', function (event) {
     }
 
     if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
-        drawNextButtonB();
         drawingCompletedB = true;
     }
-
+    
     isDrawingPartB = false;
+    drawNextButtonB();
 });
 
 function drawNextButtonB() {
@@ -171,6 +172,7 @@ let isDrawingPartB2 = false;
 let lastCirclePartB2 = null;
 const correctPathsPartB2 = [];
 let drawingCompletedB2 = false;
+let temporizador = null;
 
 const circleCoordinatesPartB2 = [
     { x: 500, y: 570 },
@@ -202,6 +204,12 @@ const circleCoordinatesPartB2 = [
 
 const firstCircleLabelB2 = "Inicio";
 const lastCircleLabelB2 = "Fin";
+
+function reiniciarTemporizador() {
+    clearTimeout(temporizador);
+    temporizador = setTimeout(completeTest, 300000); // Cambia después de 300 segundos
+    // temporizador = setTimeout(completeTest, 3000); // Cambia después de 3 segundos
+}
 
 function startPartB2() {
     document.getElementById('partB2').style.display = 'none';
@@ -268,11 +276,11 @@ canvasPartB2.addEventListener('mouseup', function (event) {
 
     // Actualización de la condición para mostrar el botón "Siguiente"
     if (currentCirclePartB2 === 13) {
-        drawNextButtonB2();
         drawingCompletedB2 = true;
     }
-
+    
     isDrawingPartB2 = false;
+    drawNextButtonB2();
 });
 
 function drawNextButtonB2() {
@@ -318,6 +326,17 @@ function showDownloadButton() {
     downloadButton.style.border = 'none';
     downloadButton.style.borderRadius = '5px';
     downloadButton.style.cursor = 'pointer';
+    
+
+    // Mostrar mensaje de finalización
+    const instructions = document.getElementById('instructions');
+    instructions.style.display = 'block';
+    instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+    instructions.style.textAlign = 'center';
+    instructions.style.fontSize = '40px';
+    instructions.style.marginTop = '20px';
+    instructions.style.display = 'flex';
+
 
     downloadButton.addEventListener('click', downloadAllCanvasImages);
 
