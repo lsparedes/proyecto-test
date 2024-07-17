@@ -191,7 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function endGame() {
         endTime = new Date(); // Registrar la hora de finalización
         const duration = (endTime - startTime) / 1000; // Duración en segundos
-        resultText.innerHTML = `Test finalizado. <br> Tu mayor Corsi span es ${highestCount} ítems. <br> Total de bloques correctos seleccionados: ${totalCorrectBlocks}. <br> Tiempo total: ${duration.toFixed(2)} segundos.`;
+        resultText.innerHTML = `El test ha finalizado. ¡Gracias por sus respuestas! <br>`
+        console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
         game.style.display = 'none';
         resultScreen.style.display = 'block';
         count = 2;
