@@ -17,12 +17,12 @@ document.addEventListener('DOMContentLoaded', function () {
     const correctPathsPartA = []; // Para almacenar caminos correctos en la parte B
     const incorrectPaths = []; // Para almacenar caminos incorrectos
     const incorrectPathsPartA = []; // Para almacenar caminos incorrectos en la parte B
-
+    let temporizador = null;
 
     const endSequenceButton = document.createElement('button'); // Crear el botón "Terminar"
     endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
     document.body.appendChild(endSequenceButton);
-    
+
     const redLinesCount = 0; // Contador para líneas incorrectas 
 
     function drawCircle(ctx, x, y, number, circlesArray, name = "") {
@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('continueButton').addEventListener('click', () => {
+        reiniciarTemporizador(); // Reiniciar el temporizador
         startPartA();
     });
 
@@ -166,6 +167,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // SEGUNDO CANVAS
+
+    function reiniciarTemporizador() {
+        clearTimeout(temporizador);
+        temporizador = setTimeout(testFinalizado, 150000); // Cambia después de 150 segundos
+        // temporizador = setTimeout(testFinalizado, 3000); // Cambia después de 3 segundos
+    }
 
     function startPartA() {
         document.getElementById('partA').style.display = 'none';
@@ -213,6 +220,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = index === 0 ? "Inicio" : (index === circleCoordinatesPartA.length - 1 ? "Fin" : "");
             drawCircle(ctxPartA, coord.x, coord.y, index + 1, circlesPartA, name);
         });
+        reiniciarTemporizador(); // Iniciar temporizador
     }
 
     let drawingCompletedA = false; // Bandera para indicar si se completó el dibujo
@@ -285,9 +293,23 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('partB').style.display = 'block'; // Mostrar instrucciones para la Parte B
             document.getElementById('continueButtonB').style.display = 'block'; // Mostrar botón de continuar
             nextButtonA.remove(); // Eliminar el botón "Siguiente" después de hacer clic
+            testFinalizado();
         });
 
         document.body.appendChild(nextButtonA);
+    }
+
+    function testFinalizado() {
+        canvasPartA.style.display = 'none'; // Ocultar el canvas actual
+        // Mostrar mensaje de finalización
+        const instructions = document.getElementById('instructions');
+        instructions.style.display = 'block';
+        instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+        instructions.style.textAlign = 'center';
+        instructions.style.fontSize = '40px';
+        instructions.style.marginTop = '20px';
+        instructions.style.display = 'flex';
+
     }
 
     fullscreenButton.addEventListener('click', () => {
@@ -296,5 +318,5 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
-    });    
+    });
 });

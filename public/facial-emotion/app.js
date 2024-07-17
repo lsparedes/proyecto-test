@@ -4,177 +4,177 @@ const imagenes = [
     {
         src: "Emociones/Alegria/alegria1.png",
         emocionCorrecta: "Alegria",
-        numero: 'I1'
+        numero: 'E1'
     },
     {
         src: "Emociones/Miedo/miedo2.png",
         emocionCorrecta: "Miedo",
-        numero: 'I2'
+        numero: 'E2'
     },
     {
         src: "Emociones/Asco/asco3.png",
         emocionCorrecta: "Asco",
-        numero: 'I3'
+        numero: 'E3'
     },
     {
         src: "Emociones/Neutro/neutro4.png",
         emocionCorrecta: "Neutro",
-        numero: 'I4'
+        numero: 'E4'
     },
     {
         src: "Emociones/Enojo/enojo5.png",
         emocionCorrecta: "Enojo",
-        numero: 'I5'
+        numero: 'E5'
     },
     {
         src: "Emociones/Sorpresa/sorpresa6.png",
         emocionCorrecta: "Sorpresa",
-        numero: 'I6'
+        numero: 'E6'
     },
     {
         src: "Emociones/Tristeza/tristeza7.png",
         emocionCorrecta: "Tristeza",
-        numero: 'I7'
+        numero: 'E7'
     },
     {
         src: "Emociones/Miedo/miedo8.png",
         emocionCorrecta: "Miedo",
-        numero: 'I8'
+        numero: 'E8'
     },
     {
         src: "Emociones/Enojo/enojo9.png",
         emocionCorrecta: "Enojo",
-        numero: 'I9'
+        numero: 'E9'
     },
     {
         src: "Emociones/Asco/asco10.png",
         emocionCorrecta: "Asco",
-        numero: 'I10'
+        numero: 'E10'
     },
     {
         src: "Emociones/Tristeza/tristeza11.png",
         emocionCorrecta: "Tristeza",
-        numero: 'I11'
+        numero: 'E11'
     },
     {
         src: "Emociones/Alegria/alegria12.png",
         emocionCorrecta: "Alegria",
-        numero: 'I12'
+        numero: 'E12'
     },
     {
         src: "Emociones/Neutro/neutro13.png",
         emocionCorrecta: "Neutro",
-        numero: 'I13'
+        numero: 'E13'
     },
     {
         src: "Emociones/Sorpresa/sorpresa14.png",
         emocionCorrecta: "Sorpresa",
-        numero: 'I14'
+        numero: 'E14'
     },
     {
         src: "Emociones/Tristeza/tristeza15.png",
         emocionCorrecta: "Tristeza",
-        numero: 'I15'
+        numero: 'E15'
     },
     {
         src: "Emociones/Sorpresa/sorpresa16.png",
         emocionCorrecta: "Sorpresa",
-        numero: 'I16'
+        numero: 'E16'
     },
     {
         src: "Emociones/Neutro/neutro17.png",
         emocionCorrecta: "Neutro",
-        numero: 'I17'
+        numero: 'E17'
     },
     {
         src: "Emociones/Alegria/alegria18.png",
         emocionCorrecta: "Alegria",
-        numero: 'I18'
+        numero: 'E18'
     },
     {
         src: "Emociones/Miedo/miedo19.png",
         emocionCorrecta: "Miedo",
-        numero: 'I19'
+        numero: 'E19'
     },
     {
         src: "Emociones/Enojo/enojo20.png",
         emocionCorrecta: "Enojo",
-        numero: 'I20'
+        numero: 'E20'
     },
     {
         src: "Emociones/Asco/asco21.png",
         emocionCorrecta: "Asco",
-        numero: 'I21'
+        numero: 'E21'
     },
     {
         src: "Emociones/Sorpresa/sorpresa22.png",
         emocionCorrecta: "Sorpresa",
-        numero: 'I22'
+        numero: 'E22'
     },
     {
         src: "Emociones/Asco/asco23.png",
         emocionCorrecta: "Asco",
-        numero: 'I23'
+        numero: 'E23'
     },
     {
         src: "Emociones/Alegria/alegria24.png",
         emocionCorrecta: "Alegria",
-        numero: 'I24'
+        numero: 'E24'
     },
     {
         src: "Emociones/Tristeza/tristeza25.png",
         emocionCorrecta: "Tristeza",
-        numero: 'I25'
+        numero: 'E25'
     },
     {
         src: "Emociones/Neutro/neutro26.png",
         emocionCorrecta: "Neutro",
-        numero: 'I26'
+        numero: 'E26'
     },
     {
         src: "Emociones/Miedo/miedo27.png",
         emocionCorrecta: "Miedo",
-        numero: 'I27'
+        numero: 'E27'
     },
     {
         src: "Emociones/Enojo/enojo28.png",
         emocionCorrecta: "Enojo",
-        numero: 'I28'
+        numero: 'E28'
     },
     {
         src: "Emociones/Enojo/enojo29.png",
         emocionCorrecta: "Enojo",
-        numero: 'I29'
+        numero: 'E29'
     },
     {
         src: "Emociones/Miedo/miedo30.png",
         emocionCorrecta: "Miedo",
-        numero: 'I30'
+        numero: 'E30'
     },
     {
         src: "Emociones/Tristeza/tristeza31.png",
         emocionCorrecta: "Tristeza",
-        numero: 'I31'
+        numero: 'E31'
     },
     {
         src: "Emociones/Sorpresa/sorpresa32.png",
         emocionCorrecta: "Sorpresa",
-        numero: 'I32'
+        numero: 'E32'
     },
     {
         src: "Emociones/Alegria/alegria33.png",
         emocionCorrecta: "Alegria",
-        numero: 'I33'
+        numero: 'E33'
     },
     {
         src: "Emociones/Asco/asco34.png",
         emocionCorrecta: "Asco",
-        numero: 'I34'
+        numero: 'E34'
     },
     {
         src: "Emociones/Neutro/neutro35.png",
         emocionCorrecta: "Neutro",
-        numero: 'I35'
+        numero: 'E35'
     },
 
 ];
@@ -183,7 +183,8 @@ let indiceActual = 0;
 let temporizador = null;
 let presentacionIniciada = false;
 const emocionesSeleccionadas = [];
-const emocionesDisponibles = ['Alegria', 'Asco', 'Enojo', 'Miedo', 'Neutro', 'Sorpresa', 'Tristeza'];
+// const emocionesDisponibles = ['Alegria', 'Asco', 'Enojo', 'Miedo', 'Neutro', 'Sorpresa', 'Tristeza'];
+const emocionesDisponibles = ['Alegria', 'Sorpresa', 'Neutro', 'Tristeza', 'Miedo', 'Asco', 'Enojo'];
 
 function mostrarEmociones() {
     const listaEmociones = document.getElementById('emotionsList');
@@ -193,7 +194,7 @@ function mostrarEmociones() {
         const listItem = document.createElement('li');
         listItem.textContent = emocion;
         listItem.style.cursor = 'pointer';
-        listItem.addEventListener('click', function() {
+        listItem.addEventListener('click', function () {
             guardarSeleccion(emocion);
             document.getElementById('next-button').style.display = 'block'; // Mostrar el botón "next-button"
 
@@ -225,7 +226,7 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
 
 function mostrarFinalizacion() {
     const imagenNumero = document.getElementById('imagenNumero');
-    document.getElementById('next-button').style.display = 'none';  
+    document.getElementById('next-button').style.display = 'none';
     clearTimeout(temporizador);
     const imageContainer = document.getElementById('imageContainer');
     imageContainer.textContent = 'El test ha finalizado. ¡Gracias por sus respuestas!';
@@ -243,6 +244,7 @@ function iniciarPresentacion() {
     presentacionIniciada = true;
     const startButton = document.getElementById('startButton');
     const imageContainer = document.getElementById('imageContainer');
+    const next_button = document.getElementById('next-button');
     const instructionText = document.getElementById('instructionText');
     const imagenNumero = document.getElementById('imagenNumero');
     document.getElementById('next-button').style.display = 'none';
@@ -252,6 +254,7 @@ function iniciarPresentacion() {
     startButton.addEventListener('click', () => {
         imagenNumero.style.display = 'block';
         imageContainer.style.display = 'block';
+        next_button.style.display = 'block';
         instructionText.style.display = 'none';
         startButton.style.display = 'none';
         mostrarImagen(indiceActual);
@@ -268,7 +271,7 @@ function guardarSeleccion(emocion) {
 }
 
 function cambiarImagen() {
-    document.getElementById('next-button').style.display = 'none'; // Ocultar el botón "next-button"
+    document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button"
     indiceActual++;
     if (indiceActual === imagenes.length) {
         mostrarFinalizacion();
@@ -291,14 +294,14 @@ function generarCSV() {
     const options = { timeZone: 'America/Santiago' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
-    
+
     const csvData = [['Numero de Imagen', 'Emocion Seleccionada', 'Emocion Correcta']];
 
     emocionesSeleccionadas.forEach((emocionSeleccionada, indice) => {
         const imagenData = imagenes[indice];
         const numeroImagen = imagenData.numero;
         const emocionCorrecta = imagenData.emocionCorrecta;
-        
+
         csvData.push([numeroImagen, emocionSeleccionada, emocionCorrecta]);
     });
 
@@ -335,6 +338,6 @@ document.addEventListener('keydown', (event) => {
 });
 
 window.onload = function () {
-    document.getElementById('next-button').style.display = 'none'; // Ocultar el botón "next-button" al cargar la página
+    document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button" al cargar la página
     iniciarPresentacion();
 };
