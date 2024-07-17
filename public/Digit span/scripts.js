@@ -42,12 +42,22 @@ function startTest(type) {
         title.textContent = titles[i - 1];
 
         const audio = document.createElement('audio');
+        const beep = document.createElement('audio');
+
+        beep.src = 'alarm.mp3';
         audio.src = `audio/${type}/${i}.mp3`;
         audio.controls = true;
 
-        // Añadir evento para iniciar grabación automáticamente al terminar la reproducción del audio
+        // Añadir evento para iniciar la reproducción del beep al terminar el audio de explicación
         audio.addEventListener('ended', () => {
-            startRecording(itemDiv, title);
+            beep.play();
+        });
+
+        // Añadir evento para iniciar la grabación automáticamente al terminar la reproducción del beep
+        beep.addEventListener('play', () => {
+            setTimeout(() => {
+                startRecording(itemDiv, title);
+            }, beep.duration * 1000 - 600); // Ajusta el tiempo (en milisegundos) según la duración del beep y tu preferencia
         });
 
         const timerDiv = document.createElement('div');
@@ -185,7 +195,7 @@ function showDownloadLinks() {
         const listItem = document.createElement('li');
         const downloadLink = document.createElement('a');
         downloadLink.href = linkData.url;
-        downloadLink.download = `respuesta_${index + 1}.wav`;   
+        downloadLink.download = `respuesta_${index + 1}.wav`;
         downloadLink.textContent = `Descargar Respuesta ${index + 1}`;
         listItem.appendChild(downloadLink);
         downloadList.appendChild(listItem);
