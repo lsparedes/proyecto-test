@@ -11,6 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
     endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
     endSequenceButton.style.display = 'none'; // Ocultar el botón inicialmente
     game.appendChild(endSequenceButton);
+    const indicator = document.createElement('div');
+    indicator.classList.add('imageText');
+    indicator.style.display = 'none';
+    game.appendChild(indicator);
 
     let sequence = [];
     let playerSequence = [];
@@ -90,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         game.style.display = 'block';
         startSequenceButton.style.display = 'inline-block';
         endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" al iniciar el test
+        indicator.textContent = `P${sequenceCount+1}`;
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
@@ -103,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sequenceDisplaying = true;
         displaySequence(0);
         startSequenceButton.style.display = 'none';
+        indicator.style.display = 'block';
     }
 
     function createSequence() {
@@ -120,7 +126,23 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             sequenceDisplaying = false;
             endSequenceButton.style.display = 'inline-block'; // Mostrar el botón "Terminar" después de mostrar la secuencia
+            playBeep(); // Llamar a playBeep aquí para reproducir el sonido después de la secuencia
         }
+    }
+
+    function playBeep() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+    
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+    
+        oscillator.frequency.value = 1000; // Frecuencia en Hz
+        gainNode.gain.value = 0.1; // Volumen
+    
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.1); // Duración del sonido en segundos
     }
 
     function checkSequence() {
@@ -141,6 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         sequenceCount++; // Incrementar la cuenta de secuencias
+        indicator.textContent = `P${sequenceCount+1}`;
 
         if (errorCount === 2 || count > 9) {
             endGame();
