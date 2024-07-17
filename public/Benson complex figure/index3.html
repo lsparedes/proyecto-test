@@ -11,7 +11,7 @@
     <div id="container">
         <div id="main-screen" class="screen">
             <ol>
-                <li>Copiar la Figura: Se presentará una figura, la cual debe copiar lo más exacta posible</li>
+                <li>Identificar figura: Se presentará una sección para identificar la figura dibujada</li>
             </ol>
             <audio controls>
                 <source src="benson.mp3" type="audio/mpeg">
@@ -22,30 +22,19 @@
                 <button id="fullscreen-button">Pantalla Completa</button>
             </div>
         </div>
-
         <div id="options-screen" class="screen" style="display:none;">
             <h2>Seleccione etapa: </h2>
-            <button id="draw-with-figure-button">Dibujar con Figura</button>
+            <button id="identify-figure-button">Identificar Figura</button>
         </div>
-
-        <div id="draw-with-figure-screen" class="screen" style="display:none;">
-            <div class="controls controls-left rotated-controls">
-                <i id="stop-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i>
-                <i id="clear-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
-                <i id="download-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
+        <div id="identify-figure-screen" class="screen" style="display:none;">
+            <div id="identify-figure-grid">
+                <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image selectable" data-figure="figura2-1">
+                <img src="figura2-2.png" alt="Figura 2-2" class="identify-figure-image selectable" data-figure="figura2-2">
+                <img src="figura2-3.png" alt="Figura 2-3" class="identify-figure-image selectable" data-figure="figura2-3">
+                <img src="figura2-4.png" alt="Figura 2-4" class="identify-figure-image selectable" data-figure="figura2-4">
             </div>
-
-            <div class="drawing-container">
-                <div class="drawing-part" style="transform: rotate(270deg);">
-                    <img src="figura1.png" alt="Figura de Benson" id="figure-image">
-                </div>
-                <div class="drawing-part" style="transform: rotate(90deg);">
-                    <canvas id="drawing-canvas" width="820" height="550"></canvas>
-                </div>
-            </div>
-            <button id="finish-drawing-with-figure"></button>
+            <button id="finish-identifying-figure"></button>
         </div>
-
         <div id="finishScreen" class="container1" style="display: none;">
             <h1>¡Has completado el test!</h1>
         </div>
