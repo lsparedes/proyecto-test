@@ -214,12 +214,16 @@ function mostrarFinalizacion() {
     imageContainer.innerHTML = 'El test ha finalizado. ¡Gracias por sus respuestas!';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
-    imageContainer.style.marginTop = '13px';
     imageContainer.style.display = 'flex';
+    imageContainer.style.justifyContent = 'center'; 
+    imageContainer.style.alignItems = 'center'; 
+    imageContainer.style.height = '90vh'; 
+    imageContainer.style.margin = '0'; 
     imageContainer.style.backgroundColor = 'transparent';
     fullscreenButton.style.display = 'none';
     generarArchivoCSV();
 }
+
 
 function iniciarPresentacion() {
     presentacionIniciada = true;
@@ -233,7 +237,6 @@ function iniciarPresentacion() {
     instrucciones.style.display = 'none';
     startButton.style.display = 'none';
     fullscreenButton.style.display = 'none';
-
     mostrarImagen(indiceActual);
 }
 

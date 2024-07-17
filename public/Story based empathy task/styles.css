@@ -13,9 +13,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 1000px;
-    margin: 0 auto;
-    margin-top: 90px;
+    max-width: 1100px;
 }
 
 #imageContainer {
@@ -27,8 +25,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: transform 0.3s ease;
-    max-width: 60%;
-    margin: 0px auto 0 auto;
+    max-width: 56%;
     text-align: center;
 }
 
@@ -41,8 +38,7 @@ h1 {
 #instructionText {
     font-size: 39px;
     text-align: justify;
-    margin-bottom: 150px;
-    margin-top: 130px;
+    margin: 120px 0px;
 }
 
 img {
@@ -51,7 +47,7 @@ img {
     object-fit: contain;
     margin: 0;
     max-height: calc(100vh - 250px);
-    
+
 }
 
 #inicioImage {
@@ -104,8 +100,10 @@ button {
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 15px; /* Ajustamos la distancia desde la parte inferior */
-    right: 15px; /* Ajustamos la distancia desde el borde derecho */
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
 }
 
 #startButton {
@@ -159,7 +157,7 @@ button {
 .option {
     max-width: calc(34% - 17px);
     margin: 8px 1px;
-    
+
 }
 
 .option:hover {
@@ -187,6 +185,7 @@ button {
     padding: 5px 10px;
     border-radius: 5px;
 }
+
 .hidden {
     display: none;
 }
@@ -211,10 +210,13 @@ audio {
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 15px; /* Ajustamos la distancia desde la parte inferior */
-    right: 15px; /* Ajustamos la distancia desde el borde derecho */
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
 }
 
 .option.selected {
-    border: 2px solid #007bff; /* Cambia el borde para mostrar que está seleccionada */
+    border: 2px solid #007bff;
+    /* Cambia el borde para mostrar que está seleccionada */
 }
