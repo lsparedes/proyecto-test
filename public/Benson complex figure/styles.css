@@ -140,6 +140,7 @@ button:active {
 
 .drawing-part {
     margin: 10px;
+    
 }
 
 canvas {
@@ -155,7 +156,7 @@ canvas {
     max-width: 81vh;
     max-height: 81vh;
     min-width: 75vh;
-    margin-top: 2vh;
+    margin-top: 1vh;
 }
 
 #identify-figure-grid {
@@ -165,6 +166,20 @@ canvas {
     max-width: 90%;
     margin: 0 auto;
     transform: rotate(270deg);
+    align-items: center;
+    
+}
+
+.option{
+    width: 100%;
+    /* Ocupa todo el ancho disponible en la cuadrícula */
+    height: auto;
+    /* Ajusta automáticamente la altura para mantener la proporción */
+    max-width: 30vh;
+    max-height: 30vh;
+    /* Establece una altura máxima mayor para las imágenes */
+    margin: 4px;
+    /* Agrega un pequeño margen entre las imágenes */
 }
 
 .identify-figure-image {
@@ -187,12 +202,37 @@ canvas {
 
 .rotated-controls {
     transform: rotate(90deg);
+
+    position: absolute;
+    top: 35vh; /* Ajusta este valor según sea necesario */
+    left: 49%; /* Alinea los controles al centro horizontalmente */
+    transform: translateX(-50%) rotate(270deg);
+}
+
+.rotated-controls1 {
+    transform: rotate(90deg);
     transform-origin: top left;
     position: absolute;
     top: 35vh; /* Ajusta este valor según sea necesario */
     left: 49%; /* Alinea los controles al centro horizontalmente */
     transform: translateX(-50%) rotate(270deg);
 }
+
+.selectable {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.selectable:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.selected {
+    border: 3px solid #007bff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
 
 #countdown-timer {
     position: fixed;
@@ -203,24 +243,6 @@ canvas {
     padding: 5px 10px;
     border: 1px solid #000;
     border-radius: 5px;
-}
-
-
-#finish-drawing-from-memory, #finish-identifying-figure {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('flecha3.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 0;
-    width: 80px;
-    height: 70px;
-    vertical-align: middle;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    transform: rotate(270deg);
 }
 
 #finish-drawing-with-figure {
@@ -239,6 +261,29 @@ canvas {
     right: 15px;
     transform: rotate(270deg);
 }
+
+.red-arrow {
+    background-image: url("flecha4.png") !important;
+  }
+  
+
+#finish-drawing-from-memory, #finish-identifying-figure {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 70px;
+    vertical-align: middle;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    transform: rotate(270deg);
+}
+
 
 #finish-identifying-figure {
     background-color: transparent;

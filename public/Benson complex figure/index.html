@@ -39,12 +39,13 @@
 
         <div id="draw-with-figure-screen" class="screen" style="display:none;">
             <div class="controls controls-left rotated-controls">
-                <span id="timer">00:00</span>
-                <i id="start-timer-button" class="fas fa-play" title="Iniciar tiempo"></i>
+            <!-- <span id="timer">00:00</span> -->              
+               <!--<i id="start-timer-button" class="fas fa-play" title="Iniciar tiempo"></i> -->
                 <i id="stop-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i>
                 <i id="clear-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
                 <i id="download-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
             </div>
+
             <div class="drawing-container">
                 <div class="drawing-part" style="transform: rotate(270deg);">
                     <img src="figura1.png" alt="Figura de Benson" id="figure-image">
@@ -57,7 +58,7 @@
         </div>
 
         <div id="draw-from-memory-screen" class="screen" style="display:none;">
-            <div class="controls controls-left rotated-controls" style="padding-right: 200px;">
+            <div class="controls controls-left rotated-controls1" style="padding-right: 200px;">
                 <span id="memory-timer">00:00</span>
                 <i id="start-memory-timer-button" class="fas fa-play" title="Iniciar tiempo"></i>
                 <i id="stop-memory-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i>
@@ -75,15 +76,16 @@
 
         <div id="identify-figure-screen" class="screen" style="display:none;">
             <div id="identify-figure-grid">
-                <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image">
-                <img src="figura2-2.png" alt="Figura 2-2" class="identify-figure-image">
-                <img src="figura2-3.png" alt="Figura 2-3" class="identify-figure-image">
-                <img src="figura2-4.png" alt="Figura 2-4" class="identify-figure-image">
+                <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image selectable" data-figure="figura2-1">
+                <img src="figura2-2.png" alt="Figura 2-2" class="identify-figure-image selectable" data-figure="figura2-2">
+                <img src="figura2-3.png" alt="Figura 2-3" class="identify-figure-image selectable" data-figure="figura2-3">
+                <img src="figura2-4.png" alt="Figura 2-4" class="identify-figure-image selectable" data-figure="figura2-4">
             </div>
             <div id="finish-identifying-figure-container">
                 <button id="finish-identifying-figure"></button>
             </div>
         </div>
+        
     </div>
 
     <audio id="timer-sound">

@@ -1,5 +1,3 @@
-let audioContext;
-
 document.addEventListener('DOMContentLoaded', () => {
     const mainScreen = document.getElementById('main-screen');
     const optionsScreen = document.getElementById('options-screen');
@@ -12,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerInterval;
     let memoryTimerInterval;
     let countdownInterval;
+
+    const selectableImages = document.querySelectorAll('.selectable');
+    let selectedFigure = null;
 
     const startButton = document.getElementById('start-button');
     const fullscreenButton = document.getElementById('fullscreen-button');
@@ -30,6 +31,25 @@ document.addEventListener('DOMContentLoaded', () => {
             document.exitFullscreen();
         } else {
             document.documentElement.requestFullscreen();
+        }
+    });
+
+    selectableImages.forEach(image => {
+        image.addEventListener('click', (event) => {
+            if (selectedFigure) {
+                selectedFigure.classList.remove('selected');
+            }
+            selectedFigure = event.target;
+            selectedFigure.classList.add('selected');
+        });
+    });
+
+    finishIdentifyingFigureButton.addEventListener('click', () => {
+        if (selectedFigure) {
+            const selectedFigureId = selectedFigure.getAttribute('data-figure');
+            console.log(`Figura seleccionada: ${selectedFigureId}`);
+        } else {
+            alert('Por favor, seleccione una figura antes de continuar.');
         }
     });
 
@@ -70,15 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
         let drawing = false;
         let x = 0;
         let y = 0;
+        let isDrawingAllowed = true; // Controlar si se permite dibujar
 
         canvas.addEventListener('mousedown', (e) => {
+            if (!isDrawingAllowed) return;
             x = e.offsetX;
             y = e.offsetY;
             drawing = true;
         });
 
         canvas.addEventListener('mousemove', (e) => {
-            if (drawing) {
+            if (drawing && isDrawingAllowed) {
                 ctx.beginPath();
                 ctx.moveTo(x, y);
                 ctx.lineTo(e.offsetX, e.offsetY);
@@ -106,6 +128,12 @@ document.addEventListener('DOMContentLoaded', () => {
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
+
+        setTimeout(() => {
+            const finishButton = document.getElementById('finish-drawing-with-figure');
+            finishButton.style.backgroundImage = 'url("flecha4.png")';
+            finishButton.classList.add('red-arrow'); // Añadir clase de flecha roja
+        }, 0.05 * 60 * 1000); //Tiempo para dibujar
     }
 
     function initTimer(timerId, startButtonId, stopButtonId) {
@@ -113,14 +141,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const timerDisplay = document.getElementById(timerId);
         const startButton = document.getElementById(startButtonId);
         const stopButton = document.getElementById(stopButtonId);
-
+    
         function updateTimer() {
             const elapsedTime = Date.now() - startTime;
             const minutes = Math.floor(elapsedTime / 60000);
             const seconds = Math.floor((elapsedTime % 60000) / 1000);
             timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
         }
-
+    
         startButton.addEventListener('click', () => {
             startTime = Date.now();
             updateTimer();
@@ -128,13 +156,16 @@ document.addEventListener('DOMContentLoaded', () => {
             startButton.style.display = 'none';
             stopButton.style.display = 'inline';
         });
-
+    
         stopButton.addEventListener('click', () => {
             clearInterval(timerInterval);
             startButton.style.display = 'inline';
             stopButton.style.display = 'none';
         });
+
+
     }
+    
 
     function startCountdown() {
         countdownElement = document.createElement('div');
@@ -164,6 +195,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timerSound = document.getElementById('timer-sound');
         timerSound.play();
     }
+
     function stopAndRemoveCountdown() {
         if (countdownElement) {
             clearInterval(countdownInterval);
@@ -178,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initTimer('memory-timer', 'start-memory-timer-button', 'stop-memory-timer-button');
 });
 
-//función para inicializar el contexto de audio
+// Función para inicializar el contexto de audio
 function initAudioContext() {
     audioContext = new AudioContext();
 }
