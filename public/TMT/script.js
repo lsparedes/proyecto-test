@@ -15,6 +15,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let lastCirclePartA = null;
     const correctPaths = []; // Para almacenar caminos correctos
     const correctPathsPartA = []; // Para almacenar caminos correctos en la parte B
+    const incorrectPaths = []; // Para almacenar caminos incorrectos
+    const incorrectPathsPartA = []; // Para almacenar caminos incorrectos en la parte B
+
 
     const endSequenceButton = document.createElement('button'); // Crear el botón "Terminar"
     endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
@@ -66,6 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
         currentCircle = 1;
         lastCircle = null;
         correctPaths.length = 0;
+        incorrectPaths.length = 0;
 
         // Coordenadas predefinidas de los círculos
         const circleCoordinates = [
@@ -130,6 +134,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!validDrop && lastCircle) {
             drawInvalidLine(ctx, lastCircle.x, lastCircle.y, x, y);
+            incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
         }
 
         if (currentCircle === 8) {
@@ -147,17 +152,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // BOTON SIGUIENTE LUEGO DE DIBUJAR TODAS LAS LINEAS PRIMER CANVAS
     function drawNextButton() {
         const nextButton = document.createElement('button');
-        // nextButton.textContent = 'Siguiente';
-        // nextButton.style.position = 'absolute';
-        // nextButton.style.bottom = '20px';
-        // nextButton.style.right = '20px';
-        // nextButton.style.padding = '10px 20px';
-        // nextButton.style.fontSize = '16px';
-        // nextButton.style.color = 'white';
-        // nextButton.style.backgroundColor = 'blue';
-        // nextButton.style.border = 'none';
-        // nextButton.style.borderRadius = '5px';
-        // nextButton.style.cursor = 'pointer';
         nextButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
         nextButton.style.display = 'inline-block';
 
@@ -181,6 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
         currentCirclePartA = 1;
         lastCirclePartA = null;
         correctPathsPartA.length = 0;
+        incorrectPathsPartA.length = 0;
 
         // Coordenadas predefinidas de los círculos
         const circleCoordinatesPartA = [
@@ -264,6 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!validDrop && lastCirclePartA) {
             drawInvalidLine(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, x, y);
+            incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
         }
 
         if (currentCirclePartA === 25) {
@@ -281,17 +277,6 @@ document.addEventListener('DOMContentLoaded', function () {
     //BOTON SIGUIENTE LUEGO DE DIBUJAR TODAS LAS LINEAS SEGUNDO CANVAS
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
-        // nextButtonA.textContent = 'Siguiente';
-        // nextButtonA.style.position = 'absolute';
-        // nextButtonA.style.bottom = '20px';
-        // nextButtonA.style.right = '20px';
-        // nextButtonA.style.padding = '10px 20px';
-        // nextButtonA.style.fontSize = '16px';
-        // nextButtonA.style.color = 'white';
-        // nextButtonA.style.backgroundColor = 'blue';
-        // nextButtonA.style.border = 'none';
-        // nextButtonA.style.borderRadius = '5px';
-        // nextButtonA.style.cursor = 'pointer';
         nextButtonA.id = 'endSequenceButton';
         nextButtonA.style.display = 'inline-block';
 

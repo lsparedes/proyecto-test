@@ -15,6 +15,8 @@ let currentCirclePartB = 1;
 let isDrawingPartB = false;
 let lastCirclePartB = null;
 const correctPathsPartB = [];
+const incorrectPathsPartB = [];
+const incorrectPathsPartB2 = [];
 let drawingCompletedB = false;
 
 const circleCoordinatesPartB = [
@@ -63,6 +65,7 @@ function startPartB() {
     currentCirclePartB = 1;
     lastCirclePartB = null;
     correctPathsPartB.length = 0;
+    incorrectPathsPartB.length = 0;
     drawingCompletedB = false;
 
     circleCoordinatesPartB.forEach((coord, index) => {
@@ -133,6 +136,7 @@ canvasPartB.addEventListener('mouseup', function (event) {
 
     if (!validDrop && lastCirclePartB) {
         drawInvalidLine(ctxPartB, lastCirclePartB.x, lastCirclePartB.y, x, y);
+        incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
     }
 
     if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
@@ -145,17 +149,6 @@ canvasPartB.addEventListener('mouseup', function (event) {
 
 function drawNextButtonB() {
     const nextButtonB = document.createElement('button');
-    //nextButtonB.textContent = 'Siguiente';
-    // nextButtonB.style.position = 'absolute';
-    // nextButtonB.style.bottom = '20px';
-    // nextButtonB.style.right = '20px';
-    // nextButtonB.style.padding = '10px 20px';
-    // nextButtonB.style.fontSize = '16px';
-    // nextButtonB.style.color = 'white';
-    // nextButtonB.style.backgroundColor = 'blue';
-    // nextButtonB.style.border = 'none';
-    // nextButtonB.style.borderRadius = '5px';
-    // nextButtonB.style.cursor = 'pointer';
     nextButtonB.id = 'endSequenceButton';
     nextButtonB.style.display = 'inline-block';
 
@@ -218,6 +211,7 @@ function startPartB2() {
     currentCirclePartB2 = 1;
     lastCirclePartB2 = null;
     correctPathsPartB2.length = 0;
+    incorrectPathsPartB2.length = 0;
     drawingCompletedB2 = false;
 
     circleCoordinatesPartB2.forEach((coord, index) => {
@@ -269,6 +263,7 @@ canvasPartB2.addEventListener('mouseup', function (event) {
 
     if (!validDrop && lastCirclePartB2) {
         drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
+        incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
     }
 
     // Actualización de la condición para mostrar el botón "Siguiente"
