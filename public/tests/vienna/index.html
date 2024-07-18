@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VIENNA</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+  <div id="initialScreen" class="screen">
+      <p id="instructionText">A continuacion se mostraran imagenes aereas de los items del test de VIENNA, en las
+          cuales se podra seleccionar
+          las puertas que el usuario escogio en su test, luego de seleccionar la puerta elegida por el usuario, debera
+          'Validar selecciones' para guardar y verfificar si la respuesta fue correcta o no. Tambien tendra la opcion
+          de: 'Mostrar puertas correctas', para ver las respuestas, y podra 'Ocultar puertas correctas' para no
+          verlas.
+          Con el boton 'Siguiente imagen' pasara al siguiente item
+      </p>
+      <div class="button-container">
+          <button id="startButton">Comenzar</button>
+          <button id="fullScreenButton">Pantalla Completa</button>
+      </div>
+  </div>
+
+  <div id="testScreen" class="screen">
+      <div class="container-fluid">
+          <div id="header">
+              <h2 class="badge bg-light text-dark shadow" id="trialIndicator">Instrucción</h2>
+          </div>
+          <div class="row align-items-center">
+              <div class="col-8 d-flex justify-content-center align-items-center">
+                  <video id="testVideo" src="../VIENNA/videos/Test_1.mp4" autoplay muted width="100%"></video>
+              </div>
+              <div class="col-4 d-flex flex-column align-items-center ">
+                  <canvas id="imageCanvas" width="600" height="400"></canvas>
+                  <div id="buttons" style="display: none;">
+                      <button id="validateButton">Validar Selecciones</button>
+                      <button id="showButton">Mostrar Puertas Correctas</button>
+                      <button id="hideButton">Ocultar Puertas Correctas</button>
+                      <button id="prevButton">Imagen Anterior</button>
+                  </div>
+                  <div id="results"></div>
+              </div>
+          </div>
+          <div class="row" id="questionRow" style="display: none;">
+              <div class="col-12">
+                  <h3>¿Qué puerta eligió la persona?</h3>
+              </div>
+          </div>
+      </div>
+  </div>
+  <button id="nextButton" class="arrow-button"></button>
+
+  <div id="completionScreen" class="screen">
+      <h2>Se han completado todas las imágenes.</h2>
+      <button id="downloadCSVButton">Descargar Respuestas (CSV)</button>
+  </div>
+
+  <script src="script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

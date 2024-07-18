@@ -1,3 +1,0 @@
-﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,trials.order,imageFile,corrAns,sameOrDiff
-0.0003,25.8809,637755,001,2023-10-22_21h00.33.065,glasgow_face_matching,2023.2.2,Win32,59.97001499,,,,,,,,,,
-,,637755,001,2023-10-22_21h00.33.065,glasgow_face_matching,2023.2.2,Win32,59.97001499,25.9001,0,0,0,6,1,11,different/013_235_R.jpg,right,different

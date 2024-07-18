@@ -1,5 +1,0 @@
-﻿instructions.started,instructions.stopped,key_resp.keys,mouse.x,mouse.y,mouse.leftButton,mouse.midButton,mouse.rightButton,mouse.time,participant,session,date,expName,psychopyVersion,OS,frameRate,ISI.started,positions,ISI.stopped,corsi_present.started,corsi_present.stopped,block_sequence.thisRepN,block_sequence.thisTrialN,block_sequence.thisN,block_sequence.thisIndex,block_sequence.ran
-0.0001,0.5889,,-0.157374339,-0.287958829,1,0,0,0.5826,829702,001,2024-02-09_14h49.00.624,corsi_blocks,2023.2.2,MacIntel,120.4819277,,,,,,,,,,
-,,,,,,,,,829702,001,2024-02-09_14h49.00.624,corsi_blocks,2023.2.2,MacIntel,120.4819277,0.5954,"[[-0.16125,-0.28],[0.45375,0.175],[-0.01125,-0.295],[-0.24625,0.04375],[-0.18625,0.41125],[0.365,-0.27625],[0.28875,0.39875],[-0.12125,-0.12625],[-0.6025,0.0725]]",1.0982,1.1039,1.597,0,0,0,0,1
-,,,,,,,,,829702,001,2024-02-09_14h49.00.624,corsi_blocks,2023.2.2,MacIntel,120.4819277,,,,1.5974,2.097,1,0,1,0,1
-,,,,,,,,,829702,001,2024-02-09_14h49.00.624,corsi_blocks,2023.2.2,MacIntel,120.4819277,,,,2.0971,2.5968,2,0,2,0,1

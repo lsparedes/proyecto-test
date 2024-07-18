@@ -1,3 +1,0 @@
-﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trial.stopped,resp.keys,resp.corr,resp.rt,resp.duration,feedback.started,feedback.stopped,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,imageFile,corrAns,sameOrDiff
-0.0003,1.3719,074272,001,2023-11-06_14h37.06.693,glasgow_face_matching,2023.2.2,Win32,60.27727547,,,,,,,,,,,,,,,,
-,,074272,001,2023-11-06_14h37.06.693,glasgow_face_matching,2023.2.2,Win32,60.27727547,1.3813,6.3677,left,1,4.9525,,6.3678,7.3648,0,0,0,1,1,same/139_DV_C2.jpg,left,same

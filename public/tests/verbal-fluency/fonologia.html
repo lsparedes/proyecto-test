@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Fonología</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .record-button {
+            width: 100px; /* Ajusta el tamaño según sea necesario */
+            height: 100px; /* Ajusta el tamaño según sea necesario */
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="instructions">
+            <p> Fonología: deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es
+                decir palabras que comiencen con la letra solicitada. Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60
+                segundos para cada tarea. Cada grabación puede ser descargada.</p>
+
+            <audio style="margin-top: 20px;" controls>
+                <source src="verbal-fluency.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+            <div class="button-container">
+                <button id="startTestButton">Comenzar Test</button>
+                <button id="fullscreenButton">Pantalla Completa</button>
+            </div>
+        </div>
+
+        <!-- Parte 1 -->
+        <div id="testSection1" style="display: none;">
+            <h2 class="imageText">FF-1</h2>
+            <div class="audio-controls">
+                <audio id="instructionAudio1" controls></audio>
+                <img id="startRecButton1" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
+                <img id="recButton1" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
+                <button id="stopRecordingButton1" style="display: none;border: none;"></button>
+            </div>
+            <div id="timer1" class="timer"></div>
+            <div id="recordingCreatedMessage1" class="recording-message">Grabación creada.</div>
+            <button id="downloadLink1" style="display: none;">Descargar</button>
+            <button id="nextButton1" style="display: none;"></button>
+        </div>
+
+        <!-- Parte 2 -->
+        <div id="testSection2" style="display: none;">
+            <h2 class="imageText">FF-2</h2>
+            <div class="audio-controls">
+                <audio id="instructionAudio2" controls></audio>
+                <img id="startRecButton2" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
+                <img id="recButton2" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
+                <button id="stopRecordingButton2" style="display: none;"></button>
+            </div>
+            <div id="timer2" class="timer"></div>
+            <div id="recordingCreatedMessage2" class="recording-message">Grabación creada.</div>
+           
+            <button id="downloadLink2" style="display: none;">Descargar</button>
+            <button id="nextButton2" style="display: none;"></button>
+        </div>
+
+        <!-- Mensaje de Finalización -->
+        <div id="completionMessage" style="display: none;">
+            <h1>Test Finalizado</h1>
+        </div>
+
+        <script src="script-fonologia.js"></script>
+    </div>
+</body>
+
+</html>

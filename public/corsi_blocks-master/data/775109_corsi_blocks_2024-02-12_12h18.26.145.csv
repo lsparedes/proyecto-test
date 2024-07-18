@@ -1,5 +1,0 @@
-﻿instructions.started,instructions.stopped,key_resp.keys,mouse.x,mouse.y,mouse.leftButton,mouse.midButton,mouse.rightButton,mouse.time,participant,session,date,expName,psychopyVersion,OS,frameRate,ISI.started,positions,ISI.stopped,corsi_present.started,corsi_present.stopped,block_sequence.thisRepN,block_sequence.thisTrialN,block_sequence.thisN,block_sequence.thisIndex,block_sequence.ran
-0,2.73,,0.105597964,-0.377862595,1,0,0,2.727,775109,001,2024-02-12_12h18.26.145,corsi_blocks,2023.2.2,iPhone,43.47826087,,,,,,,,,,
-,,,,,,,,,775109,001,2024-02-12_12h18.26.145,corsi_blocks,2023.2.2,iPhone,43.47826087,2.741,"[[0.45375,0.175],[-0.3575,-0.05625],[0.57875,-0.31375],[-0.55125,-0.13375],[0.03125,-0.41],[-0.285,-0.27125],[-0.24625,0.04375],[-0.675,0.29875],[0.22,0.2425]]",3.235,3.237,3.736,0,0,0,0,1
-,,,,,,,,,775109,001,2024-02-12_12h18.26.145,corsi_blocks,2023.2.2,iPhone,43.47826087,,,,3.736,4.235,1,0,1,0,1
-,,,,,,,,,775109,001,2024-02-12_12h18.26.145,corsi_blocks,2023.2.2,iPhone,43.47826087,,,,4.236,4.735,2,0,2,0,1

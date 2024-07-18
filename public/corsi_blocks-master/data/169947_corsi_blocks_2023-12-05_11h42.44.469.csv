@@ -1,5 +1,0 @@
-﻿instructions.started,instructions.stopped,key_resp.keys,mouse.x,mouse.y,mouse.leftButton,mouse.midButton,mouse.rightButton,mouse.time,participant,session,date,expName,psychopyVersion,OS,frameRate,ISI.started,positions,ISI.stopped,corsi_present.started,corsi_present.stopped,block_sequence.thisRepN,block_sequence.thisTrialN,block_sequence.thisN,block_sequence.thisIndex,block_sequence.ran
-0.001200001,2.822200001,,0.036381982,-0.153685781,1,0,0,2.801,169947,001,2023-12-05_11h42.44.469,corsi_blocks,2023.2.2,Linux armv81,62.58605583,,,,,,,,,,
-,,,,,,,,,169947,001,2023-12-05_11h42.44.469,corsi_blocks,2023.2.2,Linux armv81,62.58605583,2.892200001,"[[-0.485,0.34625],[-0.55125,-0.13375],[-0.45875,-0.3],[-0.3575,-0.05625],[0.05875,-0.0575],[-0.6025,0.0725],[-0.26625,0.235],[0.25625,0.0975],[0.1925,-0.295]]",3.333700001,3.352900002,3.829,0,0,0,0,1
-,,,,,,,,,169947,001,2023-12-05_11h42.44.469,corsi_blocks,2023.2.2,Linux armv81,62.58605583,,,,3.834700001,4.319400002,1,0,1,0,1
-,,,,,,,,,169947,001,2023-12-05_11h42.44.469,corsi_blocks,2023.2.2,Linux armv81,62.58605583,,,,4.3225,4.811900002,2,0,2,0,1

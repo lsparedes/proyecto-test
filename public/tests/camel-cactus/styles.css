@@ -1,0 +1,203 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    margin: 0; 
+    padding: 0; 
+}
+
+.center-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1000px;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+#imageContainer {
+    width: auto;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    max-width: 100vh;
+    max-height: 100vh;
+    margin: 0; 
+    padding: 0; 
+    text-align: center;
+    transform: rotate(-90deg); /* Rotación de 90 grados */
+    
+}
+
+
+
+#instructionText {
+    font-size: 37px;
+    text-align: justify;
+    margin-bottom: 150px;
+    margin-top: 110px;
+}
+
+
+button {
+    margin: 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+#startButton {
+    padding: 15px 30px;
+    font-size: 22px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#startButton:hover {
+    background-color: #0056b3;
+}
+
+#startButton:active {
+    transform: scale(0.98);
+}
+
+#fullscreenButton {
+    padding: 15px 30px;
+    font-size: 22px;
+    color: rgb(0, 0, 0);
+    background-color: #c7c7c7;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#fullscreenButton:hover {
+    background-color: #8f8f8f;
+}
+
+#fullscreenButton:active {
+    transform: scale(0.98);
+}
+
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+    /* Alinea los botones al centro horizontal */
+}
+
+.button-container button {
+    margin: 20px;
+    /* Ajusta el margen entre los botones */
+}
+
+#optionsContainer {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* Dos columnas con el mismo ancho */
+    grid-gap: 50px;
+    /* Aumenta el espacio entre las imágenes */
+    justify-content: center;
+    /* Centra las imágenes horizontalmente */
+    margin: auto;
+    margin-bottom: 3px;
+}
+
+.option {
+    width: 100%;
+    /* Ocupa todo el ancho disponible en la cuadrícula */
+    height: auto;
+    /* Ajusta automáticamente la altura para mantener la proporción */
+    max-width: 30vh;
+    max-height: 30vh;
+    /* Establece una altura máxima mayor para las imágenes */
+    margin: 4px;
+    /* Agrega un pequeño margen entre las imágenes */
+}
+
+.option:hover {
+    transform: scale(1.02);
+    /* Aumenta ligeramente el tamaño al pasar el ratón sobre las opciones */
+    cursor: pointer;
+    border: 2px solid #007bff;
+    /* Cambia el borde al pasar el mouse */
+}
+
+
+.option.selected {
+    border: 2px solid #007bff; /* Cambia el borde para mostrar que está seleccionada */
+}
+
+
+#storyImage {
+    max-width: 100%;
+    /* Utiliza el ancho máximo disponible */
+    max-height: 52vh;
+    /* Limita la altura máxima para evitar que la imagen sea demasiado grande */
+    object-fit: contain;
+    /* Ajusta la imagen dentro del contenedor manteniendo la proporción */
+    margin: 0 auto 8px auto;
+    /* Añade margen a la parte inferior */
+    display: block;
+    /* Asegura que la imagen se muestre correctamente */
+    margin-top: 8px;
+    padding: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.imageText {
+    position: absolute;
+    bottom: 30px;
+    left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px 10px;
+    border-radius: 5px;
+    opacity: 0; /* Inicialmente oculto */
+    transform: rotate(-90deg);
+}
+
+audio {
+    margin-bottom: 20px;
+}
+
+#nextButton {
+    
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 8vh;
+    /* Ajusta el ancho fijo */
+    height: 7vh;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    top: 3%;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 4%;
+    /* Ajustamos la distancia desde el borde derecho */
+    transform: rotate(270deg); /* Rotación de 90 grados */
+}
+

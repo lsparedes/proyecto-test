@@ -1,3 +1,0 @@
-﻿Instructions.started,Instructions.stopped,participant,session,date,expName,psychopyVersion,OS,frameRate,trial.started,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,trials.order,imageFile,corrAns,sameOrDiff
-0,11.5891,866982,001,2023-12-01_16h05.41.477,glasgow_face_matching,2023.2.2,Win32,59.68011459,,,,,,,,,,
-,,866982,001,2023-12-01_16h05.41.477,glasgow_face_matching,2023.2.2,Win32,59.68011459,11.6171,0,0,0,4,1,11,same/235_C2_DV.jpg,left,same

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Two-armed Bandit - Decision Making</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+  <div id="instructions" class="container">
+    <h1>Instrucciones</h1>
+    <p>En este experimento verás aparecer dos máquinas tragamonedas en la pantalla y deberás seleccionar una de ellas...</p>
+    <div class="button-container">
+      <button id="startPracticeButton" class="start-button">Comenzar Práctica</button>
+      <button id="fullscreenButton" class="fullscreen-button">Pantalla Completa</button>
+    </div>
+  </div>
+
+  <div id="practiceTrial" class="container" style="display: none;">
+    <h1><span id="trialIndicator" class="badge bg-light text-dark shadow">P-1</span></h1>
+    <h1 id="puntaje">Ganancia: <span id="scoreAmount" class="score-amount ">$0</span></h1>
+    <div id="slotMachines">
+      <div class="container">
+        <div class="row">
+          <div class="col-5">
+            <img id="leftSlot" src="slot-machine-left-up.png" class="slot-machine" alt="Máquina tragamonedas izquierda">
+          </div>
+          <div class="col-2"></div>
+          <div class="col-5">
+            <img id="rightSlot" src="slot-machine-right-up.png" class="slot-machine" alt="Máquina tragamonedas derecha">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="feedbackScreen" class="container" style="display: none;">
+    <h1><span id="feedbackMessage"></span></h1>
+    
+    <img id="feedbackImage2" src="" alt="Feedback" class="feedback-image feedback-image-money" >
+    <br>
+    <img id="feedbackImage1" src="" alt="Feedback" class="feedback-image feedback-image-person">
+  </div>
+
+  <div id="blockFinishScreen" class="container" style="display: none;">
+    <h1>Bloque completado</h1>
+    <button id="startNextBlockButton" class="arrow-button"></button>
+  </div>
+
+  <div id="endScreen" class="container" style="display: none;">
+    <h1>Test completado</h1>
+    <button id="downloadResultsButton">Descargar resultados</button>
+  </div>
+  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>

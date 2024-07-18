@@ -1,0 +1,228 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #ffffff;
+}
+
+#container {
+    text-align: center;
+    background: white;
+    padding: 100px;
+}
+
+h1 {
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 30px;
+    margin-bottom: 80px;
+}
+
+p {
+    font-size: 38px;
+    text-align: justify;
+}
+
+ol {
+    font-size: 38px;
+    margin-bottom: 150px;
+    text-align: justify;
+}
+
+button {
+    margin: 20px;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#start-button {
+    padding: 15px 30px;
+    font-size: 22px;
+    color: white;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#start-button:hover {
+    background-color: #0056b3;
+}
+
+#start-button:active {
+    transform: scale(0.98);
+}
+
+#fullscreen-button {
+    margin-top: 10px;
+    padding: 15px 30px;
+    font-size: 22px;
+    color: rgb(0, 0, 0);
+    background-color: #c7c7c7;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#fullscreen-button:hover {
+    background-color: #8f8f8f;
+}
+
+#fullscreen-button:active {
+    transform: scale(0.98);
+}
+
+.option-button {
+    font-size: 28px;
+}
+
+.screen {
+    text-align: center;
+    max-width: 100vh;
+    max-height: 100vh;
+}
+
+#main-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.button-container {
+    margin-top: 20px;
+    text-align: center;
+    /* Alinea los botones al centro horizontal */
+}
+
+.button-container button {
+    margin: 20px;
+    /* Ajusta el margen entre los botones */
+}
+
+.controls {
+    margin-bottom: 10px;
+}
+
+#timer,
+#memory-timer {
+    font-size: 24px;
+    margin-right: 20px;
+}
+
+.drawing-container {
+    display: flex;
+    justify-content: center;
+}
+
+.drawing-part {
+    margin: 10px;
+}
+
+canvas {
+    border: 1px solid #000;
+    cursor: crosshair;
+}
+
+#drawing-canvas {
+    margin-bottom: 10vh;
+}
+
+#figure-image {
+    max-width: 81vh;
+    max-height: 81vh;
+    min-width: 75vh;
+    margin-top: 2vh;
+}
+
+#identify-figure-image {
+    max-width: 90%;
+    max-height: 90%;
+}
+
+.controls i {
+    font-size: 30px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.controls i {
+    transform: scale(0.98);
+}
+
+.rotated-controls {
+    transform: rotate(90deg);
+    transform-origin: top left;
+    position: absolute;
+    top: 15vh; /* Ajusta este valor según sea necesario */
+    left: 59%; /* Alinea los controles al centro horizontalmente */
+    transform: translateX(-50%) rotate(90deg);
+}
+
+#countdown-timer {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 24px;
+    background-color: #fff;
+    padding: 5px 10px;
+    border: 1px solid #000;
+    border-radius: 5px;
+}
+
+#finish-drawing-from-memory, #finish-identifying-figure {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 75px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 6%; /* Ajustamos la distancia desde la parte inferior */
+    right: 10%; /* Ajustamos la distancia desde el borde derecho */
+}
+
+#finish-drawing-with-figure {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 75px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 3%; /* Ajustamos la distancia desde la parte inferior */
+    left: 3%; /* Ajustamos la distancia desde el borde derecho */
+    transform: rotate(90deg);
+}

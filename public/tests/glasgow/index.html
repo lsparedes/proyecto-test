@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Glasgow Face Matching Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  </head>
+  <body>
+    <div id="instruction-screen" class="screen">
+        <p id="instructionText">En esta prueba, verás imágenes de pares de rostros. Debes decidir si los rostros en cada imagen son iguales o
+            diferentes. Haz clic en el botón correspondiente y luego presiona la flecha para pasar a la siguiente
+            imagen.</p>
+
+        <audio controls id="instrucciones">
+            <source src="glasgow.mp3" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+
+        <div class="button-container">
+            <button id="start-button">Comenzar</button>
+            <button id="fullscreen-button">Pantalla Completa</button>
+        </div>
+    </div>
+
+    <div id="test-screen" class="screen" style="display: none;">
+        <div class="container-fluid">
+            <div id="header">
+                <h2 class="badge bg-light text-dark shadow" id="trialIndicator">Instrucción</h2>
+            </div>
+            <div id="image-container">
+                <img id="image" src="" alt="Imagen de pares de rostros">
+            </div>
+            <div id="controls">
+                <button id="same-button">Misma</button>
+                <button id="different-button">Diferentes</button>
+                
+            </div>
+            <button id="next-button"></button>
+        </div>
+    </div>
+
+    <div id="end-screen" class="screen" style="display: none;">
+        <p id="finalizacionText">Test finalizado, Gracias por sus respuestas.</p>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
+</html>

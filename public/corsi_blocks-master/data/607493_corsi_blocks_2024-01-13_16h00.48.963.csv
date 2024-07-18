@@ -1,5 +1,0 @@
-﻿instructions.started,instructions.stopped,key_resp.keys,mouse.x,mouse.y,mouse.leftButton,mouse.midButton,mouse.rightButton,mouse.time,participant,session,date,expName,psychopyVersion,OS,frameRate,ISI.started,positions,ISI.stopped,corsi_present.started,corsi_present.stopped,block_sequence.thisRepN,block_sequence.thisTrialN,block_sequence.thisN,block_sequence.thisIndex,block_sequence.ran
-0.001,2.837,,0.309121622,-0.346283784,1,0,0,2.833,607493,001,2024-01-13_16h00.48.963,corsi_blocks,2023.2.2,iPad,47.61904762,,,,,,,,,,
-,,,,,,,,,607493,001,2024-01-13_16h00.48.963,corsi_blocks,2023.2.2,iPad,47.61904762,2.844,"[[0.57875,-0.31375],[-0.26625,0.235],[0.0675,0.07375],[0.1925,-0.295],[0.54,0.03625],[0.25625,0.0975],[0.16625,0.3825],[0.30125,-0.0175],[-0.16125,-0.28]]",3.346,3.349,3.846,0,0,0,0,1
-,,,,,,,,,607493,001,2024-01-13_16h00.48.963,corsi_blocks,2023.2.2,iPad,47.61904762,,,,3.847,4.346,1,0,1,0,1
-,,,,,,,,,607493,001,2024-01-13_16h00.48.963,corsi_blocks,2023.2.2,iPad,47.61904762,,,,4.347,4.828,2,0,2,0,1
