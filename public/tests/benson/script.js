@@ -1,72 +1,169 @@
-let audioContext;
-
 document.addEventListener('DOMContentLoaded', () => {
+    // Seleccionar elementos comunes
     const mainScreen = document.getElementById('main-screen');
-    const optionsScreen = document.getElementById('options-screen');
+    const startButton = document.getElementById('start-button');
+    const fullscreenButton = document.getElementById('fullscreen-button');
+    const finishScreen = document.getElementById('finishScreen');
+
+    // Seleccionar elementos específicos para los index
     const drawWithFigureScreen = document.getElementById('draw-with-figure-screen');
+    const finishDrawingWithFigureButton = document.getElementById('finish-drawing-with-figure');
+
     const drawFromMemoryScreen = document.getElementById('draw-from-memory-screen');
+    const finishDrawingFromMemoryButton = document.getElementById('finish-drawing-from-memory');
+
     const identifyFigureScreen = document.getElementById('identify-figure-screen');
+    const finishIdentifyingFigureButton = document.getElementById('finish-identifying-figure');
+
+    const selectableImages = document.querySelectorAll('.selectable');
+
+    let selectedFigure = null;
+    let mediaRecorder;
+    let recordedChunks = [];
+
     initAudioContext();
-    let countdownElement; 
 
     let timerInterval;
     let memoryTimerInterval;
     let countdownInterval;
 
-    const startButton = document.getElementById('start-button');
-    const fullscreenButton = document.getElementById('fullscreen-button');
-    const optionButtons = document.querySelectorAll('.option-button');
-    const finishDrawingWithFigureButton = document.getElementById('finish-drawing-with-figure');
-    const finishDrawingFromMemoryButton = document.getElementById('finish-drawing-from-memory');
-    const finishIdentifyingFigureButton = document.getElementById('finish-identifying-figure');
+    // Check if 10 minutes have passed since the first test
+    if (drawFromMemoryScreen || identifyFigureScreen) {
+        const firstTestEndTime = localStorage.getItem('firstTestEndTime');
+        if (firstTestEndTime) {
+            const now = new Date().getTime();
+            const endTime = new Date(parseInt(firstTestEndTime)).getTime();
+            const timeLeft = endTime + 10 * 60 * 1000 - now;
 
-    startButton.addEventListener('click', () => {
+            if (timeLeft > 0) {
+                disableStartButton(timeLeft);
+            }
+        }
+    }
+
+    // Eventos comunes
+    startButton.addEventListener('click', async () => {
         mainScreen.style.display = 'none';
-        optionsScreen.style.display = 'block';
-    });
 
-    fullscreenButton.addEventListener('click', () => {
-        if (document.fullscreenElement) {
-            document.exitFullscreen();
-        } else {
-            document.documentElement.requestFullscreen();
+        if (drawWithFigureScreen) {
+            drawWithFigureScreen.style.display = 'block';
+            finishDrawingWithFigureButton.style.display = 'block';
+            initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
+            await startCanvasRecording('drawing-canvas');
+        }
+
+        if (drawFromMemoryScreen) {
+            drawFromMemoryScreen.style.display = 'block';
+            initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
+            await startCanvasRecording('memory-canvas');
+        }
+
+        if (identifyFigureScreen) {
+            identifyFigureScreen.style.display = 'block';
         }
     });
 
-    optionButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
-            optionsScreen.style.display = 'none';
-            const option = event.target.dataset.option;
-            stopAndRemoveCountdown();
-            if (option === '1') {
-                drawWithFigureScreen.style.display = 'block';
-            } else if (option === '2') {
-                drawFromMemoryScreen.style.display = 'block';
-            } else if (option === '3') {
-                identifyFigureScreen.style.display = 'block';
+    fullscreenButton.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    });
+
+    if (finishDrawingWithFigureButton) {
+        finishDrawingWithFigureButton.addEventListener('click', () => {
+            drawWithFigureScreen.style.display = 'none';
+            finishScreen.style.display = 'block';
+            stopCanvasRecording();
+            localStorage.setItem('firstTestEndTime', new Date().getTime().toString());
+        });
+    }
+
+    if (finishDrawingFromMemoryButton) {
+        finishDrawingFromMemoryButton.addEventListener('click', () => {
+            drawFromMemoryScreen.style.display = 'none';
+            finishScreen.style.display = 'block';
+            stopCanvasRecording();
+            localStorage.setItem('secondTestEndTime', new Date().getTime().toString());
+            setTimeout(() => {
+                disableStartButton(10 * 60 * 1000);
+            }, 0);
+        });
+    }
+
+    if (finishIdentifyingFigureButton) {
+        finishIdentifyingFigureButton.addEventListener('click', () => {
+            if (selectedFigure) {
+                identifyFigureScreen.style.display = 'none';
+                finishScreen.style.display = 'block';
+
+                // Descargar automáticamente la imagen seleccionada
+                const link = document.createElement('a');
+                link.href = selectedFigure.src;
+                link.download = 'selected-image.png';
+                link.click();
+            } else {
+                alert('Por favor, seleccione una figura antes de continuar.');
             }
         });
-    });
 
-    finishDrawingWithFigureButton.addEventListener('click', () => {
-        drawWithFigureScreen.style.display = 'none';
-        optionsScreen.style.display = 'block';
-        startCountdown();
-    });
+        selectableImages.forEach(image => {
+            image.addEventListener('click', (event) => {
+                if (selectedFigure) {
+                    selectedFigure.classList.remove('selected');
+                }
+                selectedFigure = event.target;
+                selectedFigure.classList.add('selected');
+            });
+        });
+    }
 
-    finishDrawingFromMemoryButton.addEventListener('click', () => {
-        drawFromMemoryScreen.style.display = 'none';
-        optionsScreen.style.display = 'block';
-    });
+    function disableStartButton(timeLeft) {
+        startButton.disabled = true;
+        const countdownElement = document.createElement('div');
+        countdownElement.id = 'contador';
+        document.body.appendChild(countdownElement);
+        
+        updateCountdown(timeLeft);
 
-    finishIdentifyingFigureButton.addEventListener('click', () => {
-        identifyFigureScreen.style.display = 'none';
-        optionsScreen.style.display = 'block';
-    });
+        countdownInterval = setInterval(() => {
+            timeLeft -= 1000;
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                startButton.disabled = false;
+                countdownElement.remove();
+            } else {
+                updateCountdown(timeLeft);
+            }
+        }, 1000);
+    }
+
+    function updateCountdown(timeLeft) {
+        const minutes = Math.floor(timeLeft / 60000);
+        const seconds = Math.floor((timeLeft % 60000) / 1000);
+        const countdownElement = document.getElementById('contador');
+        countdownElement.textContent = `Espera ${minutes}:${seconds < 10 ? '0' : ''}${seconds} minutos para comenzar`;
+    }
+
+    function setCanvasBackground(canvas, color) {
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 
     function initCanvas(canvasId, clearButtonId, downloadButtonId) {
         const canvas = document.getElementById(canvasId);
         const ctx = canvas.getContext('2d');
+
+        // Establecer el color del fondo en blanco
+        setCanvasBackground(canvas, 'white');
+
+        // Establecer el color del trazo en negro
+        ctx.strokeStyle = 'black';
+
         let drawing = false;
         let x = 0;
         let y = 0;
@@ -98,87 +195,51 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById(clearButtonId).addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            setCanvasBackground(canvas, 'white'); // Restablecer el fondo blanco
         });
 
         document.getElementById(downloadButtonId).addEventListener('click', () => {
             const link = document.createElement('a');
-            link.download = 'drawing.png';
+            link.download = 'Benson Complex Figure.png';
             link.href = canvas.toDataURL('image/png');
             link.click();
         });
     }
 
-    function initTimer(timerId, startButtonId, stopButtonId) {
-        let startTime;
-        const timerDisplay = document.getElementById(timerId);
-        const startButton = document.getElementById(startButtonId);
-        const stopButton = document.getElementById(stopButtonId);
+    async function startCanvasRecording(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const stream = canvas.captureStream(30); // 30 FPS
 
-        function updateTimer() {
-            const elapsedTime = Date.now() - startTime;
-            const minutes = Math.floor(elapsedTime / 60000);
-            const seconds = Math.floor((elapsedTime % 60000) / 1000);
-            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
-
-        startButton.addEventListener('click', () => {
-            startTime = Date.now();
-            updateTimer();
-            timerInterval = setInterval(updateTimer, 1000);
-            startButton.style.display = 'none';
-            stopButton.style.display = 'inline';
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'video/webm;codecs=vp9'
         });
 
-        stopButton.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            startButton.style.display = 'inline';
-            stopButton.style.display = 'none';
-        });
-    }
-
-    function startCountdown() {
-        countdownElement = document.createElement('div');
-        countdownElement.id = 'countdown-timer';
-        document.body.appendChild(countdownElement);
-    
-        let countdownTime = 15 * 60; // minutos en segundos
-    
-        function updateCountdown() {
-            const minutes = Math.floor(countdownTime / 60);
-            const seconds = countdownTime % 60;
-            countdownElement.textContent = `Tiempo restante: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    
-            if (countdownTime <= 0) {
-                clearInterval(countdownInterval);
-                playTimerSound(); // Llama a la función para reproducir el sonido
-            } else {
-                countdownTime--;
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
             }
-        }
-    
-        updateCountdown();
-        countdownInterval = setInterval(updateCountdown, 1000);
-    }
-    
-    function playTimerSound() {
-        const timerSound = document.getElementById('timer-sound');
-        timerSound.play();
-    }
-    function stopAndRemoveCountdown() {
-        if (countdownElement) {
-            clearInterval(countdownInterval);
-            document.body.removeChild(countdownElement);
-            countdownElement = null;
-        }
+        };
+
+        mediaRecorder.start();
     }
 
-    initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
-    initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
-    initTimer('timer', 'start-timer-button', 'stop-timer-button');
-    initTimer('memory-timer', 'start-memory-timer-button', 'stop-memory-timer-button');
+    function stopCanvasRecording() {
+        mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/webm'
+            });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'canvas-recording.webm';
+            link.click();
+            URL.revokeObjectURL(url);
+            recordedChunks = []; // Clear recorded chunks
+        };
+    }
+
+    function initAudioContext() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    }
 });
-
-//función para inicializar el contexto de audio
-function initAudioContext() {
-    audioContext = new AudioContext();
-}

@@ -141,4 +141,7 @@ audio {
 #practica, #prueba, #endScreen {
   transform: rotate(-90deg);
   transform-origin: center;
+  }
+.red-arrow {
+  background-image: url("flecha4.png") !important;
 }
