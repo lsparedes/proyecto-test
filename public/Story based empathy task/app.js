@@ -227,16 +227,19 @@ function mostrarFinalizacion() {
 
 function iniciarPresentacion() {
     presentacionIniciada = true;
+    const h1 = document.getElementById('titulo');
     const imageContainer = document.getElementById('imageContainer');
     const instructionText = document.getElementById('instructionText');
     const instrucciones = document.getElementById('instrucciones');
     const startButton = document.getElementById('startButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
-    imageContainer.style.display = 'block';
+    h1.style.display ='none';
+    
     instructionText.style.display = 'none';
     instrucciones.style.display = 'none';
     startButton.style.display = 'none';
     fullscreenButton.style.display = 'none';
+    imageContainer.style.display = 'block';
     mostrarImagen(indiceActual);
 }
 

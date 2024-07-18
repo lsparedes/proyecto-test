@@ -40,7 +40,7 @@ function startTest(type) {
 
         const title = document.createElement('h3');
         title.textContent = titles[i - 1];
-
+        titulo =  title.textContent;
         const audio = document.createElement('audio');
         const beep = document.createElement('audio');
 
@@ -48,16 +48,14 @@ function startTest(type) {
         audio.src = `audio/${type}/${i}.mp3`;
         audio.controls = true;
 
-        // Añadir evento para iniciar la reproducción del beep al terminar el audio de explicación
         audio.addEventListener('ended', () => {
             beep.play();
         });
 
-        // Añadir evento para iniciar la grabación automáticamente al terminar la reproducción del beep
         beep.addEventListener('play', () => {
             setTimeout(() => {
                 startRecording(itemDiv, title);
-            }, beep.duration * 1000 - 600); 
+            }, beep.duration * 1000 - 600);
         });
 
         const timerDiv = document.createElement('div');
@@ -85,7 +83,8 @@ function startTest(type) {
                 itemDiv.nextSibling.classList.remove('hidden');
             } else {
                 document.getElementById('test-items-' + type).classList.add('hidden');
-                showDownloadLinks();
+                mostrarFinalizacion(type,titulo); 
+
             }
         });
 
@@ -119,7 +118,7 @@ function startRecording(itemDiv, title) {
         const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
         chunks = [];
         const audioURL = window.URL.createObjectURL(blob);
-        downloadLinks.push({ url: audioURL, title: title });
+        downloadLinks.push({ url: audioURL, title: title, blob: blob });
 
         // Ocultar el botón de grabación y mostrar el botón de siguiente
         const stopImg = itemDiv.querySelector('.stop-img');
@@ -187,20 +186,54 @@ function updateTimerDisplay(displayElement, time) {
     displayElement.textContent = formatTime(time);
 }
 
-function showDownloadLinks() {
+function mostrarFinalizacion(type, titulo) {
     const completionMessage = document.getElementById('completion-message');
-    const downloadList = document.createElement('ul');
 
-    downloadLinks.forEach((linkData, index) => {
-        const listItem = document.createElement('li');
-        const downloadLink = document.createElement('a');
-        downloadLink.href = linkData.url;
-        downloadLink.download = `respuesta_${index + 1}.wav`;
-        downloadLink.textContent = `Descargar Respuesta ${index + 1}`;
-        listItem.appendChild(downloadLink);
-        downloadList.appendChild(listItem);
+    completionMessage.style.textAlign = 'center';
+    completionMessage.style.fontSize = '35px';
+    completionMessage.style.marginTop = '13px';
+    completionMessage.style.display = 'flex';
+    crearZip(type, titulo);
+}
+
+function crearZip(type, titulo) {
+    // Obtener la fecha y la hora actuales
+
+    const zip = new JSZip();
+    const audioFolder = zip.folder('audios');
+
+    const fileName = `${type}_${titulo}.mp3`; // Generar el nombre del archivo
+    console.log('Generando archivo:', fileName); // Mostrar el nombre del archivo en la consola
+    
+    downloadLinks.forEach(linkData => {
+        audioFolder.file(fileName, linkData.blob);
     });
 
-    completionMessage.appendChild(downloadList);
-    completionMessage.classList.remove('hidden');
+    zip.generateAsync({ type: "blob" })
+        .then(content => {
+
+            const fechaActual = new Date();
+            const año = fechaActual.getFullYear();
+            const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+            const dia = String(fechaActual.getDate()).padStart(2, '0');
+            const horas = String(fechaActual.getHours()).padStart(2, '0');
+            const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
+            const segundos = String(fechaActual.getSeconds()).padStart(2, '0');
+
+            // Formatear la fecha y la hora
+            const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
+
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(content);
+            downloadLink.download = `respuestas_digital_span_${type}_${fechaHoraFormateada}.zip`;;
+            downloadLink.textContent = 'Descargar todas las grabaciones';
+            document.body.appendChild(downloadLink);
+
+            downloadLink.click();
+
+            // Elimina el enlace del DOM después de la descarga
+            document.body.removeChild(downloadLink);
+
+            completionMessage.classList.remove('hidden');
+        });
 }
