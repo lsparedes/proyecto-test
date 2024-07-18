@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TMT Test</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="instructions">
+    <div id="partB">
+      <p id="instructionTextB1">Ahora comienza la Parte B, partiremos con una muestra, en esta parte hay números y
+        letras
+        dentro de unos círculos. Por
+        favor, haga una línea de un círculo a otro, alternando el orden entre números y letras. Empiece en el número 1,
+        y
+        luego vaya
+        a la primera letra, A, siga al próximo número, 2, y luego a la próxima letra, B, y así sucesivamente. Trabaje lo
+        más rápido que pueda.</p>
+
+      <audio controls>
+        <source src="TMT-MuestraB.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+      </audio>
+
+      <div class="button-container">
+        <button id="continueButtonB">Comenzar</button>
+      </div>
+    </div>
+
+    <div id="partB2" style="display:none;">
+      <p id="instructionTextB2">Continuamos con la Parte B, en esta página hay más números y letras dentro de unos
+        círculos. Por
+        favor, haga una línea de un círculo a otro, alternando el orden entre números y las letras. Empiece en el número
+        1
+        y termine en el 13. Trabaje lo más rápido que pueda.</p>
+
+      <audio controls>
+        <source src="TMT-ParteB.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+      </audio>
+
+      <div class="button-container">
+        <button id="continueButtonB2">Comenzar</button>
+      </div>
+    </div>
+
+
+    <canvas id="tmtCanvasPartB" style="display:none;" width="1000" height="800">
+      <p id="pCanvas" style="display: none;"></p>
+    </canvas>
+    <canvas id="tmtCanvasPartB2" width="900" height="1300" style="display:none;transform: rotate(90deg);"></canvas>
+
+
+    <script src="app.js"></script>
+</body>
+
+</html>

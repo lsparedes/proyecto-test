@@ -4,6 +4,7 @@ document.getElementById('continueButtonB').addEventListener('click', () => {
 });
 
 document.getElementById('continueButtonB2').addEventListener('click', () => {
+    reiniciarTemporizador();
     startPartB2();
 });
 
@@ -15,26 +16,28 @@ let currentCirclePartB = 1;
 let isDrawingPartB = false;
 let lastCirclePartB = null;
 const correctPathsPartB = [];
+const incorrectPathsPartB = [];
+const incorrectPathsPartB2 = [];
 let drawingCompletedB = false;
 
 const circleCoordinatesPartB = [
-    { x: 500, y: 500 },
-    { x: 700, y: 170 },
-    { x: 900, y: 500 },
-    { x: 720, y: 370 },
-    { x: 700, y: 650 },
-    { x: 300, y: 650 },
-    { x: 190, y: 180 },
-    { x: 450, y: 310 }
+    { x: 498, y: 497 },
+    { x: 653, y: 237 },
+    { x: 847, y: 494 },
+    { x: 671, y: 364 },
+    { x: 670, y: 619 },
+    { x: 272, y: 621 },
+    { x: 209, y: 253 },
+    { x: 433, y: 335 }
 ];
 
-const firstCircleLabelB = "Inicio";
-const lastCircleLabelB = "Fin";
+const firstCircleLabelB = "Empezar";
+const lastCircleLabelB = "Terminar";
 
-function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "") {
+function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRadius) {
     ctx.fillStyle = 'white';
     ctx.beginPath();
-    ctx.arc(x, y, 29, 0, Math.PI * 2, true);
+    ctx.arc(x, y, circleRadius, 0, Math.PI * 2, true);
     ctx.fill();
 
     ctx.lineWidth = 1;
@@ -42,14 +45,14 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "") {
     ctx.stroke();
 
     ctx.fillStyle = 'black';
-    ctx.font = '27px Arial';
+    ctx.font = 'bold 32px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(label, x, y);
 
     if (name) {
-        ctx.font = '15px Arial';
-        ctx.fillText(name, x, y + 35);
+        ctx.font = 'bold 19px Arial';
+        ctx.fillText(name, x, y - circleRadius - 20);
     }
 
     circlesArray.push({ x, y, label });
@@ -63,12 +66,13 @@ function startPartB() {
     currentCirclePartB = 1;
     lastCirclePartB = null;
     correctPathsPartB.length = 0;
+    incorrectPathsPartB.length = 0;
     drawingCompletedB = false;
 
     circleCoordinatesPartB.forEach((coord, index) => {
         const label = index % 2 === 0 ? (index / 2) + 1 : String.fromCharCode(65 + (index - 1) / 2);
         const name = index === 0 ? firstCircleLabelB : (index === circleCoordinatesPartB.length - 1 ? lastCircleLabelB : "");
-        drawCircleWithLabel(ctxPartB, coord.x, coord.y, label, circlesPartB, name);
+        drawCircleWithLabel(ctxPartB, coord.x, coord.y, label, circlesPartB, name, 50);
     });
 }
 
@@ -98,7 +102,7 @@ canvasPartB.addEventListener('mousedown', function (event) {
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 20 && circle.label === currentCirclePartB) {
+        if (distance < 50 && circle.label === currentCirclePartB) {
             isDrawingPartB = true;
             lastCirclePartB = circle;
             ctxPartB.beginPath();
@@ -121,7 +125,7 @@ canvasPartB.addEventListener('mouseup', function (event) {
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 20 && circle.label === getNextLabel(currentCirclePartB)) {
+        if (distance < 50 && circle.label === getNextLabel(currentCirclePartB)) {
             ctxPartB.lineTo(circle.x, circle.y);
             ctxPartB.stroke();
             correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
@@ -133,29 +137,24 @@ canvasPartB.addEventListener('mouseup', function (event) {
 
     if (!validDrop && lastCirclePartB) {
         drawInvalidLine(ctxPartB, lastCirclePartB.x, lastCirclePartB.y, x, y);
+        incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
     }
 
     if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
-        drawNextButtonB();
         drawingCompletedB = true;
     }
-
+    
     isDrawingPartB = false;
+
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB();
+    }
 });
 
 function drawNextButtonB() {
     const nextButtonB = document.createElement('button');
-    nextButtonB.textContent = 'Siguiente';
-    nextButtonB.style.position = 'absolute';
-    nextButtonB.style.bottom = '20px';
-    nextButtonB.style.right = '20px';
-    nextButtonB.style.padding = '10px 20px';
-    nextButtonB.style.fontSize = '16px';
-    nextButtonB.style.color = 'white';
-    nextButtonB.style.backgroundColor = 'blue';
-    nextButtonB.style.border = 'none';
-    nextButtonB.style.borderRadius = '5px';
-    nextButtonB.style.cursor = 'pointer';
+    nextButtonB.id = 'endSequenceButton';
+    nextButtonB.style.display = 'inline-block';
 
     nextButtonB.addEventListener('click', () => {
         canvasPartB.style.display = 'none';
@@ -176,37 +175,44 @@ let isDrawingPartB2 = false;
 let lastCirclePartB2 = null;
 const correctPathsPartB2 = [];
 let drawingCompletedB2 = false;
+let temporizador = null;
 
 const circleCoordinatesPartB2 = [
-    { x: 500, y: 570 },
-    { x: 700, y: 820 },
-    { x: 280, y: 910 },
-    { x: 450, y: 270 },
-    { x: 480, y: 430 },
-    { x: 650, y: 630 },
-    { x: 570, y: 170 },
-    { x: 740, y: 140 },
-    { x: 760, y: 570 },
-    { x: 790, y: 1090 },
-    { x: 450, y: 960 },
-    { x: 200, y: 1080 },
-    { x: 400, y: 560 },
-    { x: 190, y: 740 },
-    { x: 220, y: 200 },
-    { x: 270, y: 630 },
-    { x: 350, y: 130 },
-    { x: 650, y: 120 },
-    { x: 850, y: 100 },
-    { x: 820, y: 850 },
-    { x: 850, y: 1170 },
-    { x: 80, y: 1200 },
-    { x: 80, y: 700 },
-    { x: 150, y: 1000 },
-    { x: 120, y: 80 }
+    { x: 452, y: 580 },
+    { x: 619, y: 850 },
+    { x: 281, y: 953 },
+    { x: 394, y: 316 },
+    { x: 413, y: 464 },
+    { x: 590, y: 697 },
+    { x: 491, y: 285 },
+    { x: 697, y: 247 },
+    { x: 694, y: 609 },
+    { x: 724, y: 1009 },
+    { x: 404, y: 962 },
+    { x: 213, y: 1041 },
+    { x: 299, y: 574 },
+    { x: 210, y: 778 },
+    { x: 176, y: 301 },
+    { x: 209, y: 660 },
+    { x: 295, y: 249 },
+    { x: 576, y: 239 },
+    { x: 793, y: 186 },
+    { x: 735, y: 861 },
+    { x: 786, y: 1080 },
+    { x: 124, y: 1093 },
+    { x: 131, y: 748 },
+    { x: 173, y: 974 },
+    { x: 141, y: 197 }
 ];
 
-const firstCircleLabelB2 = "Inicio";
-const lastCircleLabelB2 = "Fin";
+const firstCircleLabelB2 = "Empezar";
+const lastCircleLabelB2 = "Terminar";
+
+function reiniciarTemporizador() {
+    clearTimeout(temporizador);
+    temporizador = setTimeout(completeTest, 300000); // Cambia después de 300 segundos
+    // temporizador = setTimeout(completeTest, 3000); // Cambia después de 3 segundos
+}
 
 function startPartB2() {
     document.getElementById('partB2').style.display = 'none';
@@ -216,12 +222,13 @@ function startPartB2() {
     currentCirclePartB2 = 1;
     lastCirclePartB2 = null;
     correctPathsPartB2.length = 0;
+    incorrectPathsPartB2.length = 0;
     drawingCompletedB2 = false;
 
     circleCoordinatesPartB2.forEach((coord, index) => {
         const label = index % 2 === 0 ? (index / 2) + 1 : String.fromCharCode(65 + (index - 1) / 2);
         const name = index === 0 ? firstCircleLabelB2 : (index === circleCoordinatesPartB2.length - 1 ? lastCircleLabelB2 : "");
-        drawCircleWithLabel(ctxPartB2, coord.x, coord.y, label, circlesPartB2, name);
+        drawCircleWithLabel(ctxPartB2, coord.x, coord.y, label, circlesPartB2, name, 30);
     });
 }
 
@@ -232,7 +239,7 @@ canvasPartB2.addEventListener('mousedown', function (event) {
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 20 && circle.label === currentCirclePartB2) {
+        if (distance < 30 && circle.label === currentCirclePartB2) {
             isDrawingPartB2 = true;
             lastCirclePartB2 = circle;
             ctxPartB2.beginPath();
@@ -255,7 +262,7 @@ canvasPartB2.addEventListener('mouseup', function (event) {
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 20 && circle.label === getNextLabel(currentCirclePartB2)) {
+        if (distance < 30 && circle.label === getNextLabel(currentCirclePartB2)) {
             ctxPartB2.lineTo(circle.x, circle.y);
             ctxPartB2.stroke();
             correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
@@ -267,30 +274,24 @@ canvasPartB2.addEventListener('mouseup', function (event) {
 
     if (!validDrop && lastCirclePartB2) {
         drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
+        incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
     }
 
     // Actualización de la condición para mostrar el botón "Siguiente"
     if (currentCirclePartB2 === 13) {
-        drawNextButtonB2();
         drawingCompletedB2 = true;
     }
-
+    
     isDrawingPartB2 = false;
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB2();
+    }
 });
 
 function drawNextButtonB2() {
     const nextButtonB2 = document.createElement('button');
-    nextButtonB2.textContent = 'Siguiente';
-    nextButtonB2.style.position = 'absolute';
-    nextButtonB2.style.bottom = '20px';
-    nextButtonB2.style.right = '20px';
-    nextButtonB2.style.padding = '10px 20px';
-    nextButtonB2.style.fontSize = '16px';
-    nextButtonB2.style.color = 'white';
-    nextButtonB2.style.backgroundColor = 'blue';
-    nextButtonB2.style.border = 'none';
-    nextButtonB2.style.borderRadius = '5px';
-    nextButtonB2.style.cursor = 'pointer';
+    nextButtonB2.id = 'endSequenceButton';
+    nextButtonB2.style.display = 'inline-block';
 
     nextButtonB2.addEventListener('click', () => {
         canvasPartB2.style.display = 'none';
@@ -330,6 +331,17 @@ function showDownloadButton() {
     downloadButton.style.border = 'none';
     downloadButton.style.borderRadius = '5px';
     downloadButton.style.cursor = 'pointer';
+    
+
+    // Mostrar mensaje de finalización
+    const instructions = document.getElementById('instructions');
+    instructions.style.display = 'block';
+    instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+    instructions.style.textAlign = 'center';
+    instructions.style.fontSize = '40px';
+    instructions.style.marginTop = '20px';
+    instructions.style.display = 'flex';
+
 
     downloadButton.addEventListener('click', downloadAllCanvasImages);
 
