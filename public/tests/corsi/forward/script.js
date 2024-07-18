@@ -233,5 +233,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    function setCanvasBackground(canvas, color) {
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function startCanvasRecording(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const stream = canvas.captureStream(30); // 30 FPS
+    
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'video/webm;codecs=vp9'
+        });
+    
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+    
+        mediaRecorder.start();
+    }
+    
+    function stopCanvasRecording() {
+        mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/webm'
+            });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'canvas-recording.webm';
+            link.click();
+            URL.revokeObjectURL(url);
+            recordedChunks = []; // Clear recorded chunks
+        };
+    }
+
     createBlocks();
 });
