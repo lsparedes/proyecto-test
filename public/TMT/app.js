@@ -145,7 +145,10 @@ canvasPartB.addEventListener('mouseup', function (event) {
     }
     
     isDrawingPartB = false;
-    drawNextButtonB();
+
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB();
+    }
 });
 
 function drawNextButtonB() {
@@ -280,7 +283,9 @@ canvasPartB2.addEventListener('mouseup', function (event) {
     }
     
     isDrawingPartB2 = false;
-    drawNextButtonB2();
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB2();
+    }
 });
 
 function drawNextButtonB2() {
