@@ -2,8 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const startScreen = document.getElementById('start-screen');
     const testScreen = document.getElementById('test-screen');
     const completionScreen = document.getElementById('completion-screen');
-    const startBtn = document.getElementById('start-btn');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const startBtn = document.getElementById('startButton');
+    const fullscreenBtn = document.getElementById('fullscreenButton');
     const recordBtn = document.getElementById('record-btn');
     const stopBtn = document.getElementById('stop-btn');
     const nextBtn = document.getElementById('next-btn');
@@ -97,14 +97,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     audioBtn.addEventListener('click', () => {
         testAudio.play();
+        
     });
 
-    recordBtn.addEventListener('click', async () => {
+    testAudio.addEventListener('ended', () => {
+        const time_end = testAudio.duration * 0.9999999999999999 * 1000; 
+
+        setTimeout(() => {
+            startRecording();
+        }, testAudio.duration * 1000 - time_end);
+    });
+
+    async function startRecording() {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         videoPreview.srcObject = stream;
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.start();
+   
         recordBtn.disabled = true;
         stopBtn.disabled = false;
         stopBtn.style.display = 'inline-block'; // Mostrar el botón stopBtn
@@ -115,7 +122,20 @@ document.addEventListener('DOMContentLoaded', () => {
         timerDisplay.classList.remove('hidden');
         nextBtn.style.display = 'none'; // Ocultar el botón nextBtn al iniciar la grabación
         startTimer();
+
+        setTimeout(() => {
+            mediaRecorder = new MediaRecorder(stream);
+            let chunks = [];
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.start();
+        }, 1000);
+    }
+    
+    recordBtn.addEventListener('click', async () => {
+        startRecording();
+        
     });
+    
 
     stopBtn.addEventListener('click', () => {
         mediaRecorder.stop();

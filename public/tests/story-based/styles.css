@@ -1,21 +1,18 @@
 body {
-    font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%;
+    height: 100vh;
     margin: 0;
 }
 
-.center-content {
+.container {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 1000px;
-    margin: 0 auto;
-    margin-top: 90px;
+    text-align: center;
 }
 
 #imageContainer {
@@ -27,23 +24,10 @@ body {
     align-items: center;
     justify-content: center;
     transition: transform 0.3s ease;
-    max-width: 60%;
-    margin: 0px auto 0 auto;
+    max-width: 56%;
     text-align: center;
 }
 
-h1 {
-    margin-top: 60px;
-    margin-bottom: 2vh;
-    font-size: 3vw;
-}
-
-#instructionText {
-    font-size: 39px;
-    text-align: justify;
-    margin-bottom: 150px;
-    margin-top: 130px;
-}
 
 img {
     max-width: 100%;
@@ -51,11 +35,12 @@ img {
     object-fit: contain;
     margin: 0;
     max-height: calc(100vh - 250px);
+
 }
 
 #inicioImage {
     max-width: 100%;
-    max-height: 70vh;
+    max-height: 80vh;
     object-fit: contain;
     margin: 0 auto 3px auto;
     display: none;
@@ -71,20 +56,19 @@ img {
 }
 
 button {
-    margin: 20px;
-    display: inline-flex;
-    align-items: center;
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+audio {
+    margin-bottom: 30px;
 }
 
 .button-container {
-    margin-top: 20px;
-    text-align: center;
-    /* Alinea los botones al centro horizontal */
-}
-
-.button-container button {
-    margin: 20px;
-    /* Ajusta el margen entre los botones */
+    display: flex;
+    gap: 10px;
 }
 
 #showMainButton {
@@ -103,48 +87,13 @@ button {
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 6%; /* Ajustamos la distancia desde la parte inferior */
-    right: 10%; /* Ajustamos la distancia desde el borde derecho */
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
 }
 
-#startButton {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
 
-#startButton:hover {
-    background-color: #0056b3;
-}
-
-#startButton:active {
-    transform: scale(0.98);
-}
-
-#fullscreenButton {
-    margin-top: 10px;
-    padding: 15px 30px;
-    font-size: 22px;
-    color: rgb(0, 0, 0);
-    background-color: #c7c7c7;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-#fullscreenButton:hover {
-    background-color: #8f8f8f;
-}
-
-#fullscreenButton:active {
-    transform: scale(0.98);
-}
 
 #optionsContainer {
     display: flex;
@@ -156,8 +105,9 @@ button {
 }
 
 .option {
-    max-width: calc(33% - 24px);
-    margin: 8px;
+    max-width: calc(34% - 17px);
+    margin: 8px 1px;
+
 }
 
 .option:hover {
@@ -174,45 +124,24 @@ button {
     display: block;
 }
 
+
 .imageText {
     position: absolute;
     top: 10px;
     left: 10px;
     font-size: 20px;
     font-weight: bold;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.5);
     padding: 5px 10px;
     border-radius: 5px;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+    color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+    box-shadow: var(--bs-box-shadow) !important;
 }
+
 .hidden {
     display: none;
 }
-
-audio {
-    margin-bottom: 20px;
-}
-
-#continueButton {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('flecha3.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 0;
-    /* Elimina el relleno para alinear el icono verticalmente */
-    width: 80px;
-    /* Ajusta el ancho fijo */
-    height: 75px;
-    /* Ajusta la altura fija */
-    vertical-align: middle;
-    /* Alineado verticalmente con el contenido */
-    position: absolute;
-    bottom: 6%; /* Ajustamos la distancia desde la parte inferior */
-    right: 10%; /* Ajustamos la distancia desde el borde derecho */
-}
-
 .option.selected {
-    border: 2px solid #007bff; /* Cambia el borde para mostrar que está seleccionada */
+    border: 2px solid #007bff;
+    /* Cambia el borde para mostrar que está seleccionada */
 }

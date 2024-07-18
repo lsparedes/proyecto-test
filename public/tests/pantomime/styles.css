@@ -15,16 +15,6 @@ body {
     background: white;
 }
 
-h1 {
-    font-size: 40px;
-}
-
-p {
-    font-size: 37px;
-    text-align: justify;
-    margin-bottom: 190px;
-    margin-top: 110px;
-}
 
 .screen {
     text-align: center;
@@ -44,16 +34,11 @@ p {
     margin-bottom: 50px;
 }
 
+
 button {
-    margin: 0 20px;
-    padding: 15px 30px;
-    border-radius: 5px;
-    font-size: 18px;
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    display: inline-block;
-    vertical-align: middle;
-    height: 60px;
 }
 
 button:not(:disabled):hover {
@@ -77,8 +62,8 @@ button:not(:disabled):active {
     height: 80px;
     vertical-align: middle;
     position: absolute;
-    bottom: 6%;
-    right: 10%;
+    bottom: 15px;
+    right: 15px;
 }
 
 #next-btn:hover {
@@ -149,6 +134,10 @@ button:not(:disabled):active {
     vertical-align: middle;
 }
 
+audio {
+    margin-bottom: 30px;
+}
+
 #audio-btn:not(:disabled):hover {
     color: white;
 }
@@ -157,22 +146,17 @@ button:not(:disabled):active {
     transform: scale(0.98);
 }
 
-
-
-
-
 button i {
     margin-right: 8px;
     vertical-align: middle;
 }
 
 .button-container {
-    margin-top: 20px;
     text-align: center;
 }
 
 .button-container button {
-    margin: 20px;
+    margin: 2.1px;
 }
 
 #start-btn {
@@ -214,19 +198,21 @@ button i {
 }
 
 #test-image {
-    width: 700px;
-    height: auto;
+    width: 50%;
+    height: 40%;
 }
 
 .item-indicator {
     position: absolute;
     top: 10px;
     left: 10px;
-    font-size: 18px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    font-size: 20px;
+    font-weight: bold;
     padding: 5px 10px;
     border-radius: 5px;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+    color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+    box-shadow: var(--bs-box-shadow) !important;
 }
 
 #video-preview {
@@ -268,9 +254,7 @@ button i {
     margin-top: 20px;
 }
 
-audio {
-    margin-bottom: 20px;
-}
+
 
 .recording-message {
     color: green;

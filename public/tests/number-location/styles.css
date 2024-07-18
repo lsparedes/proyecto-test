@@ -1,33 +1,25 @@
 body {
-    font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 100vh;
     margin: 0;
-    position: relative;
 }
 
-.screen {
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-    max-width: 1100px;
 }
-
-p {
-    font-size: 37px;
-    text-align: justify;
-    margin-bottom: 190px;
-    margin-top: 110px;
-}
-
-h1{
-    font-size: 37px;
-}
-
 #image-container {
     position: relative;
-    width: 98vh; /* Aumentar el ancho */
-    height: 85vh; /* Aumentar la altura */
+    width: 98vh;
+    /* Aumentar el ancho */
+    height: 85vh;
+    /* Aumentar la altura */
     margin: 20px auto;
     display: flex;
     justify-content: center;
@@ -57,10 +49,12 @@ h1{
     top: 10px;
     left: 10px;
     font-size: 20px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 10px 15px;
+    font-weight: bold;
+    padding: 5px 10px;
     border-radius: 5px;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+    color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+    box-shadow: var(--bs-box-shadow) !important;
 }
 
 .feedback-message {
@@ -78,57 +72,19 @@ h1{
 
 button {
     margin: 10px;
-    display: inline-flex;
-    align-items: center;
-}
-
-#start-btn {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
 }
 
-#start-btn:hover {
-    background-color: #0056b3;
-}
-
-#start-btn:active {
-    transform: scale(0.98);
-}
-
-#fullscreen-btn {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: rgb(0, 0, 0);
-    background-color: #c7c7c7;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-#fullscreen-btn:hover {
-    background-color: #8f8f8f;
-}
-
-#fullscreen-btn:active {
-    transform: scale(0.98);
+audio {
+    margin-bottom: 30px;
 }
 
 .button-container {
-    margin-top: 20px;
-    text-align: center;
+    display: flex;
+    gap: 10px;
 }
-
-.button-container button {
-    margin: 20px;
-}
-
 #submit-btn {
     padding: 12px 22px;
     font-size: 25px;
@@ -140,13 +96,7 @@ button {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-#submit-btn:hover {
-    background-color: #9e9e9e;
-}
 
-#submit-btn:active {
-    transform: scale(0.98);
-}
 
 input {
     padding: 12px;
@@ -159,17 +109,23 @@ input {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px; /* Espacio entre el input y la imagen */
+    margin-bottom: 20px;
+    /* Espacio entre el input y la imagen */
 }
 
 #number-input {
-    padding: 8px; /* Reducir el padding */
-    flex: 0; /* No se expande */
-    width: 50px; /* Ancho fijo del input */
-    margin-right: 5px; /* Espacio entre el input y el botón */
+    padding: 8px;
+    /* Reducir el padding */
+    flex: 0;
+    /* No se expande */
+    width: 50px;
+    /* Ancho fijo del input */
+    margin-right: 5px;
+    /* Espacio entre el input y el botón */
     background-color: #f9f9f9;
     color: #333;
-    text-align: center; /* Centrar el texto */
+    text-align: center;
+    /* Centrar el texto */
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -181,7 +137,6 @@ input {
 }
 
 #next-button {
-    display: none;
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -190,15 +145,15 @@ input {
     background-repeat: no-repeat;
     padding: 0;
     /* Elimina el relleno para alinear el icono verticalmente */
-    width: 85px;
+    width: 80px;
     /* Ajusta el ancho fijo */
     height: 75px;
     /* Ajusta la altura fija */
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 6%;
+    bottom: 15px;
     /* Ajustamos la distancia desde la parte inferior */
-    right: 5%;
+    right: 15px;
     /* Ajustamos la distancia desde el borde derecho */
 }

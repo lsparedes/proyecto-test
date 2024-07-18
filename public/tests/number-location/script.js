@@ -46,7 +46,7 @@ function showNextImage() {
         document.getElementById('test-screen').style.display = 'block';
         if (currentImageIndex < 2) {
             document.getElementById('submit-btn').style.display = 'block';
-            document.getElementById('next-button').style.display = 'none';
+            document.getElementById('next-button').style.display = 'block';
         } else {
             document.getElementById('submit-btn').style.display = 'none';
             document.getElementById('next-button').style.display = 'block';
@@ -98,7 +98,7 @@ function generateCSV() {
     csvContent += "Item,Respuesta escrita,Respuesta correcta,Tiempo\n";
     
     answers.forEach(answer => {
-        csvContent += `${answer.title},${answer.userAnswer},${answer.correctAnswer},${answer.timeTaken.toFixed(1)} segundos\n`;
+        csvContent += `${answer.title},${answer.userAnswer},${answer.correctAnswer},${(answer.timeTaken * 1000)} milisegundos\n`;
     });
 
     const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
