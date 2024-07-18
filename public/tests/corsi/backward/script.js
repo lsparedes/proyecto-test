@@ -191,14 +191,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function endGame() {
         endTime = new Date(); // Registrar la hora de finalización
         const duration = (endTime - startTime) / 1000; // Duración en segundos
-        resultText.innerHTML = `El test ha finalizado. ¡Gracias por sus respuestas! <br>`
+        resultText.innerHTML = `¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!`
         console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
         game.style.display = 'none';
         resultScreen.style.display = 'block';
         count = 2;
         errorCount = 0;
         resetBlocks();
-        stopRecording();
         generateCSV(highestCount, totalCorrectBlocks, duration, sequenceCount); // Generar el CSV al final del juego
     }
 
@@ -210,16 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveAs(blob, fileName);
     }
 
-    startTestButton.addEventListener('click', async () => {
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-            video: { mediaSource: 'screen' }
-        });
-    
-        recorder = new RecordRTC(stream, {
-            type: 'video'
-        });
-    
-        recorder.startRecording();
+    startTestButton.addEventListener('click', () => {
         startTest();
     });
 
@@ -239,19 +229,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
-
-    function stopRecording(){
-        recorder.stopRecording(() => {
-            const blob = recorder.getBlob();
-            const url = URL.createObjectURL(blob);
-    
-            // Crear un enlace para descargar el video
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = 'recording.webm';
-            downloadLink.click();
-        });
-    }
 
     createBlocks();
 });

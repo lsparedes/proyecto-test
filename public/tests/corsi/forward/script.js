@@ -200,7 +200,6 @@ document.addEventListener('DOMContentLoaded', () => {
         count = 2;
         errorCount = 0;
         resetBlocks();
-        stopRecording();
         generateCSV(highestCount, totalCorrectBlocks, duration, sequenceCount); // Generar el CSV al final del juego
     }
 
@@ -212,16 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveAs(blob, fileName);
     }
 
-    startTestButton.addEventListener('click', async () => {
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-            video: { mediaSource: 'screen' }
-        });
-    
-        recorder = new RecordRTC(stream, {
-            type: 'video'
-        });
-    
-        recorder.startRecording();
+    startTestButton.addEventListener('click', () => {
         startTest();
     });
 
@@ -241,19 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
-
-    function stopRecording(){
-        recorder.stopRecording(() => {
-            const blob = recorder.getBlob();
-            const url = URL.createObjectURL(blob);
-    
-            // Crear un enlace para descargar el video
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = 'recording.webm';
-            downloadLink.click();
-        });
-    }
 
     createBlocks();
 });
