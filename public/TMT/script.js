@@ -25,10 +25,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const redLinesCount = 0; // Contador para líneas incorrectas 
 
-    function drawCircle(ctx, x, y, number, circlesArray, name = "") {
+    function drawCircle(ctx, x, y, number, circlesArray, name = "", circleRadius) {
         ctx.fillStyle = 'white'; // Fondo blanco
         ctx.beginPath();
-        ctx.arc(x, y, 29, 0, Math.PI * 2, true);
+        ctx.arc(x, y, circleRadius, 0, Math.PI * 2, true);
         ctx.fill();
 
         ctx.lineWidth = 1; // Grosor del borde
@@ -36,14 +36,14 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
 
         ctx.fillStyle = 'black'; // Texto negro
-        ctx.font = '27px Arial';
+        ctx.font = 'bold 32px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(number, x, y);
 
         if (name) {
-            ctx.font = '14px Arial';
-            ctx.fillText(name, x, y + 45); // Mostrar el nombre debajo del círculo
+            ctx.font = 'bold 18px Arial';
+            ctx.fillText(name, x, y - circleRadius - 20); // Mostrar el nombre debajo del círculo
         }
 
         circlesArray.push({ x, y, number });
@@ -70,23 +70,24 @@ document.addEventListener('DOMContentLoaded', function () {
         lastCircle = null;
         correctPaths.length = 0;
         incorrectPaths.length = 0;
+        circleRadius = 40;
 
         // Coordenadas predefinidas de los círculos
         const circleCoordinates = [
             { x: 450, y: 460 },
-            { x: 620, y: 190 },
-            { x: 850, y: 470 },
-            { x: 650, y: 370 },
-            { x: 650, y: 580 },
-            { x: 200, y: 610 },
-            { x: 140, y: 320 },
+            { x: 600, y: 200 },
+            { x: 840, y: 470 },
+            { x: 650, y: 350 },
+            { x: 670, y: 580 },
+            { x: 180, y: 610 },
+            { x: 130, y: 320 },
             { x: 400, y: 250 }
         ];
 
         // Dibujar círculos con las coordenadas predefinidas
         circleCoordinates.forEach((coord, index) => {
-            const name = index === 0 ? "Inicio" : (index === circleCoordinates.length - 1 ? "Fin" : "");
-            drawCircle(ctx, coord.x, coord.y, index + 1, circles, name);
+            const name = index === 0 ? "Empezar" : (index === circleCoordinates.length - 1 ? "Terminar" : "");
+            drawCircle(ctx, coord.x, coord.y, index + 1, circles, name, circleRadius);
         });
     }
 
@@ -99,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-            if (distance < 20 && circle.number === currentCircle) {
+            if (distance < circleRadius && circle.number === currentCircle) {
                 isDrawing = true;
                 lastCircle = circle;
                 ctx.beginPath();
@@ -122,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-            if (distance < 20 && circle.number === currentCircle + 1) {
+            if (distance < circleRadius && circle.number === currentCircle + 1) {
                 ctx.lineTo(circle.x, circle.y);
                 ctx.stroke();
                 correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
@@ -183,42 +184,43 @@ document.addEventListener('DOMContentLoaded', function () {
         lastCirclePartA = null;
         correctPathsPartA.length = 0;
         incorrectPathsPartA.length = 0;
+        circleRadius = 30;
 
         // Coordenadas predefinidas de los círculos
         const circleCoordinatesPartA = [
             { x: 610, y: 800 },
-            { x: 450, y: 870 },
-            { x: 680, y: 910 },
-            { x: 650, y: 600 },
-            { x: 400, y: 600 },
-            { x: 510, y: 750 },
-            { x: 350, y: 810 },
-            { x: 210, y: 920 },
-            { x: 260, y: 1070 },
-            { x: 350, y: 950 },
+            { x: 431, y: 937 },
+            { x: 684, y: 981 },
+            { x: 651, y: 590 },
+            { x: 397, y: 626 },
+            { x: 518, y: 717 },
+            { x: 373, y: 811 },
+            { x: 234, y: 979 },
+            { x: 288, y: 1099 },
+            { x: 351, y: 975 },
 
-            { x: 600, y: 1030 },
-            { x: 150, y: 1200 },
-            { x: 150, y: 700 },
-            { x: 60, y: 840 },
-            { x: 100, y: 150 },
-            { x: 200, y: 300 },
-            { x: 450, y: 120 },
-            { x: 450, y: 450 },
-            { x: 710, y: 210 },
-            { x: 550, y: 200 },
+            { x: 567, y: 1137 },
+            { x: 160, y: 1186 },
+            { x: 230, y: 704 },
+            { x: 134, y: 841 },
+            { x: 142, y: 300 },
+            { x: 232, y: 465 },
+            { x: 465, y: 266 },
+            { x: 439, y: 495 },
+            { x: 697, y: 355 },
+            { x: 549, y: 347 },
 
-            { x: 800, y: 90 },
-            { x: 810, y: 550 },
-            { x: 810, y: 1200 },
-            { x: 760, y: 750 },
-            { x: 740, y: 1080 }
+            { x: 774, y: 248 },
+            { x: 764, y: 564 },
+            { x: 791, y: 1160 },
+            { x: 741, y: 766 },
+            { x: 702, y: 1123 }
         ];
 
         // Dibujar círculos con las coordenadas predefinidas
         circleCoordinatesPartA.forEach((coord, index) => {
-            const name = index === 0 ? "Inicio" : (index === circleCoordinatesPartA.length - 1 ? "Fin" : "");
-            drawCircle(ctxPartA, coord.x, coord.y, index + 1, circlesPartA, name);
+            const name = index === 0 ? "Empezar" : (index === circleCoordinatesPartA.length - 1 ? "Terminar" : "");
+            drawCircle(ctxPartA, coord.x, coord.y, index + 1, circlesPartA, name, circleRadius);
         });
         reiniciarTemporizador(); // Iniciar temporizador
     }
@@ -232,7 +234,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-            if (distance < 20 && circle.number === currentCirclePartA) {
+            if (distance < circleRadius && circle.number === currentCirclePartA) {
                 isDrawingPartA = true;
                 lastCirclePartA = circle;
                 ctxPartA.beginPath();
@@ -255,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-            if (distance < 20 && circle.number === currentCirclePartA + 1) {
+            if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
                 ctxPartA.lineTo(circle.x, circle.y);
                 ctxPartA.stroke();
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
@@ -290,8 +292,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         nextButtonA.addEventListener('click', () => {
             canvasPartA.style.display = 'none'; // Ocultar el canvas actual
-            document.getElementById('partB').style.display = 'block'; // Mostrar instrucciones para la Parte B
-            document.getElementById('continueButtonB').style.display = 'block'; // Mostrar botón de continuar
             nextButtonA.remove(); // Eliminar el botón "Siguiente" después de hacer clic
             testFinalizado();
         });
