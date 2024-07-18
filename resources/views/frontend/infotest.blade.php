@@ -56,13 +56,6 @@
                                             <span>{{$test->nombre_url_opcional}}</span>
                                         </a>
                                     @endif
-                                    @if (!empty($test->url_adicional2))
-                                        <a href="/{{ $test->url_adicional2 }}" target="_blank"
-                                            class="circular-button additional">
-                                            <i class="fas fa-play"></i>
-                                            <span>{{$test->nombre_url_opcional2}}</span>
-                                        </a>
-                                    @endif
                                     @if (!empty($test->link_millisecond))
                                         <a href="/{{ $test->link_millisecond }}" target="_blank"
                                             class="circular-button additional">
