@@ -27,14 +27,24 @@ document.addEventListener('DOMContentLoaded', () => {
     let memoryTimerInterval;
     let countdownInterval;
 
+    const beepAudio = new Audio('beep.wav');
+
     // Check if 10 minutes have passed since the first test
     if (drawFromMemoryScreen || identifyFigureScreen) {
         const firstTestEndTime = localStorage.getItem('firstTestEndTime');
+        const secondTestEndTime = localStorage.getItem('secondTestEndTime');
         if (firstTestEndTime) {
             const now = new Date().getTime();
             const endTime = new Date(parseInt(firstTestEndTime)).getTime();
             const timeLeft = endTime + 10 * 60 * 1000 - now;
-
+            if (timeLeft > 0) {
+                disableStartButton(timeLeft);
+            }
+        }
+        if (secondTestEndTime) {
+            const now = new Date().getTime();
+            const endTime = new Date(parseInt(secondTestEndTime)).getTime();
+            const timeLeft = endTime + 10 * 60 * 1000 - now;
             if (timeLeft > 0) {
                 disableStartButton(timeLeft);
             }
@@ -108,6 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 alert('Por favor, seleccione una figura antes de continuar.');
             }
+            localStorage.setItem('thirdTestEndTime', new Date().getTime().toString());
+            setTimeout(() => {
+                disableStartButton(10 * 60 * 1000);
+            }, 0);
         });
 
         selectableImages.forEach(image => {
@@ -126,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const countdownElement = document.createElement('div');
         countdownElement.id = 'contador';
         document.body.appendChild(countdownElement);
-        
+
         updateCountdown(timeLeft);
 
         countdownInterval = setInterval(() => {
@@ -135,6 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(countdownInterval);
                 startButton.disabled = false;
                 countdownElement.remove();
+                beepAudio.play(); // Reproducir el audio cuando el tiempo llegue a 0
             } else {
                 updateCountdown(timeLeft);
             }
@@ -145,7 +160,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor(timeLeft / 60000);
         const seconds = Math.floor((timeLeft % 60000) / 1000);
         const countdownElement = document.getElementById('contador');
-        countdownElement.textContent = `Espera ${minutes}:${seconds < 10 ? '0' : ''}${seconds} minutos para comenzar`;
     }
 
     function setCanvasBackground(canvas, color) {
