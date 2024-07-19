@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(countdownInterval);
                 startButton.disabled = false;
                 countdownElement.remove();
-                beepAudio.play();
+                beepAudio.play(); // Reproducir el audio cuando el tiempo llegue a 0
             } else {
                 updateCountdown(timeLeft);
             }

@@ -45,8 +45,6 @@ window.onload = function () {
 
     document.getElementById('practiceNextButton').addEventListener('click', function () {
         stopPracticeRecording();
-        downloadCanvas(practiceCanvas, 'practice-drawing.png');
-        downloadPracticeVideo();
         practiceContainer.style.display = 'none';
         practiceFinishScreen.style.display = 'block';
     });
@@ -63,8 +61,6 @@ window.onload = function () {
 
     document.getElementById('finishButton').addEventListener('click', function () {
         stopRecording();
-        downloadCanvas(canvas, 'drawing.png');
-        downloadVideo();
         canvasContainer.style.display = 'none';
         finishScreen.style.display = 'block';
     });
@@ -184,7 +180,7 @@ window.onload = function () {
 
         setTimeout(() => {
             document.getElementById('finishButton').style.display = 'block';
-        }, 2000); // 60 segundos
+        }, 60000); // 60 segundos
     }
 
     function stopRecording() {
