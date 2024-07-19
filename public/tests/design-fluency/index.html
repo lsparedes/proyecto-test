@@ -7,8 +7,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div id="instructions" class="container1">
-        <p id="instructionText">En este test, debes unir todos los puntos en cada uno de los cuadros de la imagen. Usa el mouse para dibujar líneas entre los puntos. Debes dibujar tantos diseños diferentes como puedas hasta que le diga que pare. Recuerde usar solo cuatro líneas rectas para conectar los puntos. Trabaje lo más rápido que puedas y trate que cada diseño sea diferente.</p>
+    <div  id="instructions" class="container1">
+        <p >En este test, debes unir todos los puntos en cada uno de los cuadros de la imagen. Usa el mouse para dibujar líneas entre los puntos. Debes dibujar tantos diseños diferentes como puedas hasta que le diga que pare. Recuerde usar solo cuatro líneas rectas para conectar los puntos. Trabaje lo más rápido que puedas y trate que cada diseño sea diferente.</p>
         <audio controls>
             <source src="Design-fluency.mp3" type="audio/mpeg">
             Tu navegador no soporta el elemento de audio.
@@ -20,33 +20,33 @@
     </div>
 
     <div id="practiceContainer" class="container" style="display: none;">
-        <h2 class="imageText">P-1</h2>
+        <h2 class="imageText">P1</h2>
         <canvas id="practiceCanvas" width="200" height="430"></canvas>
         <button id="practiceNextButton" class="finish-button"></button>
     </div>
 
-    <div id="practiceFinishScreen" class="container1" style="display: none;">
+    <div id="practiceFinishScreen" class="container" style="display: none;">
         <div id="practica" style="text-align: center;">
           <h1>Práctica terminada</h1>
-          <button id="downloadPracticeImage">Descargar imagen</button>
-          <button id="downloadPracticeVideo">Descargar video</button>
+          <!-- <button id="downloadPracticeImage">Descargar imagen</button> -->
+          <!-- <button id="downloadPracticeVideo">Descargar video</button> -->
         </div>
         <button id="toMainTestButton" class="finish-button"></button>
     </div>
 
     <div id="canvasContainer" class="container" style="display: none;">
-        <h2 class="imageText">E-1</h2>
+        <h2 class="imageText">E1</h2>
         <canvas id="designCanvas" width="1200" height="900"></canvas>
         <button id="finishButton" class="finish-button" style="display: none;"></button>
     </div>
 
-    <div id="finishScreen" class="container1" style="display: none;">
+    <div id="finishScreen" class="container" style="display: none;">
         <div id="prueba" style="text-align: center;">
           <h1>Test terminado</h1>
-          <button id="downloadImage">Descargar imagen</button>
-          <button id="downloadVideo">Descargar video</button>
+          <!-- <button id="downloadImage">Descargar imagen</button> -->
+          <!-- <button id="downloadVideo">Descargar video</button> -->
         </div>
-        <button id="endTestButton" class="finish-button"></button>
+        <button id="endTestButton" class="finish-button" style="display: none;"></button>
     </div>
 
     <div id="endScreen" class="container1" style="display: none;text-align: center;">
