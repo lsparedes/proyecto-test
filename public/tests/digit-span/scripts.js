@@ -42,7 +42,7 @@ function startTest(type) {
         title.textContent = titles[i - 1];
         titulo = title.textContent;
         const audio = document.createElement('audio');
-  
+
         audio.src = `audio/${type}/${i}.mp3`;
         audio.controls = true;
 
@@ -75,7 +75,7 @@ function startTest(type) {
                 itemDiv.nextSibling.classList.remove('hidden');
             } else {
                 document.getElementById('test-items-' + type).classList.add('hidden');
-                mostrarFinalizacion(type, titulo); 
+                mostrarFinalizacion(type, titulo);
             }
         });
 
@@ -188,15 +188,11 @@ function mostrarFinalizacion(type, titulo) {
 }
 
 function crearZip(type, titulo) {
-    // Obtener la fecha y la hora actuales
-
     const zip = new JSZip();
     const audioFolder = zip.folder('audios');
 
-    const fileName = `${type}_${titulo}.mp3`; // Generar el nombre del archivo
-    console.log('Generando archivo:', fileName); // Mostrar el nombre del archivo en la consola
-    
-    downloadLinks.forEach(linkData => {
+    downloadLinks.forEach((linkData, index) => {
+        const fileName = `${type}_${titulo}_${index + 1}.mp3`;
         audioFolder.file(fileName, linkData.blob);
     });
 
@@ -216,7 +212,7 @@ function crearZip(type, titulo) {
 
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
-            downloadLink.download = `respuestas_digital_span_${type}_${fechaHoraFormateada}.zip`;;
+            downloadLink.download = `respuestas_digital_span_${type}_${fechaHoraFormateada}.zip`;
             downloadLink.textContent = 'Descargar todas las grabaciones';
             document.body.appendChild(downloadLink);
 
