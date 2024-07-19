@@ -23,13 +23,13 @@ body {
   display: none;
 }
 
-#instructionText, #instructionTextA, #instructionTextB1, #instructionTextB2, #instructionTextB2 {
+/* #instructionText, #instructionTextA, #instructionTextB1, #instructionTextB2, #instructionTextB2 {
   font-size: 37px;
   text-align: justify;
   margin-bottom: 90px;
-}
+} */
 
-#startButton, #continueButton ,#continueButtonB2, #continueButtonB, #continueButtonB2{
+/* #startButton, #continueButton ,#continueButtonB2, #continueButtonB, #continueButtonB2{
   padding: 15px 30px;
   font-size: 22px;
   color: white;
@@ -38,17 +38,17 @@ body {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-}
+} */
 
-#startButton:hover, #continueButton:hover, #continueButtonB2:hover, #continueButtonB:hover, #continueButtonB2:hover {
+/* #startButton:hover, #continueButton:hover, #continueButtonB2:hover, #continueButtonB:hover, #continueButtonB2:hover {
   background-color: #0056b3;
-}
+} */
 
-#startButton:active, #continueButton:active, #continueButtonB2:active, #continueButtonB:active, #continueButtonB2:active {
+/* #startButton:active, #continueButton:active, #continueButtonB2:active, #continueButtonB:active, #continueButtonB2:active {
   transform: scale(0.98);
-}
+} */
 
-#fullscreenButton {
+/* #fullscreenButton {
   padding: 15px 30px;
   font-size: 22px;
   color: rgb(0, 0, 0);
@@ -57,23 +57,35 @@ body {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-}
+} */
 
-#fullscreenButton:hover {
+/* #fullscreenButton:hover {
   background-color: #8f8f8f;
+} */
+
+/* #fullscreenButton:active {
+  transform: scale(0.98);
+} */
+
+button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-#fullscreenButton:active {
-  transform: scale(0.98);
-}
+/* .button-container {
+  text-align: center;
+} */
 
 .button-container {
-  text-align: center;
+  display: flex;
+  gap: 10px;
 }
 
-.button-container button {
+/* .button-container button {
   margin: 20px;
-}
+} */
 
 canvas {
   display: block;  /* Eliminar cualquier espacio extra y alinear adecuadamente */
@@ -82,7 +94,7 @@ canvas {
 }
 
 audio {
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 
@@ -95,16 +107,10 @@ audio {
   background-size: contain;
   background-repeat: no-repeat;
   padding: 0;
-  /* Elimina el relleno para alinear el icono verticalmente */
   width: 90px;
-  /* Ajusta el ancho fijo */
   height: 80px;
-  /* Ajusta la altura fija */
   vertical-align: middle;
-  /* Alineado verticalmente con el contenido */
   position: absolute;
   bottom: 15px;
-  /* Ajustamos la distancia desde la parte inferior */
   right: 15px;
-  /* Ajustamos la distancia desde el borde derecho */
 }

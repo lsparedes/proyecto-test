@@ -16,6 +16,9 @@ window.onload = function () {
     let drawing = false;
     let startX = 0;
     let startY = 0;
+    let practiceDrawing = false;
+    let practiceStartX = 0;
+    let practiceStartY = 0;
     let practiceMediaRecorder;
     let mediaRecorder;
     let practiceRecordedChunks = [];
@@ -38,17 +41,17 @@ window.onload = function () {
             practiceCtx.rotate(-Math.PI / 2);
             practiceCtx.drawImage(practiceImage, -practiceCanvas.height / 2, -practiceCanvas.width / 2, practiceCanvas.height, practiceCanvas.width);
             practiceCtx.restore();
-        }
-        startPracticeRecording();
+        };
+        startPracticeRecording('practiceCanvas');
         document.getElementById('practiceNextButton').style.display = 'block';
     });
 
     document.getElementById('practiceNextButton').addEventListener('click', function () {
         stopPracticeRecording();
-        downloadCanvas(practiceCanvas, 'practice-drawing.png');
-        downloadPracticeVideo();
         practiceContainer.style.display = 'none';
         practiceFinishScreen.style.display = 'block';
+        downloadCanvas(practiceCanvas, 'practice-drawing.png');
+        downloadPracticeVideo();
     });
 
     document.getElementById('toMainTestButton').addEventListener('click', function () {
@@ -57,16 +60,16 @@ window.onload = function () {
         image.src = 'imagen2.png';
         image.onload = function () {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-        }
-        startRecording();
+        };
+        startRecording('designCanvas');
     });
 
     document.getElementById('finishButton').addEventListener('click', function () {
         stopRecording();
-        downloadCanvas(canvas, 'drawing.png');
-        downloadVideo();
         canvasContainer.style.display = 'none';
         finishScreen.style.display = 'block';
+        downloadCanvas(canvas, 'drawing.png');
+        downloadVideo();
     });
 
     document.getElementById('endTestButton').addEventListener('click', function () {
@@ -74,69 +77,41 @@ window.onload = function () {
         endScreen.style.display = 'block';
     });
 
-    document.getElementById('downloadPracticeImage').addEventListener('click', function () {
-        downloadCanvas(practiceCanvas, 'practice-drawing.png');
-    });
 
-    document.getElementById('downloadPracticeVideo').addEventListener('click', function () {
-        downloadPracticeVideo();
-    });
+    async function startPracticeRecording(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const stream = canvas.captureStream(30); // 30 FPS
 
-    document.getElementById('downloadImage').addEventListener('click', function () {
-        downloadCanvas(canvas, 'drawing.png');
-    });
-
-    document.getElementById('downloadVideo').addEventListener('click', function () {
-        downloadVideo();
-    });
-
-    [practiceCanvas, canvas].forEach(currentCanvas => {
-        currentCanvas.addEventListener('mousedown', function (e) {
-            const rect = currentCanvas.getBoundingClientRect();
-            startX = e.clientX - rect.left;
-            startY = e.clientY - rect.top;
-            drawing = true;
+        practiceMediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'video/webm;codecs=vp9'
         });
 
-        currentCanvas.addEventListener('mousemove', function (e) {
-            if (!drawing) return;
-            const rect = currentCanvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
+        practiceMediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                practiceRecordedChunks.push(event.data);
+            }
+        };
 
-            const currentCtx = currentCanvas === practiceCanvas ? practiceCtx : ctx;
-            currentCtx.beginPath();
-            currentCtx.moveTo(startX, startY);
-            currentCtx.lineTo(mouseX, mouseY);
-            currentCtx.stroke();
+        practiceMediaRecorder.start();
+    }
 
-            startX = mouseX;
-            startY = mouseY;
+    function stopPracticeRecording() {
+        practiceMediaRecorder.stop();
+        practiceMediaRecorder.onstop = () => {
+            const blob = new Blob(practiceRecordedChunks, { 
+                type: 'video/webm' 
 
-            points.forEach((boxPoints, boxIndex) => {
-                boxPoints.forEach((point, pointIndex) => {
-                    if (isNearPoint(mouseX, mouseY, point.x, point.y)) {
-                        connectedPoints[boxIndex].add(pointIndex);
-                        if (connectedPoints[boxIndex].size === 5) {
-                            console.log(`Cuadro ${boxIndex + 1} completo!`);
-                        }
-                    }
-                });
             });
-        });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'canvasPractice-recording.webm';
+            link.style.visibility = 'hidden';
+            link.click();
+            URL.revokeObjectURL(url);
+            practiceRecordedChunks = [];
 
-        currentCanvas.addEventListener('mouseup', function () {
-            drawing = false;
-        });
-
-        currentCanvas.addEventListener('mouseleave', function () {
-            drawing = false;
-        });
-    });
-
-    function isNearPoint(x1, y1, x2, y2, radius = 5) {
-        const dist = Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2);
-        return dist <= radius;
+        };
     }
 
     function downloadCanvas(canvas, fileName) {
@@ -149,34 +124,17 @@ window.onload = function () {
         document.body.removeChild(link);
     }
 
-    function startPracticeRecording() {
-        const stream = practiceCanvas.captureStream(30); // 30 fps
-        practiceMediaRecorder = new MediaRecorder(stream, {
-            mimeType: 'video/webm; codecs=vp9'
-        });
+    async function startRecording(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const stream = canvas.captureStream(30); // 30 FPS
 
-        practiceMediaRecorder.ondataavailable = function (e) {
-            if (e.data.size > 0) {
-                practiceRecordedChunks.push(e.data);
-            }
-        };
-
-        practiceMediaRecorder.start();
-    }
-
-    function stopPracticeRecording() {
-        practiceMediaRecorder.stop();
-    }
-
-    function startRecording() {
-        const stream = canvas.captureStream(30); // 30 fps
         mediaRecorder = new MediaRecorder(stream, {
-            mimeType: 'video/webm; codecs=vp9'
+            mimeType: 'video/webm;codecs=vp9'
         });
 
-        mediaRecorder.ondataavailable = function (e) {
-            if (e.data.size > 0) {
-                recordedChunks.push(e.data);
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
             }
         };
 
@@ -184,34 +142,74 @@ window.onload = function () {
 
         setTimeout(() => {
             document.getElementById('finishButton').style.display = 'block';
-        }, 2000); // 60 segundos
+        }, 60000); // 60 segundos
     }
 
     function stopRecording() {
         mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, { 
+                type: 'video/webm' 
+
+            });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'canvas-recording.webm';
+            link.style.visibility = 'hidden';
+            link.click();
+            URL.revokeObjectURL(url);
+            recordedChunks = [];
+        };
     }
 
-    function downloadPracticeVideo() {
-        const blob = new Blob(practiceRecordedChunks, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'practice-drawing-video.webm';
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    practiceCanvas.addEventListener('mousedown', function (e) {
+        practiceDrawing = true;
+        practiceStartX = e.offsetX;
+        practiceStartY = e.offsetY;
+    });
 
-    function downloadVideo() {
-        const blob = new Blob(recordedChunks, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'drawing-video.webm';
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-}
+    practiceCanvas.addEventListener('mousemove', function (e) {
+        if (practiceDrawing) {
+            practiceCtx.beginPath();
+            practiceCtx.moveTo(practiceStartX, practiceStartY);
+            practiceCtx.lineTo(e.offsetX, e.offsetY);
+            practiceCtx.stroke();
+            practiceStartX = e.offsetX;
+            practiceStartY = e.offsetY;
+        }
+    });
+
+    practiceCanvas.addEventListener('mouseup', function () {
+        practiceDrawing = false;
+    });
+
+    practiceCanvas.addEventListener('mouseleave', function () {
+        practiceDrawing = false;
+    });
+
+    canvas.addEventListener('mousedown', function (e) {
+        drawing = true;
+        startX = e.offsetX;
+        startY = e.offsetY;
+    });
+
+    canvas.addEventListener('mousemove', function (e) {
+        if (drawing) {
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+            startX = e.offsetX;
+            startY = e.offsetY;
+        }
+    });
+
+    canvas.addEventListener('mouseup', function () {
+        drawing = false;
+    });
+
+    canvas.addEventListener('mouseleave', function () {
+        drawing = false;
+    });
+};
