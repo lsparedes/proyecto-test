@@ -23,18 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initAudioContext();
 
-    let timerInterval;
-    let memoryTimerInterval;
     let countdownInterval;
 
-    // Check if 10 minutes have passed since the first test
+    const beepAudio = new Audio('beep.wav');
     if (drawFromMemoryScreen || identifyFigureScreen) {
         const firstTestEndTime = localStorage.getItem('firstTestEndTime');
+        const secondTestEndTime = localStorage.getItem('secondTestEndTime');
         if (firstTestEndTime) {
             const now = new Date().getTime();
             const endTime = new Date(parseInt(firstTestEndTime)).getTime();
             const timeLeft = endTime + 10 * 60 * 1000 - now;
-
+            if (timeLeft > 0) {
+                disableStartButton(timeLeft);
+            }
+        }
+        if (secondTestEndTime) {
+            const now = new Date().getTime();
+            const endTime = new Date(parseInt(secondTestEndTime)).getTime();
+            const timeLeft = endTime + 10 * 60 * 1000 - now;
             if (timeLeft > 0) {
                 disableStartButton(timeLeft);
             }
@@ -108,6 +114,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 alert('Por favor, seleccione una figura antes de continuar.');
             }
+            localStorage.setItem('thirdTestEndTime', new Date().getTime().toString());
+            setTimeout(() => {
+                disableStartButton(10 * 60 * 1000);
+            }, 0);
         });
 
         selectableImages.forEach(image => {
@@ -126,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const countdownElement = document.createElement('div');
         countdownElement.id = 'contador';
         document.body.appendChild(countdownElement);
-        
+
         updateCountdown(timeLeft);
 
         countdownInterval = setInterval(() => {
@@ -135,6 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(countdownInterval);
                 startButton.disabled = false;
                 countdownElement.remove();
+                beepAudio.play(); // Reproducir el audio cuando el tiempo llegue a 0
             } else {
                 updateCountdown(timeLeft);
             }
@@ -145,7 +156,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = Math.floor(timeLeft / 60000);
         const seconds = Math.floor((timeLeft % 60000) / 1000);
         const countdownElement = document.getElementById('contador');
-        countdownElement.textContent = `Espera ${minutes}:${seconds < 10 ? '0' : ''}${seconds} minutos para comenzar`;
     }
 
     function setCanvasBackground(canvas, color) {
@@ -195,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById(clearButtonId).addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            setCanvasBackground(canvas, 'white'); // Restablecer el fondo blanco
+            setCanvasBackground(canvas, 'white');
         });
 
         document.getElementById(downloadButtonId).addEventListener('click', () => {
@@ -235,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link.download = 'canvas-recording.webm';
             link.click();
             URL.revokeObjectURL(url);
-            recordedChunks = []; // Clear recorded chunks
+            recordedChunks = [];
         };
     }
 

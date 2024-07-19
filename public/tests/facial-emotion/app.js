@@ -229,7 +229,7 @@ function mostrarFinalizacion() {
     document.getElementById('next-button').style.display = 'none';
     clearTimeout(temporizador);
     const imageContainer = document.getElementById('imageContainer');
-    imageContainer.textContent = 'El test ha finalizado. ¡Gracias por sus respuestas!';
+    imageContainer.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.marginTop = '20px';
