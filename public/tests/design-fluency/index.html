@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,8 +6,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div  id="instructions" class="container1">
-        <p >En este test, debes unir todos los puntos en cada uno de los cuadros de la imagen. Usa el mouse para dibujar líneas entre los puntos. Debes dibujar tantos diseños diferentes como puedas hasta que le diga que pare. Recuerde usar solo cuatro líneas rectas para conectar los puntos. Trabaje lo más rápido que puedas y trate que cada diseño sea diferente.</p>
+    <div id="instructions" class="container1">
+        <p id="instructionText">En este test, debes unir todos los puntos en cada uno de los cuadros de la imagen. Usa el mouse para dibujar líneas entre los puntos. Debes dibujar tantos diseños diferentes como puedas hasta que le diga que pare. Recuerde usar solo cuatro líneas rectas para conectar los puntos. Trabaje lo más rápido que puedas y trate que cada diseño sea diferente.</p>
         <audio controls>
             <source src="Design-fluency.mp3" type="audio/mpeg">
             Tu navegador no soporta el elemento de audio.
@@ -28,8 +27,6 @@
     <div id="practiceFinishScreen" class="container" style="display: none;">
         <div id="practica" style="text-align: center;">
           <h1>Práctica terminada</h1>
-          <!-- <button id="downloadPracticeImage">Descargar imagen</button> -->
-          <!-- <button id="downloadPracticeVideo">Descargar video</button> -->
         </div>
         <button id="toMainTestButton" class="finish-button"></button>
     </div>
@@ -43,10 +40,8 @@
     <div id="finishScreen" class="container" style="display: none;">
         <div id="prueba" style="text-align: center;">
           <h1>Test terminado</h1>
-          <!-- <button id="downloadImage">Descargar imagen</button> -->
-          <!-- <button id="downloadVideo">Descargar video</button> -->
         </div>
-        <button id="endTestButton" class="finish-button" style="display: none;"></button>
+        <button id="endTestButton" class="finish-button"></button>
     </div>
 
     <div id="endScreen" class="container1" style="display: none;text-align: center;">

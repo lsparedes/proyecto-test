@@ -23,13 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initAudioContext();
 
-    let timerInterval;
-    let memoryTimerInterval;
     let countdownInterval;
 
     const beepAudio = new Audio('beep.wav');
-
-    // Check if 10 minutes have passed since the first test
     if (drawFromMemoryScreen || identifyFigureScreen) {
         const firstTestEndTime = localStorage.getItem('firstTestEndTime');
         const secondTestEndTime = localStorage.getItem('secondTestEndTime');
@@ -149,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearInterval(countdownInterval);
                 startButton.disabled = false;
                 countdownElement.remove();
-                beepAudio.play();
+                beepAudio.play(); // Reproducir el audio cuando el tiempo llegue a 0
             } else {
                 updateCountdown(timeLeft);
             }
@@ -209,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById(clearButtonId).addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            setCanvasBackground(canvas, 'white'); // Restablecer el fondo blanco
+            setCanvasBackground(canvas, 'white');
         });
 
         document.getElementById(downloadButtonId).addEventListener('click', () => {
@@ -249,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link.download = 'canvas-recording.webm';
             link.click();
             URL.revokeObjectURL(url);
-            recordedChunks = []; // Clear recorded chunks
+            recordedChunks = [];
         };
     }
 
