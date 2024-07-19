@@ -110,9 +110,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     canvas.addEventListener('mousemove', function (event) {
+        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
         if (!isDrawing) return;
-        ctx.lineTo(event.offsetX, event.offsetY);
+        const x = event.offsetX;
+        const y = event.offsetY;
+        ctx.lineTo(x, y);
         ctx.stroke();
+
+        let validDrop = false;
+
+        circles.forEach(circle => {
+            const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+            console.log(distance);
+            if ( distance < 20 && (circle.number != currentCircle + 1) &&  lastCircle.number != circle.number ) {
+                console.log('lastcircle: '+lastCircle.number + ' '+ circle.number);
+                drawInvalidLine(ctx, lastCircle.x, lastCircle.y, x, y);
+                incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
+                isDrawing = false;
+            }else{
+
+                if (distance < 20 && circle.number === currentCircle + 1) {
+                    // ctx.lineTo(circle.x, circle.y);
+                    // ctx.stroke();
+                    correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
+                    currentCircle++;
+                    lastCircle = circle;
+                    validDrop = true;
+                }
+            }
+        });
+
+        // console.log(incorrectPaths);
+
+        if (currentCircle === 8) {
+            drawNextButton();
+            drawingCompleted = true; // Establecer la bandera en true cuando se complete el dibujo
+        }
     });
 
     canvas.addEventListener('mouseup', function (event) {
@@ -132,8 +165,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 validDrop = true;
             }
         });
+        console.log(incorrectPaths);
+        const distance = Math.sqrt((x - lastCircle.x) ** 2 + (y - lastCircle.y) ** 2);
 
-        if (!validDrop && lastCircle) {
+        if (!validDrop && lastCircle && distance > circleRadius) {
             drawInvalidLine(ctx, lastCircle.x, lastCircle.y, x, y);
             incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
         }
@@ -244,17 +279,49 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     canvasPartA.addEventListener('mousemove', function (event) {
+        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
         if (!isDrawingPartA) return;
-        ctxPartA.lineTo(event.offsetX, event.offsetY);
+        const x = event.offsetX;
+        const y = event.offsetY;
+        ctxPartA.lineTo(x, y);
         ctxPartA.stroke();
-    });
 
+        let validDrop = false;
+
+        circlesPartA.forEach(circle => {
+            const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+            // console.log(distance);
+            // console.log('Current circle part A'+currentCirclePartA);
+            // console.log('lastcircle: '+lastCirclePartA.number );
+            if ( distance < circleRadius && (circle.number != currentCirclePartA + 1) &&  lastCirclePartA.number != circle.number ) {
+                drawInvalidLine(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, x, y);
+                incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
+                isDrawingPartA = false;
+            }else{
+                
+                if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
+                    // ctx.lineTo(circle.x, circle.y);
+                    // ctx.stroke();
+                    correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
+                    currentCirclePartA++;
+                    lastCirclePartA = circle;
+                    validDrop = true;
+                }
+            }
+        });
+        
+        if (currentCirclePartA === 25) {
+            drawNextButtonA();
+            drawingCompletedA = true; // Establecer la bandera en true cuando se complete el dibujo
+        }
+    });
+    
     canvasPartA.addEventListener('mouseup', function (event) {
         if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
         const x = event.offsetX;
         const y = event.offsetY;
         let validDrop = false;
-
+        
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
@@ -267,7 +334,9 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        if (!validDrop && lastCirclePartA) {
+        const distance = Math.sqrt((x - lastCirclePartA.x) ** 2 + (y - lastCirclePartA.y) ** 2);
+
+        if (!validDrop && lastCirclePartA && distance > circleRadius) {
             drawInvalidLine(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, x, y);
             incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
         }
