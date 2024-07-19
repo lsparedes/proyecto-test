@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         nextButton.addEventListener('click', () => {
             canvas.style.display = 'none'; // Ocultar el canvas actual
-            document.getElementById('partA').style.display = 'block'; // Mostrar instrucciones para la Parte B
+            document.getElementById('partA').style.display = 'flex'; // Mostrar instrucciones para la Parte B
             document.getElementById('continueButton').style.display = 'block'; // Mostrar botón de continuar
             nextButton.remove(); // Eliminar el botón "Siguiente" después de hacer clic
         });
@@ -311,6 +311,14 @@ document.addEventListener('DOMContentLoaded', function () {
         instructions.style.textAlign = 'center';
         instructions.style.fontSize = '40px';
         instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
+
+        const downloadButton = document.createElement('button');
+        downloadButton.addEventListener('click', function() {
+            downloadAllCanvasImages();
+            document.body.removeChild(downloadButton);
+        });
+        document.body.appendChild(downloadButton);
+        downloadButton.click();
     }
 
     fullscreenButton.addEventListener('click', () => {
@@ -320,4 +328,17 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
+
+    function downloadAllCanvasImages() {
+        downloadCanvasImage(canvasPartA, 'canvasPartA.png');
+        downloadCanvasImage(canvas, 'canvas.png');
+    }
+
+    function downloadCanvasImage(canvas, fileName) {
+        const dataURL = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = dataURL;
+        link.download = fileName;
+        link.click();
+    }
 });

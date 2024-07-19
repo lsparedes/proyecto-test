@@ -115,6 +115,34 @@ canvasPartB.addEventListener('mousemove', function (event) {
     if (!isDrawingPartB) return;
     ctxPartB.lineTo(event.offsetX, event.offsetY);
     ctxPartB.stroke();
+
+    let validDrop = false;
+
+    circlesPartB.forEach(circle => {
+        const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+        if (distance < 50 && circle.label != getNextLabel(currentCirclePartB) && circle.label != lastCirclePartB.label) {
+            drawInvalidLine(ctxPartB, lastCirclePartB.x, lastCirclePartB.y, x, y);
+            incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
+            isDrawingPartB = false;
+        } else {
+            if (distance < 50 && circle.label === getNextLabel(currentCirclePartB)) {
+                // ctxPartB.lineTo(circle.x, circle.y);
+                // ctxPartB.stroke();
+                correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
+                currentCirclePartB = getNextLabel(currentCirclePartB);
+                lastCirclePartB = circle;
+                validDrop = true;
+            }
+        }
+    });
+
+    if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
+        drawingCompletedB = true;
+    }
+
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB();
+    }
 });
 
 canvasPartB.addEventListener('mouseup', function (event) {
@@ -146,9 +174,9 @@ canvasPartB.addEventListener('mouseup', function (event) {
     
     isDrawingPartB = false;
 
-    if (document.getElementById('endSequenceButton') === null) {
-        drawNextButtonB();
-    }
+    // if (document.getElementById('endSequenceButton') === null) {
+    //     drawNextButtonB();
+    // }
 });
 
 function drawNextButtonB() {
@@ -158,7 +186,7 @@ function drawNextButtonB() {
 
     nextButtonB.addEventListener('click', () => {
         canvasPartB.style.display = 'none';
-        document.getElementById('partB2').style.display = 'block';
+        document.getElementById('partB2').style.display = 'flex';
         document.getElementById('continueButtonB2').style.display = 'block';
         nextButtonB.remove();
     });
@@ -252,6 +280,34 @@ canvasPartB2.addEventListener('mousemove', function (event) {
     if (!isDrawingPartB2) return;
     ctxPartB2.lineTo(event.offsetX, event.offsetY);
     ctxPartB2.stroke();
+
+    let validDrop = false;
+
+    circlesPartB2.forEach(circle => {
+        const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+        if(distance < 30 && circle.label != getNextLabel(currentCirclePartB2) && circle.label != lastCirclePartB2.label){
+            drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
+            incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
+            isDrawingPartB2 = false;
+        }else{
+            if (distance < 30 && circle.label === getNextLabel(currentCirclePartB2)) {
+                // ctxPartB2.lineTo(circle.x, circle.y);
+                // ctxPartB2.stroke();
+                correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
+                currentCirclePartB2 = getNextLabel(currentCirclePartB2);
+                lastCirclePartB2 = circle;
+                validDrop = true;
+            }
+        }
+    });
+
+    if (currentCirclePartB2 === 13) {
+        drawingCompletedB2 = true;
+    }
+
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB2();
+    }
 });
 
 canvasPartB2.addEventListener('mouseup', function (event) {
@@ -283,9 +339,9 @@ canvasPartB2.addEventListener('mouseup', function (event) {
     }
     
     isDrawingPartB2 = false;
-    if (document.getElementById('endSequenceButton') === null) {
-        drawNextButtonB2();
-    }
+    // if (document.getElementById('endSequenceButton') === null || drawingCompletedB2) {
+    //     drawNextButtonB2();
+    // }
 });
 
 function drawNextButtonB2() {
@@ -342,10 +398,13 @@ function showDownloadButton() {
     instructions.style.marginTop = '20px';
     instructions.style.display = 'flex';
 
-
-    downloadButton.addEventListener('click', downloadAllCanvasImages);
+    downloadButton.addEventListener('click', function() {
+        downloadAllCanvasImages();
+        document.body.removeChild(downloadButton);
+    });
 
     document.body.appendChild(downloadButton);
+    downloadButton.click();
 }
 
 // Llamar a esta función cuando se complete la prueba
