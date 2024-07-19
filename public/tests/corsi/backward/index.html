@@ -6,11 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Corsi Block Backward</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
     <div id="introScreen">
+        <H1 id="titulo">Instrucciones</H1>
         <p id="instructionText">Se mostrará una secuencia de 2 a 8 cuadrados. Debe Memorizar la secuencia y tocar los
             cuadrados en orden inverso a la secuencia mostrada haciendo clic en los cuadrados. Se presentaran dos
             secuencias en cada longitud (16 secuencias en total) en orden creciente de longitud. La prueba se
@@ -23,8 +24,8 @@
         </audio>
 
         <div class="button-container">
-            <button id="startTestButton">Comenzar Test</button>
-            <button id="fullscreenButton">Pantalla completa</button>
+            <button id="startTestButton" class="start-button">Comenzar Test</button>
+            <button id="fullscreenButton" class="fullscreen-button">Pantalla completa</button>
         </div>
     </div>
     <div id="game" style="display: none;">
@@ -35,6 +36,7 @@
     <div id="resultScreen" style="display: none;">
         <p id="resultText"></p>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="script.js"></script>
 </body>
 
