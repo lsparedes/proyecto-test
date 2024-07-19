@@ -3,6 +3,7 @@ let chunks = [];
 let timerInterval;
 const downloadLinks = [];
 let audioStream = null; // Guardar el stream de audio
+let audioreproducido = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     requestMicrophonePermission();
@@ -40,6 +41,7 @@ function startTest(type) {
 
         const titleElement = document.createElement('h3');
         titleElement.textContent = title;
+        
         const audio = document.createElement('audio');
         audio.src = `audio/${type}/${index + 1}.mp3`;
         audio.controls = true;
@@ -97,7 +99,9 @@ function playBeepAndShowButtons(itemDiv, titleElement, index) {
     const beep = new Audio('beep.wav');
     beep.play();
     beep.addEventListener('ended', () => {
-        startRecording(itemDiv, titleElement, index);
+        if (!itemDiv.querySelector('.new-button')) {
+            startRecording(itemDiv, titleElement, index);
+        }
     });
 }
 
@@ -107,28 +111,34 @@ function startRecording(itemDiv, titleElement, index) {
         return;
     }
 
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+    }
+    chunks = []; // Limpiar los chunks previos
+
     mediaRecorder = new MediaRecorder(audioStream);
     mediaRecorder.ondataavailable = e => {
         chunks.push(e.data);
     };
     mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
-        chunks = [];
-        const audioURL = window.URL.createObjectURL(blob);
+        if (chunks.length > 0) {
+            const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
+            const audioURL = window.URL.createObjectURL(blob);
 
-        // Guardar el enlace con el título y el índice
-        downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob });
+            // Guardar el enlace con el título y el índice
+            downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob });
 
-        // Ocultar el botón de grabación y mostrar el botón de siguiente
-        const stopImg = itemDiv.querySelector('.stop-img');
-        stopImg.classList.add('hidden');
-        const nextButton = itemDiv.querySelector('.next-button');
-        nextButton.classList.remove('hidden');
+            // Ocultar el botón de grabación y mostrar el botón de siguiente
+            const stopImg = itemDiv.querySelector('.stop-img');
+            stopImg.classList.add('hidden');
+            const nextButton = itemDiv.querySelector('.next-button');
+            nextButton.classList.remove('hidden');
 
-        const message = document.createElement('div');
-        message.textContent = 'Grabación creada';
-        message.classList.add('recording-message');
-        itemDiv.appendChild(message);
+            const message = document.createElement('div');
+            message.textContent = 'Grabación creada';
+            message.classList.add('recording-message');
+            itemDiv.appendChild(message);
+        }
     };
     mediaRecorder.start();
 
@@ -139,6 +149,12 @@ function startRecording(itemDiv, titleElement, index) {
     const newButton = document.createElement('div');
     newButton.classList.add('img-button', 'new-button');
     newButton.style.backgroundImage = "url('boton-rec.png')";
+
+    // Verificar si ya existe un botón nuevo y eliminarlo antes de agregar uno nuevo
+    const existingNewButton = itemDiv.querySelector('.new-button');
+    if (existingNewButton) {
+        existingNewButton.parentNode.removeChild(existingNewButton);
+    }
 
     // Insertar el nuevo botón justo antes de stopImg
     stopImg.parentNode.insertBefore(newButton, stopImg);
@@ -206,27 +222,17 @@ function crearZip(type) {
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
-
             const fechaActual = new Date();
-            const año = fechaActual.getFullYear();
-            const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-            const dia = String(fechaActual.getDate()).padStart(2, '0');
-            const horas = String(fechaActual.getHours()).padStart(2, '0');
-            const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
-            const segundos = String(fechaActual.getSeconds()).padStart(2, '0');
-
-            // Formatear la fecha y la hora
-            const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
-
+            const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
+            const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones);
+            
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
-            downloadLink.download = `respuestas_digital_span_${type}_${fechaHoraFormateada}.zip`;
+            downloadLink.download = `respuestas_digital_span_${type}_${fechaFormateada}.zip`;
             downloadLink.textContent = 'Descargar todas las grabaciones';
             document.body.appendChild(downloadLink);
 
             downloadLink.click();
-
-            // Elimina el enlace del DOM después de la descarga
             document.body.removeChild(downloadLink);
 
             completionMessage.classList.remove('hidden');

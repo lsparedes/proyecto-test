@@ -4,7 +4,6 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-    margin: 0;
 }
 
 .container {
@@ -85,6 +84,7 @@ audio {
     display: flex;
     gap: 10px;
 }
+
 #submit-btn {
     padding: 12px 22px;
     font-size: 25px;

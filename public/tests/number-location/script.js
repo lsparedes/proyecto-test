@@ -1,4 +1,4 @@
-document.getElementById('start-btn').addEventListener('click', startTest);
+document.getElementById('startButton').addEventListener('click', startTest);
 document.getElementById('fullscreen-btn').addEventListener('click', toggleFullScreen);
 document.getElementById('submit-btn').addEventListener('click', submitAnswer);
 document.getElementById('next-button').addEventListener('click', () => {
