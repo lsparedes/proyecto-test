@@ -60,6 +60,7 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
 
 function startPartB() {
     document.getElementById('partB').style.display = 'none';
+    // document.getElementById('instructions').style.marginTop = '0';
     canvasPartB.style.display = 'block';
     ctxPartB.clearRect(0, 0, canvasPartB.width, canvasPartB.height);
     circlesPartB.length = 0;
@@ -112,9 +113,42 @@ canvasPartB.addEventListener('mousedown', function (event) {
 });
 
 canvasPartB.addEventListener('mousemove', function (event) {
+    if (drawingCompletedB) return;
     if (!isDrawingPartB) return;
-    ctxPartB.lineTo(event.offsetX, event.offsetY);
+
+    const x = event.offsetX;
+    const y = event.offsetY;
+
+    ctxPartB.lineTo(x, y);
     ctxPartB.stroke();
+
+    let validDrop = false;
+
+    circlesPartB.forEach(circle => {
+        const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+        if (distance < 50 && circle.label != getNextLabel(currentCirclePartB) && circle.label != lastCirclePartB.label) {
+            drawInvalidLine(ctxPartB, lastCirclePartB.x, lastCirclePartB.y, x, y);
+            incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
+            isDrawingPartB = false;
+        } else {
+            if (distance < 50 && circle.label === getNextLabel(currentCirclePartB)) {
+                // ctxPartB.lineTo(circle.x, circle.y);
+                // ctxPartB.stroke();
+                correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
+                currentCirclePartB = getNextLabel(currentCirclePartB);
+                lastCirclePartB = circle;
+                validDrop = true;
+            }
+        }
+    });
+
+    if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
+        drawingCompletedB = true;
+    }
+
+    if (document.getElementById('endSequenceButton') === null || drawingCompletedB) {
+        drawNextButtonB();
+    }
 });
 
 canvasPartB.addEventListener('mouseup', function (event) {
@@ -134,8 +168,9 @@ canvasPartB.addEventListener('mouseup', function (event) {
             validDrop = true;
         }
     });
+    const distance = Math.sqrt((x - lastCirclePartB.x) ** 2 + (y - lastCirclePartB.y) ** 2);
 
-    if (!validDrop && lastCirclePartB) {
+    if (!validDrop && lastCirclePartB && distance >= 50) {
         drawInvalidLine(ctxPartB, lastCirclePartB.x, lastCirclePartB.y, x, y);
         incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
     }
@@ -143,10 +178,10 @@ canvasPartB.addEventListener('mouseup', function (event) {
     if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
         drawingCompletedB = true;
     }
-    
+
     isDrawingPartB = false;
 
-    if (document.getElementById('endSequenceButton') === null) {
+    if (document.getElementById('endSequenceButton') === null || drawingCompletedB) {
         drawNextButtonB();
     }
 });
@@ -249,9 +284,38 @@ canvasPartB2.addEventListener('mousedown', function (event) {
 });
 
 canvasPartB2.addEventListener('mousemove', function (event) {
+    if (drawingCompletedB2) return;
     if (!isDrawingPartB2) return;
-    ctxPartB2.lineTo(event.offsetX, event.offsetY);
+    
+    const x = event.offsetX;
+    const y = event.offsetY;
+
+    ctxPartB2.lineTo(x, y);
     ctxPartB2.stroke();
+
+    let validDrop = false;
+
+    circlesPartB2.forEach(circle => {
+        const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+        if(distance < 30 && circle.label != getNextLabel(currentCirclePartB2) && circle.label != lastCirclePartB2.label){
+            drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
+            incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
+            isDrawingPartB2 = false;
+        }else{
+            if (distance < 30 && circle.label === getNextLabel(currentCirclePartB2)) {
+                // ctxPartB2.lineTo(circle.x, circle.y);
+                // ctxPartB2.stroke();
+                correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
+                currentCirclePartB2 = getNextLabel(currentCirclePartB2);
+                lastCirclePartB2 = circle;
+                validDrop = true;
+            }
+        }
+    });
+
+    if (currentCirclePartB2 === 13) {
+        drawingCompletedB2 = true;
+    }
 });
 
 canvasPartB2.addEventListener('mouseup', function (event) {
@@ -272,7 +336,8 @@ canvasPartB2.addEventListener('mouseup', function (event) {
         }
     });
 
-    if (!validDrop && lastCirclePartB2) {
+    const distance = Math.sqrt((x - lastCirclePartB2.x) ** 2 + (y - lastCirclePartB2.y) ** 2);
+    if (!validDrop && lastCirclePartB2 && distance >= 30) {
         drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
         incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
     }
@@ -281,9 +346,9 @@ canvasPartB2.addEventListener('mouseup', function (event) {
     if (currentCirclePartB2 === 13) {
         drawingCompletedB2 = true;
     }
-    
+
     isDrawingPartB2 = false;
-    if (document.getElementById('endSequenceButton') === null) {
+    if (document.getElementById('endSequenceButton') === null || drawingCompletedB2) {
         drawNextButtonB2();
     }
 });
@@ -331,7 +396,7 @@ function showDownloadButton() {
     downloadButton.style.border = 'none';
     downloadButton.style.borderRadius = '5px';
     downloadButton.style.cursor = 'pointer';
-    
+
 
     // Mostrar mensaje de finalización
     const instructions = document.getElementById('instructions');
