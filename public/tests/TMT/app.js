@@ -181,9 +181,9 @@ canvasPartB.addEventListener('mouseup', function (event) {
 
     isDrawingPartB = false;
 
-    // if (document.getElementById('endSequenceButton') === null) {
-    //     drawNextButtonB();
-    // }
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB();
+    }
 });
 
 function drawNextButtonB() {
@@ -316,7 +316,6 @@ canvasPartB2.addEventListener('mousemove', function (event) {
     if (currentCirclePartB2 === 13) {
         drawingCompletedB2 = true;
     }
-
     if (document.getElementById('endSequenceButton') === null) {
         drawNextButtonB2();
     }
@@ -352,9 +351,9 @@ canvasPartB2.addEventListener('mouseup', function (event) {
     }
 
     isDrawingPartB2 = false;
-    // if (document.getElementById('endSequenceButton') === null || drawingCompletedB2) {
-    //     drawNextButtonB2();
-    // }
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB2();
+    }
 });
 
 function drawNextButtonB2() {
