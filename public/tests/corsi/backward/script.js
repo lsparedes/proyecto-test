@@ -131,17 +131,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playBeep() {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
+        const audioUrl = 'beep.wav';
     
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-    
-        oscillator.frequency.value = 1000; // Frecuencia en Hz
-        gainNode.gain.value = 0.1; // Volumen
-    
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.1); // Duración del sonido en segundos
+        fetch(audioUrl)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+            })
+            .catch(e => console.error('Error al cargar el archivo de audio:', e));
     }
 
     function checkSequence() {
@@ -191,14 +192,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function endGame() {
         endTime = new Date(); // Registrar la hora de finalización
         const duration = (endTime - startTime) / 1000; // Duración en segundos
-        resultText.innerHTML = `El test ha finalizado. ¡Gracias por sus respuestas! <br>`
+        resultText.innerHTML = `¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!`
         console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
         game.style.display = 'none';
         resultScreen.style.display = 'block';
         count = 2;
         errorCount = 0;
         resetBlocks();
-        stopRecording();
         generateCSV(highestCount, totalCorrectBlocks, duration, sequenceCount); // Generar el CSV al final del juego
     }
 
@@ -210,16 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveAs(blob, fileName);
     }
 
-    startTestButton.addEventListener('click', async () => {
-        const stream = await navigator.mediaDevices.getDisplayMedia({
-            video: { mediaSource: 'screen' }
-        });
-    
-        recorder = new RecordRTC(stream, {
-            type: 'video'
-        });
-    
-        recorder.startRecording();
+    startTestButton.addEventListener('click', () => {
         startTest();
     });
 
@@ -240,17 +231,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function stopRecording(){
-        recorder.stopRecording(() => {
-            const blob = recorder.getBlob();
-            const url = URL.createObjectURL(blob);
+    function setCanvasBackground(canvas, color) {
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = color;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    async function startCanvasRecording(canvasId) {
+        const canvas = document.getElementById(canvasId);
+        const stream = canvas.captureStream(30); // 30 FPS
     
-            // Crear un enlace para descargar el video
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = 'recording.webm';
-            downloadLink.click();
+        mediaRecorder = new MediaRecorder(stream, {
+            mimeType: 'video/webm;codecs=vp9'
         });
+    
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+    
+        mediaRecorder.start();
+    }
+    
+    function stopCanvasRecording() {
+        mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/webm'
+            });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'canvas-recording.webm';
+            link.click();
+            URL.revokeObjectURL(url);
+            recordedChunks = []; // Clear recorded chunks
+        };
     }
 
     createBlocks();

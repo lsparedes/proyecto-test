@@ -4,6 +4,7 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
+  overflow: hidden;
   font-family: Arial, sans-serif;
 }
 
@@ -77,6 +78,7 @@ body {
 canvas {
   display: block;  /* Eliminar cualquier espacio extra y alinear adecuadamente */
   max-width: 99%; /* Asegura que el canvas no sea más grande que su contenedor */
+  max-height: 99%;
   height: auto;    /* Mantener la proporción de aspecto */
 }
 
