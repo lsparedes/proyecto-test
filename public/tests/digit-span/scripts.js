@@ -40,22 +40,14 @@ function startTest(type) {
 
         const title = document.createElement('h3');
         title.textContent = titles[i - 1];
-        titulo =  title.textContent;
+        titulo = title.textContent;
         const audio = document.createElement('audio');
-        const beep = document.createElement('audio');
-
-        beep.src = 'alarm.mp3';
+  
         audio.src = `audio/${type}/${i}.mp3`;
         audio.controls = true;
 
         audio.addEventListener('ended', () => {
-            beep.play();
-        });
-
-        beep.addEventListener('play', () => {
-            setTimeout(() => {
-                startRecording(itemDiv, title);
-            }, beep.duration * 1000 - 600);
+            startRecording(itemDiv, title);
         });
 
         const timerDiv = document.createElement('div');
@@ -83,8 +75,7 @@ function startTest(type) {
                 itemDiv.nextSibling.classList.remove('hidden');
             } else {
                 document.getElementById('test-items-' + type).classList.add('hidden');
-                mostrarFinalizacion(type,titulo); 
-
+                mostrarFinalizacion(type, titulo); 
             }
         });
 
