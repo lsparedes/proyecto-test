@@ -1,4 +1,4 @@
-    body {
+body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
@@ -23,26 +23,25 @@
 }
 
 #introScreen p {
-    font-size: 37px;
+    /* font-size: 37px; */
     text-align: justify;
-    margin-bottom: 100px;
-    margin-top: 50px;
+    /* margin-bottom: 100px; */
+    /* margin-top: 50px; */
 }
 
 #blocks {
     position: relative;
-    width: 1200px;
-    height: 750px;
+    width: 1100px;
+    height: 700px;
     margin: 10px auto;
     border: 1px solid #ccc;
     background-color: #fff;
 }
 
 .block {
-    width: 140px;
-    height: 140px;
-    background-color: blue;
-    border-radius: 5px;
+    width: 130px;
+    height: 130px;
+    background-color: rgb(29, 63, 255);
     cursor: pointer;
     position: absolute;
     transition: background-color 0.3s;
@@ -57,10 +56,11 @@
     background-color: yellow !important;
 }
 
-#startTestButton,
-#startSequenceButton,
-#fullscreenButton,
-#restartButton {
+/* #startTestButton, */
+/* #startSequenceButton, */
+/* #fullscreenButton, */
+/* #restartButton { */
+#startSequenceButton{
     padding: 15px 30px;
     font-size: 22px;
     border: none;
@@ -69,21 +69,33 @@
     transition: background-color 0.3s, transform 0.2s;
 }
 
-#startTestButton {
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+}
+
+/* #startTestButton {
     color: white;
     background-color: #007bff;
-}
+} */
 
-#startTestButton:hover {
+/* #startTestButton:hover {
     background-color: #0056b3;
-}
+} */
 
-#startTestButton:active,
+/* #startTestButton:active,
 #startSequenceButton:active,
 #fullscreenButton:active,
 #restartButton:active {
     transform: scale(0.98);
-}
+} */
 
 #startSequenceButton {
     background-color: transparent;
@@ -99,14 +111,14 @@
     vertical-align: middle;
 }
 
-#fullscreenButton {
+/* #fullscreenButton {
     color: black;
     background-color: #c7c7c7;
-}
+} */
 
-#fullscreenButton:hover {
+/* #fullscreenButton:hover {
     background-color: #8f8f8f;
-}
+} */
 
 #restartButton {
     color: white;
@@ -117,21 +129,30 @@
     background-color: #c82333;
 }
 
-.button-container {
+/* .button-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 40px;
     width: 100%;
 }
 
 .button-container button {
     margin: 20px;
+} */
+
+audio {
+    margin-bottom: 30px;
 }
 
 #resultText {
     font-size: 40px;
+    /* Ajusta el tamaño de la fuente aquí */
     margin-bottom: 70px;
+}
+
+.controls {
+    margin-bottom: 10px;
 }
 
 #endSequenceButton {
@@ -143,18 +164,12 @@
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
-    /* Elimina el relleno para alinear el icono verticalmente */
     width: 90px;
-    /* Ajusta el ancho fijo */
     height: 80px;
-    /* Ajusta la altura fija */
     vertical-align: middle;
-    /* Alineado verticalmente con el contenido */
     position: absolute;
     bottom: 15px;
-    /* Ajustamos la distancia desde la parte inferior */
     right: 15px;
-    /* Ajustamos la distancia desde el borde derecho */
 }
 
 .imageText {
@@ -163,8 +178,9 @@
     left: 10px;
     font-size: 20px;
     font-weight: bold;
-    color: white;
-    background-color: rgba(0, 0, 0, 0.5);
     padding: 5px 10px;
     border-radius: 5px;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+    color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+    box-shadow: var(--bs-box-shadow) !important;
 }

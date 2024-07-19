@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         game.style.display = 'block';
         startSequenceButton.style.display = 'inline-block';
         endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" al iniciar el test
-        indicator.textContent = `P${sequenceCount+1}`;
+        indicator.textContent = `E${sequenceCount+1}`;
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         sequenceCount++; // Incrementar la cuenta de secuencias
-        indicator.textContent = `P${sequenceCount+1}`;
+        indicator.textContent = `E${sequenceCount+1}`;
 
         if (errorCount === 2 || count > 9) {
             endGame();
