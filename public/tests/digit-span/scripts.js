@@ -34,20 +34,18 @@ function startTest(type) {
 
     const titles = type === 'forward' ? forwardTitles : backwardTitles;
 
-    for (let i = 1; i <= 14; i++) {
+    titles.forEach((title, index) => {
         const itemDiv = document.createElement('div');
         itemDiv.classList.add('test-item');
 
-        const title = document.createElement('h3');
-        title.textContent = titles[i - 1];
-        titulo = title.textContent;
+        const titleElement = document.createElement('h3');
+        titleElement.textContent = title;
         const audio = document.createElement('audio');
-
-        audio.src = `audio/${type}/${i}.mp3`;
+        audio.src = `audio/${type}/${index + 1}.mp3`;
         audio.controls = true;
 
         audio.addEventListener('ended', () => {
-            startRecording(itemDiv, title);
+            playBeepAndShowButtons(itemDiv, titleElement, index + 1);
         });
 
         const timerDiv = document.createElement('div');
@@ -62,7 +60,7 @@ function startTest(type) {
         const stopImg = document.createElement('img');
         stopImg.src = 'detenerr1.png';
         stopImg.classList.add('img-button', 'stop-img', 'hidden');
-        stopImg.addEventListener('click', () => stopRecording(timerSpan, i, itemDiv));
+        stopImg.addEventListener('click', () => stopRecording(timerSpan, index + 1, itemDiv));
 
         const nextButton = document.createElement('button');
         nextButton.textContent = '';
@@ -75,11 +73,11 @@ function startTest(type) {
                 itemDiv.nextSibling.classList.remove('hidden');
             } else {
                 document.getElementById('test-items-' + type).classList.add('hidden');
-                mostrarFinalizacion(type, titulo);
+                mostrarFinalizacion(type);
             }
         });
 
-        itemDiv.appendChild(title);
+        itemDiv.appendChild(titleElement);
         itemDiv.appendChild(audio);
         itemDiv.appendChild(stopImg);
         itemDiv.appendChild(timerDiv);
@@ -89,13 +87,21 @@ function startTest(type) {
         buttonContainer.appendChild(nextButton);
         itemDiv.appendChild(buttonContainer);
 
-        if (i !== 1) itemDiv.classList.add('hidden');
+        if (index !== 0) itemDiv.classList.add('hidden');
 
         testItemsContainer.appendChild(itemDiv);
-    }
+    });
 }
 
-function startRecording(itemDiv, title) {
+function playBeepAndShowButtons(itemDiv, titleElement, index) {
+    const beep = new Audio('beep.wav');
+    beep.play();
+    beep.addEventListener('ended', () => {
+        startRecording(itemDiv, titleElement, index);
+    });
+}
+
+function startRecording(itemDiv, titleElement, index) {
     if (!audioStream) {
         alert('No se puede acceder al micrófono. Por favor, revisa los permisos.');
         return;
@@ -109,7 +115,9 @@ function startRecording(itemDiv, title) {
         const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
         chunks = [];
         const audioURL = window.URL.createObjectURL(blob);
-        downloadLinks.push({ url: audioURL, title: title, blob: blob });
+
+        // Guardar el enlace con el título y el índice
+        downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob });
 
         // Ocultar el botón de grabación y mostrar el botón de siguiente
         const stopImg = itemDiv.querySelector('.stop-img');
@@ -177,22 +185,22 @@ function updateTimerDisplay(displayElement, time) {
     displayElement.textContent = formatTime(time);
 }
 
-function mostrarFinalizacion(type, titulo) {
+function mostrarFinalizacion(type) {
     const completionMessage = document.getElementById('completion-message');
 
     completionMessage.style.textAlign = 'center';
     completionMessage.style.fontSize = '35px';
     completionMessage.style.marginTop = '13px';
     completionMessage.style.display = 'flex';
-    crearZip(type, titulo);
+    crearZip(type);
 }
 
-function crearZip(type, titulo) {
+function crearZip(type) {
     const zip = new JSZip();
     const audioFolder = zip.folder('audios');
 
-    downloadLinks.forEach((linkData, index) => {
-        const fileName = `${type}_${titulo}_${index + 1}.mp3`;
+    downloadLinks.forEach(linkData => {
+        const fileName = `${type}_${linkData.title}.mp3`;
         audioFolder.file(fileName, linkData.blob);
     });
 
