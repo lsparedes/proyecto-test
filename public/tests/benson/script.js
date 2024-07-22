@@ -47,16 +47,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+
+    drawWithFigure.addEventListener('click', async () => {
+        drawWithFigure.style.display = 'none';
+        drawContainer.style.display = 'block';
+        finishDrawingWithFigureButton.style.display = 'block';
+        initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
+        await startCanvasRecording('drawing-canvas');
+    });
+
+    finishDrawingWithFigureButton.addEventListener('click', () => {
+        drawContainer.style.display = 'none';
+        finishScreen.style.display = 'block';
+        stopCanvasRecording();
+        localStorage.setItem('firstTestEndTime', new Date().getTime().toString());
+    });
+
     // Eventos comunes
     startButton.addEventListener('click', async () => {
-        mainScreen.style.display = 'none';
 
-        if (drawWithFigureScreen) {
-            drawWithFigureScreen.style.display = 'block';
-            finishDrawingWithFigureButton.style.display = 'block';
-            initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
-            await startCanvasRecording('drawing-canvas');
-        }
 
         if (drawFromMemoryScreen) {
             drawFromMemoryScreen.style.display = 'block';

@@ -9,29 +9,25 @@
 </head>
 <body>
     <div id="container">
-        <div id="main-screen" class="screen">
-            <ol>
-                <p>Identificar figura:</p>
-                <p>Se presentará una sección para identificar la figura dibujada</p>
-            </ol>
-            <audio controls>
+        <div id="instructions">
+            <p>Identificar figura:</p>
+            <p>Se presentará una sección para identificar la figura dibujada</p>
+            <audio id="audio-instructions" controls>
                 <source src="benson.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
-                <button id="start-button">Comenzar</button>
                 <button id="fullscreen-button">Pantalla Completa</button>
             </div>
         </div>
-
-        <div id="identify-figure-screen" class="screen" style="display:none;">
+        <div id="main-screen" class="screen">
             <div id="identify-figure-grid">
                 <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image selectable" data-figure="figura2-1">
                 <img src="figura2-2.png" alt="Figura 2-2" class="identify-figure-image selectable" data-figure="figura2-2">
                 <img src="figura2-3.png" alt="Figura 2-3" class="identify-figure-image selectable" data-figure="figura2-3">
                 <img src="figura2-4.png" alt="Figura 2-4" class="identify-figure-image selectable" data-figure="figura2-4">
             </div>
-            <button id="finish-identifying-figure"></button>
+            <button id="finish-identifying-figure"></button> <!-- Added text content -->
         </div>
         <div id="finishScreen" class="container1" style="display: none;">
             <h1>¡Has completado el test!</h1>

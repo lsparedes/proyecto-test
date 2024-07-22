@@ -3,51 +3,57 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
     margin: 0;
     background-color: #ffffff;
+    transform: rotate(270deg);
+    transform-origin: center center;
+    height: 100vh;
+    overflow: hidden;
 }
 
 #container {
-    text-align: center;
-    background: white;
-    padding: 100px;
-}
-
-
-.container1 {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 1000px;
-    margin-top: 50px;
-    transform: rotate(270deg);
-  }
-
-h1 {
-    font-size: 40px;
+    width: 100vh;
+    height: 100vw;
+    background: white;
 }
 
-h2 {
-    font-size: 30px;
-    margin-bottom: 80px;
+#instructions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    width: 100%;
+    background: #f0f0f0;
+    margin-bottom: 10px;
 }
 
-p {
+#main-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+h1, h2, p, ol {
     font-size: 30px;
     text-align: center;
-}
-
-ol {
-    font-size: 30px;
-    margin-bottom: 150px;
-    text-align: center;
+    margin: 0 10px;
 }
 
 button {
-    margin: 20px;
-    padding: 15px 30px;
     border-radius: 5px;
     font-size: 20px;
     cursor: pointer;
@@ -65,27 +71,7 @@ button:active {
     transform: scale(0.98);
 }
 
-#start-button {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-#start-button:hover {
-    background-color: #0056b3;
-}
-
-#start-button:active {
-    transform: scale(0.98);
-}
-
 #fullscreen-button {
-    margin-top: 10px;
     padding: 15px 30px;
     font-size: 22px;
     color: rgb(0, 0, 0);
@@ -104,64 +90,29 @@ button:active {
     transform: scale(0.98);
 }
 
-.option-button {
-    font-size: 28px;
-}
-
-.screen {
-    text-align: center;
-    max-width: 100vh;
-    max-height: 100vh;
-}
-
-#main-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    max-width: 1100px;
-    margin: 0 auto;
-    transform: rotate(270deg);
-}
-
 .button-container {
     margin-top: 20px;
     text-align: center;
-    /* Alinea los botones al centro horizontal */
 }
 
 .button-container button {
     margin: 20px;
-    /* Ajusta el margen entre los botones */
-}
-
-.controls {
-    margin-bottom: 10px;
-}
-
-#timer,
-#memory-timer {
-    font-size: 24px;
-    margin-right: 20px;
 }
 
 .drawing-container {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
 .drawing-part {
     margin: 10px;
-    
 }
 
 canvas {
     border: 1px solid #000;
     cursor: crosshair;
-}
-
-#drawing-canvas {
-    margin-bottom: 10vh;
 }
 
 #figure-image {
@@ -172,33 +123,17 @@ canvas {
 }
 
 #identify-figure-grid {
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px; /* Espacio entre las imágenes */
-    max-width: 90%;
-    margin: 0 auto;
-    transform: rotate(270deg);
-    align-items: center;
-    
-}
-
-.option{
-    width: 100%;
-    /* Ocupa todo el ancho disponible en la cuadrícula */
-    height: auto;
-    /* Ajusta automáticamente la altura para mantener la proporción */
-    max-width: 30vh;
-    max-height: 30vh;
-    /* Establece una altura máxima mayor para las imágenes */
-    margin: 4px;
-    /* Agrega un pequeño margen entre las imágenes */
+    justify-content: center;
+    gap: 0; /* Elimina el espacio entre las columnas */
 }
 
 .identify-figure-image {
-    width: 100%;
+    width: 90%; /* Ajusta el tamaño según sea necesario */
     height: auto;
-    max-width: 100%;
-    max-height: 100%;
+    margin: auto; /* Centra las imágenes dentro de sus contenedores */
 }
 
 .controls i {
@@ -206,28 +141,6 @@ canvas {
     margin: 0 10px;
     cursor: pointer;
     transition: color 0.3s, transform 0.2s;
-}
-
-.controls i {
-    transform: scale(0.98);
-}
-
-.rotated-controls {
-    transform: rotate(90deg);
-
-    position: absolute;
-    top: 35vh; /* Ajusta este valor según sea necesario */
-    left: 49%; /* Alinea los controles al centro horizontalmente */
-    transform: translateX(-50%) rotate(270deg);
-}
-
-.rotated-controls1 {
-    transform: rotate(90deg);
-    transform-origin: top left;
-    position: absolute;
-    top: 35vh; /* Ajusta este valor según sea necesario */
-    left: 49%; /* Alinea los controles al centro horizontalmente */
-    transform: translateX(-50%) rotate(270deg);
 }
 
 .selectable {
@@ -245,7 +158,6 @@ canvas {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-
 #countdown-timer {
     position: fixed;
     top: 10px;
@@ -257,46 +169,15 @@ canvas {
     border-radius: 5px;
 }
 
-#finish-drawing-with-figure {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('flecha3.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 0;
-    width: 80px;
-    height: 70px;
-    vertical-align: middle;
+.rotated-controls {
     position: absolute;
-    top: 15px;
-    right: 15px;
-    transform: rotate(270deg);
+    top: 35vh;
+    left: 49%;
+    transform: rotate(90deg);
 }
 
-.red-arrow {
-    background-image: url("flecha4.png") !important;
-  }
-  
-
-#finish-drawing-from-memory, #finish-identifying-figure {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('flecha3.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 0;
-    width: 80px;
-    height: 70px;
-    vertical-align: middle;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    transform: rotate(270deg);
-}
-
-
+#finish-drawing-with-figure,
+#finish-drawing-from-memory,
 #finish-identifying-figure {
     background-color: transparent;
     border: none;
@@ -308,10 +189,16 @@ canvas {
     width: 80px;
     height: 75px;
     vertical-align: middle;
+}
+
+#finishButton{
     position: absolute;
     top: 15px;
     right: 15px;
-    transform: rotate(270deg);
+  }
+
+.red-arrow {
+    background-image: url("flecha4.png") !important;
 }
 
 #contador {
@@ -323,5 +210,5 @@ canvas {
     padding: 5px 10px;
     border-radius: 5px;
     font-family: Arial, sans-serif;
-    z-index: 1000; /* Asegura que el contador esté siempre visible */
+    z-index: 1000;
 }
