@@ -1,4 +1,7 @@
-document.getElementById('startButton').addEventListener('click', startTest);
+document.getElementById('startButton').addEventListener('click', () => {
+    document.getElementById('start-screen').style.display = 'none';
+    showNextImage();
+});
 document.getElementById('fullscreen-btn').addEventListener('click', toggleFullScreen);
 document.getElementById('submit-btn').addEventListener('click', submitAnswer);
 document.getElementById('next-button').addEventListener('click', () => {
@@ -25,14 +28,7 @@ let currentImageIndex = -1;
 let startTime;
 let answers = [];
 
-function startTest() {
-    document.getElementById('start-screen').style.display = 'none';
-    document.getElementById('stimulus-screen').style.display = 'block';
-    setTimeout(() => {
-        document.getElementById('stimulus-screen').style.display = 'none';
-        showNextImage();
-    }, 2000);
-}
+
 
 function showNextImage() {
     currentImageIndex++;
@@ -95,10 +91,10 @@ function toggleFullScreen() {
 
 function generateCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Item,Respuesta escrita,Respuesta correcta,Tiempo\n";
+    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta ingreso dato;Tiempo duracion tarea\n";
     
     answers.forEach(answer => {
-        csvContent += `${answer.title},${answer.userAnswer},${answer.correctAnswer},${(answer.timeTaken * 1000)} milisegundos\n`;
+        csvContent += `${answer.title};${answer.userAnswer};${answer.correctAnswer};;${(answer.timeTaken * 1000)} milisegundos;\n`;
     });
 
     const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
