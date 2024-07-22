@@ -19,13 +19,14 @@
             total de secuencias realizadas correctamente. ¡Buena suerte!
         </p>
 
-        <audio controls>
-            <source src="corsi-forward.mp3" type="audio/mpeg">
+        <audio controls id="audioContainer">
+            <source id="instructionAudio" src="corsi-forward.mp3" type="audio/mpeg">
             Tu navegador no soporta el elemento de audio.
         </audio>
+        
         <div class="button-container">
-            <button id="startTestButton" class="start-button">Comenzar Test</button>
-            <button id="fullscreenButton" class="fullscreen-button">Pantalla completa</button>
+            <button id="startTestButton" class="start-button" style="display: inline-block;"></button>
+            <button id="fullscreenButton" class="fullscreen-button"></button>
         </div>
     </div>
     <div id="game" style="display: none;">

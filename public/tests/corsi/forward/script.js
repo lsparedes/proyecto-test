@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const blocksContainer = document.getElementById('blocks');
+    const instructionsAudio = document.getElementById('instructionAudio');
+    const instructions = document.getElementById('instructionText');
     const startTestButton = document.getElementById('startTestButton');
     const startSequenceButton = document.getElementById('startSequenceButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     indicator.style.display = 'none';
     game.appendChild(indicator);
 
+    let isPractice = true;
     let sequence = [];
     let playerSequence = [];
     let count = 2;
@@ -30,16 +33,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Posiciones fijas de los cuadrados
     const fixedPositions = [
-        { top: 150, left: 80 },
-        { top: 50, left: 360 },
-        { top: 30, left: 650 },
-        { top: 400, left: 170 },
-        { top: 280, left: 360 },
-        { top: 150, left: 950 },
-        { top: 550, left: 400 },
-        { top: 350, left: 750 },
-        { top: 500, left: 900 }
+        { "top": 185, "left": 125 },
+        { "top": 58, "left": 380 },
+        { "top": 20, "left": 632 },
+        { "top": 440, "left": 188 },
+        { "top": 312, "left": 358 },
+        { "top": 145, "left": 890 },
+        { "top": 590, "left": 400 },
+        { "top": 397, "left": 656 },
+        { "top": 548, "left": 825 }
     ];
+
+    const practiceSequences = [
+        [2, 3],
+        [4, 5]
+    ]
 
     // Secuencias fijas de bloques
     const fixedSequences = [
@@ -90,30 +98,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startTest() {
         playerSequence = [];
-        createBlocks();
         introScreen.style.display = 'none';
         game.style.display = 'block';
+        startSequenceButton.style.visibility = 'visible';
         startSequenceButton.style.display = 'inline-block';
         endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" al iniciar el test
-        indicator.textContent = `E${sequenceCount+1}`;
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
         repeatCount = 0; // Reiniciar el contador de repeticiones
-        startTime = new Date(); // Registrar la hora de inicio
+        errorCount = 0;
+        if (isPractice) {
+            createBlocks();
+            indicator.textContent = `P${sequenceCount+1}`;
+        } else {
+            startTime = new Date(); // Registrar la hora de inicio
+            indicator.textContent = `S${count}-${repeatCount+1}`;
+        }
     }
 
     function startSequence() {
         playerSequence = [];
-        createSequence();
+        if (isPractice) {
+            createSequence(practiceSequences)
+        } else{
+            createSequence(fixedSequences);
+        }
         sequenceDisplaying = true;
         displaySequence(0);
-        startSequenceButton.style.display = 'none';
+        startSequenceButton.style.visibility = 'hidden';
         indicator.style.display = 'block';
     }
 
-    function createSequence() {
-        sequence = fixedSequences[sequenceCount % fixedSequences.length];
+    function createSequence(currentSequences) {
+        sequence = currentSequences[sequenceCount % currentSequences.length];
     }
 
     function displaySequence(index) {
@@ -129,22 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
             endSequenceButton.style.display = 'inline-block'; // Mostrar el botón "Terminar" después de mostrar la secuencia
             playBeep(); // Llamar a playBeep aquí para reproducir el sonido después de la secuencia
         }
-    }
-
-    function playBeep() {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const audioUrl = 'beep.wav';
-    
-        fetch(audioUrl)
-            .then(response => response.arrayBuffer())
-            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-            .then(audioBuffer => {
-                const source = audioContext.createBufferSource();
-                source.buffer = audioBuffer;
-                source.connect(audioContext.destination);
-                source.start();
-            })
-            .catch(e => console.error('Error al cargar el archivo de audio:', e));
     }
 
     function checkSequence() {
@@ -165,21 +167,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         sequenceCount++; // Incrementar la cuenta de secuencias
-        indicator.textContent = `E${sequenceCount+1}`;
 
-        if (errorCount === 2 || count > 9) {
-            endGame();
-        } else {
-            repeatCount++; // Incrementar el contador de repeticiones
-            if (repeatCount === 2) {
-                count++; // Incrementar la longitud de la secuencia después de 2 repeticiones
-                repeatCount = 0; // Reiniciar el contador de repeticiones
+        if (isPractice) {
+            indicator.textContent = `P${sequenceCount+1}`;
+            if (sequenceCount < practiceSequences.length) {
+                setTimeout(resetBlocks, 500);
+                setTimeout(() => {
+                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
+                    startSequence();
+                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+            } else {
+                endPractice();
             }
-            setTimeout(resetBlocks, 500);
-            setTimeout(() => {
-                endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                startSequence();
-            }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+        } else {
+            if (errorCount === 2 || sequenceCount === fixedSequences.length) {
+                endGame();
+            } else {
+                repeatCount++; // Incrementar el contador de repeticiones
+                if (repeatCount === 2) {
+                    count++; // Incrementar la longitud de la secuencia después de 2 repeticiones
+                    repeatCount = 0; // Reiniciar el contador de repeticiones
+                }
+                indicator.textContent = `S${count}-${repeatCount+1}`;
+                setTimeout(resetBlocks, 500);
+                setTimeout(() => {
+                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
+                    startSequence();
+                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+            }
         }
     }
 
@@ -202,6 +217,20 @@ document.addEventListener('DOMContentLoaded', () => {
         errorCount = 0;
         resetBlocks();
         generateCSV(highestCount, totalCorrectBlocks, duration, sequenceCount); // Generar el CSV al final del juego
+    }
+
+    function endPractice() {
+        instructionsAudio.src = 'beep.wav';
+        var audioContainer = instructionsAudio.parentNode;
+        audioContainer.load();
+        instructions.innerHTML = 'Instrucciones despues de la practica'
+        isPractice = false;
+        introScreen.style.display = 'block';
+        game.style.display = 'none';
+        endSequenceButton.style.display = 'none';
+        indicator.style.display = 'none';
+        startTestButton.style.display = 'inline-block';
+        resetBlocks();
     }
 
     function generateCSV(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
@@ -272,5 +301,21 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    createBlocks();
+    function playBeep() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioUrl = 'beep.wav';
+    
+        fetch(audioUrl)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+            })
+            .catch(e => console.error('Error al cargar el archivo de audio:', e));
+    }
+
+    // createBlocks();
 });
