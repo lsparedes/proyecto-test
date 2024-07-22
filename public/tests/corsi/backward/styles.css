@@ -185,3 +185,19 @@ audio {
     color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
     box-shadow: var(--bs-box-shadow) !important;
 }
+
+#fullscreenButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 75px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}

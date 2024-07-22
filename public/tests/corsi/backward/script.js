@@ -224,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
         instructions.innerHTML = 'Instrucciones despues de la practica'
         isPractice = false;
         introScreen.style.display = 'block';
+        document.getElementById('fullscreenButton').style.display = 'none';
         game.style.display = 'none';
         endSequenceButton.style.display = 'none';
         indicator.style.display = 'none';
