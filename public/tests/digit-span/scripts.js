@@ -60,7 +60,7 @@ function startTest(type) {
         timerDiv.appendChild(timerSpan);
 
         const stopImg = document.createElement('img');
-        stopImg.src = 'detenerr1.png';
+        stopImg.src = 'img/detenerr1.png';
         stopImg.classList.add('img-button', 'stop-img', 'hidden');
         stopImg.addEventListener('click', () => stopRecording(timerSpan, index + 1, itemDiv));
 
@@ -96,7 +96,7 @@ function startTest(type) {
 }
 
 function playBeepAndShowButtons(itemDiv, titleElement, index) {
-    const beep = new Audio('beep.wav');
+    const beep = new Audio('audio/beep.wav');
     beep.play();
     beep.addEventListener('ended', () => {
         if (!itemDiv.querySelector('.new-button')) {
@@ -148,7 +148,7 @@ function startRecording(itemDiv, titleElement, index) {
 
     const newButton = document.createElement('div');
     newButton.classList.add('img-button', 'new-button');
-    newButton.style.backgroundImage = "url('boton-rec.png')";
+    newButton.style.backgroundImage = "url('img/boton-rec.png')";
 
     // Verificar si ya existe un botón nuevo y eliminarlo antes de agregar uno nuevo
     const existingNewButton = itemDiv.querySelector('.new-button');

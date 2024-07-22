@@ -135,12 +135,54 @@ input {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+#startButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('img/flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+#fullscreen-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('img/full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    left: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
 
 #next-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    background-image: url('flecha3.png');
+    background-image: url('img/flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;

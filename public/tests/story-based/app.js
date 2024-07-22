@@ -12,7 +12,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/1/1_SET-IA_item1.jpg",
         src: "imagenes/1-SET.IA/1/1_SET-IA_item1.1.jpg",
-        textoDistintivo: "IA 1",
+        textoDistintivo: "IA1",
         options: [
             { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.2.jpg", correct: false },
             { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.3.jpg", correct: false },
@@ -22,7 +22,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/2/1_SET-IA_item2.jpg",
         src: "imagenes/1-SET.IA/2/1_SET-IA_item2.1.jpg",
-        textoDistintivo: "IA 2",
+        textoDistintivo: "IA2",
         options: [
             { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.2.jpg", correct: false },
             { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.3.jpg", correct: true },
@@ -32,7 +32,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/3/1_SET-IA_item3.jpg",
         src: "imagenes/1-SET.IA/3/1_SET-IA_item3.1.jpg",
-        textoDistintivo: "IA 3",
+        textoDistintivo: "IA3",
         options: [
             { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.2.jpg", correct: false },
             { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.3.jpg", correct: true },
@@ -42,7 +42,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/4/1_SET-IA_item4.jpg",
         src: "imagenes/1-SET.IA/4/1_SET-IA_item4.1.jpg",
-        textoDistintivo: "IA 4",
+        textoDistintivo: "IA4",
         options: [
             { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.2.jpg", correct: true },
             { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.3.jpg", correct: false },
@@ -52,7 +52,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/5/1_SET-IA_item5.jpg",
         src: "imagenes/1-SET.IA/5/1_SET-IA_item5.1.jpg",
-        textoDistintivo: "IA 5",
+        textoDistintivo: "IA5",
         options: [
             { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.2.jpg", correct: true },
             { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.3.jpg", correct: false },
@@ -62,7 +62,7 @@ const imagenes = [
     {
         preliminar: "imagenes/1-SET.IA/6/1_SET-IA_item6.jpg",
         src: "imagenes/1-SET.IA/6/1_SET-IA_item6.1.jpg",
-        textoDistintivo: "IA 6",
+        textoDistintivo: "IA6",
         options: [
             { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.2.jpg", correct: false },
             { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.3.jpg", correct: true },
@@ -72,7 +72,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/1/2_SET-CI_item1.jpg",
         src: "imagenes/2-SET-CI/1/2_SET-CI_item1.1.jpg",
-        textoDistintivo: "CI 1",
+        textoDistintivo: "CI1",
         options: [
             { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.2.jpg", correct: true },
             { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.3.jpg", correct: false },
@@ -92,7 +92,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/3/2_SET-CI_item3.jpg",
         src: "imagenes/2-SET-CI/3/2_SET-CI_item3.1.jpg",
-        textoDistintivo: "CI 3",
+        textoDistintivo: "CI3",
         options: [
             { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.2.jpg", correct: false },
             { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.3.jpg", correct: true },
@@ -102,7 +102,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/4/2_SET-CI_item4.jpg",
         src: "imagenes/2-SET-CI/4/2_SET-CI_item4.1.jpg",
-        textoDistintivo: "CI 4",
+        textoDistintivo: "CI4",
         options: [
             { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.2.jpg", correct: false },
             { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.3.jpg", correct: true },
@@ -112,7 +112,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/5/2_SET-CI_item5.jpg",
         src: "imagenes/2-SET-CI/5/2_SET-CI_item5.1.jpg",
-        textoDistintivo: "CI 5",
+        textoDistintivo: "CI5",
         options: [
             { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.2.jpg", correct: true },
             { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.3.jpg", correct: false },
@@ -122,7 +122,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/6/2_SET-CI_items_prueba_page-0012.jpg",
         src: "imagenes/2-SET-CI/6/2_SET-CI_item6.jpg",
-        textoDistintivo: "CI 6",
+        textoDistintivo: "CI6",
         options: [
             { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.1.jpg", correct: false },
             { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.2.jpg", correct: false },
@@ -132,7 +132,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/1/3_SET-EA_items_prueba_page-0002.jpg",
         src: "imagenes/3-SET-EA/1/3_SET-EA_item1.jpg",
-        textoDistintivo: "EA 1",
+        textoDistintivo: "EA1",
         options: [
             { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.1.jpg", correct: false },
             { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.2.jpg", correct: false },
@@ -142,7 +142,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/2/3_SET-EA_items_prueba_page-0004.jpg",
         src: "imagenes/3-SET-EA/2/3_SET-EA_item2.jpg",
-        textoDistintivo: "EA 2",
+        textoDistintivo: "EA2",
         options: [
             { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.1.jpg", correct: false },
             { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.2.jpg", correct: false },
@@ -152,7 +152,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/3/3_SET-EA_items_prueba_page-0006.jpg",
         src: "imagenes/3-SET-EA/3/3_SET-EA_item3.jpg",
-        textoDistintivo: "EA 3",
+        textoDistintivo: "EA3",
         options: [
             { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.1.jpg", correct: true },
             { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.2.jpg", correct: false },
@@ -162,7 +162,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/4/3_SET-EA_items_prueba_page-0008.jpg",
         src: "imagenes/3-SET-EA/4/3_SET-EA_item4.jpg",
-        textoDistintivo: "EA 4",
+        textoDistintivo: "EA4",
         options: [
             { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.1.jpg", correct: false },
             { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.2.jpg", correct: true },
@@ -172,7 +172,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/5/3_SET-EA_items_prueba_page-0010.jpg",
         src: "imagenes/3-SET-EA/5/3_SET-EA_item5.jpg",
-        textoDistintivo: "EA 5",
+        textoDistintivo: "EA5",
         options: [
             { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.1.jpg", correct: false },
             { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.2.jpg", correct: true },
@@ -182,7 +182,7 @@ const imagenes = [
     {
         preliminar: "imagenes/3-SET-EA/6/3_SET-EA_items_prueba_page-0012.jpg",
         src: "imagenes/3-SET-EA/6/3_SET-EA_item6.jpg",
-        textoDistintivo: "EA 6",
+        textoDistintivo: "EA6",
         options: [
             { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.1.jpg", correct: true },
             { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.2.jpg", correct: false },
@@ -393,15 +393,23 @@ function generarArchivoCSV() {
     }
 
     // Crear el contenido del archivo CSV
-    let csvContent = "Item, Opcion seleccionada, Es correcta, Tiempo (segundos), Tiempo (minutos)\n";
+    let csvContent = [
+        ["Item", "Opcion seleccionada", "Es correcta", "Tiempo (segundos)", "Tiempo (minutos)"]
+    ];
+    
     respuestasSeleccionadas.forEach(respuesta => {
         // Convertir el tiempo de milisegundos a segundos y minutos
         const tiempoEnSegundos = respuesta.tiempo / 1000;
         const tiempoEnMinutos = respuesta.tiempo / 60000;
-
-        // Agregar los tiempos en segundos y minutos al CSV
-        csvContent += `${respuesta.item}, ${respuesta.opcionSeleccionada}, ${respuesta.esCorrecta}, ${tiempoEnSegundos}, ${tiempoEnMinutos}\n`;
+    
+        // Agregar los tiempos en segundos y minutos al arreglo csvContent
+        csvContent.push([respuesta.item, respuesta.opcionSeleccionada, respuesta.esCorrecta, tiempoEnSegundos, tiempoEnMinutos]);
     });
+    
+    // Convertir el arreglo bidimensional a una cadena CSV
+    let csvString = csvContent.map(row => row.join(", ")).join("\n");
+    
+    console.log(csvString);
 
     // Crear un blob a partir del contenido del CSV
     const blob = new Blob([csvContent], { type: 'text/csv' });
