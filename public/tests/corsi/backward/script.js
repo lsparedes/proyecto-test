@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         instructionsAudio.src = 'beep.wav';
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.load();
-        instructions.innerHTML = 'Instrucciones despues de la practica'
+        instructions.innerHTML = 'A continuacion se presentarán secuencias de 2 a 8 cuadrados, con dos secuencias en cada longitud, para un total de 16 secuencias en orden creciente de longitud. Debe tocar los cuadrados en orden inverso a la secuencia mostrada. La prueba se terminará cuando se entreguen respuestas incorrectas para ambas secuencias de una misma longitud. La puntuación será el número total de secuencias realizadas correctamente. Concéntrese y haga su mejor esfuerzo para recordar cada secuencia en orden inverso. ¡Buena suerte!'
         isPractice = false;
         introScreen.style.display = 'block';
         document.getElementById('fullscreenButton').style.display = 'none';

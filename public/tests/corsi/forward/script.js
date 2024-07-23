@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         instructionsAudio.src = 'beep.wav';
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.load();
-        instructions.innerHTML = 'Instrucciones despues de la practica'
+        instructions.innerHTML = 'A continuación se presentarán secuencias de 2 a 9 cuadrados, con dos secuencias en cada longitud, para un total de 16 secuencias en orden creciente de longitud. La prueba se terminará cuando se entreguen respuestas incorrectas para ambas secuencias de una misma longitud. La puntuación será el número total de secuencias realizadas correctamente. Concéntrese y haga su mejor esfuerzo para recordar cada secuencia. ¡Buena suerte!'
         isPractice = false;
         introScreen.style.display = 'block';
         document.getElementById('fullscreenButton').style.display = 'none';
