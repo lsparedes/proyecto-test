@@ -1,73 +1,27 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Seleccionar elementos comunes
-    const mainScreen = document.getElementById('main-screen');
-    const startButton = document.getElementById('start-button');
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishScreen = document.getElementById('finishScreen');
 
-    // Seleccionar elementos específicos para los index
+    // Pantalla de dibujo con figura
     const drawWithFigureScreen = document.getElementById('draw-with-figure-screen');
     const finishDrawingWithFigureButton = document.getElementById('finish-drawing-with-figure');
-
+    const rememberFigureScreen = document.getElementById('remember-figure-screen');
+    const finishRememberingFigureButton = document.getElementById('finish-remembering-figure');
+    // Pantalla de dibujo desde memoria
     const drawFromMemoryScreen = document.getElementById('draw-from-memory-screen');
     const finishDrawingFromMemoryButton = document.getElementById('finish-drawing-from-memory');
 
+    // Pantalla de identificación de figura
     const identifyFigureScreen = document.getElementById('identify-figure-screen');
     const finishIdentifyingFigureButton = document.getElementById('finish-identifying-figure');
-
     const selectableImages = document.querySelectorAll('.selectable');
 
     let selectedFigure = null;
     let mediaRecorder;
     let recordedChunks = [];
-
-    initAudioContext();
-
     let countdownInterval;
 
-    const beepAudio = new Audio('beep.wav');
-    if (drawFromMemoryScreen || identifyFigureScreen) {
-        const firstTestEndTime = localStorage.getItem('firstTestEndTime');
-        const secondTestEndTime = localStorage.getItem('secondTestEndTime');
-        if (firstTestEndTime) {
-            const now = new Date().getTime();
-            const endTime = new Date(parseInt(firstTestEndTime)).getTime();
-            const timeLeft = endTime + 10 * 60 * 1000 - now;
-            if (timeLeft > 0) {
-                disableStartButton(timeLeft);
-            }
-        }
-        if (secondTestEndTime) {
-            const now = new Date().getTime();
-            const endTime = new Date(parseInt(secondTestEndTime)).getTime();
-            const timeLeft = endTime + 10 * 60 * 1000 - now;
-            if (timeLeft > 0) {
-                disableStartButton(timeLeft);
-            }
-        }
-    }
-
-    // Eventos comunes
-    startButton.addEventListener('click', async () => {
-        mainScreen.style.display = 'none';
-
-        if (drawWithFigureScreen) {
-            drawWithFigureScreen.style.display = 'block';
-            finishDrawingWithFigureButton.style.display = 'block';
-            initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
-            await startCanvasRecording('drawing-canvas');
-        }
-
-        if (drawFromMemoryScreen) {
-            drawFromMemoryScreen.style.display = 'block';
-            initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
-            await startCanvasRecording('memory-canvas');
-        }
-
-        if (identifyFigureScreen) {
-            identifyFigureScreen.style.display = 'block';
-        }
-    });
+    initAudioContext();
 
     fullscreenButton.addEventListener('click', () => {
         if (!document.fullscreenElement) {
@@ -79,75 +33,96 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Audio
+    const audioElement = document.getElementById('benson-audio');
+    audioElement.addEventListener('ended', () => {
+        setTimeout(() => {
+            finishDrawingWithFigureButton.classList.add('red-arrow');
+        }, 10000); // 10 segundos
+    });
+
+    const beepAudio = new Audio('beep.wav');
+
+    if (drawFromMemoryScreen || identifyFigureScreen) {
+        const firstTestEndTime = localStorage.getItem('firstTestEndTime');
+        const secondTestEndTime = localStorage.getItem('secondTestEndTime');
+        if (firstTestEndTime) {
+            const now = new Date().getTime();
+            const endTime = new Date(parseInt(firstTestEndTime)).getTime();
+            const timeLeft = endTime + 0.05 * 60 * 1000 - now;
+            if (timeLeft > 0) {
+                disableStartButton(timeLeft);
+            }
+        }
+        if (secondTestEndTime) {
+            const now = new Date().getTime();
+            const endTime = new Date(parseInt(secondTestEndTime)).getTime();
+            const timeLeft = endTime + 0.05 * 60 * 1000 - now;
+            if (timeLeft > 0) {
+                disableStartButton(timeLeft);
+            }
+        }
+    }
+
     if (finishDrawingWithFigureButton) {
         finishDrawingWithFigureButton.addEventListener('click', () => {
             drawWithFigureScreen.style.display = 'none';
-            finishScreen.style.display = 'block';
+            rememberFigureScreen.style.display = 'block';
             stopCanvasRecording();
+            downloadCanvas('drawing-canvas', 'DrawWithFigure.png');
             localStorage.setItem('firstTestEndTime', new Date().getTime().toString());
         });
+        initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
+        startCanvasRecording('drawing-canvas');
     }
 
+    if (finishRememberingFigureButton) {
+        finishRememberingFigureButton.addEventListener('click', () => {
+            rememberFigureScreen.style.display = 'none';
+            finishScreen.style.display = 'block';
+        });
+    }
     if (finishDrawingFromMemoryButton) {
         finishDrawingFromMemoryButton.addEventListener('click', () => {
             drawFromMemoryScreen.style.display = 'none';
             finishScreen.style.display = 'block';
             stopCanvasRecording();
+            downloadCanvas('memory-canvas', 'DrawFromMemory.png');
             localStorage.setItem('secondTestEndTime', new Date().getTime().toString());
-            setTimeout(() => {
-                disableStartButton(10 * 60 * 1000);
-            }, 0);
         });
+        initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
+        startCanvasRecording('memory-canvas');
     }
-
     if (finishIdentifyingFigureButton) {
         finishIdentifyingFigureButton.addEventListener('click', () => {
             if (selectedFigure) {
                 identifyFigureScreen.style.display = 'none';
                 finishScreen.style.display = 'block';
-
-                // Descargar automáticamente la imagen seleccionada
                 const link = document.createElement('a');
                 link.href = selectedFigure.src;
                 link.download = 'selected-image.png';
                 link.click();
+                localStorage.setItem('thirdTestEndTime', new Date().getTime().toString());
             } else {
-                alert('Por favor, seleccione una figura antes de continuar.');
+                alert('Por favor, selecciona una figura antes de continuar.');
             }
-            localStorage.setItem('thirdTestEndTime', new Date().getTime().toString());
-            setTimeout(() => {
-                disableStartButton(10 * 60 * 1000);
-            }, 0);
         });
-
         selectableImages.forEach(image => {
-            image.addEventListener('click', (event) => {
-                if (selectedFigure) {
-                    selectedFigure.classList.remove('selected');
-                }
-                selectedFigure = event.target;
-                selectedFigure.classList.add('selected');
+            image.addEventListener('click', () => {
+                selectableImages.forEach(img => img.classList.remove('selected'));
+                image.classList.add('selected');
+                selectedFigure = image;
             });
         });
     }
 
-    function disableStartButton(timeLeft) {
-        startButton.disabled = true;
-        const countdownElement = document.createElement('div');
-        countdownElement.id = 'contador';
-        document.body.appendChild(countdownElement);
-
-        updateCountdown(timeLeft);
-
+    function startCountdown(duration) {
+        let timeLeft = duration;
         countdownInterval = setInterval(() => {
-            timeLeft -= 1000;
+            timeLeft--;
             if (timeLeft <= 0) {
                 clearInterval(countdownInterval);
-                startButton.disabled = false;
-                countdownElement.remove();
-                beepAudio.play(); // Reproducir el audio cuando el tiempo llegue a 0
-            } else {
-                updateCountdown(timeLeft);
+                finishDrawingWithFigureButton.classList.add('red-arrow');
             }
         }, 1000);
     }
@@ -168,10 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const canvas = document.getElementById(canvasId);
         const ctx = canvas.getContext('2d');
 
-        // Establecer el color del fondo en blanco
         setCanvasBackground(canvas, 'white');
-
-        // Establecer el color del trazo en negro
         ctx.strokeStyle = 'black';
 
         let drawing = false;
@@ -209,16 +181,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         document.getElementById(downloadButtonId).addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = 'Benson Complex Figure.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
+            downloadCanvas(canvasId, canvasId + '.png');
         });
+    }
+
+    function downloadCanvas(canvasId, filename) {
+        const canvas = document.getElementById(canvasId);
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
     }
 
     async function startCanvasRecording(canvasId) {
         const canvas = document.getElementById(canvasId);
-        const stream = canvas.captureStream(30); // 30 FPS
+        const stream = canvas.captureStream(30);
 
         mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'video/webm;codecs=vp9'
@@ -226,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         mediaRecorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
-                recordedChunks.push(event.data);
+                recordedChunks.push(event.data);    
             }
         };
 

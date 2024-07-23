@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test de Figura Compleja de Benson</title>
+    <title>Test de Figura Compleja de Benson - Identificar Figura</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
     <div id="container">
-        <div id="main-screen" class="screen">
+        <div id="main-screen" class="screen" >
             <ol>
                 <p>Identificar figura:</p>
                 <p>Se presentará una sección para identificar la figura dibujada</p>
@@ -19,12 +19,11 @@
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
-                <button id="start-button">Comenzar</button>
                 <button id="fullscreen-button">Pantalla Completa</button>
             </div>
         </div>
 
-        <div id="identify-figure-screen" class="screen" style="display:none;">
+        <div id="identify-figure-screen" class="screen">
             <div id="identify-figure-grid">
                 <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image selectable" data-figure="figura2-1">
                 <img src="figura2-2.png" alt="Figura 2-2" class="identify-figure-image selectable" data-figure="figura2-2">
@@ -33,6 +32,7 @@
             </div>
             <button id="finish-identifying-figure"></button>
         </div>
+
         <div id="finishScreen" class="container1" style="display: none;">
             <h1>¡Has completado el test!</h1>
         </div>

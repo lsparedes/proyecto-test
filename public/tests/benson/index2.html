@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test de Figura Compleja de Benson</title>
+    <title>Test de Figura Compleja de Benson - Recuerdo Diferido</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
@@ -15,26 +15,22 @@
                 <p>Pasado un tiempo, deberá dibujar la misma figura de memoria,</p>
                 <p>sin ayuda</p>
             </ol>
-            <audio controls>
+            <audio controls id="benson-audio">
                 <source src="benson.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
-                <button id="start-button">Comenzar</button>
                 <button id="fullscreen-button">Pantalla Completa</button>
             </div>
         </div>
 
-        <div id="draw-from-memory-screen" class="screen" style="display:none;">
-            <div class="controls controls-left rotated-controls1" style="padding-right: 500px;">
-                <!--<span id="memory-timer">00:00</span> -->
-                <!-- <i id="start-memory-timer-button" class="fas fa-play" title="Iniciar tiempo"></i> -->
-                <!-- <i id="stop-memory-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i> -->
+        <div id="draw-from-memory-screen" class="screen">
+            <div class="controls controls-left">
                 <i id="clear-memory-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
                 <i id="download-memory-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
             </div>
-            <div class="drawing-container" style="padding-left: 200px;">
-                <div class="drawing-part" style="transform: rotate(90deg);">
+            <div class="drawing-container">
+                <div class="drawing-part">
                     <canvas id="memory-canvas" width="820" height="550"></canvas>
                 </div>
             </div>

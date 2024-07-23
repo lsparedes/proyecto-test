@@ -6,14 +6,18 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #ffffff;
+    transform: rotate(270deg);
+    transform-origin: center;
+    overflow: hidden;
 }
 
 #container {
     text-align: center;
     background: white;
-    padding: 100px;
+    padding: 50px;
+    width: 100vh;
+    height: 100vw;
 }
-
 
 .container1 {
     display: flex;
@@ -22,8 +26,7 @@ body {
     justify-content: center;
     max-width: 1000px;
     margin-top: 50px;
-    transform: rotate(270deg);
-  }
+}
 
 h1 {
     font-size: 40px;
@@ -121,7 +124,6 @@ button:active {
     justify-content: center;
     max-width: 1100px;
     margin: 0 auto;
-    transform: rotate(270deg);
 }
 
 .button-container {
@@ -147,12 +149,12 @@ button:active {
 
 .drawing-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .drawing-part {
     margin: 10px;
-    
 }
 
 canvas {
@@ -177,12 +179,10 @@ canvas {
     gap: 10px; /* Espacio entre las imágenes */
     max-width: 90%;
     margin: 0 auto;
-    transform: rotate(270deg);
     align-items: center;
-    
 }
 
-.option{
+.option {
     width: 100%;
     /* Ocupa todo el ancho disponible en la cuadrícula */
     height: auto;
@@ -208,26 +208,14 @@ canvas {
     transition: color 0.3s, transform 0.2s;
 }
 
-.controls i {
-    transform: scale(0.98);
+.controls i:hover {
+    transform: scale(1.1);
 }
 
 .rotated-controls {
-    transform: rotate(90deg);
 
-    position: absolute;
     top: 35vh; /* Ajusta este valor según sea necesario */
     left: 49%; /* Alinea los controles al centro horizontalmente */
-    transform: translateX(-50%) rotate(270deg);
-}
-
-.rotated-controls1 {
-    transform: rotate(90deg);
-    transform-origin: top left;
-    position: absolute;
-    top: 35vh; /* Ajusta este valor según sea necesario */
-    left: 49%; /* Alinea los controles al centro horizontalmente */
-    transform: translateX(-50%) rotate(270deg);
 }
 
 .selectable {
@@ -245,7 +233,6 @@ canvas {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-
 #countdown-timer {
     position: fixed;
     top: 10px;
@@ -257,46 +244,8 @@ canvas {
     border-radius: 5px;
 }
 
-#finish-drawing-with-figure {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('flecha3.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 0;
-    width: 80px;
-    height: 70px;
-    vertical-align: middle;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    transform: rotate(270deg);
-}
-
-.red-arrow {
-    background-image: url("flecha4.png") !important;
-  }
-  
-
-#finish-drawing-from-memory, #finish-identifying-figure {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('flecha3.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 0;
-    width: 80px;
-    height: 70px;
-    vertical-align: middle;
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    transform: rotate(270deg);
-}
-
-
+#finish-drawing-with-figure,
+#finish-drawing-from-memory,
 #finish-identifying-figure {
     background-color: transparent;
     border: none;
@@ -306,12 +255,23 @@ canvas {
     background-repeat: no-repeat;
     padding: 0;
     width: 80px;
-    height: 75px;
+    height: 70px;
     vertical-align: middle;
-    position: absolute;
-    top: 15px;
+    position: relative;
+    bottom: 15px;
     right: 15px;
-    transform: rotate(270deg);
+}
+
+#finish-drawing-with-figure.red-arrow {
+    background-image: url('flecha4.png');
+}
+
+#finish-drawing-from-memory.red-arrow{
+    background-image: url('flecha4.png');
+}
+
+#finish-identifying-figure{
+    background-image: url('flecha4.png');
 }
 
 #contador {
@@ -319,7 +279,7 @@ canvas {
     top: 15px;
     right: 15px;
     background-color: rgb(255, 255, 255);
-    color: white;
+    color: black;
     padding: 5px 10px;
     border-radius: 5px;
     font-family: Arial, sans-serif;
