@@ -215,9 +215,9 @@ audio {
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 6%;
+    bottom: 15px;
     /* Ajustamos la distancia desde la parte inferior */
-    right: 10%;
+    right: 15px;
     /* Ajustamos la distancia desde el borde derecho */
 }
 
