@@ -1,3 +1,7 @@
+// IMPORTANTE! SI SE CAMBIA LA RUTA DE LAS IMAGENES, ADEMAS DE CAMBIARLAS EN const imagenes (linea 5)
+// HAY QUE VERIFICAR LA RUTA USADA EN LA FUNCION function verificarRespuesta(event) (linea 602)
+// DE LO CONTRARIO NO SE GENERARA EL CSV CORRECTAMENTE
+
 const imagenes = [
     {
         src: "imagenes/mcct_target_pr1.png",
@@ -400,6 +404,10 @@ const fullscreenButton = document.getElementById('fullscreenButton');
 const nextButton = document.getElementById('nextButton');
 let respuestaSeleccionada = false; // Variable para verificar si se seleccionó una respuesta
 let respuesta = {}; // Variable para almacenar la respuesta seleccionada
+let startTime;
+let endTime;
+let timer;
+let milliseconds = 0;
 
 function requestFullscreen() {
     const element = document.documentElement;
@@ -438,7 +446,8 @@ function mostrarFinalizacion() {
     }
 
     //generarArchivoRespuestas(); // Generar el archivo con las respuestas
-    generarArchivoRespuestasCSV()
+    generarArchivoRespuestasCSV();
+    descargarVariableComoTxt();
 }
 
 function generarArchivoRespuestas() {
@@ -466,6 +475,9 @@ function generarArchivoRespuestas() {
 }
 
 function generarArchivoRespuestasCSV() {
+    endTime = new Date(); // Registrar la hora de finalización
+    const duration = (endTime - startTime) / 1000; // Duración en segundos
+
     // Verificar si hay respuestas seleccionadas
     if (respuestasSeleccionadas.length === 0) {
         console.log('No hay respuestas seleccionadas.');
@@ -473,13 +485,13 @@ function generarArchivoRespuestasCSV() {
     }
 
     // Crear el encabezado del CSV
-    let csvContent = "textoDistintivo,item,respuestaCorrecta,respuestaParticipante,precision\n";
+    let csvContent = "numero,item,respuestaCorrecta,respuestaParticipante,precision,tiempoTarea,tiempoDedicado\n";
 
     // Recorrer las respuestas seleccionadas
     respuestasSeleccionadas.forEach(respuesta => {
         if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
             // Construir una línea del CSV con los datos de la respuesta
-            const lineaCSV = `${respuesta.textoDistintivo},${respuesta.imagen},${respuesta.respuestaCorrecta},${respuesta.respuestaSeleccion},${respuesta.esCorrecta ? 1 : 0}\n`;
+            const lineaCSV = `${respuesta.textoDistintivo},${respuesta.imagen},${respuesta.respuestaCorrecta},${respuesta.respuestaSeleccion},${respuesta.esCorrecta ? 1 : 0},${duration.toFixed(2)},${respuesta.tiempoDedicado}\n`;
             // Agregar la línea al contenido del CSV
             csvContent += lineaCSV;
         }
@@ -511,6 +523,8 @@ function generarArchivoRespuestasCSV() {
 
 
 function iniciarPresentacion() {
+    startTime = new Date(); // Registrar la hora de inicio
+
     presentacionIniciada = true;
     const imageContainer = document.getElementById('imageContainer');
     const instructionText = document.getElementById('instructionText');
@@ -596,10 +610,6 @@ function agregarTextoYOpciones(imagenInfo) {
 }
 
 
-
-
-
-
 function verificarRespuesta(event) {
     event.stopPropagation();
 
@@ -618,7 +628,7 @@ function verificarRespuesta(event) {
         imagen: imagenes[indiceActual].item,
         respuestaCorrecta: imagenes[indiceActual].options.find(option => option.correct).item,
         respuestaSeleccion: imagenes[indiceActual].options.find(option => option.src === "imagenes"+optionImg.src.split('imagenes')[1]).item,
-        esCorrecta: esCorrecta
+        esCorrecta: esCorrecta,
     };
 
     respuestaSeleccionada = true;
@@ -630,8 +640,11 @@ function verificarRespuesta(event) {
 // Al hacer clic en "Next", avanzar a la siguiente imagen
 nextButton.addEventListener('click', function () {
     if(respuestaSeleccionada){
+        stopTimer(); // Detener el timer
+        respuesta['tiempoDedicado'] = (milliseconds / 1000).toFixed(2);
         respuestasSeleccionadas.push(respuesta);
     }
+    startTimer(); // Iniciar el timer nuevamente
     nextButton.style.display = 'none'; // Ocultar el botón "Next" nuevamente
     cambioHabilitado = true; // Permitir cambiar de imagen
     cambiarImagen();
@@ -657,6 +670,43 @@ function cambiarImagen() {
     } else {
         mostrarImagen(indiceActual);
     }
+}
+
+function startTimer() {
+    stopTimer(); // Reiniciar el timer si ya está corriendo
+    milliseconds = 0; // Reiniciar los milisegundos
+    timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
+}
+
+function stopTimer() {
+    clearInterval(timer);
+}
+
+function updateTimer() {
+    milliseconds += 10; // Incrementar en 10 ms
+    let seconds = milliseconds / 1000; // Convertir a segundos
+}
+
+function descargarVariableComoTxt() {
+    // Define la variable que quieres guardar en el archivo .txt
+    const miVariable = (endTime - startTime) / 1000;;
+
+    // Crea un Blob con el contenido
+    const blob = new Blob([miVariable.toFixed(2)], { type: 'text/plain' });
+
+    // Crea un enlace de descarga para el Blob
+    const enlace = document.createElement('a');
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = 'tiempoDedicado.txt'; // Nombre del archivo a descargar
+
+    // Agrega el enlace al documento
+    document.body.appendChild(enlace);
+
+    // Simula un clic en el enlace para iniciar la descarga
+    enlace.click();
+
+    // Opcional: Elimina el enlace después de iniciar la descarga
+    document.body.removeChild(enlace);
 }
 
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
