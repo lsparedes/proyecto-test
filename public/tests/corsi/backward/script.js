@@ -30,18 +30,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime;
     let endTime;
     let repeatCount = 0; // Contador de repeticiones de la secuencia actual
+    let testData = [];
+    let timer;
+    let milliseconds = 0;
 
     // Posiciones fijas de los cuadrados
     const fixedPositions = [
-        { "top": 185, "left": 125 },
-        { "top": 58, "left": 380 },
-        { "top": 20, "left": 632 },
-        { "top": 440, "left": 188 },
-        { "top": 312, "left": 358 },
-        { "top": 145, "left": 890 },
         { "top": 590, "left": 400 },
+        { "top": 548, "left": 825 },
+        { "top": 440, "left": 188 },
         { "top": 397, "left": 656 },
-        { "top": 548, "left": 825 }
+        { "top": 312, "left": 358 },
+        { "top": 185, "left": 125 },
+        { "top": 145, "left": 890 },
+        { "top": 20, "left": 632 },
+        { "top": 58, "left": 380 }
     ];
 
     const practiceSequences = [
@@ -66,6 +69,25 @@ document.addEventListener('DOMContentLoaded', () => {
         [6, 1, 0, 3, 4, 7, 8, 2],
         [8, 1, 7, 0, 6, 5, 3, 4]
     ];
+
+    const fixedTitles = [
+        "S2-1",
+        "S2-2",
+        "S3-1",
+        "S3-2",
+        "S4-1",
+        "S4-2",
+        "S5-1",
+        "S5-2",
+        "S6-1",
+        "S6-2",
+        "S7-1",
+        "S7-2",
+        "S8-1",
+        "S8-2",
+        "S9-1",
+        "S9-2"
+    ]
 
     function createBlocks() {
         blocksContainer.innerHTML = '';
@@ -110,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
             createBlocks();
             indicator.textContent = `P${sequenceCount+1}`;
         } else {
-            startTime = new Date(); // Registrar la hora de inicio
             indicator.textContent = `S${count}-${repeatCount+1}`;
         }
     }
@@ -121,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
             createSequence(practiceSequences)
         } else{
             createSequence(fixedSequences);
+            startTime = new Date(); // Registrar la hora de inicio
         }
         sequenceDisplaying = true;
         displaySequence(0);
@@ -144,6 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sequenceDisplaying = false;
             endSequenceButton.style.display = 'inline-block'; // Mostrar el botón "Terminar" después de mostrar la secuencia
             playBeep(); // Llamar a playBeep aquí para reproducir el sonido después de la secuencia
+            startTimer();
         }
     }
 
@@ -233,11 +256,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
-        const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        const fileName = `CorsiBackwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
-        const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        saveAs(blob, fileName);
+        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Tiempo de Respuesta (s)","Tiempo Total (s)", "Mano Utilizada"];
+        const rows = testData.map(data => [
+            data.exerciseTitle,
+            data.correctAnswer.reverse().join(""),
+            data.userResponse.join(""),
+            data.responseTime,
+            duration.toFixed(2),
+            "Izquierda",
+        ]);
+
+        const desiredRowCount = fixedSequences.length;
+        const currentRowCount = rows.length;
+        const rowsToFill = desiredRowCount - currentRowCount;
+    
+        for (let i = 0; i < rowsToFill; i++) {
+            // Puedes reemplazar los valores vacíos con cualquier valor predeterminado que desees
+            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount+i].reverse().join(""), "", "",duration.toFixed(2),"Izquierda"]);
+        }
+
+        let csvContent = "data:text/csv;charset=utf-8," 
+        + headers.join(",") + "\n"
+        + rows.map(e => e.join(",")).join("\n");
+        saveAs(csvContent, `CorsiForwardTest.csv`);
+
+        // const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
+        // const fileName = `CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
+        // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
+        // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        // saveAs(blob, fileName);
     }
 
     startTestButton.addEventListener('click', () => {
@@ -249,6 +296,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     endSequenceButton.addEventListener('click', () => {
+        if (!isPractice) {
+            stopTimer();
+
+            const exerciseData = {
+                exerciseTitle: fixedTitles[sequenceCount],
+                correctAnswer: sequence,
+                userResponse: playerSequence,
+                responseTime: (milliseconds / 1000).toFixed(2),
+            };
+            testData.push(exerciseData);
+        }
         checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
         endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
     });
@@ -314,6 +372,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 source.start();
             })
             .catch(e => console.error('Error al cargar el archivo de audio:', e));
+    }
+
+    function startTimer() {
+        stopTimer(); // Reiniciar el timer si ya está corriendo
+        milliseconds = 0; // Reiniciar los milisegundos
+        timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
+    }
+    
+    function stopTimer() {
+        clearInterval(timer);
+    }
+
+    function updateTimer() {
+        milliseconds += 10; // Incrementar en 10 ms
+        let seconds = milliseconds / 1000; // Convertir a segundos
     }
 
     // createBlocks();
