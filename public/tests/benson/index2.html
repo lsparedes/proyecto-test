@@ -9,29 +9,37 @@
 </head>
 <body>
     <div id="container">
-        <div id="instructions">
-            <p>Recuerdo Diferido:</p>
-            <p>Pasado un tiempo, deberá dibujar la misma figura de memoria, sin ayuda</p>
-            <audio id="audio-instructions" controls>
+        <div id="main-screen" class="screen">
+            <ol>
+                <p>Recuerdo Diferido:</p>
+                <p>Pasado un tiempo, deberá dibujar la misma figura de memoria,</p>
+                <p>sin ayuda</p>
+            </ol>
+            <audio controls>
                 <source src="benson.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
+                <button id="start-button">Comenzar</button>
                 <button id="fullscreen-button">Pantalla Completa</button>
             </div>
         </div>
-        <div id="main-screen" class="screen">
-            <div class="controls controls-left">
+
+        <div id="draw-from-memory-screen" class="screen" style="display:none;">
+            <div class="controls controls-left rotated-controls1" style="padding-right: 500px;">
+                <!--<span id="memory-timer">00:00</span> -->
+                <!-- <i id="start-memory-timer-button" class="fas fa-play" title="Iniciar tiempo"></i> -->
+                <!-- <i id="stop-memory-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i> -->
                 <i id="clear-memory-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
                 <i id="download-memory-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
             </div>
-            <div class="drawing-container">
-                <div class="drawing-part">
+            <div class="drawing-container" style="padding-left: 200px;">
+                <div class="drawing-part" style="transform: rotate(90deg);">
                     <canvas id="memory-canvas" width="820" height="550"></canvas>
                 </div>
             </div>
+            <button id="finish-drawing-from-memory"></button>
         </div>
-        <button id="finish-drawing-from-memory"></button> <!-- Added text content -->
         <div id="finishScreen" class="container1" style="display: none;">
             <h1>¡Has completado el test!</h1>
         </div>

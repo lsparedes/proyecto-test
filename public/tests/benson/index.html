@@ -9,31 +9,37 @@
 </head>
 <body>
     <div id="container">
-        <div id="instructions">
-            <p>Copiar la Figura:</p>
-            <p>Se presentará una figura, la cual debe copiar lo más exacta posible</p>
-            <audio id="audio-instructions" controls>
+        <div id="main-screen" class="screen">
+            <ol>
+                <p>Copiar la Figura: </p>
+                <p>Se presentará una figura, la cual debe copiar lo más exacta posible</p>
+            </ol>
+            <audio controls>
                 <source src="benson.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
+                <button id="start-button">Comenzar</button>
                 <button id="fullscreen-button">Pantalla Completa</button>
             </div>
         </div>
-        <div id="main-screen" class="screen">
+
+        <div id="draw-with-figure-screen" class="screen" style="display:none;">
+            <div class="controls controls-left rotated-controls">
+                <i id="stop-timer-button" class="fas fa-pause" style="display:none;" title="Pausar tiempo"></i>
+                <i id="clear-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
+                <i id="download-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
+            </div>
+
             <div class="drawing-container">
-                <div class="drawing-part">
+                <div class="drawing-part" style="transform: rotate(270deg);">
                     <img src="figura1.png" alt="Figura de Benson" id="figure-image">
                 </div>
-                <div class="controls controls-left">
-                    <i id="clear-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
-                    <i id="download-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
-                </div>
-                <div class="drawing-part">
+                <div class="drawing-part" style="transform: rotate(90deg);">
                     <canvas id="drawing-canvas" width="820" height="550"></canvas>
                 </div>
             </div>
-            <button id="finish-drawing-with-figure"></button> <!-- Added text content -->
+            <button id="finish-drawing-with-figure"></button>
         </div>
 
         <div id="finishScreen" class="container1" style="display: none;">
