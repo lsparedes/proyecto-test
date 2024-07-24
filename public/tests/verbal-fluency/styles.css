@@ -15,7 +15,6 @@ body {
     max-width: 1000px;
 }
 
-
 h1 {
     font-size: 40px;
 }
@@ -26,12 +25,10 @@ h2 {
 
 .timer {
     display: none;
-    /* Oculta el temporizador */
     font-size: 20px;
     margin-top: 10px;
     color: red;
     font-weight: bold;
-    /* Negrita */
 }
 
 p {
@@ -64,64 +61,14 @@ button {
     align-items: center;
 }
 
-button:hover {
-    background-color: #007bff;
-    color: white;
-}
-
-button:active {
-    transform: scale(0.98);
-}
-
-#startTestButton {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-#startTestButton:hover {
-    background-color: #0056b3;
-}
-
-#startTestButton:active {
-    transform: scale(0.98);
-}
-
-#fullscreenButton {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: rgb(0, 0, 0);
-    background-color: #c7c7c7;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-#fullscreenButton:hover {
-    background-color: #8f8f8f;
-}
-
-#fullscreenButton:active {
-    transform: scale(0.98);
-}
-
 .button-container {
     margin-top: 20px;
     text-align: center;
-    /* Alinea los botones al centro horizontal */
 }
 
 .button-container button {
     margin: 20px;
-    /* Ajusta el margen entre los botones */
 }
-
 
 #stopRecordingButton1,
 #stopRecordingButton2,
@@ -131,7 +78,6 @@ button:active {
     background: url('detenerr1.png') no-repeat left center;
     background-size: 90px 90px;
 }
-
 
 #stopRecordingButton1,
 #stopRecordingButton2,
@@ -195,21 +141,14 @@ button:active {
     background-image: url('flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
-    padding: 0;
-    /* Elimina el relleno para alinear el icono verticalmente */
-    width: 90px;
-    /* Ajusta el ancho fijo */
-    height: 80px;
-    /* Ajusta la altura fija */
+    padding: 5px;
+    width: 80px;
+    height: 65px;
     vertical-align: middle;
-    /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 6%;
-    /* Ajustamos la distancia desde la parte inferior */
-    right: 10%;
-    /* Ajustamos la distancia desde el borde derecho */
+    bottom: 15px;
+    right: 15px;
 }
-
 
 audio {
     margin-bottom: 20px;
@@ -217,7 +156,46 @@ audio {
 
 .recording-message {
     display: none;
-    /* Ocultar por defecto */
     color: green;
     font-weight: bold;
+}
+
+#fullscreenButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}
+
+#startTestButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+.letter-display {
+    font-size: 40px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 20px;
+    display: none;
 }
