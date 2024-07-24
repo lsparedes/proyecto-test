@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const finishScreen = document.getElementById('finishScreen');
 
     // Pantalla de dibujo con figura
-    const drawWithFigureScreen = document.getElementById('draw-with-figure-screen');
     const finishDrawingWithFigureButton = document.getElementById('finish-drawing-with-figure');
-    const rememberFigureScreen = document.getElementById('remember-figure-screen');
-    const finishRememberingFigureButton = document.getElementById('finish-remembering-figure');
+    const instruccionesDespues = document.getElementById('instruccionesdespues');
+    const container2 = document.querySelector('.container2');
+    const finishRememberingFigureButton = document.getElementById("finalize-button")
+
     // Pantalla de dibujo desde memoria
     const drawFromMemoryScreen = document.getElementById('draw-from-memory-screen');
     const finishDrawingFromMemoryButton = document.getElementById('finish-drawing-from-memory');
@@ -38,10 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     audioElement.addEventListener('ended', () => {
         setTimeout(() => {
             finishDrawingWithFigureButton.classList.add('red-arrow');
-        }, 10000); // 10 segundos
+        }, 5000); // 5 segundos
     });
-
-    const beepAudio = new Audio('beep.wav');
 
     if (drawFromMemoryScreen || identifyFigureScreen) {
         const firstTestEndTime = localStorage.getItem('firstTestEndTime');
@@ -66,8 +65,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (finishDrawingWithFigureButton) {
         finishDrawingWithFigureButton.addEventListener('click', () => {
-            drawWithFigureScreen.style.display = 'none';
-            rememberFigureScreen.style.display = 'block';
+            if (container2.style.display === 'none') {
+                container2.style.display = 'block';
+                instruccionesDespues.style.display = 'none';
+            } else if (instruccionesDespues.style.display === 'none') {
+                container2.style.display = 'none';
+                instruccionesDespues.style.display = 'block';
+            } else {
+                instruccionesDespues.style.display = 'none';
+                finishScreen.style.display = 'block';
+            }
             stopCanvasRecording();
             downloadCanvas('drawing-canvas', 'DrawWithFigure.png');
             localStorage.setItem('firstTestEndTime', new Date().getTime().toString());
@@ -78,10 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (finishRememberingFigureButton) {
         finishRememberingFigureButton.addEventListener('click', () => {
-            rememberFigureScreen.style.display = 'none';
+            container2.style.display = 'none';
+            instruccionesDespues.style.display = 'none';
             finishScreen.style.display = 'block';
         });
     }
+
     if (finishDrawingFromMemoryButton) {
         finishDrawingFromMemoryButton.addEventListener('click', () => {
             drawFromMemoryScreen.style.display = 'none';
@@ -93,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
         startCanvasRecording('memory-canvas');
     }
+
     if (finishIdentifyingFigureButton) {
         finishIdentifyingFigureButton.addEventListener('click', () => {
             if (selectedFigure) {

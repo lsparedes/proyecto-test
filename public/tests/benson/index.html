@@ -9,35 +9,37 @@
 </head>
 <body>
     <div id="container">
-        <div id="main-screen" class="screen">
-            <ol>
-                <p>Copiar la Figura: </p>
-                <p>Se presentará una figura, la cual debe copiar lo más exacta posible</p>
-            </ol>
-            <audio id="benson-audio" controls>
-                <source src="benson.mp3" type="audio/mpeg">
-                Tu navegador no soporta el elemento de audio.
-            </audio>
-            <div class="button-container">
-                <button id="fullscreen-button">Pantalla Completa</button>
-            </div>
-        </div>
-
-        <div id="draw-with-figure-screen" class="screen">
-            <div class="drawing-container">
-                <img src="figura1.png" alt="Figura de Benson" id="figure-image">
-                <div class="controls controls-left">
-                    <i id="clear-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
-                    <i id="download-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
+        <div class="container2" style="display: block;">
+            <div id="main-screen" class="screen">
+                <ol>
+                    <p>Copiar la Figura:</p>
+                    <p>Se presentará una figura, la cual debe copiar lo más exacta posible</p>
+                </ol>
+                <audio id="benson-audio" controls>
+                    <source src="benson.mp3" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+                <div class="button-container">
+                    <button id="fullscreen-button">Pantalla Completa</button>
                 </div>
-                <canvas id="drawing-canvas" width="820" height="550"></canvas>
             </div>
-            <button id="finish-drawing-with-figure"></button>
+
+            <div id="draw-with-figure-screen" class="screen" >
+                <div class="drawing-container">
+                    <img src="figura1.png" alt="Figura de Benson" id="figure-image">
+                    <div class="controls controls-left">
+                        <i id="clear-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
+                        <i id="download-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
+                    </div>
+                    <canvas id="drawing-canvas" width="820" height="550"></canvas>
+                </div>
+                <button id="finish-drawing-with-figure"></button>
+            </div>
         </div>
 
-        <div class="screen" id="instruccionesdespues" style="display: none;">
+        <div id="instruccionesdespues" class="screen" style="display: none;">
             <p>Recuerda esta figura para más adelante:</p>
-            <img src="figura1.png" alt="Figura de Benson" id="figure-image-instructions">
+            <img src="figura1.png" alt="Figura de Benson" id="figure-image">
             <button id="finalize-button"></button>
         </div>
 

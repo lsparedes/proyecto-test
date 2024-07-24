@@ -262,6 +262,22 @@ canvas {
     right: 15px;
 }
 
+#finalize-button{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 70px;
+    vertical-align: middle;
+    position: relative;
+    bottom: 15px;
+    right: 15px;
+}
+
 #finish-drawing-with-figure.red-arrow {
     background-image: url('flecha4.png');
 }
