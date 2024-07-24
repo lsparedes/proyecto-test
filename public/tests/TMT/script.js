@@ -49,14 +49,22 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesArray.push({ x, y, number });
     }
 
-    function drawInvalidLine(ctx, startX, startY, endX, endY) {
+    function highlightCircle(ctx, circle, color) {
+        ctx.lineWidth = 3; // Aumentar el grosor del borde
+        ctx.strokeStyle = color; // Color para el borde resaltado
         ctx.beginPath();
-        ctx.moveTo(startX, startY);
-        ctx.lineTo(endX, endY);
-        ctx.strokeStyle = 'red'; // Color para las líneas incorrectas
-        ctx.lineWidth = 2;
+        ctx.arc(circle.x, circle.y, circleRadius, 0, Math.PI * 2, true);
         ctx.stroke();
         ctx.strokeStyle = 'black'; // Restablecer el color para futuras líneas correctas
+        ctx.lineWidth = 1; // Restablecer el grosor del borde
+    }
+
+    function drawLineToCircleEdge(ctx, startX, startY, endX, endY) {
+        const angle = Math.atan2(endY - startY, endX - startX);
+        const edgeX = endX - circleRadius * Math.cos(angle);
+        const edgeY = endY - circleRadius * Math.sin(angle);
+        ctx.lineTo(edgeX, edgeY);
+        ctx.stroke();
     }
 
     // PRIMER CANVAS
@@ -121,26 +129,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-            console.log(distance);
-            if ( distance < 20 && (circle.number != currentCircle + 1) &&  lastCircle.number != circle.number ) {
-                console.log('lastcircle: '+lastCircle.number + ' '+ circle.number);
-                drawInvalidLine(ctx, lastCircle.x, lastCircle.y, x, y);
+            if (distance < circleRadius && circle.number != currentCircle + 1 && lastCircle.number != circle.number) {
+                highlightCircle(ctx, circle, 'red');
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
                 isDrawing = false;
-            }else{
-
-                if (distance < 20 && circle.number === currentCircle + 1) {
-                    // ctx.lineTo(circle.x, circle.y);
-                    // ctx.stroke();
-                    correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
-                    currentCircle++;
-                    lastCircle = circle;
-                    validDrop = true;
-                }
+            } else if (distance < circleRadius && circle.number === currentCircle + 1) {
+                highlightCircle(ctx, circle, 'black'); // Restablecer el borde correcto
+                correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
+                currentCircle++;
+                lastCircle = circle;
+                validDrop = true;
             }
         });
-
-        // console.log(incorrectPaths);
 
         if (currentCircle === 8) {
             drawNextButton();
@@ -157,19 +157,17 @@ document.addEventListener('DOMContentLoaded', function () {
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCircle + 1) {
-                ctx.lineTo(circle.x, circle.y);
-                ctx.stroke();
+                highlightCircle(ctx, circle, 'black'); // Restablecer el borde correcto
                 correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
                 currentCircle++;
                 lastCircle = circle;
                 validDrop = true;
             }
         });
-        console.log(incorrectPaths);
+
         const distance = Math.sqrt((x - lastCircle.x) ** 2 + (y - lastCircle.y) ** 2);
 
         if (!validDrop && lastCircle && distance > circleRadius) {
-            drawInvalidLine(ctx, lastCircle.x, lastCircle.y, x, y);
             incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
         }
 
@@ -290,43 +288,35 @@ document.addEventListener('DOMContentLoaded', function () {
 
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-            // console.log(distance);
-            // console.log('Current circle part A'+currentCirclePartA);
-            // console.log('lastcircle: '+lastCirclePartA.number );
-            if ( distance < circleRadius && (circle.number != currentCirclePartA + 1) &&  lastCirclePartA.number != circle.number ) {
-                drawInvalidLine(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, x, y);
+            if (distance < circleRadius && circle.number != currentCirclePartA + 1 && lastCirclePartA.number != circle.number) {
+                highlightCircle(ctxPartA, circle, 'red');
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
                 isDrawingPartA = false;
-            }else{
-                
-                if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
-                    // ctx.lineTo(circle.x, circle.y);
-                    // ctx.stroke();
-                    correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
-                    currentCirclePartA++;
-                    lastCirclePartA = circle;
-                    validDrop = true;
-                }
+            } else if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
+                highlightCircle(ctxPartA, circle, 'black'); // Restablecer el borde correcto
+                correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
+                currentCirclePartA++;
+                lastCirclePartA = circle;
+                validDrop = true;
             }
         });
-        
+
         if (currentCirclePartA === 25) {
             drawNextButtonA();
             drawingCompletedA = true; // Establecer la bandera en true cuando se complete el dibujo
         }
     });
-    
+
     canvasPartA.addEventListener('mouseup', function (event) {
         if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
         const x = event.offsetX;
         const y = event.offsetY;
         let validDrop = false;
-        
+
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
-                ctxPartA.lineTo(circle.x, circle.y);
-                ctxPartA.stroke();
+                highlightCircle(ctxPartA, circle, 'black'); // Restablecer el borde correcto
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
                 currentCirclePartA++;
                 lastCirclePartA = circle;
@@ -337,7 +327,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const distance = Math.sqrt((x - lastCirclePartA.x) ** 2 + (y - lastCirclePartA.y) ** 2);
 
         if (!validDrop && lastCirclePartA && distance > circleRadius) {
-            drawInvalidLine(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, x, y);
             incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
         }
 
