@@ -186,7 +186,6 @@ input {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
-    /* Elimina el relleno para alinear el icono verticalmente */
     width: 80px;
     /* Ajusta el ancho fijo */
     height: 75px;

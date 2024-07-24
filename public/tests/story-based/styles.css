@@ -75,7 +75,7 @@ audio {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    background-image: url('flecha3.png');
+    background-image: url('imagenes/flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
@@ -150,7 +150,7 @@ audio {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    background-image: url('flecha3.png');
+    background-image: url('imagenes/flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
@@ -165,5 +165,48 @@ audio {
     bottom: 15px;
     /* Ajustamos la distancia desde la parte inferior */
     right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+
+#startButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('imagenes/flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+#fullscreenButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('imagenes/full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    left: 15px;
     /* Ajustamos la distancia desde el borde derecho */
 }

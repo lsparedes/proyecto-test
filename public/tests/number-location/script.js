@@ -1,4 +1,7 @@
-document.getElementById('startButton').addEventListener('click', startTest);
+document.getElementById('startButton').addEventListener('click', () => {
+    document.getElementById('start-screen').style.display = 'none';
+    showNextImage();
+});
 document.getElementById('fullscreen-btn').addEventListener('click', toggleFullScreen);
 document.getElementById('submit-btn').addEventListener('click', submitAnswer);
 document.getElementById('next-button').addEventListener('click', () => {
@@ -25,15 +28,6 @@ let currentImageIndex = -1;
 let startTime;
 let answers = [];
 
-function startTest() {
-    document.getElementById('start-screen').style.display = 'none';
-    document.getElementById('stimulus-screen').style.display = 'block';
-    setTimeout(() => {
-        document.getElementById('stimulus-screen').style.display = 'none';
-        showNextImage();
-    }, 2000);
-}
-
 function showNextImage() {
     currentImageIndex++;
     if (currentImageIndex < images.length) {
@@ -41,8 +35,10 @@ function showNextImage() {
         const imageInfo = images[currentImageIndex];
         document.getElementById('test-image').src = imageInfo.src;
         document.getElementById('item-indicator').textContent = imageInfo.title;
-        document.getElementById('number-input').value = '';
-        document.getElementById('number-input').style.backgroundColor = ''; // Resetear el color de fondo
+        const numberInput = document.getElementById('number-input');
+        numberInput.value = '';
+        numberInput.style.backgroundColor = ''; // Resetear el color de fondo
+        numberInput.focus(); // Enfocar el campo de entrada
         document.getElementById('test-screen').style.display = 'block';
         if (currentImageIndex < 2) {
             document.getElementById('submit-btn').style.display = 'block';
@@ -80,7 +76,7 @@ function submitAnswer() {
             document.getElementById('number-input').style.backgroundColor = 'red';
             setTimeout(() => {
                 document.getElementById('number-input').style.backgroundColor = '';
-            }, 1200); // Resetear el color de fondo después de 2 segundos
+            }, 1200); // Resetear el color de fondo después de 1.2 segundos
         }
     }
 }
@@ -95,10 +91,10 @@ function toggleFullScreen() {
 
 function generateCSV() {
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Item,Respuesta escrita,Respuesta correcta,Tiempo\n";
+    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta ingreso dato;Tiempo duracion tarea\n";
     
     answers.forEach(answer => {
-        csvContent += `${answer.title},${answer.userAnswer},${answer.correctAnswer},${(answer.timeTaken * 1000)} milisegundos\n`;
+        csvContent += `${answer.title};${answer.userAnswer};${answer.correctAnswer};;${(answer.timeTaken * 1000)} milisegundos;\n`;
     });
 
     const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");

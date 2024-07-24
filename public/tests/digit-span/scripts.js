@@ -4,6 +4,7 @@ let timerInterval;
 const downloadLinks = [];
 let audioStream = null; // Guardar el stream de audio
 let audioreproducido = false;
+let recordingStartTime;
 
 document.addEventListener('DOMContentLoaded', () => {
     requestMicrophonePermission();
@@ -41,7 +42,7 @@ function startTest(type) {
 
         const titleElement = document.createElement('h3');
         titleElement.textContent = title;
-        
+
         const audio = document.createElement('audio');
         audio.src = `audio/${type}/${index + 1}.mp3`;
         audio.controls = true;
@@ -124,9 +125,10 @@ function startRecording(itemDiv, titleElement, index) {
         if (chunks.length > 0) {
             const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
             const audioURL = window.URL.createObjectURL(blob);
-
+            const recordingTime = new Date();
+            const duration = (recordingTime - recordingStartTime);
             // Guardar el enlace con el título y el índice
-            downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob });
+            downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob, duration: duration });
 
             // Ocultar el botón de grabación y mostrar el botón de siguiente
             const stopImg = itemDiv.querySelector('.stop-img');
@@ -141,7 +143,7 @@ function startRecording(itemDiv, titleElement, index) {
         }
     };
     mediaRecorder.start();
-
+    recordingStartTime = new Date();
     // Mostrar el botón de detener y el nuevo botón al iniciar la grabación
     const stopImg = itemDiv.querySelector('.stop-img');
     stopImg.classList.remove('hidden');
@@ -210,22 +212,58 @@ function mostrarFinalizacion(type) {
     completionMessage.style.display = 'flex';
     crearZip(type);
 }
+function generarCSV() {
+    let csvContent = "";
+    csvContent += "Prueba;Tiempo Dedicado en milisegundos\n";
+
+    downloadLinks.forEach(linkData => {
+        if (linkData.title && linkData.duration) {
+            const row = `${linkData.title};${linkData.duration}`;
+            csvContent += row + "\n";
+        }
+    });
+
+    return csvContent;
+}
 
 function crearZip(type) {
+    // Verificar si `downloadLinks` no está vacío
+    if (!downloadLinks.length) {
+        console.error("No hay datos en downloadLinks.");
+        return;
+    }
+
     const zip = new JSZip();
     const audioFolder = zip.folder('audios');
 
+    // Verificar si `JSZip` está disponible
+    if (!audioFolder) {
+        console.error("No se pudo crear la carpeta 'audios' en el archivo ZIP.");
+        return;
+    }
+
     downloadLinks.forEach(linkData => {
-        const fileName = `${type}_${linkData.title}.mp3`;
-        audioFolder.file(fileName, linkData.blob);
+        if (linkData.title && linkData.blob) {
+            const fileName = `${type}_${linkData.title}.mp3`;
+            audioFolder.file(fileName, linkData.blob);
+        } else {
+            console.warn("Datos incompletos en linkData:", linkData);
+        }
     });
+
+    const csvContent = generarCSV();
+    const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+
+    // Obtener la fecha actual y formatearla
+    const fechaActual = new Date();
+    const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
+    const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_'); // Reemplaza caracteres no válidos en nombres de archivo
+
+    // Añadir el archivo CSV al ZIP
+    zip.file(`respuestas_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
-            const fechaActual = new Date();
-            const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
-            const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones);
-            
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
             downloadLink.download = `respuestas_digital_span_${type}_${fechaFormateada}.zip`;
@@ -235,6 +273,14 @@ function crearZip(type) {
             downloadLink.click();
             document.body.removeChild(downloadLink);
 
-            completionMessage.classList.remove('hidden');
+            const completionMessage = document.getElementById('completion-message');
+            if (completionMessage) {
+                completionMessage.classList.remove('hidden');
+            }
+        })
+        .catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
         });
 }
+
+
