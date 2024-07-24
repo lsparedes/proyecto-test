@@ -1,4 +1,7 @@
+let startTime;
+
 document.getElementById('startTestButton').addEventListener('click', () => {
+    startTime = Date.now();
     document.getElementById('instructions').style.display = 'none';
     document.getElementById('testSection1').style.display = 'block';
     loadAudio(1); // Cargar el primer audio
@@ -60,10 +63,6 @@ function startRecording(part) {
     mediaRecorders[part].addEventListener('stop', () => {
         const audioBlob = new Blob(audioChunks[part], { type: 'audio/wav' });
         const audioUrl = URL.createObjectURL(audioBlob);
-        const downloadLink = document.getElementById('downloadLink' + part);
-        downloadLink.href = audioUrl;
-        downloadLink.download = `Parte ${part}.wav`;
-        downloadLink.style.display = 'block';
         document.getElementById('nextButton' + part).style.display = 'inline-block';
         showRecordingCreatedMessage(part);
         clearInterval(timers[part]); // Clear the timer when recording stops
@@ -80,6 +79,7 @@ function stopRecording(part) {
         document.getElementById('stopRecordingButton' + part).style.display = 'none';
         document.getElementById('recButton' + part).style.display = 'none';
         document.getElementById('instructionAudio' + part).style.display = 'none'; // Ocultar el reproductor de audio
+        nextSection(part);
     }
 }
 
@@ -96,19 +96,26 @@ function startTimer(part) {
 document.getElementById('stopRecordingButton1').addEventListener('click', () => stopRecording(1));
 document.getElementById('stopRecordingButton2').addEventListener('click', () => stopRecording(2));
 
-document.getElementById('nextButton1').addEventListener('click', () => {
-    document.getElementById('testSection1').style.display = 'none';
-    document.getElementById('testSection2').style.display = 'block';
-    loadAudio(2); // Cargar el segundo audio
-});
+document.getElementById('nextButton1').addEventListener('click', () => nextSection(1));
+document.getElementById('nextButton2').addEventListener('click', () => nextSection(2));
 
-document.getElementById('nextButton2').addEventListener('click', () => {
-    document.getElementById('testSection2').style.display = 'none';
-    document.getElementById('completionMessage').style.display = 'block';
-});
+function nextSection(part) {
+    if (part === 1) {
+        document.getElementById('testSection1').style.display = 'none';
+        document.getElementById('testSection2').style.display = 'block';
+        loadAudio(2); // Cargar el segundo audio
+    } else if (part === 2) {
+        document.getElementById('testSection2').style.display = 'none';
+        document.getElementById('completionMessage').style.display = 'block';
+        downloadRecordingAndTime();
+    }
+}
 
 function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
+    const letterDisplay = document.getElementById('letterDisplay' + part);
+    letterDisplay.style.display = 'block';
+
     switch (part) {
         case 1:
             audio.src = 'audios/P.mp3';
@@ -119,7 +126,9 @@ function loadAudio(part) {
     }
 
     audio.addEventListener('ended', () => {
+        letterDisplay.style.display = 'none';
         document.getElementById('startRecButton' + part).style.display = 'inline-block'; // Mostrar botón para comenzar grabación
+        document.getElementById('nextButton' + part).style.display = 'inline-block'; // Mostrar la flecha
     });
 }
 
@@ -138,4 +147,34 @@ document.getElementById('startRecButton2').addEventListener('click', () => {
 function showRecordingCreatedMessage(part) {
     const messageElement = document.getElementById('recordingCreatedMessage' + part);
     messageElement.style.display = 'block';
+}
+
+function downloadRecordingAndTime() {
+    const totalTime = Date.now() - startTime;
+    const totalTimeMs = totalTime;
+    const totalTimeSecs = (totalTime / 1000).toFixed(2);
+    
+    const timeBlob = new Blob([`Tiempo total: ${totalTimeMs} ms (${totalTimeSecs} s)`], { type: 'text/plain' });
+    const timeUrl = URL.createObjectURL(timeBlob);
+
+    const link = document.createElement('a');
+    link.href = timeUrl;
+    link.download = 'tiempo_total.txt';
+    link.click();
+
+    const zip = new JSZip();
+    zip.file("tiempo_total.txt", timeBlob);
+
+    const audio1Blob = new Blob(audioChunks[1], { type: 'audio/wav' });
+    zip.file("Fonológica - Parte 1.wav", audio1Blob);
+
+    const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
+    zip.file("Fonológica - Parte 2.wav", audio2Blob);
+
+    zip.generateAsync({ type: 'blob' }).then(content => {
+        const zipLink = document.createElement('a');
+        zipLink.href = URL.createObjectURL(content);
+        zipLink.download = 'Grabaciones Fluidez Verbal - Fonológica.zip';
+        zipLink.click();
+    });
 }

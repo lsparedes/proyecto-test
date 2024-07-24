@@ -7,30 +7,27 @@
     <title>Test de Number Location</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
     <div id="start-screen" class="container">
         <h1 id="titulo">Instrucciones</h1>
-        <p id="instructionText">Uno de los números del cuadrado corresponde con la posición del punto en el cuadrado, debe decir el número
+        <p id="instructionText">Uno de los números del cuadrado corresponde con la posición del punto en el cuadrado,
+            debe decir el número
             que coincide con la posición del punto. En la práctica 1 y 2, se le mostrará la retroalimentación de su
             respuesta antes de pasar a la siguiente tarjeta.</p>
 
-        <audio controls id ="instrucciones">
-            <source src="number-location.mp3" type="audio/mpeg">
+        <audio controls id="instrucciones">
+            <source src="audio/number-location.mp3" type="audio/mpeg">
             Tu navegador no soporta el elemento de audio.
         </audio>
         <div class="button-container">
-            <button id="startButton">Comenzar Práctica</button>
-            <button id="fullscreen-btn">Pantalla Completa</button>
+            <button id="startButton"></button>
+            <button id="fullscreen-btn"></button>
         </div>
     </div>
-
-    <div id="stimulus-screen" class="screen" style="display: none;">
-        <h1>Estímulos</h1>
-    </div>
-
     <div id="test-screen" class="screen" style="display: none;">
         <div id="item-indicator" class="item-indicator"></div>
         <div id="image-container">
@@ -47,7 +44,9 @@
     <div id="feedback-message" class="feedback-message" style="display: none;"></div>
 
     <div id="end-screen" class="screen" style="display: none;">
-        <h1>El test ha finalizado. ¡Gracias por sus respuestas!</h1>
+        <h1>¡Has completado esta tarea con éxito!</h1>
+        <br>
+        <h1>¡Muchas gracias!</h1>
     </div>
 
     <script src="script.js"></script>

@@ -146,7 +146,7 @@ canvasPartB.addEventListener('mousemove', function (event) {
         drawingCompletedB = true;
     }
 
-    if (document.getElementById('endSequenceButton') === null || drawingCompletedB) {
+    if (document.getElementById('endSequenceButton') === null) {
         drawNextButtonB();
     }
 });
@@ -181,7 +181,7 @@ canvasPartB.addEventListener('mouseup', function (event) {
 
     isDrawingPartB = false;
 
-    if (document.getElementById('endSequenceButton') === null || drawingCompletedB) {
+    if (document.getElementById('endSequenceButton') === null) {
         drawNextButtonB();
     }
 });
@@ -193,7 +193,7 @@ function drawNextButtonB() {
 
     nextButtonB.addEventListener('click', () => {
         canvasPartB.style.display = 'none';
-        document.getElementById('partB2').style.display = 'block';
+        document.getElementById('partB2').style.display = 'flex';
         document.getElementById('continueButtonB2').style.display = 'block';
         nextButtonB.remove();
     });
@@ -316,6 +316,9 @@ canvasPartB2.addEventListener('mousemove', function (event) {
     if (currentCirclePartB2 === 13) {
         drawingCompletedB2 = true;
     }
+    if (document.getElementById('endSequenceButton') === null) {
+        drawNextButtonB2();
+    }
 });
 
 canvasPartB2.addEventListener('mouseup', function (event) {
@@ -348,7 +351,7 @@ canvasPartB2.addEventListener('mouseup', function (event) {
     }
 
     isDrawingPartB2 = false;
-    if (document.getElementById('endSequenceButton') === null || drawingCompletedB2) {
+    if (document.getElementById('endSequenceButton') === null) {
         drawNextButtonB2();
     }
 });
@@ -407,10 +410,13 @@ function showDownloadButton() {
     instructions.style.marginTop = '20px';
     instructions.style.display = 'flex';
 
-
-    downloadButton.addEventListener('click', downloadAllCanvasImages);
+    downloadButton.addEventListener('click', function() {
+        downloadAllCanvasImages();
+        document.body.removeChild(downloadButton);
+    });
 
     document.body.appendChild(downloadButton);
+    downloadButton.click();
 }
 
 // Llamar a esta función cuando se complete la prueba

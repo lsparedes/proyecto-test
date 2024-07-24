@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const blocksContainer = document.getElementById('blocks');
+    const instructionsAudio = document.getElementById('instructionAudio');
+    const instructions = document.getElementById('instructionText');
     const startTestButton = document.getElementById('startTestButton');
     const startSequenceButton = document.getElementById('startSequenceButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     indicator.style.display = 'none';
     game.appendChild(indicator);
 
+    let isPractice = true;
     let sequence = [];
     let playerSequence = [];
     let count = 2;
@@ -27,18 +30,26 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime;
     let endTime;
     let repeatCount = 0; // Contador de repeticiones de la secuencia actual
+    let testData = [];
+    let timer;
+    let milliseconds = 0;
 
     // Posiciones fijas de los cuadrados
     const fixedPositions = [
-        { top: 150, left: 80 },
-        { top: 50, left: 360 },
-        { top: 30, left: 650 },
-        { top: 400, left: 170 },
-        { top: 280, left: 360 },
-        { top: 150, left: 950 },
-        { top: 550, left: 400 },
-        { top: 350, left: 750 },
-        { top: 500, left: 900 }
+        { "top": 590, "left": 400 },
+        { "top": 548, "left": 825 },
+        { "top": 440, "left": 188 },
+        { "top": 397, "left": 656 },
+        { "top": 312, "left": 358 },
+        { "top": 185, "left": 125 },
+        { "top": 145, "left": 890 },
+        { "top": 20, "left": 632 },
+        { "top": 58, "left": 380 }
+    ];
+
+    const practiceSequences = [
+        [2, 3],
+        [4, 5]
     ];
 
     // Secuencias fijas de bloques
@@ -58,6 +69,25 @@ document.addEventListener('DOMContentLoaded', () => {
         [6, 1, 0, 3, 4, 7, 8, 2],
         [8, 1, 7, 0, 6, 5, 3, 4]
     ];
+
+    const fixedTitles = [
+        "S2-1",
+        "S2-2",
+        "S3-1",
+        "S3-2",
+        "S4-1",
+        "S4-2",
+        "S5-1",
+        "S5-2",
+        "S6-1",
+        "S6-2",
+        "S7-1",
+        "S7-2",
+        "S8-1",
+        "S8-2",
+        "S9-1",
+        "S9-2"
+    ]
 
     function createBlocks() {
         blocksContainer.innerHTML = '';
@@ -88,30 +118,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startTest() {
         playerSequence = [];
-        createBlocks();
         introScreen.style.display = 'none';
         game.style.display = 'block';
+        startSequenceButton.style.visibility = 'visible';
         startSequenceButton.style.display = 'inline-block';
         endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" al iniciar el test
-        indicator.textContent = `E${sequenceCount+1}`;
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
         repeatCount = 0; // Reiniciar el contador de repeticiones
-        startTime = new Date(); // Registrar la hora de inicio
+        errorCount = 0;
+        if (isPractice) {
+            createBlocks();
+            indicator.textContent = `P${sequenceCount+1}`;
+        } else {
+            indicator.textContent = `S${count}-${repeatCount+1}`;
+        }
     }
 
     function startSequence() {
         playerSequence = [];
-        createSequence();
+        if (isPractice) {
+            createSequence(practiceSequences)
+        } else{
+            createSequence(fixedSequences);
+            startTime = new Date(); // Registrar la hora de inicio
+        }
         sequenceDisplaying = true;
         displaySequence(0);
-        startSequenceButton.style.display = 'none';
+        startSequenceButton.style.visibility = 'hidden';
         indicator.style.display = 'block';
     }
 
-    function createSequence() {
-        sequence = fixedSequences[sequenceCount % fixedSequences.length];
+    function createSequence(currentSequences) {
+        sequence = currentSequences[sequenceCount % currentSequences.length];
     }
 
     function displaySequence(index) {
@@ -126,23 +166,8 @@ document.addEventListener('DOMContentLoaded', () => {
             sequenceDisplaying = false;
             endSequenceButton.style.display = 'inline-block'; // Mostrar el botón "Terminar" después de mostrar la secuencia
             playBeep(); // Llamar a playBeep aquí para reproducir el sonido después de la secuencia
+            startTimer();
         }
-    }
-
-    function playBeep() {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const audioUrl = 'beep.wav';
-    
-        fetch(audioUrl)
-            .then(response => response.arrayBuffer())
-            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-            .then(audioBuffer => {
-                const source = audioContext.createBufferSource();
-                source.buffer = audioBuffer;
-                source.connect(audioContext.destination);
-                source.start();
-            })
-            .catch(e => console.error('Error al cargar el archivo de audio:', e));
     }
 
     function checkSequence() {
@@ -163,21 +188,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         sequenceCount++; // Incrementar la cuenta de secuencias
-        indicator.textContent = `E${sequenceCount+1}`;
 
-        if (errorCount === 2 || count > 8) {
-            endGame();
-        } else {
-            repeatCount++; // Incrementar el contador de repeticiones
-            if (repeatCount === 2) {
-                count++; // Incrementar la longitud de la secuencia después de 2 repeticiones
-                repeatCount = 0; // Reiniciar el contador de repeticiones
+        if (isPractice) {
+            indicator.textContent = `P${sequenceCount+1}`;
+            if (sequenceCount < practiceSequences.length) {
+                setTimeout(resetBlocks, 500);
+                setTimeout(() => {
+                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
+                    startSequence();
+                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+            } else {
+                endPractice();
             }
-            setTimeout(resetBlocks, 500);
-            setTimeout(() => {
-                endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                startSequence();
-            }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+        } else {
+            if (errorCount === 2 || sequenceCount === fixedSequences.length) {
+                endGame();
+            } else {
+                repeatCount++; // Incrementar el contador de repeticiones
+                if (repeatCount === 2) {
+                    count++; // Incrementar la longitud de la secuencia después de 2 repeticiones
+                    repeatCount = 0; // Reiniciar el contador de repeticiones
+                }
+                indicator.textContent = `S${count}-${repeatCount+1}`;
+                setTimeout(resetBlocks, 500);
+                setTimeout(() => {
+                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
+                    startSequence();
+                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+            }
         }
     }
 
@@ -202,12 +240,51 @@ document.addEventListener('DOMContentLoaded', () => {
         generateCSV(highestCount, totalCorrectBlocks, duration, sequenceCount); // Generar el CSV al final del juego
     }
 
+    function endPractice() {
+        instructionsAudio.src = 'beep.wav';
+        var audioContainer = instructionsAudio.parentNode;
+        audioContainer.load();
+        instructions.innerHTML = 'A continuacion se presentarán secuencias de 2 a 8 cuadrados, con dos secuencias en cada longitud, para un total de 16 secuencias en orden creciente de longitud. Debe tocar los cuadrados en orden inverso a la secuencia mostrada. La prueba se terminará cuando se entreguen respuestas incorrectas para ambas secuencias de una misma longitud. La puntuación será el número total de secuencias realizadas correctamente. Concéntrese y haga su mejor esfuerzo para recordar cada secuencia en orden inverso. ¡Buena suerte!'
+        isPractice = false;
+        introScreen.style.display = 'block';
+        document.getElementById('fullscreenButton').style.display = 'none';
+        game.style.display = 'none';
+        endSequenceButton.style.display = 'none';
+        indicator.style.display = 'none';
+        startTestButton.display = 'inline-block';
+        resetBlocks();
+    }
+
     function generateCSV(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
-        const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        const fileName = `CorsiBackwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
-        const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        saveAs(blob, fileName);
+        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Tiempo de Respuesta (s)","Tiempo Total (s)", "Mano Utilizada"];
+        const rows = testData.map(data => [
+            data.exerciseTitle,
+            data.correctAnswer.reverse().join(""),
+            data.userResponse.join(""),
+            data.responseTime,
+            duration.toFixed(2),
+            "Izquierda",
+        ]);
+
+        const desiredRowCount = fixedSequences.length;
+        const currentRowCount = rows.length;
+        const rowsToFill = desiredRowCount - currentRowCount;
+    
+        for (let i = 0; i < rowsToFill; i++) {
+            // Puedes reemplazar los valores vacíos con cualquier valor predeterminado que desees
+            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount+i].reverse().join(""), "", "",duration.toFixed(2),"Izquierda"]);
+        }
+
+        let csvContent = "data:text/csv;charset=utf-8," 
+        + headers.join(",") + "\n"
+        + rows.map(e => e.join(",")).join("\n");
+        saveAs(csvContent, `CorsiForwardTest.csv`);
+
+        // const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
+        // const fileName = `CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
+        // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
+        // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        // saveAs(blob, fileName);
     }
 
     startTestButton.addEventListener('click', () => {
@@ -219,6 +296,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     endSequenceButton.addEventListener('click', () => {
+        if (!isPractice) {
+            stopTimer();
+
+            const exerciseData = {
+                exerciseTitle: fixedTitles[sequenceCount],
+                correctAnswer: sequence,
+                userResponse: playerSequence,
+                responseTime: (milliseconds / 1000).toFixed(2),
+            };
+            testData.push(exerciseData);
+        }
         checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
         endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
     });
@@ -270,5 +358,36 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    createBlocks();
+    function playBeep() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioUrl = 'beep.wav';
+    
+        fetch(audioUrl)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+            })
+            .catch(e => console.error('Error al cargar el archivo de audio:', e));
+    }
+
+    function startTimer() {
+        stopTimer(); // Reiniciar el timer si ya está corriendo
+        milliseconds = 0; // Reiniciar los milisegundos
+        timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
+    }
+    
+    function stopTimer() {
+        clearInterval(timer);
+    }
+
+    function updateTimer() {
+        milliseconds += 10; // Incrementar en 10 ms
+        let seconds = milliseconds / 1000; // Convertir a segundos
+    }
+
+    // createBlocks();
 });

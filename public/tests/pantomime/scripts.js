@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const completionScreen = document.getElementById('completion-screen');
     const startBtn = document.getElementById('startButton');
     const fullscreenBtn = document.getElementById('fullscreenButton');
-    const recordBtn = document.getElementById('record-btn');
     const stopBtn = document.getElementById('stop-btn');
     const nextBtn = document.getElementById('next-btn');
     const audioBtn = document.getElementById('audio-btn');
@@ -14,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoPreview = document.getElementById('video-preview');
     const currentItem = document.getElementById('current-item');
     const timerDisplay = document.createElement('div');
-    const downloadsContainer = document.getElementById('downloads-container');
     const recordingMessage = document.createElement('div');
 
     timerDisplay.id = 'timer-display';
@@ -72,12 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'audio/19.mp3',
         'audio/20.mp3'
     ];
-
     let mediaRecorder;
     let chunks = [];
     let timer;
     let seconds = 0;
-    const downloadLinks = [];
+    const zip = new JSZip();
 
     startBtn.addEventListener('click', () => {
         startScreen.classList.remove('active');
@@ -97,87 +94,76 @@ document.addEventListener('DOMContentLoaded', () => {
 
     audioBtn.addEventListener('click', () => {
         testAudio.play();
-        
     });
 
     testAudio.addEventListener('ended', () => {
-        const time_end = testAudio.duration * 0.9999999999999999 * 1000; 
-
-        setTimeout(() => {
-            startRecording();
-        }, testAudio.duration * 1000 - time_end);
+        startRecording();
     });
 
     async function startRecording() {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         videoPreview.srcObject = stream;
-   
-        recordBtn.disabled = true;
+
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = e => chunks.push(e.data);
+        mediaRecorder.start();
         stopBtn.disabled = false;
-        stopBtn.style.display = 'inline-block'; // Mostrar el botón stopBtn
-        audioBtn.style.display = 'none'; // Ocultar el botón audioBtn
+        stopBtn.style.display = 'inline-block'; 
+        nextBtn.disabled = false;
+        nextBtn.style.display = 'inline-block'; 
+        audioBtn.style.display = 'none'; 
         testImage.classList.add('hidden');
         testAudio.classList.add('hidden');
         videoPreview.classList.remove('hidden');
         timerDisplay.classList.remove('hidden');
-        nextBtn.style.display = 'none'; // Ocultar el botón nextBtn al iniciar la grabación
         startTimer();
-
-        setTimeout(() => {
-            mediaRecorder = new MediaRecorder(stream);
-            let chunks = [];
-            mediaRecorder.ondataavailable = e => chunks.push(e.data);
-            mediaRecorder.start();
-        }, 1000);
     }
-    
-    recordBtn.addEventListener('click', async () => {
-        startRecording();
-        
-    });
-    
 
     stopBtn.addEventListener('click', () => {
-        mediaRecorder.stop();
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(chunks, { type: 'video/mp4' });
-            chunks = [];
-            const url = URL.createObjectURL(blob);
-            const downloadLink = document.createElement('a');
-            downloadLink.href = url;
-            downloadLink.download = `pantomima_video_${currentImageIndex + 1}.mp4`;
-            downloadLink.textContent = `Descargar Video ${currentImageIndex + 1}`;
-            downloadLinks.push(downloadLink);
-        };
-        const stream = videoPreview.srcObject;
-        const tracks = stream.getTracks();
-        tracks.forEach(track => track.stop());
-        videoPreview.srcObject = null;
-        recordBtn.disabled = false;
-        stopBtn.disabled = true;
-        stopBtn.style.display = 'none'; // Ocultar el botón stopBtn
-        audioBtn.style.display = 'inline-block'; // Mostrar el botón audioBtn
-        timerDisplay.classList.add('hidden');
-        stopTimer();
-        nextBtn.style.display = 'block'; // Mostrar el botón nextBtn al detener la grabación
-
-        showRecordingMessage();
+        stopRecording(true);
     });
 
     nextBtn.addEventListener('click', () => {
+        stopRecording(true);
+    });
+
+    function stopRecording(showNextButton) {
+        if (mediaRecorder) {
+            mediaRecorder.stop();
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/mp4' });
+                chunks = [];
+                zip.file(`grabaciones/pantomima_video_${currentImageIndex + 1}.mp4`, blob);
+
+                const stream = videoPreview.srcObject;
+                const tracks = stream.getTracks();
+                tracks.forEach(track => track.stop());
+                videoPreview.srcObject = null;
+                stopBtn.disabled = true;
+                stopBtn.style.display = 'none'; 
+                audioBtn.style.display = 'inline-block'; 
+                timerDisplay.classList.add('hidden');
+                stopTimer();
+
+                // Always proceed to the next image after stopping the recording
+                proceedToNextImage();
+            };
+        }
+    }
+
+    function proceedToNextImage() {
         currentImageIndex++;
         if (currentImageIndex < images.length) {
             loadNextImage();
-            nextBtn.style.display = 'none'; // Ocultar el botón nextBtn al avanzar al siguiente ítem
         } else {
             showCompletionScreen();
         }
-    });
+    }
 
     function loadNextImage() {
         testImage.src = images[currentImageIndex];
         audioSource.src = audios[currentImageIndex];
-        testAudio.load(); // Cargar el nuevo audio
+        testAudio.load(); 
         currentItem.textContent = `I${currentImageIndex + 1}`;
         testImage.classList.remove('hidden');
         testAudio.classList.remove('hidden');
@@ -188,19 +174,17 @@ document.addEventListener('DOMContentLoaded', () => {
         testScreen.classList.remove('active');
         testScreen.classList.add('hidden');
         completionScreen.classList.remove('hidden');
-        downloadsContainer.innerHTML = '';
-        downloadLinks.forEach(link => {
-            const div = document.createElement('div');
-            div.appendChild(link);
-            downloadsContainer.appendChild(div);
-        });
+        completionScreen.classList.add('active');
+        createZipAndDownload();
     }
 
     function startTimer() {
         seconds = 0;
         timer = setInterval(() => {
             seconds++;
-            timerDisplay.textContent = formatTime(seconds);
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            timerDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
         }, 1000);
     }
 
@@ -209,16 +193,12 @@ document.addEventListener('DOMContentLoaded', () => {
         timerDisplay.textContent = '00:00';
     }
 
-    function formatTime(sec) {
-        const minutes = Math.floor(sec / 60);
-        const seconds = sec % 60;
-        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-    }
-
-    function showRecordingMessage() {
-        recordingMessage.style.display = 'block';
-        setTimeout(() => {
-            recordingMessage.style.display = 'none';
-        }, 1300); // Ocultar el mensaje después de 1.3 segundos
+    function createZipAndDownload() {
+        zip.generateAsync({ type: 'blob' }).then(content => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = 'pantomima_videos.zip';
+            link.click();
+        });
     }
 });

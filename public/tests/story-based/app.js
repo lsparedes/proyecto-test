@@ -4,190 +4,209 @@ const imagenes = [
         src: "imagenes/practica/SET_item_practica1.jpg",
         textoDistintivo: "P1",
         options: [
-            { src: "imagenes/practica/A.jpg", correct: false },
-            { src: "imagenes/practica/B.jpg", correct: true },
-            { src: "imagenes/practica/C.jpg", correct: false },
-        ]
+            { src: "imagenes/practica/A.jpg", letter: 'a' },
+            { src: "imagenes/practica/B.jpg", letter: 'b' },
+            { src: "imagenes/practica/C.jpg", letter: 'c' },
+        ],
+        correct: 'b'
     },
     {
         preliminar: "imagenes/1-SET.IA/1/1_SET-IA_item1.jpg",
         src: "imagenes/1-SET.IA/1/1_SET-IA_item1.1.jpg",
-        textoDistintivo: "IA 1",
+        textoDistintivo: "IA1",
         options: [
-            { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.2.jpg", correct: false },
-            { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.3.jpg", correct: false },
-            { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.4.jpg", correct: true },
-        ]
+            { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.2.jpg", letter: 'a' },
+            { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.3.jpg", letter: 'b' },
+            { src: "imagenes/1-SET.IA/1/1_SET-IA_item1.4.jpg", letter: 'c' },
+        ],
+        correct: 'c'
     },
     {
         preliminar: "imagenes/1-SET.IA/2/1_SET-IA_item2.jpg",
         src: "imagenes/1-SET.IA/2/1_SET-IA_item2.1.jpg",
-        textoDistintivo: "IA 2",
+        textoDistintivo: "IA2",
         options: [
-            { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.2.jpg", correct: false },
-            { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.3.jpg", correct: true },
-            { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.4.jpg", correct: false },
-        ]
+            { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.2.jpg", letter: 'a' },
+            { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.3.jpg", letter: 'b' },
+            { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.4.jpg", letter: 'c ' },
+        ],
+        correct: 'b'
     },
     {
         preliminar: "imagenes/1-SET.IA/3/1_SET-IA_item3.jpg",
         src: "imagenes/1-SET.IA/3/1_SET-IA_item3.1.jpg",
-        textoDistintivo: "IA 3",
+        textoDistintivo: "IA3",
         options: [
-            { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.2.jpg", correct: false },
-            { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.3.jpg", correct: true },
-            { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.4.jpg", correct: false },
-        ]
+            { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.2.jpg", letter: 'a' },
+            { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.3.jpg", letter: 'b' },
+            { src: "imagenes/1-SET.IA/3/1_SET-IA_item3.4.jpg", letter: 'c' },
+        ],
+        correct: 'b'
     },
     {
         preliminar: "imagenes/1-SET.IA/4/1_SET-IA_item4.jpg",
         src: "imagenes/1-SET.IA/4/1_SET-IA_item4.1.jpg",
-        textoDistintivo: "IA 4",
+        textoDistintivo: "IA4",
         options: [
-            { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.2.jpg", correct: true },
-            { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.3.jpg", correct: false },
-            { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.4.jpg", correct: false },
-        ]
+            { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.2.jpg", letter: 'a' },
+            { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.3.jpg", letter: 'b' },
+            { src: "imagenes/1-SET.IA/4/1_SET-IA_item4.4.jpg", letter: 'c' },
+        ],
+        correct: 'a'
     },
     {
         preliminar: "imagenes/1-SET.IA/5/1_SET-IA_item5.jpg",
         src: "imagenes/1-SET.IA/5/1_SET-IA_item5.1.jpg",
-        textoDistintivo: "IA 5",
+        textoDistintivo: "IA5",
         options: [
-            { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.2.jpg", correct: true },
-            { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.3.jpg", correct: false },
-            { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.4.jpg", correct: false },
-        ]
+            { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.2.jpg", letter: 'a' },
+            { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.3.jpg", letter: 'b' },
+            { src: "imagenes/1-SET.IA/5/1_SET-IA_item5.4.jpg", letter: 'c' },
+        ],
+        correct: 'a'
     },
     {
         preliminar: "imagenes/1-SET.IA/6/1_SET-IA_item6.jpg",
         src: "imagenes/1-SET.IA/6/1_SET-IA_item6.1.jpg",
-        textoDistintivo: "IA 6",
+        textoDistintivo: "IA6",
         options: [
-            { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.2.jpg", correct: false },
-            { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.3.jpg", correct: true },
-            { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.4.jpg", correct: false },
-        ]
+            { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.2.jpg", letter: 'a' },
+            { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.3.jpg", letter: 'b' },
+            { src: "imagenes/1-SET.IA/6/1_SET-IA_item6.4.jpg", letter: 'c' },
+        ],
+        correct: 'b'
     },
     {
         preliminar: "imagenes/2-SET-CI/1/2_SET-CI_item1.jpg",
         src: "imagenes/2-SET-CI/1/2_SET-CI_item1.1.jpg",
-        textoDistintivo: "CI 1",
+        textoDistintivo: "CI1",
         options: [
-            { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.2.jpg", correct: true },
-            { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.3.jpg", correct: false },
-            { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.4.jpg", correct: false },
-        ]
+            { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.2.jpg", letter: 'a' },
+            { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.3.jpg", letter: 'b' },
+            { src: "imagenes/2-SET-CI/1/2_SET-CI_item1.4.jpg", letter: 'c' },
+        ],
+        correct: 'a'
     },
     {
         preliminar: "imagenes/2-SET-CI/2/2_SET-CI_item2.jpg",
         src: "imagenes/2-SET-CI/2/2_SET-CI_item2.1.jpg",
         textoDistintivo: "CI 2",
         options: [
-            { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.2.jpg", correct: false },
-            { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.3.jpg", correct: false },
-            { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.4.jpg", correct: true },
-        ]
+            { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.2.jpg", letter: 'a' },
+            { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.3.jpg", letter: 'b' },
+            { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.4.jpg", letter: 'c' },
+        ],
+        correct: 'c'
     },
     {
         preliminar: "imagenes/2-SET-CI/3/2_SET-CI_item3.jpg",
         src: "imagenes/2-SET-CI/3/2_SET-CI_item3.1.jpg",
-        textoDistintivo: "CI 3",
+        textoDistintivo: "CI3",
         options: [
-            { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.2.jpg", correct: false },
-            { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.3.jpg", correct: true },
-            { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.4.jpg", correct: false },
-        ]
+            { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.2.jpg", letter: 'a' },
+            { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.3.jpg", letter: 'b' },
+            { src: "imagenes/2-SET-CI/3/2_SET-CI_item3.4.jpg", letter: 'c' },
+        ],
+        correct: 'b'
     },
     {
         preliminar: "imagenes/2-SET-CI/4/2_SET-CI_item4.jpg",
         src: "imagenes/2-SET-CI/4/2_SET-CI_item4.1.jpg",
-        textoDistintivo: "CI 4",
+        textoDistintivo: "CI4",
         options: [
-            { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.2.jpg", correct: false },
-            { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.3.jpg", correct: true },
-            { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.4.jpg", correct: false },
-        ]
+            { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.2.jpg", letter: 'a' },
+            { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.3.jpg", letter: 'b' },
+            { src: "imagenes/2-SET-CI/4/2_SET-CI_item4.4.jpg", letter: 'c' },
+        ],
+        correct: 'b'
     },
     {
         preliminar: "imagenes/2-SET-CI/5/2_SET-CI_item5.jpg",
         src: "imagenes/2-SET-CI/5/2_SET-CI_item5.1.jpg",
-        textoDistintivo: "CI 5",
+        textoDistintivo: "CI5",
         options: [
-            { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.2.jpg", correct: true },
-            { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.3.jpg", correct: false },
-            { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.4.jpg", correct: false },
-        ]
+            { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.2.jpg", letter: 'a' },
+            { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.3.jpg", letter: 'b' },
+            { src: "imagenes/2-SET-CI/5/2_SET-CI_item5.4.jpg", letter: 'c' },
+        ],
+        correct: 'a'
     },
     {
         preliminar: "imagenes/2-SET-CI/6/2_SET-CI_items_prueba_page-0012.jpg",
         src: "imagenes/2-SET-CI/6/2_SET-CI_item6.jpg",
-        textoDistintivo: "CI 6",
+        textoDistintivo: "CI6",
         options: [
-            { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.1.jpg", correct: false },
-            { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.2.jpg", correct: false },
-            { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.3.jpg", correct: true },
-        ]
+            { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.1.jpg", letter: 'a' },
+            { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.2.jpg", letter: 'b' },
+            { src: "imagenes/2-SET-CI/6/2_SET-CI_item6.3.jpg", letter: 'c' },
+        ],
+        correct: 'c'
     },
     {
         preliminar: "imagenes/3-SET-EA/1/3_SET-EA_items_prueba_page-0002.jpg",
         src: "imagenes/3-SET-EA/1/3_SET-EA_item1.jpg",
-        textoDistintivo: "EA 1",
+        textoDistintivo: "EA1",
         options: [
-            { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.1.jpg", correct: false },
-            { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.2.jpg", correct: false },
-            { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.3.jpg", correct: true },
-        ]
+            { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.1.jpg", letter: 'a' },
+            { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.2.jpg", letter: 'b' },
+            { src: "imagenes/3-SET-EA/1/3_SET-EA_item1.3.jpg", letter: 'c' },
+        ],
+        correct: 'c'
     },
     {
         preliminar: "imagenes/3-SET-EA/2/3_SET-EA_items_prueba_page-0004.jpg",
         src: "imagenes/3-SET-EA/2/3_SET-EA_item2.jpg",
-        textoDistintivo: "EA 2",
+        textoDistintivo: "EA2",
         options: [
-            { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.1.jpg", correct: false },
-            { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.2.jpg", correct: false },
-            { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.3.jpg", correct: true },
-        ]
+            { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.1.jpg", letter: 'a' },
+            { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.2.jpg", letter: 'b' },
+            { src: "imagenes/3-SET-EA/2/3_SET-EA_item2.3.jpg", letter: 'c' },
+        ],
+        correct: 'c'
     },
     {
         preliminar: "imagenes/3-SET-EA/3/3_SET-EA_items_prueba_page-0006.jpg",
         src: "imagenes/3-SET-EA/3/3_SET-EA_item3.jpg",
-        textoDistintivo: "EA 3",
+        textoDistintivo: "EA3",
         options: [
-            { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.1.jpg", correct: true },
-            { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.2.jpg", correct: false },
-            { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.3.jpg", correct: false },
-        ]
+            { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.1.jpg", letter: 'a' },
+            { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.2.jpg", letter: 'b' },
+            { src: "imagenes/3-SET-EA/3/3_SET-EA_item3.3.jpg", letter: 'c' },
+        ],
+        correct: 'a'
     },
     {
         preliminar: "imagenes/3-SET-EA/4/3_SET-EA_items_prueba_page-0008.jpg",
         src: "imagenes/3-SET-EA/4/3_SET-EA_item4.jpg",
-        textoDistintivo: "EA 4",
+        textoDistintivo: "EA4",
         options: [
-            { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.1.jpg", correct: false },
-            { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.2.jpg", correct: true },
-            { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.3.jpg", correct: false },
-        ]
+            { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.1.jpg", letter: 'a' },
+            { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.2.jpg", letter: 'b' },
+            { src: "imagenes/3-SET-EA/4/3_SET-EA_item4.3.jpg", letter: 'c' },
+        ],
+        correct: 'b'
     },
     {
         preliminar: "imagenes/3-SET-EA/5/3_SET-EA_items_prueba_page-0010.jpg",
         src: "imagenes/3-SET-EA/5/3_SET-EA_item5.jpg",
-        textoDistintivo: "EA 5",
+        textoDistintivo: "EA5",
         options: [
-            { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.1.jpg", correct: false },
-            { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.2.jpg", correct: true },
-            { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.3.jpg", correct: false },
-        ]
+            { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.1.jpg", letter: 'a' },
+            { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.2.jpg", letter: 'b' },
+            { src: "imagenes/3-SET-EA/5/3_SET-EA_item5.3.jpg", letter: 'c' },
+        ],
+        correct: 'b'
     },
     {
         preliminar: "imagenes/3-SET-EA/6/3_SET-EA_items_prueba_page-0012.jpg",
         src: "imagenes/3-SET-EA/6/3_SET-EA_item6.jpg",
-        textoDistintivo: "EA 6",
+        textoDistintivo: "EA6",
         options: [
-            { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.1.jpg", correct: true },
-            { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.2.jpg", correct: false },
-            { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.3.jpg", correct: false },
-        ]
+            { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.1.jpg", letter: 'a' },
+            { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.2.jpg", letter: 'b' },
+            { src: "imagenes/3-SET-EA/6/3_SET-EA_item6.3.jpg", letter: 'c' },
+        ],
+        correct: 'a'
     },
 ];
 
@@ -211,14 +230,14 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
 
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
-    imageContainer.innerHTML = 'El test ha finalizado. ¡Gracias por sus respuestas!';
+    imageContainer.innerHTML = ' ¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.display = 'flex';
-    imageContainer.style.justifyContent = 'center'; 
-    imageContainer.style.alignItems = 'center'; 
-    imageContainer.style.height = '90vh'; 
-    imageContainer.style.margin = '0'; 
+    imageContainer.style.justifyContent = 'center';
+    imageContainer.style.alignItems = 'center';
+    imageContainer.style.height = '90vh';
+    imageContainer.style.margin = '0';
     imageContainer.style.backgroundColor = 'transparent';
     fullscreenButton.style.display = 'none';
     generarArchivoCSV();
@@ -233,8 +252,8 @@ function iniciarPresentacion() {
     const instrucciones = document.getElementById('instrucciones');
     const startButton = document.getElementById('startButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
-    h1.style.display ='none';
-    
+    h1.style.display = 'none';
+
     instructionText.style.display = 'none';
     instrucciones.style.display = 'none';
     startButton.style.display = 'none';
@@ -353,21 +372,19 @@ let respuestasSeleccionadas = [];
 
 function verificarRespuesta(selectedOptionIndex) {
     const itemActual = imagenes[indiceActual];
-    const correctOptionIndex = itemActual.options.findIndex(option => option.correct);
-    const esCorrecta = selectedOptionIndex === correctOptionIndex;
+    const correctOptionIndex = itemActual.options.findIndex(option => option.letter === itemActual.correct);
+    const letraSeleccionada = itemActual.options[selectedOptionIndex].letter;
+    const letraCorrecta = itemActual.options[correctOptionIndex].letter;
 
-    // Calcular el tiempo transcurrido
     const tiempoTranscurrido = Date.now() - tiempoInicio;
 
-    // Agregar la información de la respuesta seleccionada al array
     respuestasSeleccionadas.push({
         item: itemActual.textoDistintivo,
-        opcionSeleccionada: selectedOptionIndex,
-        esCorrecta: esCorrecta ? 'Si' : 'No',
-        tiempo: tiempoTranscurrido // Agregar el tiempo transcurrido al objeto de respuesta
+        opcionSeleccionada: letraSeleccionada,
+        respuestaCorrecta: letraCorrecta,
+        tiempo: tiempoTranscurrido
     });
 
-    // Estilizar la opción seleccionada
     document.querySelectorAll('.option').forEach(option => {
         option.classList.remove('selected');
     });
@@ -376,7 +393,6 @@ function verificarRespuesta(selectedOptionIndex) {
     respuestaSeleccionada = true;
     cambioHabilitado = false;
 
-    // Habilitar el cambio después de 900 ms solo si no hay otra respuesta seleccionada
     setTimeout(() => {
         if (!respuestaSeleccionada) {
             cambioHabilitado = true;
@@ -386,24 +402,32 @@ function verificarRespuesta(selectedOptionIndex) {
 
 // Función para generar el archivo CSV al finalizar el test
 function generarArchivoCSV() {
-    // Verificar si hay respuestas seleccionadas
     if (respuestasSeleccionadas.length === 0) {
         console.log('No hay respuestas seleccionadas.');
         return;
     }
 
-    // Crear el contenido del archivo CSV
-    let csvContent = "Item, Opcion seleccionada, Es correcta, Tiempo (segundos), Tiempo (minutos)\n";
-    respuestasSeleccionadas.forEach(respuesta => {
-        // Convertir el tiempo de milisegundos a segundos y minutos
-        const tiempoEnSegundos = respuesta.tiempo / 1000;
-        const tiempoEnMinutos = respuesta.tiempo / 60000;
+    let csvContent = "";
+    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta en milisegundos;Tiempo dedicado tarea;Mano utilizada\n";
+    
+    let respuestasCorrectas = respuestasSeleccionadas.filter(respuesta => 
+        respuesta.opcionSeleccionada === respuesta.respuestaCorrecta
+    ).length;
 
-        // Agregar los tiempos en segundos y minutos al CSV
-        csvContent += `${respuesta.item}, ${respuesta.opcionSeleccionada}, ${respuesta.esCorrecta}, ${tiempoEnSegundos}, ${tiempoEnMinutos}\n`;
+    let porcentajePrecision = (respuestasCorrectas / respuestasSeleccionadas.length) * 100;
+
+
+   
+    respuestasSeleccionadas.forEach(respuesta => {
+        const tiempoConComa = (respuesta.tiempo).toFixed(3).replace('.', ',');
+        const precision = respuesta.opcionSeleccionada === respuesta.respuestaCorrecta ? 1 : 0;
+
+        csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa};;\n`;
     });
 
-    // Crear un blob a partir del contenido del CSV
+    csvContent += "\n\n% de precisión:\n";
+    csvContent += `Porcentaje de precisión;${porcentajePrecision.toFixed(2)}%\n`;
+
     const blob = new Blob([csvContent], { type: 'text/csv' });
 
     // Obtener la fecha y la hora actuales
@@ -413,10 +437,8 @@ function generarArchivoCSV() {
     const dia = String(fechaActual.getDate()).padStart(2, '0');
     const horas = String(fechaActual.getHours()).padStart(2, '0');
     const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
-    const segundos = String(fechaActual.getSeconds()).padStart(2, '0');
-
     // Formatear la fecha y la hora
-    const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
+    const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}`;
 
     // Crear un enlace de descarga para el archivo CSV
     const url = URL.createObjectURL(blob);
@@ -424,7 +446,8 @@ function generarArchivoCSV() {
     a.href = url;
     a.download = `respuestas_story_based_${fechaHoraFormateada}.csv`;
     a.click();
-    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
+    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URLr un blob a partir del contenido del CSV
+   
 }
 
 

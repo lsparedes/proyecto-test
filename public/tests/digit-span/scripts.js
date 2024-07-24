@@ -3,6 +3,8 @@ let chunks = [];
 let timerInterval;
 const downloadLinks = [];
 let audioStream = null; // Guardar el stream de audio
+let audioreproducido = false;
+let recordingStartTime;
 
 document.addEventListener('DOMContentLoaded', () => {
     requestMicrophonePermission();
@@ -40,6 +42,7 @@ function startTest(type) {
 
         const titleElement = document.createElement('h3');
         titleElement.textContent = title;
+
         const audio = document.createElement('audio');
         audio.src = `audio/${type}/${index + 1}.mp3`;
         audio.controls = true;
@@ -58,7 +61,7 @@ function startTest(type) {
         timerDiv.appendChild(timerSpan);
 
         const stopImg = document.createElement('img');
-        stopImg.src = 'detenerr1.png';
+        stopImg.src = 'img/detenerr1.png';
         stopImg.classList.add('img-button', 'stop-img', 'hidden');
         stopImg.addEventListener('click', () => stopRecording(timerSpan, index + 1, itemDiv));
 
@@ -94,10 +97,12 @@ function startTest(type) {
 }
 
 function playBeepAndShowButtons(itemDiv, titleElement, index) {
-    const beep = new Audio('beep.wav');
+    const beep = new Audio('audio/beep.wav');
     beep.play();
     beep.addEventListener('ended', () => {
-        startRecording(itemDiv, titleElement, index);
+        if (!itemDiv.querySelector('.new-button')) {
+            startRecording(itemDiv, titleElement, index);
+        }
     });
 }
 
@@ -107,38 +112,51 @@ function startRecording(itemDiv, titleElement, index) {
         return;
     }
 
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+    }
+    chunks = []; // Limpiar los chunks previos
+
     mediaRecorder = new MediaRecorder(audioStream);
     mediaRecorder.ondataavailable = e => {
         chunks.push(e.data);
     };
     mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
-        chunks = [];
-        const audioURL = window.URL.createObjectURL(blob);
+        if (chunks.length > 0) {
+            const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
+            const audioURL = window.URL.createObjectURL(blob);
+            const recordingTime = new Date();
+            const duration = (recordingTime - recordingStartTime);
+            // Guardar el enlace con el título y el índice
+            downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob, duration: duration });
 
-        // Guardar el enlace con el título y el índice
-        downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob });
+            // Ocultar el botón de grabación y mostrar el botón de siguiente
+            const stopImg = itemDiv.querySelector('.stop-img');
+            stopImg.classList.add('hidden');
+            const nextButton = itemDiv.querySelector('.next-button');
+            nextButton.classList.remove('hidden');
 
-        // Ocultar el botón de grabación y mostrar el botón de siguiente
-        const stopImg = itemDiv.querySelector('.stop-img');
-        stopImg.classList.add('hidden');
-        const nextButton = itemDiv.querySelector('.next-button');
-        nextButton.classList.remove('hidden');
-
-        const message = document.createElement('div');
-        message.textContent = 'Grabación creada';
-        message.classList.add('recording-message');
-        itemDiv.appendChild(message);
+            const message = document.createElement('div');
+            message.textContent = 'Grabación creada';
+            message.classList.add('recording-message');
+            itemDiv.appendChild(message);
+        }
     };
     mediaRecorder.start();
-
+    recordingStartTime = new Date();
     // Mostrar el botón de detener y el nuevo botón al iniciar la grabación
     const stopImg = itemDiv.querySelector('.stop-img');
     stopImg.classList.remove('hidden');
 
     const newButton = document.createElement('div');
     newButton.classList.add('img-button', 'new-button');
-    newButton.style.backgroundImage = "url('boton-rec.png')";
+    newButton.style.backgroundImage = "url('img/boton-rec.png')";
+
+    // Verificar si ya existe un botón nuevo y eliminarlo antes de agregar uno nuevo
+    const existingNewButton = itemDiv.querySelector('.new-button');
+    if (existingNewButton) {
+        existingNewButton.parentNode.removeChild(existingNewButton);
+    }
 
     // Insertar el nuevo botón justo antes de stopImg
     stopImg.parentNode.insertBefore(newButton, stopImg);
@@ -194,41 +212,75 @@ function mostrarFinalizacion(type) {
     completionMessage.style.display = 'flex';
     crearZip(type);
 }
+function generarCSV() {
+    let csvContent = "";
+    csvContent += "Prueba;Tiempo Dedicado en milisegundos\n";
+
+    downloadLinks.forEach(linkData => {
+        if (linkData.title && linkData.duration) {
+            const row = `${linkData.title};${linkData.duration}`;
+            csvContent += row + "\n";
+        }
+    });
+
+    return csvContent;
+}
 
 function crearZip(type) {
+    // Verificar si `downloadLinks` no está vacío
+    if (!downloadLinks.length) {
+        console.error("No hay datos en downloadLinks.");
+        return;
+    }
+
     const zip = new JSZip();
     const audioFolder = zip.folder('audios');
 
+    // Verificar si `JSZip` está disponible
+    if (!audioFolder) {
+        console.error("No se pudo crear la carpeta 'audios' en el archivo ZIP.");
+        return;
+    }
+
     downloadLinks.forEach(linkData => {
-        const fileName = `${type}_${linkData.title}.mp3`;
-        audioFolder.file(fileName, linkData.blob);
+        if (linkData.title && linkData.blob) {
+            const fileName = `${type}_${linkData.title}.mp3`;
+            audioFolder.file(fileName, linkData.blob);
+        } else {
+            console.warn("Datos incompletos en linkData:", linkData);
+        }
     });
+
+    const csvContent = generarCSV();
+    const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+
+    // Obtener la fecha actual y formatearla
+    const fechaActual = new Date();
+    const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
+    const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_'); // Reemplaza caracteres no válidos en nombres de archivo
+
+    // Añadir el archivo CSV al ZIP
+    zip.file(`respuestas_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
-
-            const fechaActual = new Date();
-            const año = fechaActual.getFullYear();
-            const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-            const dia = String(fechaActual.getDate()).padStart(2, '0');
-            const horas = String(fechaActual.getHours()).padStart(2, '0');
-            const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
-            const segundos = String(fechaActual.getSeconds()).padStart(2, '0');
-
-            // Formatear la fecha y la hora
-            const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
-
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
-            downloadLink.download = `respuestas_digital_span_${type}_${fechaHoraFormateada}.zip`;
+            downloadLink.download = `respuestas_digital_span_${type}_${fechaFormateada}.zip`;
             downloadLink.textContent = 'Descargar todas las grabaciones';
             document.body.appendChild(downloadLink);
 
             downloadLink.click();
-
-            // Elimina el enlace del DOM después de la descarga
             document.body.removeChild(downloadLink);
 
-            completionMessage.classList.remove('hidden');
+            const completionMessage = document.getElementById('completion-message');
+            if (completionMessage) {
+                completionMessage.classList.remove('hidden');
+            }
+        })
+        .catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
         });
 }
+
+

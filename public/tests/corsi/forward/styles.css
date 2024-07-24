@@ -32,7 +32,7 @@ body {
 #blocks {
     position: relative;
     width: 1100px;
-    height: 700px;
+    height: 750px;
     margin: 10px auto;
     border: 1px solid #ccc;
     background-color: #fff;
@@ -155,6 +155,7 @@ audio {
     margin-bottom: 10px;
 }
 
+#startTestButton,
 #endSequenceButton {
     display: none;
     background-color: transparent;
@@ -183,4 +184,20 @@ audio {
     background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
     color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
     box-shadow: var(--bs-box-shadow) !important;
+}
+
+#fullscreenButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 75px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
 }

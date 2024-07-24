@@ -1,358 +1,397 @@
+// IMPORTANTE! SI SE CAMBIA LA RUTA DE LAS IMAGENES, ADEMAS DE CAMBIARLAS EN const imagenes (linea 5)
+// HAY QUE VERIFICAR LA RUTA USADA EN LA FUNCION function verificarRespuesta(event) (linea 602)
+// DE LO CONTRARIO NO SE GENERARA EL CSV CORRECTAMENTE
+
 const imagenes = [
     {
         src: "imagenes/mcct_target_pr1.png",
         textoDistintivo: "P1",
+        item: "",
         options: [
-            { src: "imagenes/mcct_comp1_pr1.png", correct: true },
-            { src: "imagenes/mcct_comp2_pr1.png", correct: false },
-            { src: "imagenes/mcct_comp3_pr1.png", correct: false },
-            { src: "imagenes/mcct_comp4_pr1.png", correct: false }
+            { src: "imagenes/mcct_comp1_pr1.png", correct: true , item: ""},
+            { src: "imagenes/mcct_comp2_pr1.png", correct: false, item: "" },
+            { src: "imagenes/mcct_comp3_pr1.png", correct: false, item: "" },
+            { src: "imagenes/mcct_comp4_pr1.png", correct: false, item: "" }
         ]
     },
     {
         src: "imagenes/mcct_target_pr2.png",
         textoDistintivo: "P2",
+        item: "",
         options: [
-            { src: "imagenes/mcct_comp1_pr2.png", correct: false },
-            { src: "imagenes/mcct_comp2_pr2.png", correct: false },
-            { src: "imagenes/mcct_comp3_pr2.png", correct: true },
-            { src: "imagenes/mcct_comp4_pr2.png", correct: false }
+            { src: "imagenes/mcct_comp1_pr2.png", correct: false, item: "" },
+            { src: "imagenes/mcct_comp2_pr2.png", correct: false, item: "" },
+            { src: "imagenes/mcct_comp3_pr2.png", correct: true, item: "" },
+            { src: "imagenes/mcct_comp4_pr2.png", correct: false, item: "" }
         ]
     },
     {
         src: "imagenes/mcct_target_pr3.png",
         textoDistintivo: "P3",
+        item: "",
         options: [
-            { src: "imagenes/mcct_comp1_pr3.png", correct: true },
-            { src: "imagenes/mcct_comp2_pr3.png", correct: false },
-            { src: "imagenes/mcct_comp3_pr3.png", correct: false },
-            { src: "imagenes/mcct_comp4_pr3.png", correct: false }
+            { src: "imagenes/mcct_comp1_pr3.png", correct: true, item: "" },
+            { src: "imagenes/mcct_comp2_pr3.png", correct: false, item: "" },
+            { src: "imagenes/mcct_comp3_pr3.png", correct: false, item: "" },
+            { src: "imagenes/mcct_comp4_pr3.png", correct: false, item: "" }
         ]
     },
     {
         src: "imagenes/mcct_target_t1.png",
-        textoDistintivo: "I1",
+        textoDistintivo: "E1",
+        item: "Piso",
         options: [
-            { src: "imagenes/mcct_comp1_t1.png", correct: true },
-            { src: "imagenes/mcct_comp2_t1.png", correct: false },
-            { src: "imagenes/mcct_comp3_t1.png", correct: false },
-            { src: "imagenes/mcct_comp4_t1.png", correct: false }
+            { src: "imagenes/mcct_comp1_t1.png", correct: true, item: "Vaca" },
+            { src: "imagenes/mcct_comp2_t1.png", correct: false, item: "Caballo" },
+            { src: "imagenes/mcct_comp3_t1.png", correct: false, item: "Chancho" },
+            { src: "imagenes/mcct_comp4_t1.png", correct: false, item: "Gallina" }
         ]
     },
 
     {
         src: "imagenes/mcct_target_t2.png",
-        textoDistintivo: "I2",
+        textoDistintivo: "E2",
+        item: "Enchufe",
         options: [
-            { src: "imagenes/mcct_comp1_t2.png", correct: false },
-            { src: "imagenes/mcct_comp2_t2.png", correct: false },
-            { src: "imagenes/mcct_comp3_t2.png", correct: false },
-            { src: "imagenes/mcct_comp4_t2.png", correct: true }
+            { src: "imagenes/mcct_comp1_t2.png", correct: false, item: "Vela" },
+            { src: "imagenes/mcct_comp2_t2.png", correct: false, item: "Linterna" },
+            { src: "imagenes/mcct_comp3_t2.png", correct: false, item: "Lampara a gas" },
+            { src: "imagenes/mcct_comp4_t2.png", correct: true, item: "Ampolleta" }
         ]
     },
 
-    {
-        src: "imagenes/mcct_target_t3.png",
-        textoDistintivo: "I3",
-        options: [
-            { src: "imagenes/mcct_comp1_t3.png", correct: false },
-            { src: "imagenes/mcct_comp2_t3.png", correct: false },
-            { src: "imagenes/mcct_comp3_t3.png", correct: false },
-            { src: "imagenes/mcct_comp4_t3.png", correct: true }
-        ]
-    },
+    // {
+    //     src: "imagenes/mcct_target_t3.png",
+    //     textoDistintivo: "E3",
+    //     item: "Tren",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t3.png", correct: false, item: "Motocicleta" },
+    //         { src: "imagenes/mcct_comp2_t3.png", correct: false, item: "Tractor" },
+    //         { src: "imagenes/mcct_comp3_t3.png", correct: false, item: "Camion" },
+    //         { src: "imagenes/mcct_comp4_t3.png", correct: true, item: "Bus" }
+    //     ]
+    // },
 
-    {
-        src: "imagenes/mcct_target_t4.png",
-        textoDistintivo: "I4",
-        options: [
-            { src: "imagenes/mcct_comp1_t4.png", correct: true },
-            { src: "imagenes/mcct_comp2_t4.png", correct: false },
-            { src: "imagenes/mcct_comp3_t4.png", correct: false },
-            { src: "imagenes/mcct_comp4_t4.png", correct: false }
-        ]
-    },
+    // {
+    //     src: "imagenes/mcct_target_t4.png",
+    //     textoDistintivo: "E4",
+    //     item: "Naranja",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t4.png", correct: true, item: "Vaso de jugo" },
+    //         { src: "imagenes/mcct_comp2_t4.png", correct: false, item: "Botella de agua" },
+    //         { src: "imagenes/mcct_comp3_t4.png", correct: false, item: "Botella de leche" },
+    //         { src: "imagenes/mcct_comp4_t4.png", correct: false, item: "Copa de vino" }
+    //     ]
+    // },
 
-    {
-        src: "imagenes/mcct_target_t5.png",
-        textoDistintivo: "I5",
-        options: [
-            { src: "imagenes/mcct_comp1_t5.png", correct: false },
-            { src: "imagenes/mcct_comp2_t5.png", correct: false },
-            { src: "imagenes/mcct_comp3_t5.png", correct: false },
-            { src: "imagenes/mcct_comp4_t5.png", correct: true }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t6.png",
-        textoDistintivo: "I6",
-        options: [
-            { src: "imagenes/mcct_comp1_t6.png", correct: false },
-            { src: "imagenes/mcct_comp2_t6.png", correct: true },
-            { src: "imagenes/mcct_comp3_t6.png", correct: false },
-            { src: "imagenes/mcct_comp4_t6.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t7.png",
-        textoDistintivo: "I7",
-        options: [
-            { src: "imagenes/mcct_comp1_t7.png", correct: false },
-            { src: "imagenes/mcct_comp2_t7.png", correct: true },
-            { src: "imagenes/mcct_comp3_t7.png", correct: false },
-            { src: "imagenes/mcct_comp4_t7.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t8.png",
-        textoDistintivo: "I8",
-        options: [
-            { src: "imagenes/mcct_comp1_t8.png", correct: false },
-            { src: "imagenes/mcct_comp2_t8.png", correct: false },
-            { src: "imagenes/mcct_comp3_t8.png", correct: true },
-            { src: "imagenes/mcct_comp4_t8.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t9.png",
-        textoDistintivo: "I9",
-        options: [
-            { src: "imagenes/mcct_comp1_t9.png", correct: false },
-            { src: "imagenes/mcct_comp2_t9.png", correct: false },
-            { src: "imagenes/mcct_comp3_t9.png", correct: true },
-            { src: "imagenes/mcct_comp4_t9.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t10.png",
-        textoDistintivo: "I10",
-        options: [
-            { src: "imagenes/mcct_comp1_t10.png", correct: false },
-            { src: "imagenes/mcct_comp2_t10.png", correct: true },
-            { src: "imagenes/mcct_comp3_t10.png", correct: false },
-            { src: "imagenes/mcct_comp4_t10.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t11.png",
-        textoDistintivo: "I11",
-        options: [
-            { src: "imagenes/mcct_comp1_t11.png", correct: false },
-            { src: "imagenes/mcct_comp2_t11.png", correct: true },
-            { src: "imagenes/mcct_comp3_t11.png", correct: false },
-            { src: "imagenes/mcct_comp4_t11.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t12.png",
-        textoDistintivo: "I12",
-        options: [
-            { src: "imagenes/mcct_comp1_t12.png", correct: false },
-            { src: "imagenes/mcct_comp2_t12.png", correct: false },
-            { src: "imagenes/mcct_comp3_t12.png", correct: false },
-            { src: "imagenes/mcct_comp4_t12.png", correct: true }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t13.png",
-        textoDistintivo: "I13",
-        options: [
-            { src: "imagenes/mcct_comp1_t13.png", correct: false },
-            { src: "imagenes/mcct_comp2_t13.png", correct: false },
-            { src: "imagenes/mcct_comp3_t13.png", correct: false },
-            { src: "imagenes/mcct_comp4_t13.png", correct: true }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t14.png",
-        textoDistintivo: "I14",
-        options: [
-            { src: "imagenes/mcct_comp1_t14.png", correct: false },
-            { src: "imagenes/mcct_comp2_t14.png", correct: false },
-            { src: "imagenes/mcct_comp3_t14.png", correct: true },
-            { src: "imagenes/mcct_comp4_t14.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t15.png",
-        textoDistintivo: "I15",
-        options: [
-            { src: "imagenes/mcct_comp1_t15.png", correct: false },
-            { src: "imagenes/mcct_comp2_t15.png", correct: false },
-            { src: "imagenes/mcct_comp3_t15.png", correct: true },
-            { src: "imagenes/mcct_comp4_t15.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t16.png",
-        textoDistintivo: "I16",
-        options: [
-            { src: "imagenes/mcct_comp1_t16.png", correct: false },
-            { src: "imagenes/mcct_comp2_t16.png", correct: false },
-            { src: "imagenes/mcct_comp3_t16.png", correct: true },
-            { src: "imagenes/mcct_comp4_t16.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t17.png",
-        textoDistintivo: "I17",
-        options: [
-            { src: "imagenes/mcct_comp1_t17.png", correct: false },
-            { src: "imagenes/mcct_comp2_t17.png", correct: false },
-            { src: "imagenes/mcct_comp3_t17.png", correct: true },
-            { src: "imagenes/mcct_comp4_t17.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t18.png",
-        textoDistintivo: "I18",
-        options: [
-            { src: "imagenes/mcct_comp1_t18.png", correct: false },
-            { src: "imagenes/mcct_comp2_t18.png", correct: false },
-            { src: "imagenes/mcct_comp3_t18.png", correct: true },
-            { src: "imagenes/mcct_comp4_t18.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t19.png",
-        textoDistintivo: "I19",
-        options: [
-            { src: "imagenes/mcct_comp1_t19.png", correct: true },
-            { src: "imagenes/mcct_comp2_t19.png", correct: false },
-            { src: "imagenes/mcct_comp3_t19.png", correct: false },
-            { src: "imagenes/mcct_comp4_t19.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t20.png",
-        textoDistintivo: "I20",
-        options: [
-            { src: "imagenes/mcct_comp1_t20.png", correct: false },
-            { src: "imagenes/mcct_comp2_t20.png", correct: false },
-            { src: "imagenes/mcct_comp3_t20.png", correct: false },
-            { src: "imagenes/mcct_comp4_t20.png", correct: true }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t21.png",
-        textoDistintivo: "I21",
-        options: [
-            { src: "imagenes/mcct_comp1_t21.png", correct: false },
-            { src: "imagenes/mcct_comp2_t21.png", correct: true },
-            { src: "imagenes/mcct_comp3_t21.png", correct: false },
-            { src: "imagenes/mcct_comp4_t21.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t22.png",
-        textoDistintivo: "I22",
-        options: [
-            { src: "imagenes/mcct_comp1_t22.png", correct: false },
-            { src: "imagenes/mcct_comp2_t22.png", correct: true },
-            { src: "imagenes/mcct_comp3_t22.png", correct: false },
-            { src: "imagenes/mcct_comp4_t22.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t23.png",
-        textoDistintivo: "I23",
-        options: [
-            { src: "imagenes/mcct_comp1_t23.png", correct: true },
-            { src: "imagenes/mcct_comp2_t23.png", correct: false },
-            { src: "imagenes/mcct_comp3_t23.png", correct: false },
-            { src: "imagenes/mcct_comp4_t23.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t24.png",
-        textoDistintivo: "I24",
-        options: [
-            { src: "imagenes/mcct_comp1_t24.png", correct: true },
-            { src: "imagenes/mcct_comp2_t24.png", correct: false },
-            { src: "imagenes/mcct_comp3_t24.png", correct: false },
-            { src: "imagenes/mcct_comp4_t24.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t25.png",
-        textoDistintivo: "I25",
-        options: [
-            { src: "imagenes/mcct_comp1_t25.png", correct: true },
-            { src: "imagenes/mcct_comp2_t25.png", correct: false },
-            { src: "imagenes/mcct_comp3_t25.png", correct: false },
-            { src: "imagenes/mcct_comp4_t25.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t26.png",
-        textoDistintivo: "I26",
-        options: [
-            { src: "imagenes/mcct_comp1_t26.png", correct: true },
-            { src: "imagenes/mcct_comp2_t26.png", correct: false },
-            { src: "imagenes/mcct_comp3_t26.png", correct: false },
-            { src: "imagenes/mcct_comp4_t26.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t27.png",
-        textoDistintivo: "I27",
-        options: [
-            { src: "imagenes/mcct_comp1_t27.png", correct: false },
-            { src: "imagenes/mcct_comp2_t27.png", correct: false },
-            { src: "imagenes/mcct_comp3_t27.png", correct: false },
-            { src: "imagenes/mcct_comp4_t27.png", correct: true }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t28.png",
-        textoDistintivo: "I28",
-        options: [
-            { src: "imagenes/mcct_comp1_t28.png", correct: false },
-            { src: "imagenes/mcct_comp2_t28.png", correct: false },
-            { src: "imagenes/mcct_comp3_t28.png", correct: false },
-            { src: "imagenes/mcct_comp4_t28.png", correct: true }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t29.png",
-        textoDistintivo: "I29",
-        options: [
-            { src: "imagenes/mcct_comp1_t29.png", correct: false },
-            { src: "imagenes/mcct_comp2_t29.png", correct: false },
-            { src: "imagenes/mcct_comp3_t29.png", correct: false },
-            { src: "imagenes/mcct_comp4_t29.png", correct: true }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t30.png",
-        textoDistintivo: "I30",
-        options: [
-            { src: "imagenes/mcct_comp1_t30.png", correct: true },
-            { src: "imagenes/mcct_comp2_t30.png", correct: false },
-            { src: "imagenes/mcct_comp3_t30.png", correct: false },
-            { src: "imagenes/mcct_comp4_t30.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t31.png",
-        textoDistintivo: "I31",
-        options: [
-            { src: "imagenes/mcct_comp1_t31.png", correct: false },
-            { src: "imagenes/mcct_comp2_t31.png", correct: true },
-            { src: "imagenes/mcct_comp3_t31.png", correct: false },
-            { src: "imagenes/mcct_comp4_t31.png", correct: false }
-        ]
-    },
-    {
-        src: "imagenes/mcct_target_t32.png",
-        textoDistintivo: "I32",
-        options: [
-            { src: "imagenes/mcct_comp1_t32.png", correct: false },
-            { src: "imagenes/mcct_comp2_t32.png", correct: true },
-            { src: "imagenes/mcct_comp3_t32.png", correct: false },
-            { src: "imagenes/mcct_comp4_t32.png", correct: false }
-        ]
-    },
+    // {
+    //     src: "imagenes/mcct_target_t5.png",
+    //     textoDistintivo: "E5",
+    //     item: "Caballo",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t5.png", correct: false, item: "Carro de supermercado" },
+    //         { src: "imagenes/mcct_comp2_t5.png", correct: false, item: "Coche" },
+    //         { src: "imagenes/mcct_comp3_t5.png", correct: false, item: "Carretilla" },
+    //         { src: "imagenes/mcct_comp4_t5.png", correct: true, item: "Carruaje" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t6.png",
+    //     textoDistintivo: "E6",
+    //     item: "Pato",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t6.png", correct: false, item: "Montaña" },
+    //         { src: "imagenes/mcct_comp2_t6.png", correct: true, item: "Lago" },
+    //         { src: "imagenes/mcct_comp3_t6.png", correct: false, item: "Desierto" },
+    //         { src: "imagenes/mcct_comp4_t6.png", correct: false, item: "Iceberg" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t7.png",
+    //     textoDistintivo: "E7",
+    //     item: "Avion",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t7.png", correct: false, item: "Pez" },
+    //         { src: "imagenes/mcct_comp2_t7.png", correct: true, item: "Pajaro" },
+    //         { src: "imagenes/mcct_comp3_t7.png", correct: false, item: "Serpiente" },
+    //         { src: "imagenes/mcct_comp4_t7.png", correct: false, item: "Perro" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t8.png",
+    //     textoDistintivo: "E8",
+    //     item: "Canasta",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t8.png", correct: false, item: "Fusilli" },
+    //         { src: "imagenes/mcct_comp2_t8.png", correct: false, item: "Hamburguesa" },
+    //         { src: "imagenes/mcct_comp3_t8.png", correct: true, item: "Huevos" },
+    //         { src: "imagenes/mcct_comp4_t8.png", correct: false, item: "Helado" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t9.png",
+    //     textoDistintivo: "E9",
+    //     item: "Cocodrilo",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t9.png", correct: false, item: "Canasta" },
+    //         { src: "imagenes/mcct_comp2_t9.png", correct: false, item: "Maleta" },
+    //         { src: "imagenes/mcct_comp3_t9.png", correct: true, item: "Cartera" },
+    //         { src: "imagenes/mcct_comp4_t9.png", correct: false, item: "Bolsa" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t10.png",
+    //     textoDistintivo: "E10",
+    //     item: "Rana",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t10.png", correct: false, item: "Girasol" },
+    //         { src: "imagenes/mcct_comp2_t10.png", correct: true, item: "Nenufar" },
+    //         { src: "imagenes/mcct_comp3_t10.png", correct: false, item: "Narciso" },
+    //         { src: "imagenes/mcct_comp4_t10.png", correct: false, item: "Rosa" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t11.png",
+    //     textoDistintivo: "E11",
+    //     item: "Cepillo de Dientes",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t11.png", correct: false, item: "Nariz" },
+    //         { src: "imagenes/mcct_comp2_t11.png", correct: true, item: "Boca" },
+    //         { src: "imagenes/mcct_comp3_t11.png", correct: false, item: "Oreja" },
+    //         { src: "imagenes/mcct_comp4_t11.png", correct: false, item: "Ojo" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t12.png",
+    //     textoDistintivo: "E12",
+    //     item: "Trineo",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t12.png", correct: false, item: "Raqueta" },
+    //         { src: "imagenes/mcct_comp2_t12.png", correct: false, item: "Paraguas" },
+    //         { src: "imagenes/mcct_comp3_t12.png", correct: false, item: "Palos de golf" },
+    //         { src: "imagenes/mcct_comp4_t12.png", correct: true, item: "Bastones de esqui" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t13.png",
+    //     textoDistintivo: "E13",
+    //     item: "Buho",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t13.png", correct: false, item: "Pato" },
+    //         { src: "imagenes/mcct_comp2_t13.png", correct: false, item: "Pavo" },
+    //         { src: "imagenes/mcct_comp3_t13.png", correct: false, item: "Pinguino" },
+    //         { src: "imagenes/mcct_comp4_t13.png", correct: true, item: "Murcielago" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t14.png",
+    //     textoDistintivo: "E14",
+    //     item: "Tijeras",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t14.png", correct: false, item: "Alambre pua" },
+    //         { src: "imagenes/mcct_comp2_t14.png", correct: false, item: "Cuerda" },
+    //         { src: "imagenes/mcct_comp3_t14.png", correct: true, item: "Papel" },
+    //         { src: "imagenes/mcct_comp4_t14.png", correct: false, item: "Madera" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t15.png",
+    //     textoDistintivo: "E15",
+    //     item: "Pinguino",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t15.png", correct: false, item: "Desierto" },
+    //         { src: "imagenes/mcct_comp2_t15.png", correct: false, item: "Lago" },
+    //         { src: "imagenes/mcct_comp3_t15.png", correct: true, item: "Iceberg" },
+    //         { src: "imagenes/mcct_comp4_t15.png", correct: false, item: "Playa" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t16.png",
+    //     textoDistintivo: "E16",
+    //     item: "Maleta",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t16.png", correct: true, item: "Silla de playa" },
+    //         { src: "imagenes/mcct_comp2_t16.png", correct: false, item: "Mecedora" },
+    //         { src: "imagenes/mcct_comp3_t16.png", correct: false, item: "Silla" },
+    //         { src: "imagenes/mcct_comp4_t16.png", correct: false, item: "Sillon" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t17.png",
+    //     textoDistintivo: "E17",
+    //     item: "Camello",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t17.png", correct: false, item: "Arbol" },
+    //         { src: "imagenes/mcct_comp2_t17.png", correct: false, item: "Girasol" },
+    //         { src: "imagenes/mcct_comp3_t17.png", correct: true, item: "Cactus" },
+    //         { src: "imagenes/mcct_comp4_t17.png", correct: false, item: "Rosa" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t18.png",
+    //     textoDistintivo: "E18",
+    //     item: "Llave",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t18.png", correct: false, item: "Ventana" },
+    //         { src: "imagenes/mcct_comp2_t18.png", correct: false, item: "Mesa" },
+    //         { src: "imagenes/mcct_comp3_t18.png", correct: true, item: "Puerta" },
+    //         { src: "imagenes/mcct_comp4_t18.png", correct: false, item: "Espejo" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t19.png",
+    //     textoDistintivo: "E19",
+    //     item: "Manzana",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t19.png", correct: true, item: "Gusano" },
+    //         { src: "imagenes/mcct_comp2_t19.png", correct: false, item: "Hormiga" },
+    //         { src: "imagenes/mcct_comp3_t19.png", correct: false, item: "Escarabajo" },
+    //         { src: "imagenes/mcct_comp4_t19.png", correct: false, item: "Mosca" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t20.png",
+    //     textoDistintivo: "E20",
+    //     item: "Basurero",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t20.png", correct: false, item: "Brocha" },
+    //         { src: "imagenes/mcct_comp2_t20.png", correct: false, item: "Cepillo de pelo" },
+    //         { src: "imagenes/mcct_comp3_t20.png", correct: false, item: "Cepillo de dientes" },
+    //         { src: "imagenes/mcct_comp4_t20.png", correct: true, item: "Escoba" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t21.png",
+    //     textoDistintivo: "E21",
+    //     item: "Cepillo",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t21.png", correct: false, item: "Cinta adhesiva" },
+    //         { src: "imagenes/mcct_comp2_t21.png", correct: true, item: "Cinta de pelo" },
+    //         { src: "imagenes/mcct_comp3_t21.png", correct: false, item: "Hilo" },
+    //         { src: "imagenes/mcct_comp4_t21.png", correct: false, item: "Alambre pua" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t22.png",
+    //     textoDistintivo: "E22",
+    //     item: "Hacha",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t22.png", correct: false, item: "Pasto" },
+    //         { src: "imagenes/mcct_comp2_t22.png", correct: true, item: "Arbol" },
+    //         { src: "imagenes/mcct_comp3_t22.png", correct: false, item: "Flor" },
+    //         { src: "imagenes/mcct_comp4_t22.png", correct: false, item: "Raices" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t23.png",
+    //     textoDistintivo: "E23",
+    //     item: "Serrucho",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t23.png", correct: true, item: "Madera" },
+    //         { src: "imagenes/mcct_comp2_t23.png", correct: false, item: "Alambre pua" },
+    //         { src: "imagenes/mcct_comp3_t23.png", correct: false, item: "Cuerda" },
+    //         { src: "imagenes/mcct_comp4_t23.png", correct: false, item: "Papel" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t24.png",
+    //     textoDistintivo: "E24",
+    //     item: "Aguila",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t24.png", correct: true, item: "Montaña" },
+    //         { src: "imagenes/mcct_comp2_t24.png", correct: false, item: "Playa" },
+    //         { src: "imagenes/mcct_comp3_t24.png", correct: false, item: "Rio" },
+    //         { src: "imagenes/mcct_comp4_t24.png", correct: false, item: "Cascada" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t25.png",
+    //     textoDistintivo: "E25",
+    //     item: "Rinoceronte",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t25.png", correct: true, item: "Leon" },
+    //         { src: "imagenes/mcct_comp2_t25.png", correct: false, item: "Gato" },
+    //         { src: "imagenes/mcct_comp3_t25.png", correct: false, item: "Perro" },
+    //         { src: "imagenes/mcct_comp4_t25.png", correct: false, item: "Zorro" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t26.png",
+    //     textoDistintivo: "E26",
+    //     item: "Gato",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t26.png", correct: true, item: "Raton" },
+    //         { src: "imagenes/mcct_comp2_t26.png", correct: false, item: "Topo" },
+    //         { src: "imagenes/mcct_comp3_t26.png", correct: false, item: "Conejo" },
+    //         { src: "imagenes/mcct_comp4_t26.png", correct: false, item: "Huron" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t27.png",
+    //     textoDistintivo: "E27",
+    //     item: "Motocicleta",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t27.png", correct: false, item: "Impermeable" },
+    //         { src: "imagenes/mcct_comp2_t27.png", correct: false, item: "Abrigo" },
+    //         { src: "imagenes/mcct_comp3_t27.png", correct: false, item: "Blazer" },
+    //         { src: "imagenes/mcct_comp4_t27.png", correct: true, item: "Chaqueta de cuero" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t28.png",
+    //     textoDistintivo: "E28",
+    //     item: "Destornillador",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t28.png", correct: false, item: "Serrucho" },
+    //         { src: "imagenes/mcct_comp2_t28.png", correct: false, item: "Avion" },
+    //         { src: "imagenes/mcct_comp3_t28.png", correct: false, item: "Brocha" },
+    //         { src: "imagenes/mcct_comp4_t28.png", correct: true, item: "Taladro" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t29.png",
+    //     textoDistintivo: "E29",
+    //     item: "Tomate",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t29.png", correct: false, item: "Coliflor" },
+    //         { src: "imagenes/mcct_comp2_t29.png", correct: false, item: "Zanahoria" },
+    //         { src: "imagenes/mcct_comp3_t29.png", correct: false, item: "Brocoli" },
+    //         { src: "imagenes/mcct_comp4_t29.png", correct: true, item: "Lechuga" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t30.png",
+    //     textoDistintivo: "E30",
+    //     item: "Tortuga",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t30.png", correct: true, item: "20" },
+    //         { src: "imagenes/mcct_comp2_t30.png", correct: false, item: "50" },
+    //         { src: "imagenes/mcct_comp3_t30.png", correct: false, item: "70" },
+    //         { src: "imagenes/mcct_comp4_t30.png", correct: false, item: "30" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t31.png",
+    //     textoDistintivo: "E31",
+    //     item: "Pera",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t31.png", correct: false, item: "Raices" },
+    //         { src: "imagenes/mcct_comp2_t31.png", correct: true, item: "Arbol" },
+    //         { src: "imagenes/mcct_comp3_t31.png", correct: false, item: "Flor" },
+    //         { src: "imagenes/mcct_comp4_t31.png", correct: false, item: "Pasto" }
+    //     ]
+    // },
+    // {
+    //     src: "imagenes/mcct_target_t32.png",
+    //     textoDistintivo: "E32",
+    //     item: "Ardilla",
+    //     options: [
+    //         { src: "imagenes/mcct_comp1_t32.png", correct: false, item: "Zanahoria" },
+    //         { src: "imagenes/mcct_comp2_t32.png", correct: true, item: "Bellota" },
+    //         { src: "imagenes/mcct_comp3_t32.png", correct: false, item: "Pasto" },
+    //         { src: "imagenes/mcct_comp4_t32.png", correct: false, item: "Choclo" }
+    //     ]
+    // },
 
 ];
 
@@ -362,6 +401,13 @@ let presentacionIniciada = false;
 let interaccionHabilitada = false;
 let respuestasSeleccionadas = [];
 const fullscreenButton = document.getElementById('fullscreenButton');
+const nextButton = document.getElementById('nextButton');
+let respuestaSeleccionada = false; // Variable para verificar si se seleccionó una respuesta
+let respuesta = {}; // Variable para almacenar la respuesta seleccionada
+let startTime;
+let endTime;
+let timer;
+let milliseconds = 0;
 
 function requestFullscreen() {
     const element = document.documentElement;
@@ -380,7 +426,8 @@ fullscreenButton.addEventListener('click', requestFullscreen);
 
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
-    imageContainer.textContent = 'Test Finalizado.';
+
+    imageContainer.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
 
     // Ajustes de estilo
     imageContainer.style.textAlign = 'center';
@@ -393,8 +440,15 @@ function mostrarFinalizacion() {
     imageContainer.style.width = 'auto';
     fullscreenButton.style.display = 'none';
 
+    document.getElementById('nextButton').style.display = 'none'; // Ocultar el botón "Next"
+    const previousImageText = document.querySelector('.imageText');
+    if (previousImageText) {
+        previousImageText.remove();
+    }
+
     //generarArchivoRespuestas(); // Generar el archivo con las respuestas
-    generarArchivoRespuestasCSV()
+    generarArchivoRespuestasCSV();
+    descargarVariableComoTxt();
 }
 
 function generarArchivoRespuestas() {
@@ -422,6 +476,9 @@ function generarArchivoRespuestas() {
 }
 
 function generarArchivoRespuestasCSV() {
+    endTime = new Date(); // Registrar la hora de finalización
+    const duration = (endTime - startTime) / 1000; // Duración en segundos
+
     // Verificar si hay respuestas seleccionadas
     if (respuestasSeleccionadas.length === 0) {
         console.log('No hay respuestas seleccionadas.');
@@ -429,14 +486,16 @@ function generarArchivoRespuestasCSV() {
     }
 
     // Crear el encabezado del CSV
-    let csvContent = "textoDistintivo,respuestaSeleccionada,esCorrecta\n";
+    let csvContent = "numero,item,respuestaCorrecta,respuestaParticipante,precision,tiempoDedicadoTarea,tiempoDedicadoEnsayo,manoUtilizada\n";
 
     // Recorrer las respuestas seleccionadas
     respuestasSeleccionadas.forEach(respuesta => {
-        // Construir una línea del CSV con los datos de la respuesta
-        const lineaCSV = `${respuesta.textoDistintivo},${respuesta.respuestaSeleccionada},${respuesta.esCorrecta ? 'Si' : 'No'}\n`;
-        // Agregar la línea al contenido del CSV
-        csvContent += lineaCSV;
+        if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
+            // Construir una línea del CSV con los datos de la respuesta
+            const lineaCSV = `${respuesta.textoDistintivo},${respuesta.imagen},${respuesta.respuestaCorrecta},${respuesta.respuestaSeleccion},${respuesta.esCorrecta ? 1 : 0},${duration.toFixed(2)},${respuesta.tiempoDedicado},${selectedHand}\n`;
+            // Agregar la línea al contenido del CSV
+            csvContent += lineaCSV;
+        }
     });
 
     // Crear un blob a partir del contenido del CSV
@@ -465,6 +524,8 @@ function generarArchivoRespuestasCSV() {
 
 
 function iniciarPresentacion() {
+    startTime = new Date(); // Registrar la hora de inicio
+
     presentacionIniciada = true;
     const imageContainer = document.getElementById('imageContainer');
     const instructionText = document.getElementById('instructionText');
@@ -550,10 +611,6 @@ function agregarTextoYOpciones(imagenInfo) {
 }
 
 
-
-
-let respuestaSeleccionada = false; // Variable para verificar si se seleccionó una respuesta
-
 function verificarRespuesta(event) {
     event.stopPropagation();
 
@@ -567,27 +624,32 @@ function verificarRespuesta(event) {
     // Marcar la opción actual como seleccionada
     optionImg.classList.add('selected');
 
-    const respuesta = {
+    respuesta = {
         textoDistintivo: imagenes[indiceActual].textoDistintivo,
-        imagen: imagenes[indiceActual].src,
-        respuestaSeleccionada: optionImg.src,
-        esCorrecta: esCorrecta
+        imagen: imagenes[indiceActual].item,
+        respuestaCorrecta: imagenes[indiceActual].options.find(option => option.correct).item,
+        respuestaSeleccion: imagenes[indiceActual].options.find(option => option.src === "imagenes"+optionImg.src.split('imagenes')[1]).item,
+        esCorrecta: esCorrecta,
     };
-    respuestasSeleccionadas.push(respuesta);
 
     respuestaSeleccionada = true;
 
     // Mostrar el botón "Next"
-    const nextButton = document.getElementById('nextButton');
     nextButton.style.display = 'block';
-
-    // Al hacer clic en "Next", avanzar a la siguiente imagen
-    nextButton.addEventListener('click', function () {
-        cambioHabilitado = true; // Permitir cambiar de imagen
-        cambiarImagen();
-        //nextButton.style.display = 'none'; // Ocultar el botón "Next" nuevamente
-    });
 }
+
+// Al hacer clic en "Next", avanzar a la siguiente imagen
+nextButton.addEventListener('click', function () {
+    if(respuestaSeleccionada){
+        stopTimer(); // Detener el timer
+        respuesta['tiempoDedicado'] = (milliseconds / 1000).toFixed(2);
+        respuestasSeleccionadas.push(respuesta);
+    }
+    startTimer(); // Iniciar el timer nuevamente
+    nextButton.style.display = 'none'; // Ocultar el botón "Next" nuevamente
+    cambioHabilitado = true; // Permitir cambiar de imagen
+    cambiarImagen();
+});
 
 // Agregar evento click a todas las opciones
 const opciones = document.querySelectorAll('.option');
@@ -605,10 +667,83 @@ function cambiarImagen() {
     indiceActual++;
     respuestaSeleccionada = false; // Restablecer la bandera de respuesta seleccionada
     if (indiceActual === imagenes.length) {
-        mostrarFinalizacion();
+        const imageContainer = document.getElementById('imageContainer');
+        imageContainer.style.display = 'none';
+        document.getElementById('nextButton').style.display = 'none'; // Ocultar el botón "Next"
+        const previousImageText = document.querySelector('.imageText');
+        if (previousImageText) {
+            previousImageText.remove();
+        }
+        showHandSelection();
     } else {
         mostrarImagen(indiceActual);
     }
 }
 
+function startTimer() {
+    stopTimer(); // Reiniciar el timer si ya está corriendo
+    milliseconds = 0; // Reiniciar los milisegundos
+    timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
+}
+
+function stopTimer() {
+    clearInterval(timer);
+}
+
+function updateTimer() {
+    milliseconds += 10; // Incrementar en 10 ms
+    let seconds = milliseconds / 1000; // Convertir a segundos
+}
+
+function descargarVariableComoTxt() {
+    // Define la variable que quieres guardar en el archivo .txt
+    const miVariable = (endTime - startTime) / 1000;;
+
+    // Crea un Blob con el contenido
+    const blob = new Blob([miVariable.toFixed(2)], { type: 'text/plain' });
+
+    // Crea un enlace de descarga para el Blob
+    const enlace = document.createElement('a');
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = 'tiempoDedicado.txt'; // Nombre del archivo a descargar
+
+    // Agrega el enlace al documento
+    document.body.appendChild(enlace);
+
+    // Simula un clic en el enlace para iniciar la descarga
+    enlace.click();
+
+    // Opcional: Elimina el enlace después de iniciar la descarga
+    document.body.removeChild(enlace);
+}
+
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
+
+// SELECCION DE MANO JS
+
+const selectHandContainer = document.getElementById("selectHand");
+const handButton = document.getElementById("handButton");
+const handInputs = document.getElementsByName('hand');
+
+// Variable con la mano seleccionada
+let selectedHand = "";
+
+// Funcion para mostrar la pantalla de seleccion de mano
+function showHandSelection() {
+    selectHandContainer.style.display = "block";
+}
+
+// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+// En este caso fue mostrarFinalizacion()
+function confirmHandSelection() {
+    selectHandContainer.style.display = "none";
+    mostrarFinalizacion();
+}
+
+// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+handInputs.forEach((input) => {
+    input.addEventListener('change', (e) => {
+        handButton.style.display = "block";
+        selectedHand = e.target.value;
+    });
+  });

@@ -5,11 +5,13 @@
     <meta charset="UTF-8">
     <title>Test modificado de camellos y cactus</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 
 <body>
 
     <div id="instrucciones" class="center-content">
+        <h1 id="titulo">Instrucciones</h1>
         <p id="instructionText">Se mostrarán 5 imágenes en la pantalla: una en la parte superior, y 4 en la parte
             inferior.<br><br>
             Debe elegir cuál de las 4 imágenes de la parte inferior se empareja mejor con la imagen en la parte
@@ -24,8 +26,8 @@
         </audio>
 
         <div class="button-container">
-            <button id="startButton" onclick="iniciarTest()">Comenzar</button>
-            <button id="fullscreenButton">Pantalla completa</button>
+            <button id="startButton" onclick="iniciarTest()"></button>
+            <button id="fullscreenButton"></button>
         </div>
     </div>
 
@@ -34,6 +36,25 @@
         <div id="optionsContainer" class="options-container"></div> <!-- Contenedor para las opciones de imágenes -->
     </div>
     <button id="nextButton" class="next-button" style="display: none;"></button>
+
+
+    <!-- SELECCION DE MANO HTML -->
+    <div id="selectHand" style="display: none;">
+        <h4>¿Con qué mano respondiste el test?</h4>
+        <div>
+            <input type="radio" id="right_hand" name="hand" value="derecha">
+            <label for="right_hand">Derecha</label>
+        </div>
+        <div>
+            <input type="radio" id="left_hand" name="hand" value="izquierda">
+            <label for="left_hand">Izquierda</label>
+        </div>
+        <div>
+            <input type="radio" id="both_hands" name="hand" value="ambas">
+            <label for="both_hands">Ambas</label>
+        </div>
+        <button id="handButton" onclick="confirmHandSelection()" style="display: none;"></button>
+    </div>
 
 
     <script src="app.js"></script>
