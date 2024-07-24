@@ -59,6 +59,14 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.lineWidth = 1; // Restablecer el grosor del borde
     }
 
+    function getTouchPos(canvasDom, touchEvent) {
+        const rect = canvasDom.getBoundingClientRect();
+        return {
+            x: touchEvent.touches[0].clientX - rect.left,
+            y: touchEvent.touches[0].clientY - rect.top
+        };
+    }
+
     function drawLineToCircleEdge(ctx, startX, startY, endX, endY) {
         const angle = Math.atan2(endY - startY, endX - startX);
         const edgeX = endX - circleRadius * Math.cos(angle);
@@ -101,11 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let drawingCompleted = false; // Bandera para indicar si se completó el dibujo
 
-    canvas.addEventListener('mousedown', function (event) {
-        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
-        const x = event.offsetX;
-        const y = event.offsetY;
-
+    function startDrawing(x, y) {
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCircle) {
@@ -115,13 +119,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 ctx.moveTo(circle.x, circle.y);
             }
         });
-    });
+    }
 
-    canvas.addEventListener('mousemove', function (event) {
+    function draw(x, y) {
         if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
         if (!isDrawing) return;
-        const x = event.offsetX;
-        const y = event.offsetY;
         ctx.lineTo(x, y);
         ctx.stroke();
 
@@ -146,12 +148,10 @@ document.addEventListener('DOMContentLoaded', function () {
             drawNextButton();
             drawingCompleted = true; // Establecer la bandera en true cuando se complete el dibujo
         }
-    });
+    }
 
-    canvas.addEventListener('mouseup', function (event) {
+    function endDrawing(x, y) {
         if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
-        const x = event.offsetX;
-        const y = event.offsetY;
         let validDrop = false;
 
         circles.forEach(circle => {
@@ -177,6 +177,40 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         isDrawing = false;
+    }
+
+    canvas.addEventListener('mousedown', function (event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        startDrawing(x, y);
+    });
+
+    canvas.addEventListener('mousemove', function (event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        draw(x, y);
+    });
+
+    canvas.addEventListener('mouseup', function (event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        endDrawing(x, y);
+    });
+
+    canvas.addEventListener('touchstart', function (event) {
+        const touchPos = getTouchPos(canvas, event);
+        startDrawing(touchPos.x, touchPos.y);
+    });
+
+    canvas.addEventListener('touchmove', function (event) {
+        const touchPos = getTouchPos(canvas, event);
+        draw(touchPos.x, touchPos.y);
+        event.preventDefault(); // Evitar el desplazamiento de la pantalla al dibujar
+    });
+
+    canvas.addEventListener('touchend', function (event) {
+        const touchPos = getTouchPos(canvas, event);
+        endDrawing(touchPos.x, touchPos.y);
     });
 
     document.getElementById('continueButton').addEventListener('click', () => {
@@ -260,11 +294,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let drawingCompletedA = false; // Bandera para indicar si se completó el dibujo
 
-    canvasPartA.addEventListener('mousedown', function (event) {
-        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
-        const x = event.offsetX;
-        const y = event.offsetY;
-
+    function startDrawingPartA(x, y) {
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCirclePartA) {
@@ -274,13 +304,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 ctxPartA.moveTo(circle.x, circle.y);
             }
         });
-    });
+    }
 
-    canvasPartA.addEventListener('mousemove', function (event) {
+    function drawPartA(x, y) {
         if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
         if (!isDrawingPartA) return;
-        const x = event.offsetX;
-        const y = event.offsetY;
         ctxPartA.lineTo(x, y);
         ctxPartA.stroke();
 
@@ -305,12 +333,10 @@ document.addEventListener('DOMContentLoaded', function () {
             drawNextButtonA();
             drawingCompletedA = true; // Establecer la bandera en true cuando se complete el dibujo
         }
-    });
+    }
 
-    canvasPartA.addEventListener('mouseup', function (event) {
+    function endDrawingPartA(x, y) {
         if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
-        const x = event.offsetX;
-        const y = event.offsetY;
         let validDrop = false;
 
         circlesPartA.forEach(circle => {
@@ -336,6 +362,40 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         isDrawingPartA = false;
+    }
+
+    canvasPartA.addEventListener('mousedown', function (event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        startDrawingPartA(x, y);
+    });
+
+    canvasPartA.addEventListener('mousemove', function (event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        drawPartA(x, y);
+    });
+
+    canvasPartA.addEventListener('mouseup', function (event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        endDrawingPartA(x, y);
+    });
+
+    canvasPartA.addEventListener('touchstart', function (event) {
+        const touchPos = getTouchPos(canvasPartA, event);
+        startDrawingPartA(touchPos.x, touchPos.y);
+    });
+
+    canvasPartA.addEventListener('touchmove', function (event) {
+        const touchPos = getTouchPos(canvasPartA, event);
+        drawPartA(touchPos.x, touchPos.y);
+        event.preventDefault(); // Evitar el desplazamiento de la pantalla al dibujar
+    });
+
+    canvasPartA.addEventListener('touchend', function (event) {
+        const touchPos = getTouchPos(canvasPartA, event);
+        endDrawingPartA(touchPos.x, touchPos.y);
     });
 
     startButton.addEventListener('click', () => {
@@ -371,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
         instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
 
         const downloadButton = document.createElement('button');
-        downloadButton.addEventListener('click', function() {
+        downloadButton.addEventListener('click', function () {
             downloadAllCanvasImages();
             document.body.removeChild(downloadButton);
         });
