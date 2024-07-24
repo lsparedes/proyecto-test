@@ -31,7 +31,7 @@ function startTest(type) {
     const testItemsContainer = type === 'forward' ? document.getElementById('test-items-forward') : document.getElementById('test-items-backward');
     testItemsContainer.innerHTML = '';
 
-    const forwardTitles = ['S3-1', 'S3-2', 'S4-1', 'S4-2', 'S5-1', 'S5-2', 'S6-1', 'S6-2', 'S7-1', 'S7-2', 'S8-1', 'S8-2', 'S9-1', 'S9-2'];
+    const forwardTitles = ['S3-1', 'S3-2'];
     const backwardTitles = ['S2-1', 'S2-2', 'S3-1', 'S3-2', 'S4-1', 'S4-2', 'S5-1', 'S5-2', 'S6-1', 'S6-2', 'S7-1', 'S7-2', 'S8-1', 'S8-2'];
 
     const titles = type === 'forward' ? forwardTitles : backwardTitles;
@@ -136,10 +136,7 @@ function startRecording(itemDiv, titleElement, index) {
             const nextButton = itemDiv.querySelector('.next-button');
             nextButton.classList.remove('hidden');
 
-            const message = document.createElement('div');
-            message.textContent = 'Grabación creada';
-            message.classList.add('recording-message');
-            itemDiv.appendChild(message);
+            nextButton.click();
         }
     };
     mediaRecorder.start();
