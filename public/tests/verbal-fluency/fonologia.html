@@ -17,23 +17,24 @@
 <body>
     <div id="container">
         <div id="instructions">
-            <p> Fonología: deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es
+            <p><b>Fonología:</b> deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es
                 decir palabras que comiencen con la letra solicitada. Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60
                 segundos para cada tarea. Cada grabación puede ser descargada.</p>
 
-            <audio style="margin-top: 20px;" controls>
+            <audio id="mainInstructionAudio" style="margin-top: 20px;" controls>
                 <source src="verbal-fluency.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
-                <button id="startTestButton">Comenzar Test</button>
-                <button id="fullscreenButton">Pantalla Completa</button>
+                <button id="startTestButton"></button>
+                <button id="fullscreenButton"></button>
             </div>
         </div>
 
         <!-- Parte 1 -->
         <div id="testSection1" style="display: none;">
             <h2 class="imageText">FF-1</h2>
+            <div id="letterDisplay1" class="letter-display">P</div>
             <div class="audio-controls">
                 <audio id="instructionAudio1" controls></audio>
                 <img id="startRecButton1" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
@@ -42,13 +43,13 @@
             </div>
             <div id="timer1" class="timer"></div>
             <div id="recordingCreatedMessage1" class="recording-message">Grabación creada.</div>
-            <button id="downloadLink1" style="display: none;">Descargar</button>
             <button id="nextButton1" style="display: none;"></button>
         </div>
 
         <!-- Parte 2 -->
         <div id="testSection2" style="display: none;">
             <h2 class="imageText">FF-2</h2>
+            <div id="letterDisplay2" class="letter-display">M</div>
             <div class="audio-controls">
                 <audio id="instructionAudio2" controls></audio>
                 <img id="startRecButton2" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
@@ -57,17 +58,17 @@
             </div>
             <div id="timer2" class="timer"></div>
             <div id="recordingCreatedMessage2" class="recording-message">Grabación creada.</div>
-           
-            <button id="downloadLink2" style="display: none;">Descargar</button>
             <button id="nextButton2" style="display: none;"></button>
         </div>
 
         <!-- Mensaje de Finalización -->
         <div id="completionMessage" style="display: none;">
-            <h1>Test Finalizado</h1>
+            <h1> ¡Has completado esta tarea con éxito! </h1> <br>
+            <h1> ¡Muchas gracias!</h1>
         </div>
 
         <script src="script-fonologia.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     </div>
 </body>
 

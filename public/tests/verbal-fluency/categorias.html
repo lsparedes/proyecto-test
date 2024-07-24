@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test de Categorías</title>
+    <title>Test de Fluidez Verbal - Categorías</title>
     <link rel="stylesheet" href="styles.css">
     <style>
         .record-button {
@@ -17,74 +17,58 @@
 <body>
     <div id="container">
         <div id="instructions">
-            <p> Categorías: deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es
-                decir palabras respecto a una categoría solicitada. Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60
+            <p><b>Categorías:</b> deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es
+                decir palabras que pertenezcan a la categoría solicitada. Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60
                 segundos para cada tarea. Cada grabación puede ser descargada.</p>
 
-            <audio style="margin-top: 20px;" controls>
+            <audio id="mainInstructionAudio" style="margin-top: 20px;" controls>
                 <source src="verbal-fluency.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
-                <button id="startTestButton">Comenzar Test</button>
-                <button id="fullscreenButton">Pantalla Completa</button>
+                <button id="startTestButton"></button>
+                <button id="fullscreenButton"></button>
             </div>
         </div>
 
-        <!-- Fluidez de Categorías Parte 1 -->
+        <!-- Parte 1 -->
         <div id="categoryFluency1" style="display: none;">
-            <h2 class="imageText">FS-1</h2>
+            <h2 class="imageText">CF-1</h2>
+            <div id="letterDisplay1" class="letter-display">Prendas de vestir</div>
             <div class="audio-controls">
-                <audio id="instructionAudio3" controls></audio>
-                <img id="startRecButton3" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
-                <img id="recButton3" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
-                <button id="stopRecordingButton3" style="display: none;"></button>
+                <audio id="instructionAudio1" controls></audio>
+                <img id="startRecButton1" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
+                <img id="recButton1" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
+                <button id="stopRecordingButton1" style="display: none;border: none;"></button>
             </div>
-            <div id="timer3" class="timer"></div>
-            <div id="recordingCreatedMessage3" class="recording-message">Grabación creada.</div>
-            <button id="downloadLink3" style="display: none;">Descargar</button>
-            <button id="nextButton3" style="display: none;"></button>
-            
+            <div id="timer1" class="timer"></div>
+            <div id="recordingCreatedMessage1" class="recording-message">Grabación creada.</div>
+            <button id="nextButton1" style="display: none;"></button>
         </div>
 
-        <!-- Fluidez de Categorías Parte 2 -->
+        <!-- Parte 2 -->
         <div id="categoryFluency2" style="display: none;">
-            <h2 class="imageText">FS-2</h2>
+            <h2 class="imageText">CF-2</h2>
+            <div id="letterDisplay2" class="letter-display">Animales</div>
             <div class="audio-controls">
-                <audio id="instructionAudio4" controls></audio>
-                <img id="startRecButton4" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
-                <img id="recButton4" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
-                <button id="stopRecordingButton4" style="display: none;"></button>
+                <audio id="instructionAudio2" controls></audio>
+                <img id="startRecButton2" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
+                <img id="recButton2" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
+                <button id="stopRecordingButton2" style="display: none;"></button>
             </div>
-            <div id="timer4" class="timer"></div>
-            <div id="recordingCreatedMessage4" class="recording-message">Grabación creada.</div>
-            <button id="downloadLink4" style="display: none;">Descargar</button>
-            <button id="nextButton4" style="display: none;"></button>
-           
-        </div>
-
-        <!-- Fluidez de Categorías Parte 3 -->
-        <div id="categoryFluency3" style="display: none;">
-            <h2 class="imageText">FS-3</h2>
-            <div class="audio-controls">
-                <audio id="instructionAudio5" controls></audio>
-                <img id="startRecButton5" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
-                <img id="recButton5" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
-                <button id="stopRecordingButton5" style="display: none;"></button>
-            </div>
-            <div id="timer5" class="timer"></div>
-            <div id="recordingCreatedMessage5" class="recording-message">Grabación creada.</div>
-            <button id="downloadLink5" style="display: none;">Descargar</button>
-            <button id="nextButton5" style="display: none;"></button>
-            
+            <div id="timer2" class="timer"></div>
+            <div id="recordingCreatedMessage2" class="recording-message">Grabación creada.</div>
+            <button id="nextButton2" style="display: none;"></button>
         </div>
 
         <!-- Mensaje de Finalización -->
         <div id="completionMessage" style="display: none;">
-            <h1>Test Finalizado</h1>
+            <h1> ¡Has completado esta tarea con éxito! </h1> <br>
+            <h1> ¡Muchas gracias!</h1>
         </div>
 
         <script src="script-categorias.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     </div>
 </body>
 
