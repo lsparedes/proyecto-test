@@ -406,6 +406,8 @@ let respuestaSeleccionada = false; // Variable para verificar si se seleccionó 
 let respuesta = {}; // Variable para almacenar la respuesta seleccionada
 let startTime;
 let endTime;
+let startTimeE;
+let endTimeE;
 let timer;
 let milliseconds = 0;
 
@@ -427,11 +429,11 @@ fullscreenButton.addEventListener('click', requestFullscreen);
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
 
-    imageContainer.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+    imageContainer.innerHTML = '<h1> ¡Has completado esta tarea con éxito! </h1> <br> <h1> ¡Muchas gracias!</h1>';
 
     // Ajustes de estilo
     imageContainer.style.textAlign = 'center';
-    imageContainer.style.fontSize = '35px';
+    imageContainer.style.fontSize = '37px';
     imageContainer.style.display = 'flex';
     imageContainer.style.alignItems = 'center'; // Centra el texto verticalmente
     imageContainer.style.justifyContent = 'center'; // Centra el texto horizontalmente
@@ -448,7 +450,6 @@ function mostrarFinalizacion() {
 
     //generarArchivoRespuestas(); // Generar el archivo con las respuestas
     generarArchivoRespuestasCSV();
-    descargarVariableComoTxt();
 }
 
 function generarArchivoRespuestas() {
@@ -477,7 +478,7 @@ function generarArchivoRespuestas() {
 
 function generarArchivoRespuestasCSV() {
     endTime = new Date(); // Registrar la hora de finalización
-    const duration = (endTime - startTime) / 1000; // Duración en segundos
+    const duration = (endTime - startTime); // Duración en segundos
 
     // Verificar si hay respuestas seleccionadas
     if (respuestasSeleccionadas.length === 0) {
@@ -486,20 +487,20 @@ function generarArchivoRespuestasCSV() {
     }
 
     // Crear el encabezado del CSV
-    let csvContent = "numero,item,respuestaCorrecta,respuestaParticipante,precision,tiempoDedicadoTarea,tiempoDedicadoEnsayo,manoUtilizada\n";
+    let csvContent = "numero;item;respuestaCorrecta;respuestaParticipante;precision;tiempoDedicadoTarea(ms);tiempoDedicadoEnsayo(ms);manoUtilizada\n";
 
     // Recorrer las respuestas seleccionadas
     respuestasSeleccionadas.forEach(respuesta => {
         if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
             // Construir una línea del CSV con los datos de la respuesta
-            const lineaCSV = `${respuesta.textoDistintivo},${respuesta.imagen},${respuesta.respuestaCorrecta},${respuesta.respuestaSeleccion},${respuesta.esCorrecta ? 1 : 0},${duration.toFixed(2)},${respuesta.tiempoDedicado},${selectedHand}\n`;
+            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${duration};${respuesta.tiempoDedicado};${selectedHand}\n`;
             // Agregar la línea al contenido del CSV
             csvContent += lineaCSV;
         }
     });
 
     // Crear un blob a partir del contenido del CSV
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
 
     // Obtener la fecha y la hora actuales
     const fechaActual = new Date();
@@ -513,13 +514,34 @@ function generarArchivoRespuestasCSV() {
     // Formatear la fecha y la hora
     const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
 
-    // Crear un enlace de descarga para el archivo CSV
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `respuestas_modified_camel_${fechaHoraFormateada}.csv`;
-    a.click();
-    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
+    // Define la variable que quieres guardar en el archivo .txt
+    const miVariable = (endTime - startTime);
+
+    // Crea un Blob con el contenido
+    const txtBlob = new Blob([miVariable], { type: 'text/plain' });
+
+    // Crear un archivo ZIP que contenga el CSV y el TXT
+    const zip = new JSZip();
+    zip.file(`respuestas_12_camel_${fechaHoraFormateada}.csv`, csvBlob);
+    zip.file(`tiempo_total_ms_12_camel_${fechaHoraFormateada}.txt`, txtBlob);
+
+    // Generar el archivo ZIP y crear un enlace de descarga
+    zip.generateAsync({ type: 'blob' }).then(function (zipBlob) {
+        const url = URL.createObjectURL(zipBlob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `archivos_12_camel_${fechaHoraFormateada}.zip`;
+        a.click();
+        URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
+    });
+
+    // // Crear un enlace de descarga para el archivo CSV
+    // const url = URL.createObjectURL(blob);
+    // const a = document.createElement('a');
+    // a.href = url;
+    // a.download = `respuestas_modified_camel_${fechaHoraFormateada}.csv`;
+    // a.click();
+    // URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
 }
 
 
@@ -641,11 +663,11 @@ function verificarRespuesta(event) {
 // Al hacer clic en "Next", avanzar a la siguiente imagen
 nextButton.addEventListener('click', function () {
     if(respuestaSeleccionada){
-        stopTimer(); // Detener el timer
-        respuesta['tiempoDedicado'] = (milliseconds / 1000).toFixed(2);
+        endTimeE = new Date(); // Registrar la hora de finalización
+        respuesta['tiempoDedicado'] = endTimeE - startTimeE;
         respuestasSeleccionadas.push(respuesta);
     }
-    startTimer(); // Iniciar el timer nuevamente
+    startTimeE = new Date(); // Registrar la hora de inicio
     nextButton.style.display = 'none'; // Ocultar el botón "Next" nuevamente
     cambioHabilitado = true; // Permitir cambiar de imagen
     cambiarImagen();
@@ -656,8 +678,6 @@ const opciones = document.querySelectorAll('.option');
 opciones.forEach(opcion => {
     opcion.addEventListener('click', verificarRespuesta);
 });
-
-
 
 function cambiarImagen() {
     if (!respuestaSeleccionada) {
@@ -678,43 +698,6 @@ function cambiarImagen() {
     } else {
         mostrarImagen(indiceActual);
     }
-}
-
-function startTimer() {
-    stopTimer(); // Reiniciar el timer si ya está corriendo
-    milliseconds = 0; // Reiniciar los milisegundos
-    timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
-}
-
-function stopTimer() {
-    clearInterval(timer);
-}
-
-function updateTimer() {
-    milliseconds += 10; // Incrementar en 10 ms
-    let seconds = milliseconds / 1000; // Convertir a segundos
-}
-
-function descargarVariableComoTxt() {
-    // Define la variable que quieres guardar en el archivo .txt
-    const miVariable = (endTime - startTime) / 1000;;
-
-    // Crea un Blob con el contenido
-    const blob = new Blob([miVariable.toFixed(2)], { type: 'text/plain' });
-
-    // Crea un enlace de descarga para el Blob
-    const enlace = document.createElement('a');
-    enlace.href = URL.createObjectURL(blob);
-    enlace.download = 'tiempoDedicado.txt'; // Nombre del archivo a descargar
-
-    // Agrega el enlace al documento
-    document.body.appendChild(enlace);
-
-    // Simula un clic en el enlace para iniciar la descarga
-    enlace.click();
-
-    // Opcional: Elimina el enlace después de iniciar la descarga
-    document.body.removeChild(enlace);
 }
 
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
@@ -738,6 +721,7 @@ function showHandSelection() {
 function confirmHandSelection() {
     selectHandContainer.style.display = "none";
     mostrarFinalizacion();
+    handButton.style.display = "none";
 }
 
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
