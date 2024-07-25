@@ -9,33 +9,53 @@
 </head>
 <body>
     <div id="container">
-        <div id="main-screen" class="screen">
-            <ol>
-                <p>Recuerdo Diferido:</p>
-                <p>Pasado un tiempo, deberá dibujar la misma figura de memoria,</p>
-                <p>sin ayuda</p>
-            </ol>
-            <audio controls id="benson-audio">
-                <source src="benson.mp3" type="audio/mpeg">
-                Tu navegador no soporta el elemento de audio.
-            </audio>
-            <div class="button-container">
-                <button id="fullscreen-button">Pantalla Completa</button>
-            </div>
-        </div>
-
-        <div id="draw-from-memory-screen" class="screen">
-            <div class="controls controls-left">
-                <i id="clear-memory-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
-                <i id="download-memory-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
-            </div>
-            <div class="drawing-container">
-                <div class="drawing-part">
-                    <canvas id="memory-canvas" width="820" height="550"></canvas>
+        <div class="container2" style="display: block;">
+            <div id="main-screen" class="screen">
+                <ol>
+                    <p>Recuerdo Diferido:</p>
+                    <p>Pasado un tiempo, deberá dibujar la misma figura de memoria,</p>
+                    <p>sin ayuda</p>
+                </ol>
+                <audio controls id="benson-audio">
+                    <source src="audio2.mp3" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+                <div class="button-container">
+                    <button id="fullscreen-button">Pantalla Completa</button>
                 </div>
             </div>
-            <button id="finish-drawing-from-memory"></button>
+    
+            <div id="draw-from-memory-screen" class="screen">
+                <div class="controls controls-left">
+                    <i id="clear-memory-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
+                    <i id="download-memory-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
+                </div>
+                <div class="drawing-container">
+                    <div class="drawing-part">
+                        <canvas id="memory-canvas" width="820" height="550"></canvas>
+                    </div>
+                </div>
+                <button id="finish-drawing-from-memory"></button>
+            </div>
         </div>
+        
+        <div id="selectHand" class="screen" style="display: none;">
+            <h4>¿Con qué mano respondiste el test?</h4>
+            <div>
+                <input type="radio" id="right_hand" name="hand" value="derecha">
+                <label for="right_hand">Derecha</label>
+            </div>
+            <div>
+                <input type="radio" id="left_hand" name="hand" value="izquierda">
+                <label for="left_hand">Izquierda</label>
+            </div>
+            <div>
+                <input type="radio" id="both_hands" name="hand" value="ambas">
+                <label for="both_hands">Ambas</label>
+            </div>
+            <button id="handButton"></button>
+        </div>
+
         <div id="finishScreen" class="container1" style="display: none;">
             <h1>¡Has completado el test!</h1>
         </div>

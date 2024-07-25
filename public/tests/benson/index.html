@@ -16,7 +16,7 @@
                     <p>Se presentará una figura, la cual debe copiar lo más exacta posible</p>
                 </ol>
                 <audio id="benson-audio" controls>
-                    <source src="benson.mp3" type="audio/mpeg">
+                    <source src="audio1.mp3" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
                 <div class="button-container">
@@ -41,6 +41,24 @@
             <p>Recuerda esta figura para más adelante:</p>
             <img src="figura1.png" alt="Figura de Benson" id="figure-image">
             <button id="finalize-button"></button>
+        </div>
+
+        <!-- SELECCION DE MANO HTML -->
+        <div id="selectHand" class="screen" style="display: none;">
+            <h4>¿Con qué mano respondiste el test?</h4>
+            <div>
+                <input type="radio" id="right_hand" name="hand" value="derecha">
+                <label for="right_hand">Derecha</label>
+            </div>
+            <div>
+                <input type="radio" id="left_hand" name="hand" value="izquierda">
+                <label for="left_hand">Izquierda</label>
+            </div>
+            <div>
+                <input type="radio" id="both_hands" name="hand" value="ambas">
+                <label for="both_hands">Ambas</label>
+            </div>
+            <button id="handButton"></button>
         </div>
 
         <div id="finishScreen" class="container1" style="display: none;">

@@ -246,7 +246,8 @@ canvas {
 
 #finish-drawing-with-figure,
 #finish-drawing-from-memory,
-#finish-identifying-figure {
+#finish-identifying-figure,
+#handButton {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -286,7 +287,7 @@ canvas {
     background-image: url('flecha4.png');
 }
 
-#finish-identifying-figure{
+#finish-identifying-figure.red-arrow{
     background-image: url('flecha4.png');
 }
 
@@ -300,4 +301,31 @@ canvas {
     border-radius: 5px;
     font-family: Arial, sans-serif;
     z-index: 1000; /* Asegura que el contador esté siempre visible */
+}
+
+
+/* SELECCION DE MANO CSS */
+
+#selectHand {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#selectHand h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#selectHand label {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#selectHand input[type="radio"] {
+    margin-right: 10px;
 }
