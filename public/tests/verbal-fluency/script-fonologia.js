@@ -114,8 +114,7 @@ function nextSection(part) {
 function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
-    letterDisplay.style.display = 'block';
-
+    
     switch (part) {
         case 1:
             audio.src = 'audios/P.mp3';
@@ -124,6 +123,13 @@ function loadAudio(part) {
             audio.src = 'audios/M.mp3';
             break;
     }
+
+    audio.addEventListener('loadedmetadata', () => {
+        const displayTime = audio.duration - 5;
+        setTimeout(() => {
+            letterDisplay.style.display = 'block';
+        }, displayTime * 1000);
+    });
 
     audio.addEventListener('ended', () => {
         letterDisplay.style.display = 'none';
@@ -153,7 +159,7 @@ function downloadRecordingAndTime() {
     const totalTime = Date.now() - startTime;
     const totalTimeMs = totalTime;
     const totalTimeSecs = (totalTime / 1000).toFixed(2);
-    
+
     const timeBlob = new Blob([`Tiempo total: ${totalTimeMs} ms (${totalTimeSecs} s)`], { type: 'text/plain' });
     const timeUrl = URL.createObjectURL(timeBlob);
 
