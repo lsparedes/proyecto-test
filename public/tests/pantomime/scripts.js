@@ -15,11 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const timerDisplay = document.createElement('div');
     const recordingMessage = document.createElement('div');
 
-    timerDisplay.id = 'timer-display';
-    timerDisplay.textContent = '00:00';
-    timerDisplay.classList.add('hidden');
-    testScreen.appendChild(timerDisplay);
-
     recordingMessage.className = 'recording-message';
     recordingMessage.textContent = 'Grabación creada';
     testScreen.appendChild(recordingMessage);
@@ -133,8 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
             mediaRecorder.onstop = () => {
                 const blob = new Blob(chunks, { type: 'video/mp4' });
                 chunks = [];
-                zip.file(`grabaciones/pantomima_video_${currentImageIndex + 1}.mp4`, blob);
-
+                const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
+               
+                zip.file(`grabaciones/pantomima_video_${dateTime}_${currentImageIndex + 1}.mp4`, blob);
+               
                 const stream = videoPreview.srcObject;
                 const tracks = stream.getTracks();
                 tracks.forEach(track => track.stop());
