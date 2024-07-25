@@ -12,9 +12,9 @@
 <body>
     <div id="instructions" style="display:none;"></div>
 
-    <div id="partB">
+    <div id="partB" style="transform: rotate(-90deg);">
       <h1>Instrucciones</h1>
-      <p id="instructionTextB1">Ahora comienza la Parte B, partiremos con una muestra, en esta parte hay números y
+      <p id="instructionTextB1" style="padding: 0px 50px;">Ahora comienza la Parte B, partiremos con una muestra, en esta parte hay números y
         letras
         dentro de unos círculos. Por
         favor, haga una línea de un círculo a otro, alternando el orden entre números y letras. Empiece en el número 1,
@@ -28,11 +28,11 @@
         Tu navegador no soporta el elemento de audio.
       </audio>
 
-      <div class="button-container">
-        <button id="continueButtonB" class="start-button">Comenzar Práctica</button>
-        <button id="fullscreenButton" class="fullscreen-button">Pantalla Completa</button>
-      </div>
+   
+
+      
     </div>
+    <button id="fullscreenButton" class="fullscreen-button"></button>
 
     <div id="partB2" style="display:none;">
       <h1>Instrucciones</h1>
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <canvas id="tmtCanvasPartB" style="display:none;" width="1000" height="800">
+    <canvas id="tmtCanvasPartB" style="display:none; transform: rotate(-90deg);" width="1000" height="800">
       <p id="pCanvas" style="display: none;"></p>
     </canvas>
     <canvas id="tmtCanvasPartB2" width="880" height="1300" style="display:none;transform: rotate(90deg) translateX(-5%);"></canvas>

@@ -295,14 +295,15 @@ function generarCSV() {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
 
-    const csvData = [['Numero de Imagen', 'Emocion Seleccionada', 'Emocion Correcta']];
+    const csvData = [['Numero de ensayo', 'Respuesta correcta', 'Respuesta participante', 'Precision', 'Tiempo de respuesta', 'Tiempo dedicado a la tarea']];
 
     emocionesSeleccionadas.forEach((emocionSeleccionada, indice) => {
         const imagenData = imagenes[indice];
         const numeroImagen = imagenData.numero;
         const emocionCorrecta = imagenData.emocionCorrecta;
+        let precision = (emocionSeleccionada === emocionCorrecta) ? 1 : 0;
 
-        csvData.push([numeroImagen, emocionSeleccionada, emocionCorrecta]);
+        csvData.push([numeroImagen, emocionSeleccionada, emocionCorrecta, precision]);
     });
 
     const csvContent = csvData.map(row => row.join(',')).join('\n');
@@ -321,8 +322,17 @@ function generarCSV() {
 }
 
 function reiniciarTemporizador() {
+    const arrow = document.getElementById('next-button');
+    arrow.style.backgroundImage =  "url('flecha3.png')";
+
     clearTimeout(temporizador);
-    temporizador = setTimeout(cambiarImagen, 12000); // Cambia después de 12 segundos
+    temporizador = setTimeout(arrowToRed, 12000); // Cambia después de 12 segundos
+}
+
+function arrowToRed() {
+    const arrow = document.getElementById('next-button');
+    arrow.style.backgroundImage =  "url('imagenes/flecha4.png')";
+
 }
 
 function mostrarImagen(indice) {

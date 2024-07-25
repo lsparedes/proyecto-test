@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
-    const startButton = document.getElementById('startButton');
+    // const startButton = document.getElementById('startButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const canvas = document.getElementById('tmtCanvas');
     const canvasPartA = document.getElementById('tmtCanvasPartA');
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const incorrectPaths = []; // Para almacenar caminos incorrectos
     const incorrectPathsPartA = []; // Para almacenar caminos incorrectos en la parte B
     let temporizador = null;
+    const circlesToCorrect = []; // Para almacenar los círculos que se deben corregir
 
     const endSequenceButton = document.createElement('button'); // Crear el botón "Terminar"
     endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
@@ -49,7 +50,15 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesArray.push({ x, y, number });
     }
 
-    function highlightCircle(ctx, circle, color) {
+    function getTouchPos(canvasDom, touchEvent) {
+        const rect = canvasDom.getBoundingClientRect();
+        return {
+            x: touchEvent.touches[0].clientX - rect.left,
+            y: touchEvent.touches[0].clientY - rect.top
+        };
+    }
+
+    function highlightCircle(ctx, circle, color, lastX, lastY) {
         ctx.lineWidth = 3; // Aumentar el grosor del borde
         ctx.strokeStyle = color; // Color para el borde resaltado
         ctx.beginPath();
@@ -57,14 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
         ctx.strokeStyle = 'black'; // Restablecer el color para futuras líneas correctas
         ctx.lineWidth = 1; // Restablecer el grosor del borde
-    }
-
-    function getTouchPos(canvasDom, touchEvent) {
-        const rect = canvasDom.getBoundingClientRect();
-        return {
-            x: touchEvent.touches[0].clientX - rect.left,
-            y: touchEvent.touches[0].clientY - rect.top
-        };
+        ctx.moveTo(lastX, lastY); // mueve el cursor desde el ultimo punto que se dibujo el arco hasta donde se encuentra el mouse
     }
 
     function drawLineToCircleEdge(ctx, startX, startY, endX, endY) {
@@ -75,10 +77,24 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
     }
 
+    function startRecording(canvas, recordedChunks) {
+        const stream = canvas.captureStream();
+        const mediaRecorder = new MediaRecorder(stream);
+
+        mediaRecorder.ondataavailable = function (event) {
+            if (event.data.size > 0) {
+                recordedChunks.push(event.data);
+            }
+        };
+
+        mediaRecorder.start();
+        return mediaRecorder;
+    }
+
     // PRIMER CANVAS
 
     function startTest() {
-        document.getElementById('instructions').style.display = 'none';
+        document.getElementById('instructions').style.display = 'flex';
         canvas.style.display = 'block';
         ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpiar el lienzo
         circles.length = 0;
@@ -87,6 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
         correctPaths.length = 0;
         incorrectPaths.length = 0;
         circleRadius = 40;
+        circlesToCorrect.length = 0;
 
         // Coordenadas predefinidas de los círculos
         const circleCoordinates = [
@@ -105,6 +122,11 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = index === 0 ? "Empezar" : (index === circleCoordinates.length - 1 ? "Terminar" : "");
             drawCircle(ctx, coord.x, coord.y, index + 1, circles, name, circleRadius);
         });
+        drawNextButton();
+    }
+
+    window.onload = function () {
+        startTest();
     }
 
     let drawingCompleted = false; // Bandera para indicar si se completó el dibujo
@@ -131,33 +153,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-            if (distance < circleRadius && circle.number != currentCircle + 1 && lastCircle.number != circle.number) {
-                highlightCircle(ctx, circle, 'red');
+            if (distance <= circleRadius && circle.number != currentCircle + 1 && lastCircle.number != circle.number) {
+                highlightCircle(ctx, circle, 'red', x, y);
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
+                circlesToCorrect.push({ x: circle.x, y: circle.y, number: circle.number });
                 isDrawing = false;
-            } else if (distance < circleRadius && circle.number === currentCircle + 1) {
-                highlightCircle(ctx, circle, 'black'); // Restablecer el borde correcto
+            } else if (distance <= circleRadius && circle.number === currentCircle + 1) {
+                highlightCircle(ctx, circle, 'black', x, y); // Restablecer el borde correcto
                 correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
                 currentCircle++;
                 lastCircle = circle;
                 validDrop = true;
+                
+                if (circlesToCorrect.length > 0) {
+                    circlesToCorrect.forEach(circle => {
+                        highlightCircle(ctx, circle, 'black', x, y);
+                    });
+                    circlesToCorrect.length = 0;
+                }
             }
         });
 
         if (currentCircle === 8) {
-            drawNextButton();
+            
             drawingCompleted = true; // Establecer la bandera en true cuando se complete el dibujo
         }
     }
 
     function endDrawing(x, y) {
-        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
         let validDrop = false;
 
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCircle + 1) {
-                highlightCircle(ctx, circle, 'black'); // Restablecer el borde correcto
+                drawLineToCircleEdge(ctx, lastCircle.x, lastCircle.y, circle.x, circle.y);
+                highlightCircle(ctx, circle, 'black', x, y); // Restablecer el borde correcto
                 correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
                 currentCircle++;
                 lastCircle = circle;
@@ -178,6 +208,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         isDrawing = false;
     }
+
+
 
     canvas.addEventListener('mousedown', function (event) {
         const x = event.offsetX;
@@ -213,11 +245,6 @@ document.addEventListener('DOMContentLoaded', function () {
         endDrawing(touchPos.x, touchPos.y);
     });
 
-    document.getElementById('continueButton').addEventListener('click', () => {
-        reiniciarTemporizador(); // Reiniciar el temporizador
-        startPartA();
-    });
-
     // BOTON SIGUIENTE LUEGO DE DIBUJAR TODAS LAS LINEAS PRIMER CANVAS
     function drawNextButton() {
         const nextButton = document.createElement('button');
@@ -225,10 +252,12 @@ document.addEventListener('DOMContentLoaded', function () {
         nextButton.style.display = 'inline-block';
 
         nextButton.addEventListener('click', () => {
+            document.getElementById('instructions').style.display = 'none';
             canvas.style.display = 'none'; // Ocultar el canvas actual
             document.getElementById('partA').style.display = 'flex'; // Mostrar instrucciones para la Parte B
-            document.getElementById('continueButton').style.display = 'block'; // Mostrar botón de continuar
+            // document.getElementById('continueButton').style.display = 'block'; // Mostrar botón de continuar
             nextButton.remove(); // Eliminar el botón "Siguiente" después de hacer clic
+            startPartA();
         });
 
         document.body.appendChild(nextButton);
@@ -238,12 +267,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function reiniciarTemporizador() {
         clearTimeout(temporizador);
-        temporizador = setTimeout(testFinalizado, 150000); // Cambia después de 150 segundos
+        temporizador = setTimeout(arrowToRed, 150000); // Cambia después de 150 segundos
         // temporizador = setTimeout(testFinalizado, 3000); // Cambia después de 3 segundos
     }
 
+    function arrowToRed() {
+        const arrow = document.getElementById('endSequenceButton');
+        arrow.style.backgroundImage =  "url('imagenes/flecha4.png')";
+    
+    }
+
+    function playBeep() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        const audioUrl = 'beep.wav';
+
+        fetch(audioUrl)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                const source = audioContext.createBufferSource();
+                source.buffer = audioBuffer;
+                source.connect(audioContext.destination);
+                source.start();
+            })
+            .catch(e => console.error('Error al cargar el archivo de audio:', e));
+    }
+
     function startPartA() {
-        document.getElementById('partA').style.display = 'none';
+        // document.getElementById('partA').style.display = 'none';
         canvasPartA.style.display = 'block';
         ctxPartA.clearRect(0, 0, canvasPartA.width, canvasPartA.height); // Limpiar el lienzo
         circlesPartA.length = 0;
@@ -317,11 +368,12 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number != currentCirclePartA + 1 && lastCirclePartA.number != circle.number) {
-                highlightCircle(ctxPartA, circle, 'red');
+                highlightCircle(ctxPartA, circle, 'red', x, y);
+                // drawInvalidLine(ctxPartA, circle.x, circle.y, circle.number);
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
                 isDrawingPartA = false;
             } else if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
-                highlightCircle(ctxPartA, circle, 'black'); // Restablecer el borde correcto
+                highlightCircle(ctxPartA, circle, 'black', x, y); // Restablecer el borde correcto
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
                 currentCirclePartA++;
                 lastCirclePartA = circle;
@@ -336,13 +388,13 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function endDrawingPartA(x, y) {
-        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
         let validDrop = false;
 
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
-                highlightCircle(ctxPartA, circle, 'black'); // Restablecer el borde correcto
+                drawLineToCircleEdge(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, circle.x, circle.y);
+                highlightCircle(ctxPartA, circle, 'black', x, y); // Restablecer el borde correcto
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
                 currentCirclePartA++;
                 lastCirclePartA = circle;
@@ -398,10 +450,6 @@ document.addEventListener('DOMContentLoaded', function () {
         endDrawingPartA(touchPos.x, touchPos.y);
     });
 
-    startButton.addEventListener('click', () => {
-        startTest();
-    });
-
     //BOTON SIGUIENTE LUEGO DE DIBUJAR TODAS LAS LINEAS SEGUNDO CANVAS
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
@@ -409,6 +457,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nextButtonA.style.display = 'inline-block';
 
         nextButtonA.addEventListener('click', () => {
+            document.getElementById('partA').style.display = 'none';
             canvasPartA.style.display = 'none'; // Ocultar el canvas actual
             nextButtonA.remove(); // Eliminar el botón "Siguiente" después de hacer clic
             testFinalizado();
@@ -440,8 +489,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     fullscreenButton.addEventListener('click', () => {
-        if (document.fullscreenEnabled) {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
             document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            document.exitFullscreen();
         } else {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }

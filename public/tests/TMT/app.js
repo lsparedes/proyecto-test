@@ -1,7 +1,12 @@
 // Event listeners for the continue buttons
-document.getElementById('continueButtonB').addEventListener('click', () => {
+// document.getElementById('continueButtonB').addEventListener('click', () => {
+//     startPartB();
+// });
+
+window.onload = function() {
     startPartB();
-});
+
+};
 
 document.getElementById('continueButtonB2').addEventListener('click', () => {
     reiniciarTemporizador();
@@ -59,7 +64,7 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
 }
 
 function startPartB() {
-    document.getElementById('partB').style.display = 'none';
+    // document.getElementById('partB').style.display = 'none';
     // document.getElementById('instructions').style.marginTop = '0';
     canvasPartB.style.display = 'block';
     ctxPartB.clearRect(0, 0, canvasPartB.width, canvasPartB.height);
@@ -77,6 +82,18 @@ function startPartB() {
     });
 }
 
+    fullscreenButton.addEventListener('click', () => {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+            document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            document.exitFullscreen();
+        } else {
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
+        }
+    });
+
 function getNextLabel(currentLabel) {
     const isNumber = !isNaN(currentLabel);
     if (isNumber) {
@@ -84,6 +101,22 @@ function getNextLabel(currentLabel) {
     } else {
         return parseInt(currentLabel.charCodeAt(0) - 64 + 1);
     }
+}
+
+function playBeep() {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const audioUrl = 'audios/beep.wav';
+
+    fetch(audioUrl)
+        .then(response => response.arrayBuffer())
+        .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+        .then(audioBuffer => {
+            const source = audioContext.createBufferSource();
+            source.buffer = audioBuffer;
+            source.connect(audioContext.destination);
+            source.start();
+        })
+        .catch(e => console.error('Error al cargar el archivo de audio:', e));
 }
 
 function drawInvalidLine(ctx, startX, startY, endX, endY) {
