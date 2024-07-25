@@ -228,7 +228,7 @@ audio {
     text-align: center;
 }
 
-#start-button {
+#start-button, #next-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
