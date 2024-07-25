@@ -114,8 +114,7 @@ function nextSection(part) {
 function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
-    letterDisplay.style.display = 'block';
-
+    
     switch (part) {
         case 1:
             audio.src = 'audios/prendas-de-vestir.mp3';
@@ -123,10 +122,14 @@ function loadAudio(part) {
         case 2:
             audio.src = 'audios/animales.mp3';
             break;
-        case 3:
-            audio.src = 'audios/vegetales.mp3';
-            break;
     }
+
+    audio.addEventListener('loadedmetadata', () => {
+        const displayTime = audio.duration - 5;
+        setTimeout(() => {
+            letterDisplay.style.display = 'block';
+        }, displayTime * 1000);
+    });
 
     audio.addEventListener('ended', () => {
         letterDisplay.style.display = 'none';
