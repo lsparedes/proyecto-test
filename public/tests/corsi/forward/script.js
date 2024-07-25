@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const introScreen = document.getElementById('introScreen');
     const game = document.getElementById('game');
     const resultScreen = document.getElementById('resultScreen');
-    const resultText = document.getElementById('resultText');
     const endSequenceButton = document.createElement('button'); // Crear el botón "Terminar"
     endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
+    endSequenceButton.style.margin = '20px';
     endSequenceButton.style.display = 'none'; // Ocultar el botón inicialmente
     game.appendChild(endSequenceButton);
     const indicator = document.createElement('div');
@@ -241,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function endGame() {
         endTime = new Date(); // Registrar la hora de finalización
         const duration = (endTime - startTime) / 1000; // Duración en segundos
-        resultText.innerHTML = `¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!`
         console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
         game.style.display = 'none';
         resultScreen.style.display = 'block';
