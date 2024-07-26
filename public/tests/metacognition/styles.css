@@ -29,6 +29,39 @@ body {
     font-size: 16px;
     cursor: pointer;
   }
+
+  #startDemoButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  #fullscreenButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+  }
+  
   
   audio {
     margin-bottom: 30px;

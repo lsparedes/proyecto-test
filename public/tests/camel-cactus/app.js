@@ -487,17 +487,20 @@ function generarArchivoRespuestasCSV() {
     }
 
     // Crear el encabezado del CSV
-    let csvContent = "numero;item;respuestaCorrecta;respuestaParticipante;precision;tiempoDedicadoTarea(ms);tiempoDedicadoEnsayo(ms);manoUtilizada\n";
+    let csvContent = "numero;item;respuestaCorrecta;respuestaParticipante;precision;tiempoDedicadoEnsayo(ms)\n";
 
     // Recorrer las respuestas seleccionadas
     respuestasSeleccionadas.forEach(respuesta => {
         if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
             // Construir una línea del CSV con los datos de la respuesta
-            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${duration};${respuesta.tiempoDedicado};${selectedHand}\n`;
+            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado}\n`;
             // Agregar la línea al contenido del CSV
             csvContent += lineaCSV;
         }
     });
+
+    csvContent += `\nTiempo total de la tarea: ${duration} ms\n`;
+    csvContent += 'Mano utilizada: ' + selectedHand + '\n';
 
     // Crear un blob a partir del contenido del CSV
     const csvBlob = new Blob([csvContent], { type: 'text/csv' });
