@@ -67,10 +67,13 @@ window.onload = function () {
     document.getElementById('finishButton').addEventListener('click', function () {
         stopRecording();
         canvasContainer.style.display = 'none';
+        
         finishScreen.style.display = 'block';
         downloadCanvas(canvas, 'drawing.png');
         downloadVideo();
     });
+
+    document.getElementById('finishButton').style.display = 'block';
 
     document.getElementById('endTestButton').addEventListener('click', function () {
         finishScreen.style.display = 'none';
@@ -140,9 +143,8 @@ window.onload = function () {
 
         mediaRecorder.start();
 
-        setTimeout(() => {
-            document.getElementById('finishButton').style.display = 'block';
-        }, 60000); // 60 segundos
+
+    
     }
 
     function stopRecording() {

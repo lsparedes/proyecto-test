@@ -6,6 +6,7 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #ffffff;
+    overflow: hidden;
 }
 
 #introScreen,
@@ -23,10 +24,9 @@ body {
 }
 
 #introScreen p {
-    /* font-size: 37px; */
+    font-size: 37px;
     text-align: justify;
-    /* margin-bottom: 100px; */
-    /* margin-top: 50px; */
+    margin-bottom: 1rem;
 }
 
 #blocks {
@@ -129,7 +129,7 @@ button {
     background-color: #c82333;
 }
 
-/* .button-container {
+.button-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -139,7 +139,7 @@ button {
 
 .button-container button {
     margin: 20px;
-} */
+}
 
 audio {
     margin-bottom: 30px;
@@ -165,8 +165,8 @@ audio {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
-    width: 90px;
-    height: 80px;
+    width: 80px;
+    height: 65px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
@@ -195,7 +195,7 @@ audio {
     background-repeat: no-repeat;
     padding: 0;
     width: 80px;
-    height: 75px;
+    height: 65px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
@@ -212,9 +212,10 @@ audio {
     background-image: url('flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
-    padding: 0;
-    width: 90px;
-    height: 80px;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    margin: 20px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
