@@ -185,6 +185,10 @@ let presentacionIniciada = false;
 const emocionesSeleccionadas = [];
 // const emocionesDisponibles = ['Alegria', 'Asco', 'Enojo', 'Miedo', 'Neutro', 'Sorpresa', 'Tristeza'];
 const emocionesDisponibles = ['Alegria', 'Sorpresa', 'Neutro', 'Tristeza', 'Miedo', 'Asco', 'Enojo'];
+const tiemposRespuesta = [];
+let iniciaResp = null;
+let tiempoInicio = null;
+let tiempoFin = null;
 
 function mostrarEmociones() {
     const listaEmociones = document.getElementById('emotionsList');
@@ -206,6 +210,16 @@ function mostrarEmociones() {
 
             // Agregar la clase 'selected' al elemento clickeado
             listItem.classList.add('selected');
+
+            // Calcular el tiempo de respuesta
+            let ahora = new Date();
+            time = responseTime(ahora);
+            tiemposRespuesta[indiceActual] = time;
+            console.log(`Tiempo de respuesta: ${time} segundos.`);
+
+            emocionesSeleccionadas.forEach((emocion, index) => {
+                console.log(`Ensayo ${index + 1}: ${emocion}`);
+            });
         });
         listaEmociones.appendChild(listItem);
     });
@@ -224,6 +238,18 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
     }
 });
 
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
+    }
+});
+
 function mostrarFinalizacion() {
     const imagenNumero = document.getElementById('imagenNumero');
     document.getElementById('next-button').style.display = 'none';
@@ -237,7 +263,15 @@ function mostrarFinalizacion() {
     imagenNumero.style.display = 'none';
     imageContainer.style.backgroundColor = 'transparent';
     document.getElementById('fullscreenButton').style.display = 'none';
-    generarCSV();
+
+    tiempoFin = new Date(); // Guardar el tiempo de fin al finalizar la tarea
+    const tiempoTranscurrido = (tiempoFin - tiempoInicio) / 1000; // Calcular el tiempo transcurrido de milisegundos a segundos
+
+    console.log(`Tarea finalizada. Tiempo transcurrido: ${tiempoTranscurrido} segundos.`);
+
+    // Aquí podrías hacer lo que necesites con el tiempo transcurrido, como guardar en un archivo CSV, etc.
+
+    generarCSV(tiempoTranscurrido, tiemposRespuesta);
 }
 
 function iniciarPresentacion() {
@@ -259,7 +293,9 @@ function iniciarPresentacion() {
         startButton.style.display = 'none';
         mostrarImagen(indiceActual);
         mostrarEmociones();
-        reiniciarTemporizador();
+        iniciaResp = new Date(); // Guardar el tiempo de inicio al iniciar la tarea
+        // reiniciarTemporizador();
+        tiempoInicio = new Date(); // Guardar el tiempo de inicio al iniciar la tarea
     });
     if (imagenes.length > 0) {
         startButton.style.display = 'block';
@@ -277,6 +313,7 @@ function cambiarImagen() {
         mostrarFinalizacion();
     } else {
         mostrarImagen(indiceActual);
+        iniciaResp = new Date(); // Guardar el tiempo de inicio al cambiar
         reiniciarTemporizador();
         mostrarEmociones();
 
@@ -289,7 +326,7 @@ function cambiarImagen() {
     }
 }
 
-function generarCSV() {
+function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
@@ -297,14 +334,16 @@ function generarCSV() {
 
     const csvData = [['Numero de ensayo', 'Respuesta correcta', 'Respuesta participante', 'Precision', 'Tiempo de respuesta', 'Tiempo dedicado a la tarea']];
 
-    emocionesSeleccionadas.forEach((emocionSeleccionada, indice) => {
-        const imagenData = imagenes[indice];
-        const numeroImagen = imagenData.numero;
-        const emocionCorrecta = imagenData.emocionCorrecta;
-        let precision = (emocionSeleccionada === emocionCorrecta) ? 1 : 0;
+    imagenes.forEach((img, index) => {
+        const numeroImagen = img.numero;
+        const emocionCorrecta = img.emocionCorrecta;
+        const emocionSeleccionada = emocionesSeleccionadas[index];
+        const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
 
-        csvData.push([numeroImagen, emocionSeleccionada, emocionCorrecta, precision]);
+
+        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, tiemposRespuesta[index], tiempoTranscurrido]);
     });
+
 
     const csvContent = csvData.map(row => row.join(',')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -323,15 +362,19 @@ function generarCSV() {
 
 function reiniciarTemporizador() {
     const arrow = document.getElementById('next-button');
-    arrow.style.backgroundImage =  "url('flecha3.png')";
+    arrow.style.backgroundImage = "url('imagenes/flecha3.png')";
 
     clearTimeout(temporizador);
     temporizador = setTimeout(arrowToRed, 12000); // Cambia después de 12 segundos
 }
 
+function responseTime(ahora) {
+    return (ahora - iniciaResp) / 1000; // Calcular el tiempo transcurrido de milisegundos a segundos
+}
+
 function arrowToRed() {
     const arrow = document.getElementById('next-button');
-    arrow.style.backgroundImage =  "url('imagenes/flecha4.png')";
+    arrow.style.backgroundImage = "url('imagenes/flecha4.png')";
 
 }
 

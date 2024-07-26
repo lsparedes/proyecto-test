@@ -111,7 +111,7 @@ button {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    background-image: url('flecha3.png');
+    background-image: url('imagenes/flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
@@ -138,19 +138,21 @@ button {
 }*/
 
 #fullscreenButton {
-    /* padding: 15px 30px;
-    font-size: 22px;
-    color: rgb(0, 0, 0);
-    background-color: #c7c7c7;
+    background-color: transparent;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    */
+  
+    background-image: url('imagenes/full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+  
     position: absolute;
-    bottom: 6%;
-    /* Ajustamos la distancia desde la parte inferior */
-    left: 5%;
-    /* Ajustamos la distancia desde el borde derecho */
+    bottom: 5vh;
+    left: 15px;
 }
 /*
 #fullscreenButton:hover {
@@ -193,7 +195,7 @@ audio {
     background-color: transparent;
     border: none;
     cursor: pointer;
-    background-image: url('flecha3.png');
+    background-image: url('imagenes/flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;

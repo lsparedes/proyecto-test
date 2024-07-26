@@ -77,9 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
     }
 
-    function startRecording(canvas, recordedChunks) {
-        const stream = canvas.captureStream();
-        const mediaRecorder = new MediaRecorder(stream);
+    function startRecording(canvas) {
+        const stream = canvas.captureStream(30); // 30 FPS
+        
+        mediaRecorder = new MediaRecorder(stream ,{
+            mimeType: 'video/webm;codecs=vp9'
+
+        });
 
         mediaRecorder.ondataavailable = function (event) {
             if (event.data.size > 0) {
@@ -88,9 +92,24 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         mediaRecorder.start();
-        return mediaRecorder;
+        // return mediaRecorder;
     }
-
+    
+    function stopCanvasRecording() {
+        mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(recordedChunks, {
+                type: 'video/webm'
+            });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'canvas-recording.webm';
+            link.click();
+            URL.revokeObjectURL(url);
+            recordedChunks = [];
+        };
+    }
     // PRIMER CANVAS
 
     function startTest() {
@@ -267,30 +286,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function reiniciarTemporizador() {
         clearTimeout(temporizador);
-        temporizador = setTimeout(arrowToRed, 150000); // Cambia después de 150 segundos
+        // temporizador = setTimeout(arrowToRed, 150000); // Cambia después de 150 segundos
+        temporizador = setTimeout(arrowToRed, 3000); // Cambia después de 150 segundos
         // temporizador = setTimeout(testFinalizado, 3000); // Cambia después de 3 segundos
     }
 
     function arrowToRed() {
+        console.log('Cambio de flecha a rojo');
         const arrow = document.getElementById('endSequenceButton');
         arrow.style.backgroundImage =  "url('imagenes/flecha4.png')";
-    
     }
 
-    function playBeep() {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const audioUrl = 'beep.wav';
+    const instructionAudio = document.getElementById('instructionAudio');
 
-        fetch(audioUrl)
-            .then(response => response.arrayBuffer())
-            .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-            .then(audioBuffer => {
-                const source = audioContext.createBufferSource();
-                source.buffer = audioBuffer;
-                source.connect(audioContext.destination);
-                source.start();
-            })
-            .catch(e => console.error('Error al cargar el archivo de audio:', e));
+    instructionAudio.addEventListener('ended', function() {
+        playBeep();
+
+    });
+
+    function playBeep() {
+        const beep = new Audio('sonidos/beep.wav'); // Asegúrate de tener un archivo beep.mp3
+        beep.play();
+        startRecording(canvasPartA);
+        reiniciarTemporizador();
     }
 
     function startPartA() {
@@ -340,7 +358,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = index === 0 ? "Empezar" : (index === circleCoordinatesPartA.length - 1 ? "Terminar" : "");
             drawCircle(ctxPartA, coord.x, coord.y, index + 1, circlesPartA, name, circleRadius);
         });
-        reiniciarTemporizador(); // Iniciar temporizador
+        // reiniciarTemporizador(); // Iniciar temporizador
+        drawNextButtonA();
     }
 
     let drawingCompletedA = false; // Bandera para indicar si se completó el dibujo
@@ -382,7 +401,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         if (currentCirclePartA === 25) {
-            drawNextButtonA();
+            
             drawingCompletedA = true; // Establecer la bandera en true cuando se complete el dibujo
         }
     }
@@ -409,7 +428,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (currentCirclePartA === 25) {
-            drawNextButtonA();
+            // drawNextButtonA();
             drawingCompletedA = true; // Establecer la bandera en true cuando se complete el dibujo
         }
 
