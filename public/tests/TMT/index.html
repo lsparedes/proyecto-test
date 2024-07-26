@@ -13,27 +13,28 @@
 <body>
 
 
-    <div id="instructions" style="transform: rotate(-90deg);">
-      <h1>Instrucciones</h1>
-      <p id="instructionText" style="text-align: justify; padding: 10%;">En este test hay 2 partes. La primera es la Parte
-        A, en esta parte habrán números dentro de
-        unos círculos. Haga una línea de un número a otro, en orden. Empiece en el 1, luego vaya al 2, luego vaya al 3, y
-        así sucesivamente. Por favor, trate de hacer una sola línea de un número a otro. En la parte B, tendrá números y
-        letras, los cuales deberá unir en orden.
-        Trabaje lo más rápido que pueda. Partiremos por la muestra A.</p>
-      <audio controls>
-        <source src="TMT.mp3" type="audio/mpeg">
-        Tu navegador no soporta el elemento de audio.
-      </audio>      
-    </div>
+  <div id="instructions" style="transform: rotate(-90deg);">
+    <h1>Instrucciones</h1>
+    <p id="instructionText" style="text-align: justify; padding: 10%;">En este test hay 2 partes. La primera es la Parte
+      A, en esta parte habrán números dentro de
+      unos círculos. Haga una línea de un número a otro, en orden. Empiece en el 1, luego vaya al 2, luego vaya al 3, y
+      así sucesivamente. Por favor, trate de hacer una sola línea de un número a otro. En la parte B, tendrá números y
+      letras, los cuales deberá unir en orden.
+      Trabaje lo más rápido que pueda. Partiremos por la muestra A.</p>
+    <audio controls>
+      <source src="TMT.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+  </div>
 
-    <canvas id="tmtCanvas" width="1000" height="800" style="display:flex; transform: rotate(-90deg);"></canvas>
-    
-    <button id="fullscreenButton" class="fullscreen-button"></button>
-    
+  <canvas id="tmtCanvas" width="1000" height="800" style="display:flex; transform: rotate(-90deg);"></canvas>
+
+  <button id="fullscreenButton" class="fullscreen-button"></button>
+
   <div id="partA" style="display:none; transform: rotate(-90deg);">
     <h1>Instrucciones</h1>
-    <p id="instructionTextA" style="padding: 0px 50px;">Continuamos con la Parte A. En esta parte hay más números dentro de unos círculos. Por
+    <p id="instructionTextA" style="padding: 0px 50px;">Continuamos con la Parte A. En esta parte hay más números dentro
+      de unos círculos. Por
       favor, haga una línea de un círculo a otro, en orden. Empiece en el 1 y termine en el 25. Trabaje lo más rápido
       que pueda.</p>
 
@@ -41,12 +42,34 @@
       <source id="audioPartA" src="TMT-ParteA.mp3" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
-    <canvas id="tmtCanvasPartA" width="850" height="1300" ></canvas>
+    <canvas id="tmtCanvasPartA" width="850" height="1300"></canvas>
   </div>
-  
+
+  <!-- SELECCION DE MANO HTML -->
+  <div id="selectHand" style="display: none; transform: rotate(270deg);">
+    <h4>¿Con qué mano respondiste el test?</h4>
+    <div>
+      <input type="radio" id="right_hand" name="hand" value="derecha">
+      <label for="right_hand">Derecha</label>
+    </div>
+    <div>
+      <input type="radio" id="left_hand" name="hand" value="izquierda">
+      <label for="left_hand">Izquierda</label>
+    </div>
+    <div>
+      <input type="radio" id="both_hands" name="hand" value="ambas">
+      <label for="both_hands">Ambas</label>
+    </div>
+  </div>
+  <button id="handButton"  style="display: none;"></button>
+
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="script.js"></script>
 </body>
 
