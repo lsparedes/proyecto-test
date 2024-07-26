@@ -15,8 +15,8 @@
 <body>
     <div id="container">
         <div id="start-screen" class="container">
-            <h1>Instrucciones</h1>
-            <p>En esta prueba, quiero que imagine que sostiene el objeto que le voy a mostrar a
+            <h1 id="titulo">Instrucciones</h1>
+            <p id="instructionText">En esta prueba, quiero que imagine que sostiene el objeto que le voy a mostrar a
                 continuación en su mano. Es importante que recuerde no usar su mano o dedos como si fuese el
                 objeto. Use los botones para grabar y detener la grabación.</p>
 
@@ -38,13 +38,13 @@
                 <source id="audio-source" src="" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
+            <video id="video-preview" autoplay muted></video>
+            
             <div class="controls">
                 <button id="audio-btn"></button>
                 <button id="recording-btn" disabled></button>
                 <button id="stop-btn" disabled></button>
-                
             </div>
-            <video id="video-preview" autoplay muted></video>
             <button id="next-btn" style="display: none;"></button>
         </div>
 
@@ -66,7 +66,9 @@
         </div>
 
         <div id="completion-screen" class="screen hidden">
-            <p>Test finalizado, gracias por tus respuestas.</p>
+            <h1>¡Has completado esta tarea con éxito!</h1>
+            <br>
+            <h1>¡Muchas gracias!</h1>
         </div>
     </div>
     <script src="scripts.js"></script>
