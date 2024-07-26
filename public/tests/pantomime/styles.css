@@ -29,6 +29,7 @@ body {
     display: none;
 }
 
+
 .controls {
     margin-top: 0px;
     margin-bottom: 50px;
@@ -269,6 +270,14 @@ button i {
 
 #selectHand {
     display: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+#selectHand.screen.active {
+    display: block;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     padding: 20px;
