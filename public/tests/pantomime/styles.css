@@ -29,6 +29,7 @@ body {
     display: none;
 }
 
+
 .controls {
     margin-top: 0px;
     margin-bottom: 50px;
@@ -107,6 +108,19 @@ button:not(:disabled):active {
     padding: 0;
     width: 100px;
     height: 90px;
+    display: none; /* Oculto por defecto */
+    vertical-align: middle;
+}
+#recording-btn {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('grabando.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 90px;
+    height: 80px;
     display: none; /* Oculto por defecto */
     vertical-align: middle;
 }
@@ -224,7 +238,7 @@ button i {
     display: none;
 }
 
-#startButton {
+#startButton, #handButton {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -265,4 +279,37 @@ button i {
     /* Ajustamos la distancia desde la parte inferior */
     left: 15px;
     /* Ajustamos la distancia desde el borde derecho */
+}
+
+#selectHand {
+    display: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+#selectHand.screen.active {
+    display: block;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#selectHand h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#selectHand label {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#selectHand input[type="radio"] {
+    margin-right: 10px;
 }
