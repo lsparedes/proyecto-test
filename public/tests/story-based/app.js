@@ -494,6 +494,11 @@ function mostrarInstrucciones() {
     startButton.style.display = 'block';
     imageContainer.style.display = 'none';
     instructionText.textContent = 'Ahora comenzará la tarea de verdad. Por favor, responda tan rápido como pueda.';
+
+    // Cambia la fuente del audio
+    const audioElement = document.getElementById('instrucciones');
+    audioElement.src = 'instrucciones2.mp3';
+    audioElement.load(); // Carga la nueva fuente
 }
 
 
