@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mediaRecorder;
     let recordedChunks = [];
     let countdownInterval;
-    let startTime1, endTime1, responseTime1;
+    let startTime1, endTime1;
     let startTime2, endTime2, responseTime2;
     let startTime3, endTime3, responseTime3;
     let correctAnswer = "figura2-3", participantAnswer = "", accuracy = 0;
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
+    
     function enterContainer2() {
         startTimeExecution = new Date();
         console.log("Tiempo de inicio: ", startTimeExecution); // Debugging
@@ -59,42 +59,63 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Tiempo de ejecución: ", executionTime); // Debugging
     }
 
-    container2.addEventListener('transitionend', enterContainer2); // Ejemplo de evento que podrías usar
-    finishScreen.addEventListener('transitionend', finishScreenReached); // Ejemplo de evento que podrías usar
-    
+
+    function finishresponse1() {
+        endTime1 = new Date();
+        console.log("Tiempo de finalización de tarea: ", endTime1); // Debugging
+        const responseTime1 = (endTime1 - startTime1) / 1000; // Tiempo en segundos
+    }
+    function finishresponse2() {
+        endTime2 = new Date();
+        console.log("Tiempo de finalización de tarea: ", endTime2); // Debugging
+        const responseTime2 = (endTime2 - startTime2) / 1000; // Tiempo en segundos
+    }
+    function finishresponse3() {
+        endTime3 = new Date();
+        console.log("Tiempo de finalización de tarea: ", endTime3); // Debugging
+        const responseTime3 = (endTime3 - startTime3) / 1000; // Tiempo en segundos
+    }
+
     // Audio
-    const audioElement1 = document.getElementById('audio1');
-    const audioElement2 = document.getElementById('audio2');
-    const audioElement3 = document.getElementById('audio3');
 
     // Guardar el tiempo total desde el inicio de la página
     const pageLoadTime = new Date();
 
+    const audioElement1 = document.getElementById('audio1');
     if (audioElement1) {
         audioElement1.addEventListener('ended', () => {
+            console.log("El audio ha terminado."); // Verificación de evento de audio
             setTimeout(() => {
                 finishDrawingWithFigureButton.classList.add('red-arrow');
-            }, 5000); // 5 segundos
-            responseTime1 = new Date();
+            }, 5000); // 10 segundos
+            startTime1 = new Date();
+            console.log("Tiempo de inicio Tarea: ", startTime1); // Debugging
         });
     }
-    
+
+    const audioElement2 = document.getElementById('audio2');
     if (audioElement2) {
         audioElement2.addEventListener('ended', () => {
-            responseTime2 = new Date();
+            console.log("El audio ha terminado."); // Verificación de evento de audio
+            startTime2 = new Date();
+            console.log("Tiempo de inicio Tarea: ", startTime2); // Debugging
         });
     }
-    
+
+    const audioElement3 = document.getElementById('audio3');
     if (audioElement3) {
         audioElement3.addEventListener('ended', () => {
-            responseTime3 = new Date();
+            console.log("El audio ha terminado."); // Verificación de evento de audio
+            startTime3 = new Date();
+            console.log("Tiempo de inicio Tarea: ", startTime3); // Debugging
         });
     }
+
     
 
     const beepAudio = new Audio('beep.wav');
 
-    if (drawFromMemoryScreen || identifyFigureScreen) {
+    /*if (drawFromMemoryScreen || identifyFigureScreen) {
         const firstTestEndTime = localStorage.getItem('firstTestEndTime');
         const secondTestEndTime = localStorage.getItem('secondTestEndTime');
         if (firstTestEndTime) {
@@ -113,11 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 disableStartButton(timeLeft);
             }
         }
-    }
+    }*/
 
     // Practica 1
     if (finishDrawingWithFigureButton) {
         enterContainer2();
+        
         finishDrawingWithFigureButton.addEventListener('click', () => {
             if (container2.style.display === 'none') {
                 container2.style.display = 'block';
@@ -132,9 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else{
                 handButton.style.display = 'none';
                 finishScreen.style.display = 'block';
-                
             }
-
             if (finishRememberingFigureButton) {
                 finishRememberingFigureButton.addEventListener('click', () => {
                     instruccionesDespues.style.display = 'none';
@@ -145,6 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
             downloadCanvas('drawing-canvas', 'DrawWithFigure.png');
             endTime1 = new Date();
             localStorage.setItem('firstTestEndTime', endTime1.getTime().toString());
+            finishresponse1();
         });
         initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
         startCanvasRecording('drawing-canvas');
@@ -169,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
             downloadCanvas('memory-canvas', 'DrawFromMemory.png');
             endTime2 = new Date();
             localStorage.setItem('secondTestEndTime', endTime2.getTime().toString());
+            finishresponse2();
         });
         initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
         startCanvasRecording('memory-canvas');
@@ -186,23 +208,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     container2.style.display = 'none';
                     selectHandContainer.style.display = 'block';
                 }
+
                 const link = document.createElement('a');
                 link.href = selectedFigure.src;
                 link.download = 'Respuesta.png';
                 link.click();
-                endTime3 = new Date();
-                responseTime3 = (endTime3 - startTime3) / 1000; // en segundos
-
                 participantAnswer = selectedFigure.alt;
                 accuracy = (correctAnswer === participantAnswer) ? 1 : 0;
-                localStorage.setItem('thirdTestEndTime', endTime3.getTime().toString());
                 stopCanvasRecording('IdentifyFigure');
+                finishresponse3();
             } else {
                 alert('Por favor, selecciona una figura antes de continuar.');
             }
         });
         selectableImages.forEach(image => {
+            
             image.addEventListener('click', (event) => {
+                
                 if (selectedFigure) {
                     selectedFigure.classList.remove('selected');
                 }
@@ -211,6 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 participantAnswer = selectedFigure.dataset.figure;
             });
         });
+        
     }
 
     document.getElementById('handButton').addEventListener('click', () => {
@@ -225,19 +248,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (handButton) {
         handButton.addEventListener('click', () => {
+            let executionTime; // Definimos la variable executionTime
+            let finishresponse1;
+            let finishresponse2;
+            let finishresponse3;
+    
             if (finishRememberingFigureButton) {
-                finishScreenReached();
-                saveResultsToCSV('DibujoConFigura', pageLoadTime, endTime1, selectedHand, "", "", "", responseTime1);
-                
+                finishScreenReached(); // Calcula endTimeExecution y executionTime
+                executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
+                saveResultsToCSV('DibujoConFigura', pageLoadTime, endTime1, selectedHand, "", "", "", finishresponse1, executionTime);
             }
             if (finishDrawingFromMemoryButton) {
                 finishScreenReached();
-                saveResultsToCSV('DibujoDesdeMemoria', pageLoadTime, endTime2, selectedHand, "", "", "", responseTime2);
-                
+                executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
+                saveResultsToCSV('DibujoDesdeMemoria', pageLoadTime, endTime2, selectedHand, "", "", "", finishresponse2, executionTime);
             }
             if (finishIdentifyingFigureButton) {
                 finishScreenReached();
-                saveResultsToCSV('IdentificacionDeFigura', pageLoadTime, endTime3, selectedHand, correctAnswer, participantAnswer, accuracy, responseTime3);
+                executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
+                saveResultsToCSV('IdentificacionDeFigura', pageLoadTime, endTime3, selectedHand, correctAnswer, participantAnswer, accuracy, finishresponse3, executionTime);
             }
     
             // Ocultar todos los otros elementos
@@ -248,12 +277,13 @@ document.addEventListener('DOMContentLoaded', () => {
             finishScreen.style.display = 'block';
         });
     }
+    
 
     function startCountdown(duration) {
         let timeLeft = duration;
         countdownInterval = setInterval(() => {
             timeLeft--;
-        }, 1000);
+        }, 10000);
     }
 
     function updateCountdown(timeLeft) {
@@ -364,13 +394,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveResultsToCSV(activity, startTime, endTime, hand, correctAnswer, participantAnswer, accuracy, responseTime, executionTime) {
         const totalTime = (endTime - startTime) / 1000; // en segundos
         const rows = [
-            ["Actividad", "Tiempo de Inicio", "Tiempo de Fin", "Tiempo Total (s)", "Tiempo de Respuesta (s)", "Mano Utilizada", "Respuesta Correcta", "Respuesta Participante", "Precisión", "Tiempo de Ejecución (s)"],
-            [activity, formatDate(startTime), formatDate(endTime), totalTime, responseTime, hand, correctAnswer, participantAnswer, accuracy, executionTime]
+            ["Actividad", "Tiempo de Inicio", "Tiempo de Fin", "Tiempo Total (s)", "Tiempo de Respuesta (s)", "Tiempo de Ejecución (s)", "Mano Utilizada", "Respuesta Correcta", "Respuesta Participante", "Precisión"],
+            [activity, formatDate(startTime), formatDate(endTime), totalTime, responseTime, executionTime, hand, correctAnswer, participantAnswer, accuracy]
         ];
-
+    
         let csvContent = "data:text/csv;charset=utf-8," 
             + rows.map(e => e.join(",")).join("\n");
-
+    
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
