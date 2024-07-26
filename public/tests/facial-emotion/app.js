@@ -251,18 +251,19 @@ fullscreenButton.addEventListener('click', () => {
 });
 
 function mostrarFinalizacion() {
-    const imagenNumero = document.getElementById('imagenNumero');
-    document.getElementById('next-button').style.display = 'none';
+    // const imagenNumero = document.getElementById('imagenNumero');
+    // document.getElementById('next-button').style.display = 'none';
     clearTimeout(temporizador);
     const imageContainer = document.getElementById('imageContainer');
+    imageContainer.style.display = 'block';
     imageContainer.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.marginTop = '20px';
     imageContainer.style.display = 'flex';
-    imagenNumero.style.display = 'none';
+    // imagenNumero.style.display = 'none';
     imageContainer.style.backgroundColor = 'transparent';
-    document.getElementById('fullscreenButton').style.display = 'none';
+    // document.getElementById('fullscreenButton').style.display = 'none';
 
     tiempoFin = new Date(); // Guardar el tiempo de fin al finalizar la tarea
     const tiempoTranscurrido = (tiempoFin - tiempoInicio) / 1000; // Calcular el tiempo transcurrido de milisegundos a segundos
@@ -310,7 +311,8 @@ function cambiarImagen() {
     document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button"
     indiceActual++;
     if (indiceActual === imagenes.length) {
-        mostrarFinalizacion();
+        showHandSelection();
+        // mostrarFinalizacion();
     } else {
         mostrarImagen(indiceActual);
         iniciaResp = new Date(); // Guardar el tiempo de inicio al cambiar
@@ -332,16 +334,17 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
 
-    const csvData = [['Numero de ensayo', 'Respuesta correcta', 'Respuesta participante', 'Precision', 'Tiempo de respuesta', 'Tiempo dedicado a la tarea']];
+    const csvData = [['Numero de ensayo', 'Respuesta correcta', 'Respuesta participante', 'Precision', 'Tiempo de respuesta', 'Tiempo dedicado a la tarea', 'Mano utilizada']];
 
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;
         const emocionCorrecta = img.emocionCorrecta;
-        const emocionSeleccionada = emocionesSeleccionadas[index];
+        const emocionSeleccionada = emocionesSeleccionadas[index] != undefined ? emocionesSeleccionadas[index] : 'Omitido';
+        const response = tiemposRespuesta[index] != undefined ? tiemposRespuesta[index] : 'No aplica';
         const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
 
 
-        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, tiemposRespuesta[index], tiempoTranscurrido]);
+        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, response, tiempoTranscurrido, selectedHand]);
     });
 
 
@@ -394,3 +397,41 @@ window.onload = function () {
     document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button" al cargar la página
     iniciarPresentacion();
 };
+
+// SELECCION DE MANO JS
+
+const selectHandContainer = document.getElementById("selectHand");
+const handButton = document.getElementById("handButton");
+const handInputs = document.getElementsByName('hand');
+
+// Variable con la mano seleccionada
+let selectedHand = "";
+
+// Funcion para mostrar la pantalla de seleccion de mano
+function showHandSelection() {
+    const imagenNumero = document.getElementById('imagenNumero');
+    imagenNumero.style.display = 'none';
+    document.getElementById('next-button').style.display = 'none';
+    document.getElementById('fullscreenButton').style.display = 'none';
+    document.getElementById('imageContainer').style.display = 'none';
+    document.getElementById('emotionsList').style.display = 'none';
+    selectHandContainer.style.display = "block";
+}
+
+// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+// En este caso fue mostrarFinalizacion()
+function confirmHandSelection() {
+    console.log('holi holi holi'+selectedHand);
+    selectHandContainer.style.display = "none";
+    handButton.style.display = "none";
+    document.getElementById('next-button').style.display = 'block';
+    mostrarFinalizacion();
+}
+
+// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+handInputs.forEach((input) => {
+    input.addEventListener('change', (e) => {
+        handButton.style.display = "block";
+        selectedHand = e.target.value;
+    });
+  });
