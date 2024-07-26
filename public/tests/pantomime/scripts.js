@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const startBtn = document.getElementById('startButton');
     const fullscreenBtn = document.getElementById('fullscreenButton');
     const stopBtn = document.getElementById('stop-btn');
+    const RecordingBtn = document.getElementById('recording-btn');
     const nextBtn = document.getElementById('next-btn');
     const audioBtn = document.getElementById('audio-btn');
     const testImage = document.getElementById('test-image');
@@ -109,6 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mediaRecorder = new MediaRecorder(stream);
         mediaRecorder.ondataavailable = e => chunks.push(e.data);
         mediaRecorder.start();
+        RecordingBtn.disabled = false;
+        RecordingBtn.style.display = 'inline-block';
         stopBtn.disabled = false;
         stopBtn.style.display = 'inline-block';
         nextBtn.disabled = false;
@@ -143,9 +146,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 const tracks = stream.getTracks();
                 tracks.forEach(track => track.stop());
                 videoPreview.srcObject = null;
+                RecordingBtn.disabled = true;
+                RecordingBtn.style.display = 'none';
                 stopBtn.disabled = true;
                 stopBtn.style.display = 'none';
-                audioBtn.style.display = 'inline-block';
+                audioBtn.style.display = 'inline';
+                nextBtn.style.display = 'none';
                 timerDisplay.classList.add('hidden');
                 stopTimer();
 
