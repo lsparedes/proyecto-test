@@ -51,7 +51,7 @@ body {
     font-size: 37px;
     text-align: justify;
     margin-bottom: 1rem;
-    margin-top: 110px;
+    /* margin-top: 110px; */
 }
 
 #finalizacionText{
@@ -158,9 +158,9 @@ button {
     background-repeat: no-repeat;
     padding: 0;
     /* Elimina el relleno para alinear el icono verticalmente */
-    width: 90px;
+    width: 80px;
     /* Ajusta el ancho fijo */
-    height: 80px;
+    height: 65px;
     /* Ajusta la altura fija */
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
@@ -169,7 +169,7 @@ button {
     /* Ajustamos la distancia desde la parte inferior */
     right: 15px;
     /* Ajustamos la distancia desde el borde derecho */
-    margin: 0;
+    margin: 20px;
 }
 
 #same-button, #different-button {
