@@ -42,7 +42,7 @@
         1
         y termine en el 13. Trabaje lo más rápido que pueda.</p>
 
-      <audio controls>
+      <audio controls id="instructionAudio">
         <source src="TMT-ParteB.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
       </audio>
@@ -58,7 +58,28 @@
     <canvas id="tmtCanvasPartB2" width="880" height="1300" style="display:none;transform: rotate(90deg) translateX(-5%);"></canvas>
 
 
+      <!-- SELECCION DE MANO HTML -->
+    <div id="selectHand" style="display: none; transform: rotate(270deg);">
+      <h4>¿Con qué mano respondiste el test?</h4>
+      <div>
+        <input type="radio" id="right_hand" name="hand" value="derecha">
+        <label for="right_hand">Derecha</label>
+      </div>
+      <div>
+        <input type="radio" id="left_hand" name="hand" value="izquierda">
+        <label for="left_hand">Izquierda</label>
+      </div>
+      <div>
+        <input type="radio" id="both_hands" name="hand" value="ambas">
+        <label for="both_hands">Ambas</label>
+      </div>
+    </div>
+    <button id="handButton"  style="display: none;"></button>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="app.js"></script>
 </body>
 
