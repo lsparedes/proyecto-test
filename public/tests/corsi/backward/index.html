@@ -12,14 +12,14 @@
 <body>
     <div id="introScreen">
         <H1 id="titulo">Instrucciones</H1>
-        <p id="instructionText">Se mostrará una secuencia de cuadrados. 
-            Debe memorizar la secuencia y tocar los cuadrados en orden inverso a la secuencia mostrada, 
-            haciendo clic en ellos. A continuación, realizará dos secuencias de práctica para familiarizarse con la tarea. 
-            Preste atención y haga su mejor esfuerzo para recordar el orden inverso correctamente.
+        <p id="instructionText">A continuación, usted verá una serie de cuadrados distribuidos en la pantalla. 
+            Algunos de estos cuadrados se iluminarán (cambiarán de color) en un orden determinado. 
+            Su tarea consistirá en reproducir esta secuencia tocando los cuadrados en el orden inverso al que se iluminaron. 
+            Ahora se le entregará un ejemplo.
         </p>
 
         <audio controls id="audioContainer">
-            <source id="instructionAudio" src="corsi-backward.mp3" type="audio/mpeg">
+            <source id="instructionAudio" src="corsi-backward-1.mp3" type="audio/mpeg">
             Tu navegador no soporta el elemento de audio.
         </audio>
 
@@ -33,8 +33,28 @@
         <button id="startSequenceButton" style="display: none;margin-top: 20px;"></button>
         <div id="feedback"></div>
     </div>
+
+    <!-- SELECCION DE MANO HTML -->
+    <div id="selectHand" style="display: none;">
+        <h4>¿Con qué mano respondiste el test?</h4>
+        <div>
+            <input type="radio" id="right_hand" name="hand" value="derecha">
+            <label for="right_hand">Derecha</label>
+        </div>
+        <div>
+            <input type="radio" id="left_hand" name="hand" value="izquierda">
+            <label for="left_hand">Izquierda</label>
+        </div>
+        <div>
+            <input type="radio" id="both_hands" name="hand" value="ambas">
+            <label for="both_hands">Ambas</label>
+        </div>
+        <button id="handButton" onclick="confirmHandSelection()" style="display: none;"></button>
+    </div>
+
     <div id="resultScreen" style="display: none;">
-        <p id="resultText"></p>
+        <h1> ¡Has completado esta tarea con éxito! </h1> <br>
+        <h1> ¡Muchas gracias!</h1>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <script src="script.js"></script>

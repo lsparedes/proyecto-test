@@ -13,20 +13,31 @@
 <body>
     <div id="container">
         <div id="welcome-screen">
-            <H1 id="titulo">Instrucciones</H1>
+            <h1 id="titulo">Instrucciones</h1>
             <p>Le voy a pedir que me repita unos números. Espere hasta que termine de decir los números y después me los
                 repite en el mismo orden. Por ejemplo, si digo 1-8-7, usted me dice 1-8-7. Si yo le digo 2-9-8, ¿qué me
-                diría?. ¡Buena suerte!.</p>
-
+                diría?.</p>
             <audio controls>
                 <source src="audio/digit-span-forward.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
-
-
             <div class="button-container">
-                <button id="start-button">Comenzar</button>
-                <button id="fullscreen-button">Pantalla Completa</button>
+                <button id="next-button"></button>
+                <button id="fullscreen-button"></button>
+            </div>
+        </div>
+
+        <div id="instruction-screen" class="hidden">
+            <h1 id="instrucciones">Instrucciones</h1>
+            <p id="instruction">Repita únicamente los números que yo le diga. Un sonido de alarma le indicará que es
+                momento de iniciar su respuesta.</p>
+            <audio controls>
+                <source src="audio/forward/forward-instructions.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+            <div class="button-container">
+                <button id="start-button"></button>
+                <button id="fullscreen-button"></button>
             </div>
         </div>
 
@@ -35,14 +46,19 @@
         </div>
 
         <div id="completion-message" class="hidden">
-            <h2>'El test ha finalizado. ¡Gracias por sus respuestas!'</h2>
+            <h2>El test ha finalizado. ¡Gracias por sus respuestas!</h2>
         </div>
     </div>
 
     <script src="scripts.js"></script>
     <script>
-        document.getElementById('start-button').addEventListener('click', () => {
+        document.getElementById('next-button').addEventListener('click', () => {
             document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('instruction-screen').classList.remove('hidden');
+        });
+
+        document.getElementById('start-button').addEventListener('click', () => {
+            document.getElementById('instruction-screen').classList.add('hidden');
             document.getElementById('test-items-forward').classList.remove('hidden');
             startTest('forward');
         });

@@ -121,44 +121,6 @@ audio {
     font-weight: bold; /* Negrita */
 }
 
-#start-button {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-#start-button:hover {
-    background-color: #0056b3;
-}
-
-#start-button:active {
-    transform: scale(0.98);
-}
-
-#fullscreen-button {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: rgb(0, 0, 0);
-    background-color: #c7c7c7;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-#fullscreen-button:hover {
-    background-color: #8f8f8f;
-}
-
-#fullscreen-button:active {
-    transform: scale(0.98);
-}
-
 /* Estilos específicos para recordImg */
 .record-img {
     width: 160px;
@@ -264,4 +226,47 @@ audio {
     font-weight: bold;
     font-size: 16px;
     text-align: center;
+}
+
+#start-button, #next-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('img/flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+#fullscreen-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('img/full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    left: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
 }

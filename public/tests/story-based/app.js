@@ -213,6 +213,13 @@ const imagenes = [
 
 let indiceActual = 0;
 let presentacionIniciada = false;
+let itemStartTime;
+let startTime;
+let practice = true;
+const fullscreenButton = document.getElementById('fullscreenButton');
+
+document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
+
 
 document.getElementById('fullscreenButton').addEventListener('click', function () {
     const element = document.documentElement;
@@ -230,7 +237,7 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
 
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
-    imageContainer.innerHTML = ' ¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+    imageContainer.innerHTML = ' <h1>¡Has completado esta tarea con éxito!</h1> <br> <h1>¡Muchas gracias!</h1>';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.display = 'flex';
@@ -252,8 +259,8 @@ function iniciarPresentacion() {
     const instrucciones = document.getElementById('instrucciones');
     const startButton = document.getElementById('startButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
+    startTime = new Date(); // Registrar el tiempo de inicio del test
     h1.style.display = 'none';
-
     instructionText.style.display = 'none';
     instrucciones.style.display = 'none';
     startButton.style.display = 'none';
@@ -408,25 +415,24 @@ function generarArchivoCSV() {
     }
 
     let csvContent = "";
-    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta en milisegundos;Tiempo dedicado tarea;Mano utilizada\n";
-    
-    let respuestasCorrectas = respuestasSeleccionadas.filter(respuesta => 
+    const endTime = new Date();
+    const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
+
+    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta en milisegundos\n";
+
+    let respuestasCorrectas = respuestasSeleccionadas.filter(respuesta =>
         respuesta.opcionSeleccionada === respuesta.respuestaCorrecta
     ).length;
 
-    let porcentajePrecision = (respuestasCorrectas / respuestasSeleccionadas.length) * 100;
-
-
-   
     respuestasSeleccionadas.forEach(respuesta => {
         const tiempoConComa = (respuesta.tiempo).toFixed(3).replace('.', ',');
         const precision = respuesta.opcionSeleccionada === respuesta.respuestaCorrecta ? 1 : 0;
 
-        csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa};;\n`;
+        csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa}\n`;
     });
 
-    csvContent += "\n\n% de precisión:\n";
-    csvContent += `Porcentaje de precisión;${porcentajePrecision.toFixed(2)}%\n`;
+    csvContent += `\n\nTiempo dedicado (Milisegundos): ${totalTestTime}\n`;
+    csvContent += `Mano utilizada: ${selectedHand}\n`;
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
 
@@ -447,7 +453,7 @@ function generarArchivoCSV() {
     a.download = `respuestas_story_based_${fechaHoraFormateada}.csv`;
     a.click();
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URLr un blob a partir del contenido del CSV
-   
+
 }
 
 
@@ -456,17 +462,65 @@ function cambiarImagen(selectedOptionIndex) {
     if (!respuestaSeleccionada) {
         return;
     }
-
     // Aquí se cambia la lógica para avanzar a la siguiente imagen
     indiceActual++;
     respuestaSeleccionada = false;
+    if (practice) {
+        practice = false;
+        mostrarInstrucciones();
+        return;
+    }
     if (indiceActual === imagenes.length) {
-        mostrarFinalizacion();
+        const imageContainer = document.getElementById('imageContainer');
+        imageContainer.style.display = 'none';
+        document.getElementById('continueButton').style.display = 'none'; // Ocultar el botón "Next"
+        const previousImageText = document.querySelector('.imageText');
+        if (previousImageText) {
+            previousImageText.remove();
+        }
+        showHandSelection();
     } else {
         mostrarImagen(indiceActual);
     }
 }
 
-document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
+function mostrarInstrucciones() {
+    const imageContainer = document.getElementById('imageContainer');
+    const instructionText = document.getElementById('instructionText');
+    const instrucciones = document.getElementById('instrucciones');
+    const startButton = document.getElementById('startButton');
+    instructionText.style.display = 'block';
+    instrucciones.style.display = 'block';
+    startButton.style.display = 'block';
+    imageContainer.style.display = 'none';
+    instructionText.textContent = 'Ahora comenzará la tarea de verdad. Por favor, responda tan rápido como pueda.';
+}
+
 
 mostrarImagen(indiceActual); // Mostrar la primera imagen al cargar la página
+
+
+const selectHandContainer = document.getElementById("selectHand");
+const handButton = document.getElementById("handButton");
+const handInputs = document.getElementsByName('hand');
+
+// Variable con la mano seleccionada
+let selectedHand = "";
+
+// Funcion para mostrar la pantalla de seleccion de mano
+function showHandSelection() {
+    selectHandContainer.style.display = "block";
+}
+
+function confirmHandSelection() {
+    selectHandContainer.style.display = "none";
+    mostrarFinalizacion();
+}
+
+// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+handInputs.forEach((input) => {
+    input.addEventListener('change', (e) => {
+        handButton.style.display = "block";
+        selectedHand = e.target.value;
+    });
+  });

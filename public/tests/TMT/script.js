@@ -19,6 +19,11 @@ document.addEventListener('DOMContentLoaded', function () {
     const incorrectPathsPartA = []; // Para almacenar caminos incorrectos en la parte B
     let temporizador = null;
     const circlesToCorrect = []; // Para almacenar los círculos que se deben corregir
+    const recordedChunksCanvas = [];
+    const recordedChunksCanvasPartA = [];
+
+    let mediaRecorderCanvas;
+    let mediaRecorderCanvasPartA;
 
     const endSequenceButton = document.createElement('button'); // Crear el botón "Terminar"
     endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
@@ -146,6 +151,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     window.onload = function () {
         startTest();
+
+        // Iniciar grabación para el primer canvas
+        mediaRecorderCanvas = startRecording(canvas, recordedChunksCanvas);
     }
 
     let drawingCompleted = false; // Bandera para indicar si se completó el dibujo
@@ -162,8 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function draw(x, y) {
-        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
+    function drawMove(x, y) {
         if (!isDrawing) return;
         ctx.lineTo(x, y);
         ctx.stroke();
@@ -177,8 +184,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
                 circlesToCorrect.push({ x: circle.x, y: circle.y, number: circle.number });
                 isDrawing = false;
-            } else if (distance <= circleRadius && circle.number === currentCircle + 1) {
-                highlightCircle(ctx, circle, 'black', x, y); // Restablecer el borde correcto
+            } else if (distance < circleRadius && circle.number === currentCircle + 1) {
+                highlightCircle(ctx, circle, 'black'); // Restablecer el borde correcto
+                drawLineToCircleEdge(ctx, lastCircle.x, lastCircle.y, circle.x, circle.y);
                 correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
                 currentCircle++;
                 lastCircle = circle;
@@ -231,37 +239,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     canvas.addEventListener('mousedown', function (event) {
-        const x = event.offsetX;
-        const y = event.offsetY;
-        startDrawing(x, y);
+        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
+        startDrawing(event.offsetX, event.offsetY);
     });
 
     canvas.addEventListener('mousemove', function (event) {
-        const x = event.offsetX;
-        const y = event.offsetY;
-        draw(x, y);
+        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
+        drawMove(event.offsetX, event.offsetY);
     });
 
     canvas.addEventListener('mouseup', function (event) {
-        const x = event.offsetX;
-        const y = event.offsetY;
-        endDrawing(x, y);
+        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
+        endDrawing(event.offsetX, event.offsetY);
     });
 
     canvas.addEventListener('touchstart', function (event) {
-        const touchPos = getTouchPos(canvas, event);
-        startDrawing(touchPos.x, touchPos.y);
+        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
+        const touch = event.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        startDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
     });
 
     canvas.addEventListener('touchmove', function (event) {
-        const touchPos = getTouchPos(canvas, event);
-        draw(touchPos.x, touchPos.y);
-        event.preventDefault(); // Evitar el desplazamiento de la pantalla al dibujar
+        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
+        const touch = event.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        drawMove(touch.clientX - rect.left, touch.clientY - rect.top);
     });
 
     canvas.addEventListener('touchend', function (event) {
-        const touchPos = getTouchPos(canvas, event);
-        endDrawing(touchPos.x, touchPos.y);
+        if (drawingCompleted) return; // Si el dibujo está completo, no hacer nada
+        const touch = event.changedTouches[0];
+        const rect = canvas.getBoundingClientRect();
+        endDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
     });
 
     // BOTON SIGUIENTE LUEGO DE DIBUJAR TODAS LAS LINEAS PRIMER CANVAS
@@ -360,6 +370,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         // reiniciarTemporizador(); // Iniciar temporizador
         drawNextButtonA();
+        reiniciarTemporizador(); // Iniciar temporizador
+
+        // Iniciar grabación para el segundo canvas
+        mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
     }
 
     let drawingCompletedA = false; // Bandera para indicar si se completó el dibujo
@@ -376,8 +390,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function drawPartA(x, y) {
-        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
+    function drawMovePartA(x, y) {
         if (!isDrawingPartA) return;
         ctxPartA.lineTo(x, y);
         ctxPartA.stroke();
@@ -393,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 isDrawingPartA = false;
             } else if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
                 highlightCircle(ctxPartA, circle, 'black', x, y); // Restablecer el borde correcto
+                drawLineToCircleEdge(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, circle.x, circle.y);
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
                 currentCirclePartA++;
                 lastCirclePartA = circle;
@@ -436,37 +450,39 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     canvasPartA.addEventListener('mousedown', function (event) {
-        const x = event.offsetX;
-        const y = event.offsetY;
-        startDrawingPartA(x, y);
+        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
+        startDrawingPartA(event.offsetX, event.offsetY);
     });
 
     canvasPartA.addEventListener('mousemove', function (event) {
-        const x = event.offsetX;
-        const y = event.offsetY;
-        drawPartA(x, y);
+        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
+        drawMovePartA(event.offsetX, event.offsetY);
     });
 
     canvasPartA.addEventListener('mouseup', function (event) {
-        const x = event.offsetX;
-        const y = event.offsetY;
-        endDrawingPartA(x, y);
+        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
+        endDrawingPartA(event.offsetX, event.offsetY);
     });
 
     canvasPartA.addEventListener('touchstart', function (event) {
-        const touchPos = getTouchPos(canvasPartA, event);
-        startDrawingPartA(touchPos.x, touchPos.y);
+        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
+        const touch = event.touches[0];
+        const rect = canvasPartA.getBoundingClientRect();
+        startDrawingPartA(touch.clientX - rect.left, touch.clientY - rect.top);
     });
 
     canvasPartA.addEventListener('touchmove', function (event) {
-        const touchPos = getTouchPos(canvasPartA, event);
-        drawPartA(touchPos.x, touchPos.y);
-        event.preventDefault(); // Evitar el desplazamiento de la pantalla al dibujar
+        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
+        const touch = event.touches[0];
+        const rect = canvasPartA.getBoundingClientRect();
+        drawMovePartA(touch.clientX - rect.left, touch.clientY - rect.top);
     });
 
     canvasPartA.addEventListener('touchend', function (event) {
-        const touchPos = getTouchPos(canvasPartA, event);
-        endDrawingPartA(touchPos.x, touchPos.y);
+        if (drawingCompletedA) return; // Si el dibujo está completo, no hacer nada
+        const touch = event.changedTouches[0];
+        const rect = canvasPartA.getBoundingClientRect();
+        endDrawingPartA(touch.clientX - rect.left, touch.clientY - rect.top);
     });
 
     //BOTON SIGUIENTE LUEGO DE DIBUJAR TODAS LAS LINEAS SEGUNDO CANVAS
@@ -486,25 +502,57 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function testFinalizado() {
-        canvasPartA.style.display = 'none'; // Ocultar el canvas actual
-        // Mostrar mensaje de finalización
-        const instructions = document.getElementById('instructions');
-        instructions.style.display = 'flex';
-        instructions.style.justifyContent = 'center'; // Centrar contenido horizontalmente
-        instructions.style.alignItems = 'center'; // Centrar contenido verticalmente
-        instructions.style.height = '100vh'; // Altura del viewport para permitir el centrado vertical
-        instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
-        instructions.style.textAlign = 'center';
-        instructions.style.fontSize = '40px';
-        instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
+        // Detener las grabaciones
+        mediaRecorderCanvas.stop();
+        mediaRecorderCanvasPartA.stop();
 
-        const downloadButton = document.createElement('button');
-        downloadButton.addEventListener('click', function () {
-            downloadAllCanvasImages();
-            document.body.removeChild(downloadButton);
-        });
-        document.body.appendChild(downloadButton);
-        downloadButton.click();
+        mediaRecorderCanvas.onstop = () => {
+            const blob = new Blob(recordedChunksCanvas, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'canvasRecording.webm';
+            link.click();
+        };
+
+        mediaRecorderCanvasPartA.onstop = () => {
+            const blob = new Blob(recordedChunksCanvasPartA, { type: 'video/webm' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'canvasPartARecording.webm';
+            link.click();
+        };
+
+        setTimeout(() => {
+            const zip = new JSZip();
+            zip.file("canvasRecording.webm", new Blob(recordedChunksCanvas, { type: 'video/webm' }));
+            zip.file("canvasPartARecording.webm", new Blob(recordedChunksCanvasPartA, { type: 'video/webm' }));
+
+            // Capturas de pantalla
+            canvas.toBlob(function (blob) {
+                zip.file("canvasScreenshot.png", blob);
+
+                canvasPartA.toBlob(function (blobPartA) {
+                    zip.file("canvasPartAScreenshot.png", blobPartA);
+
+                    zip.generateAsync({ type: 'blob' }).then(function (content) {
+                        saveAs(content, "test_results.zip");
+                    });
+                });
+            });
+
+            // Mostrar mensaje de finalización
+            const instructions = document.getElementById('instructions');
+            instructions.style.display = 'flex';
+            instructions.style.justifyContent = 'center'; // Centrar contenido horizontalmente
+            instructions.style.alignItems = 'center'; // Centrar contenido verticalmente
+            instructions.style.height = '100vh'; // Altura del viewport para permitir el centrado vertical
+            instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+            instructions.style.textAlign = 'center';
+            instructions.style.fontSize = '40px';
+            instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
+        }, 1000); // Ajustar tiempo si es necesario
     }
 
     fullscreenButton.addEventListener('click', () => {
@@ -518,17 +566,4 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
-
-    function downloadAllCanvasImages() {
-        downloadCanvasImage(canvasPartA, 'canvasPartA.png');
-        downloadCanvasImage(canvas, 'canvas.png');
-    }
-
-    function downloadCanvasImage(canvas, fileName) {
-        const dataURL = canvas.toDataURL('image/png');
-        const link = document.createElement('a');
-        link.href = dataURL;
-        link.download = fileName;
-        link.click();
-    }
 });

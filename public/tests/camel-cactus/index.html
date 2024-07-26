@@ -39,7 +39,7 @@
 
 
     <!-- SELECCION DE MANO HTML -->
-    <div id="selectHand" style="display: none;">
+    <div id="selectHand" style="display: none; transform: rotate(270deg);">
         <h4>¿Con qué mano respondiste el test?</h4>
         <div>
             <input type="radio" id="right_hand" name="hand" value="derecha">
@@ -53,12 +53,14 @@
             <input type="radio" id="both_hands" name="hand" value="ambas">
             <label for="both_hands">Ambas</label>
         </div>
-        <button id="handButton" onclick="confirmHandSelection()" style="display: none;"></button>
     </div>
+    <button id="handButton" onclick="confirmHandSelection()" style="display: none;"></button>
 
 
     <script src="app.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <script>
         function iniciarTest() {

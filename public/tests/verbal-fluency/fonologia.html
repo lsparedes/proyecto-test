@@ -1,20 +1,19 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Test de Fonología</title>
     <link rel="stylesheet" href="styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <style>
         .record-button {
             width: 100px; /* Ajusta el tamaño según sea necesario */
             height: 100px; /* Ajusta el tamaño según sea necesario */
         }
     </style>
-</head>
-
-<body>
+  </head>
+  <body>
     <div id="container">
         <div id="instructions">
             <p><b>Fonología:</b> deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es
@@ -33,7 +32,7 @@
 
         <!-- Parte 1 -->
         <div id="testSection1" style="display: none;">
-            <h2 class="imageText">FF-1</h2>
+            <h2 class="imageText">E1</h2>
             <div id="letterDisplay1" class="letter-display">P</div>
             <div class="audio-controls">
                 <audio id="instructionAudio1" controls></audio>
@@ -42,13 +41,13 @@
                 <button id="stopRecordingButton1" style="display: none;border: none;"></button>
             </div>
             <div id="timer1" class="timer"></div>
-            <div id="recordingCreatedMessage1" class="recording-message">Grabación creada.</div>
+           
             <button id="nextButton1" style="display: none;"></button>
         </div>
 
         <!-- Parte 2 -->
         <div id="testSection2" style="display: none;">
-            <h2 class="imageText">FF-2</h2>
+            <h2 class="imageText">E2</h2>
             <div id="letterDisplay2" class="letter-display">M</div>
             <div class="audio-controls">
                 <audio id="instructionAudio2" controls></audio>
@@ -57,7 +56,7 @@
                 <button id="stopRecordingButton2" style="display: none;"></button>
             </div>
             <div id="timer2" class="timer"></div>
-            <div id="recordingCreatedMessage2" class="recording-message">Grabación creada.</div>
+            
             <button id="nextButton2" style="display: none;"></button>
         </div>
 
@@ -67,9 +66,14 @@
             <h1> ¡Muchas gracias!</h1>
         </div>
 
-        <script src="script-fonologia.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+        
     </div>
-</body>
-
+    <script src="script-fonologia.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  </body>
 </html>
+
+
+
+

@@ -1,12 +1,14 @@
 document.getElementById('startButton').addEventListener('click', () => {
     document.getElementById('start-screen').style.display = 'none';
+    startTime = new Date(); // Registrar el tiempo de inicio del test
     showNextImage();
 });
+
 document.getElementById('fullscreen-btn').addEventListener('click', toggleFullScreen);
 document.getElementById('submit-btn').addEventListener('click', submitAnswer);
 document.getElementById('next-button').addEventListener('click', () => {
-    submitAnswer(); // Guardar la respuesta actual antes de mostrar la siguiente imagen
-    showNextImage(); // Mostrar la siguiente imagen
+    submitAnswer();
+    showNextImage();
 });
 
 const images = [
@@ -27,19 +29,21 @@ const images = [
 let currentImageIndex = -1;
 let startTime;
 let answers = [];
+let itemStartTime;
 
 function showNextImage() {
     currentImageIndex++;
     if (currentImageIndex < images.length) {
-        startTime = new Date(); // Iniciar el temporizador para este ítem
+        itemStartTime = new Date(); // Iniciar el temporizador para este ítem
         const imageInfo = images[currentImageIndex];
         document.getElementById('test-image').src = imageInfo.src;
         document.getElementById('item-indicator').textContent = imageInfo.title;
         const numberInput = document.getElementById('number-input');
         numberInput.value = '';
         numberInput.style.backgroundColor = ''; // Resetear el color de fondo
-        numberInput.focus(); // Enfocar el campo de entrada
         document.getElementById('test-screen').style.display = 'block';
+        numberInput.focus(); // Enfocar el campo de entrada
+
         if (currentImageIndex < 2) {
             document.getElementById('submit-btn').style.display = 'block';
             document.getElementById('next-button').style.display = 'block';
@@ -57,16 +61,18 @@ function showNextImage() {
 function submitAnswer() {
     const userAnswer = document.getElementById('number-input').value;
     const correctAnswer = images[currentImageIndex].answer;
-    const endTime = new Date();
-    const timeTaken = (endTime - startTime) / 1000; // Tiempo transcurrido en segundos
-    
+    const itemEndTime = new Date();
+    const timeTaken = (itemEndTime - itemStartTime) / 1000; 
+    const precision = userAnswer === correctAnswer ? 1 : 0; 
+
     answers.push({
         title: images[currentImageIndex].title,
         userAnswer: userAnswer,
         correctAnswer: correctAnswer,
+        precision : precision,
         timeTaken: timeTaken
     });
-    
+
     if (currentImageIndex < 2) { // Si es uno de los ítems de práctica
         if (userAnswer === correctAnswer) {
             document.getElementById('number-input').style.backgroundColor = 'green';
@@ -76,6 +82,7 @@ function submitAnswer() {
             document.getElementById('number-input').style.backgroundColor = 'red';
             setTimeout(() => {
                 document.getElementById('number-input').style.backgroundColor = '';
+                numberInput.focus(); // Asegurarse de que el foco se mantenga en el campo
             }, 1200); // Resetear el color de fondo después de 1.2 segundos
         }
     }
@@ -90,12 +97,17 @@ function toggleFullScreen() {
 }
 
 function generateCSV() {
+    const endTime = new Date();
+    const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
+
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta ingreso dato;Tiempo duracion tarea\n";
-    
+    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta(Milisegundos)\n";
+
     answers.forEach(answer => {
-        csvContent += `${answer.title};${answer.userAnswer};${answer.correctAnswer};;${(answer.timeTaken * 1000)} milisegundos;\n`;
+        csvContent += `${answer.title};${answer.userAnswer};${answer.correctAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')}\n`;
     });
+
+    csvContent += `\nTiempo dedicado (Milisegundos): ${totalTestTime}\n`;
 
     const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
     const filename = `respuestas_number_location_${dateTime}.csv`;

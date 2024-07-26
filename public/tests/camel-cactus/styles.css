@@ -39,12 +39,11 @@ body {
 
 
 
-/* #instructionText {
+#instructionText {
     font-size: 37px;
     text-align: justify;
-    margin-bottom: 150px;
-    margin-top: 110px;
-} */
+    margin-bottom: 1rem;
+}
 
 
 button {
@@ -189,11 +188,11 @@ button {
 } */
 
 audio {
+    margin-top: 20px;
     margin-bottom: 20px;
 }
 
 #nextButton {
-    
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -225,8 +224,8 @@ audio {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
-    width: 90px;
-    height: 80px;
+    width: 80px;
+    height: 65px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
@@ -242,7 +241,7 @@ audio {
     background-repeat: no-repeat;
     padding: 0;
     width: 80px;
-    height: 75px;
+    height: 65px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
@@ -252,7 +251,6 @@ audio {
 /* SELECCION DE MANO CSS */
 
 #handButton {
-    display: inline-block;
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -260,12 +258,19 @@ audio {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
-    width: 90px;
-    height: 80px;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 65px;
+    /* Ajusta la altura fija */
     vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
     position: absolute;
-    bottom: 15px;
+    top: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
     right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+    transform: rotate(270deg); /* Rotación de 90 grados */
 }
 
 #selectHand {

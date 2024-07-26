@@ -40,7 +40,7 @@ audio {
   justify-content: center;
   max-width: 800px;
   margin-top: 50px;
-  transform: rotate(270deg);
+
 
 }
 
@@ -100,12 +100,12 @@ audio {
   width: 80px;
   height: 75px;
   vertical-align: middle;
-  transform: rotate(270deg);
+
 }
 
 .imageText {
   position: absolute;
-  bottom: 10px;
+  top: 10px;
   left: 10px;
   font-size: 20px;
   font-weight: bold;
@@ -114,37 +114,34 @@ audio {
   padding: 8px 10px;
   border-radius: 5px;
   opacity: 0.8;
-  transform: rotate(270deg);
+
 }
 
 #practiceNextButton{
   position: absolute;
-  top: 15px;
+  bottom: 15px;
   right: 10px;
 }
 
 #toMainTestButton{
   position: absolute;
-  top: 15px;
+  bottom: 15px;
   right: 15px;
 }
 
 #finishButton{
   position: absolute;
-  top: 15px;
+  bottom: 15px;
   right: 15px;
 }
 
 #endTestButton{
   position: absolute;
-  top: 15px;
+  bottom: 15px;
   right: 15px;
 }
 
-#practica, #prueba, #endScreen {
-  transform-origin: center;
-  transform: rotate(270deg);
-  }
+
 
 .red-arrow {
   background-image: url("flecha4.png") !important;

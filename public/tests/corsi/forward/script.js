@@ -8,9 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const introScreen = document.getElementById('introScreen');
     const game = document.getElementById('game');
     const resultScreen = document.getElementById('resultScreen');
-    const resultText = document.getElementById('resultText');
     const endSequenceButton = document.createElement('button'); // Crear el botón "Terminar"
     endSequenceButton.id = 'endSequenceButton'; // Asignar el id para aplicar estilos CSS
+    endSequenceButton.style.margin = '20px';
     endSequenceButton.style.display = 'none'; // Ocultar el botón inicialmente
     game.appendChild(endSequenceButton);
     const indicator = document.createElement('div');
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isPractice = true;
     let sequence = [];
     let playerSequence = [];
-    let count = 2;
+    let count = 3;
     let errorCount = 0;
     let sequenceDisplaying = false;
     let highestCount = 0;
@@ -35,6 +35,17 @@ document.addEventListener('DOMContentLoaded', () => {
     let milliseconds = 0;
 
     // Posiciones fijas de los cuadrados
+    // const fixedPositions = [
+    //     { "top": "9%", "left": "51%" },
+    //     { "top": "13%", "left": "28%" },
+    //     { "top": "24.5%", "left": "62.7%" },
+    //     { "top": "29%", "left": "37.5%" },
+    //     { "top": "38%", "left": "53.5%" },
+    //     { "top": "51.5%", "left": "66%" },
+    //     { "top": "56%", "left": "24.7%" },
+    //     { "top": "69.5%", "left": "38.5%" },
+    //     { "top": "65%", "left": "52%" }
+    // ];
     const fixedPositions = [
         { "top": 590, "left": 400 },
         { "top": 548, "left": 825 },
@@ -48,33 +59,29 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const practiceSequences = [
-        [2, 3],
-        [4, 5]
+        [0, 7, 6],
+        [1, 8, 7]
     ]
 
     // Secuencias fijas de bloques
     const fixedSequences = [
-        [2, 4],
-        [0, 7],
-        [7, 5, 8],
-        [2, 6, 4],
-        [8, 0, 7, 8],
-        [3, 7, 6, 5],
-        [4, 8, 6, 2, 0],
-        [7, 8, 5, 5, 6],
-        [3, 1, 8, 7, 2, 5],
-        [3, 5, 2, 8, 1, 7],
-        [4, 1, 6, 5, 7, 8, 2],
-        [4, 5, 1, 8, 2, 7, 0],
-        [4, 2, 6, 1, 8, 0, 7, 5],
-        [4, 1, 3, 0, 5, 8, 7, 3],
-        [4, 3, 2, 5, 6, 8, 7, 0, 1],
-        [7, 8, 0, 2, 6, 6, 1, 3, 4]
+        [3, 6, 1],
+        [7, 0, 4],
+        [2, 3, 0, 6],
+        [5, 0, 4, 7],
+        [4, 1, 0, 7, 5],
+        [3, 1, 6, 2, 0],
+        [2, 8, 1, 3, 7, 6],
+        [2, 6, 7, 1, 8, 3],
+        [4, 8, 0, 6, 3, 1, 7],
+        [4, 6, 8, 1, 7, 3, 5],
+        [4, 7, 0, 8, 1, 5, 3, 6],
+        [4, 8, 2, 5, 6, 1, 3, 2],
+        [4, 2, 7, 6, 0, 1, 3, 5, 8],
+        [3, 1, 5, 7, 0, 6, 8, 2, 4]
     ];
 
     const fixedTitles = [
-        "S2-1",
-        "S2-2",
         "S3-1",
         "S3-2",
         "S4-1",
@@ -161,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const block = blocksContainer.children[sequence[index]];
             block.style.backgroundColor = 'yellow';
             setTimeout(() => {
-                block.style.backgroundColor = 'blue';
+                block.style.backgroundColor = 'rgb(29, 63, 255)';
                 setTimeout(() => displaySequence(index + 1), 300);
             }, 500);
         } else {
@@ -204,12 +211,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             if (errorCount === 2 || sequenceCount === fixedSequences.length) {
-                endGame();
+                game.style.display = 'none';
+                showHandSelection();
             } else {
                 repeatCount++; // Incrementar el contador de repeticiones
                 if (repeatCount === 2) {
                     count++; // Incrementar la longitud de la secuencia después de 2 repeticiones
                     repeatCount = 0; // Reiniciar el contador de repeticiones
+                    errorCount = 0; // Reiniciar el contador de errores
                 }
                 indicator.textContent = `S${count}-${repeatCount+1}`;
                 setTimeout(resetBlocks, 500);
@@ -225,14 +234,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const blocks = document.querySelectorAll('.block');
         blocks.forEach(block => {
             block.classList.remove('selected');
-            block.style.backgroundColor = 'blue';
+            block.style.backgroundColor = 'rgb(29, 63, 255);';
         });
     }
 
     function endGame() {
         endTime = new Date(); // Registrar la hora de finalización
         const duration = (endTime - startTime) / 1000; // Duración en segundos
-        resultText.innerHTML = `¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!`
         console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
         game.style.display = 'none';
         resultScreen.style.display = 'block';
@@ -243,10 +251,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function endPractice() {
-        instructionsAudio.src = 'beep.wav';
+        instructionsAudio.src = 'corsi-forward-2.mp3';
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.load();
-        instructions.innerHTML = 'A continuación se presentarán secuencias de 2 a 9 cuadrados, con dos secuencias en cada longitud, para un total de 16 secuencias en orden creciente de longitud. La prueba se terminará cuando se entreguen respuestas incorrectas para ambas secuencias de una misma longitud. La puntuación será el número total de secuencias realizadas correctamente. Concéntrese y haga su mejor esfuerzo para recordar cada secuencia. ¡Buena suerte!'
+        instructions.innerHTML = 'La longitud de las secuencias que tendrá que memorizar aumentará gradualmente. Un sonido de alarma le indicará que es momento de iniciar su respuesta. Por favor, responda tan rápido como pueda.';
         isPractice = false;
         introScreen.style.display = 'block';
         document.getElementById('fullscreenButton').style.display = 'none';
@@ -254,19 +262,26 @@ document.addEventListener('DOMContentLoaded', () => {
         endSequenceButton.style.display = 'none';
         indicator.style.display = 'none';
         startTestButton.style.display = 'inline-block';
+        sequenceDisplaying = true;
         resetBlocks();
     }
 
     function generateCSV(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
-        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Tiempo de Respuesta (s)","Tiempo Total (s)", "Mano Utilizada"];
-        const rows = testData.map(data => [
-            data.exerciseTitle,
-            data.correctAnswer.join(""),
-            data.userResponse.join(""),
-            data.responseTime,
-            duration.toFixed(2),
-            "Izquierda",
-        ]);
+        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta (s)","Tiempo Total (s)", "Mano Utilizada"];
+        const rows = testData.map(data => {
+            const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
+            const userResponseIncremented = data.userResponse.map(num => num + 1);
+            const precision = data.correctAnswer.join("") === data.userResponse.join("") ? 1 : 0;
+            return [
+                data.exerciseTitle,
+                correctAnswerIncremented.join(""),
+                userResponseIncremented.join(""),
+                precision,
+                data.responseTime,
+                duration.toFixed(2),
+                selectedHand,
+            ];
+        });
 
         const desiredRowCount = fixedSequences.length;
         const currentRowCount = rows.length;
@@ -274,16 +289,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
         for (let i = 0; i < rowsToFill; i++) {
             // Puedes reemplazar los valores vacíos con cualquier valor predeterminado que desees
-            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount+i].join(""), "", "",duration.toFixed(2),"Izquierda"]);
+            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, "", "", ""]);
         }
 
         let csvContent = "data:text/csv;charset=utf-8," 
-        + headers.join(",") + "\n"
-        + rows.map(e => e.join(",")).join("\n");
-        saveAs(csvContent, `CorsiForwardTest.csv`);
-
-        // const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        // const fileName = `CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
+        + headers.join(";") + "\n"
+        + rows.map(e => e.join(";")).join("\n");
+        const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
+        const fileName = `CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
+        saveAs(csvContent, fileName);
         // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
         // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         // saveAs(blob, fileName);
@@ -392,4 +406,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // createBlocks();
+    
+    // SELECCION DE MANO JS
+
+    const selectHandContainer = document.getElementById("selectHand");
+    const handButton = document.getElementById("handButton");
+    const handInputs = document.getElementsByName('hand');
+
+    // Variable con la mano seleccionada
+    let selectedHand = "";
+
+    // Funcion para mostrar la pantalla de seleccion de mano
+    function showHandSelection() {
+        selectHandContainer.style.display = "block";
+    }
+
+    // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+    // En este caso fue mostrarFinalizacion()
+    function confirmHandSelection() {
+        selectHandContainer.style.display = "none";
+        endGame();
+    }
+
+    // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+    handInputs.forEach((input) => {
+        input.addEventListener('change', (e) => {
+            handButton.style.display = "block";
+            selectedHand = e.target.value;
+        });
+    });
+
+    window.confirmHandSelection = confirmHandSelection;
 });
