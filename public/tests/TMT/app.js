@@ -11,10 +11,7 @@ window.onload = function () {
 
 };
 
-document.getElementById('continueButtonB2').addEventListener('click', () => {
-    reiniciarTemporizador();
-    startPartB2();
-});
+
 
 // PART 2.1 NUMBERS AND LETTERS
 const canvasPartB = document.getElementById('tmtCanvasPartB');
@@ -253,7 +250,7 @@ canvasPartB.addEventListener('touchend', function (event) {
     const touch = event.changedTouches[0];
     const rect = canvas.getBoundingClientRect();
     endDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
-    airStartTime = new Date(); // REVISAR
+    airStartTime = new Date(); // REVISAR (no estoy segura si va aqui)
 });
 
 
@@ -276,7 +273,8 @@ function drawNextButtonB() {
         canvasPartB.style.display = 'none';
         document.getElementById('partB').style.display = 'none';
         document.getElementById('partB2').style.display = 'flex';
-        document.getElementById('continueButtonB2').style.display = 'block';
+        // document.getElementById('continueButtonB2').style.display = 'block'; // REVISAR (comienza un temporizador por aqui)
+        startPartB2();
         nextButtonB.remove();
     });
 
@@ -360,7 +358,8 @@ function playBeep() {
 }
 
 function startPartB2() {
-    document.getElementById('partB2').style.display = 'none';
+    // document.getElementById('partB2').style.display = 'none';
+    circleRadius = 30;
     canvasPartB2.style.display = 'block';
     ctxPartB2.clearRect(0, 0, canvasPartB2.width, canvasPartB2.height);
     circlesPartB2.length = 0;
@@ -375,31 +374,24 @@ function startPartB2() {
         const name = index === 0 ? firstCircleLabelB2 : (index === circleCoordinatesPartB2.length - 1 ? lastCircleLabelB2 : "");
         drawCircleWithLabel(ctxPartB2, coord.x, coord.y, label, circlesPartB2, name, 30);
     });
+    drawNextButtonB2();
 }
 
-canvasPartB2.addEventListener('mousedown', function (event) {
-    if (drawingCompletedB2) return;
-    const x = event.offsetX;
-    const y = event.offsetY;
 
+function startDrawingPartB2(x, y) {
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 30 && circle.label === currentCirclePartB2) {
+        if (distance < circleRadius && circle.label === currentCirclePartB2) {
             isDrawingPartB2 = true;
             lastCirclePartB2 = circle;
             ctxPartB2.beginPath();
             ctxPartB2.moveTo(circle.x, circle.y);
         }
     });
-});
+}
 
-canvasPartB2.addEventListener('mousemove', function (event) {
-    if (drawingCompletedB2) return;
+function drawMovePartB2(x, y) {
     if (!isDrawingPartB2) return;
-
-    const x = event.offsetX;
-    const y = event.offsetY;
-
     ctxPartB2.lineTo(x, y);
     ctxPartB2.stroke();
 
@@ -407,18 +399,27 @@ canvasPartB2.addEventListener('mousemove', function (event) {
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 30 && circle.label != getNextLabel(currentCirclePartB2) && circle.label != lastCirclePartB2.label) {
-            drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
+        if (distance < circleRadius && circle.label != getNextLabel(currentCirclePartB2) && circle.label != lastCirclePartB2.label) {
+            // drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
+            highlightCircle(ctxPartB2, circle, 'red', x, y);
+            erroresComision++;
+            circlesToCorrectB2.push({ x: circle.x, y: circle.y, number: circle.number });
             incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
             isDrawingPartB2 = false;
-        } else {
-            if (distance < 30 && circle.label === getNextLabel(currentCirclePartB2)) {
-                // ctxPartB2.lineTo(circle.x, circle.y);
-                // ctxPartB2.stroke();
-                correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
-                currentCirclePartB2 = getNextLabel(currentCirclePartB2);
-                lastCirclePartB2 = circle;
-                validDrop = true;
+        } else if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB2)) {
+            console.log('HOLA HOLA: ', circleRadius);
+            highlightCircle(ctxPartB2, circle, 'black', x, y);
+            correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
+            currentCirclePartB2 = getNextLabel(currentCirclePartB2);
+            lastCirclePartB2 = circle;
+            validDrop = true;
+            correctLines++;
+
+            if (circlesToCorrectB2.length > 0) {
+                circlesToCorrectB2.forEach(circle => {
+                    highlightCircle(ctxPartB2, circle, 'black', x, y);
+                });
+                circlesToCorrectB2.length = 0;
             }
         }
     });
@@ -426,22 +427,16 @@ canvasPartB2.addEventListener('mousemove', function (event) {
     if (currentCirclePartB2 === 13) {
         drawingCompletedB2 = true;
     }
-    if (document.getElementById('endSequenceButton') === null) {
-        drawNextButtonB2();
-    }
-});
+}
 
-canvasPartB2.addEventListener('mouseup', function (event) {
-    if (drawingCompletedB2) return;
-    const x = event.offsetX;
-    const y = event.offsetY;
+function endDrawingPartB2(x, y) {
     let validDrop = false;
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 30 && circle.label === getNextLabel(currentCirclePartB2)) {
-            ctxPartB2.lineTo(circle.x, circle.y);
-            ctxPartB2.stroke();
+        if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB2)) {
+            // drawLineToCircleEdge(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, circle.x, circle.y);
+            highlightCircle(ctxPartB2, circle, 'black', x, y); // Restablecer el borde correcto
             correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB2 = getNextLabel(currentCirclePartB2);
             lastCirclePartB2 = circle;
@@ -450,20 +445,67 @@ canvasPartB2.addEventListener('mouseup', function (event) {
     });
 
     const distance = Math.sqrt((x - lastCirclePartB2.x) ** 2 + (y - lastCirclePartB2.y) ** 2);
-    if (!validDrop && lastCirclePartB2 && distance >= 30) {
-        drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
+
+    if (!validDrop && lastCirclePartB2 && distance > circleRadius) {
         incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
     }
 
-    // Actualización de la condición para mostrar el botón "Siguiente"
     if (currentCirclePartB2 === 13) {
         drawingCompletedB2 = true;
     }
 
     isDrawingPartB2 = false;
-    if (document.getElementById('endSequenceButton') === null) {
-        drawNextButtonB2();
+}
+
+canvasPartB2.addEventListener('mousedown', function (event) {
+    if (isDrawingPartB2) return; // Si el dibujo está completo, no hacer nada
+    startDrawingPartB2(event.offsetX, event.offsetY);
+    if (airStartTime) {
+        const airEndTime = new Date();
+        const airTime = (airEndTime - airStartTime) / 1000; // Tiempo de lápiz en el aire en segundos
+        penAirTime += airTime;
+        airStartTime = null;
     }
+});
+
+canvasPartB2.addEventListener('mousemove', function (event) {
+    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    drawMovePartB2(event.offsetX, event.offsetY);
+});
+
+canvasPartB2.addEventListener('mouseup', function (event) {
+    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    endDrawingPartB2(event.offsetX, event.offsetY);
+    liftPenCount++;
+    airStartTime = new Date();
+});
+
+canvasPartB2.addEventListener('touchstart', function (event) {
+    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    const touch = event.touches[0];
+    const rect = canvasPartB2.getBoundingClientRect();
+    startDrawingPartA(touch.clientX - rect.left, touch.clientY - rect.top);
+    if (airStartTime) {
+        const airEndTime = new Date();
+        const airTime = (airEndTime - airStartTime) / 1000; // Tiempo de lápiz en el aire en segundos
+        penAirTime += airTime;
+        airStartTime = null;
+    }
+});
+
+canvasPartB2.addEventListener('touchmove', function (event) {
+    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    const touch = event.touches[0];
+    const rect = canvasPartB2.getBoundingClientRect();
+    drawMovePartB2(touch.clientX - rect.left, touch.clientY - rect.top);
+});
+
+canvasPartB2.addEventListener('touchend', function (event) {
+    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    const touch = event.changedTouches[0];
+    const rect = canvasPartA.getBoundingClientRect();
+    endDrawingPartB2(touch.clientX - rect.left, touch.clientY - rect.top);
+    liftPenCount++;
 });
 
 function drawNextButtonB2() {
@@ -472,10 +514,11 @@ function drawNextButtonB2() {
     nextButtonB2.style.display = 'inline-block';
 
     nextButtonB2.addEventListener('click', () => {
+        document.getElementById('partB2').style.display = 'none';
         canvasPartB2.style.display = 'none';
         // Aquí puedes agregar la lógica para mostrar la siguiente sección o concluir la prueba
         nextButtonB2.remove();
-        completeTest(); // Llamar a completeTest aquí para mostrar el botón de descarga
+        showHandSelection(); // Llamar a completeTest aquí para mostrar el botón de descarga
     });
 
     document.body.appendChild(nextButtonB2);
@@ -498,27 +541,6 @@ function downloadAllCanvasImages() {
 // Función para mostrar el botón de descarga al final
 function showDownloadButton() {
     const downloadButton = document.createElement('button');
-    downloadButton.textContent = 'Descargar Todas las Imágenes';
-    downloadButton.style.position = 'absolute';
-    downloadButton.style.bottom = '20px';
-    downloadButton.style.left = '20px';
-    downloadButton.style.padding = '10px 20px';
-    downloadButton.style.fontSize = '16px';
-    downloadButton.style.color = 'white';
-    downloadButton.style.backgroundColor = 'blue';
-    downloadButton.style.border = 'none';
-    downloadButton.style.borderRadius = '5px';
-    downloadButton.style.cursor = 'pointer';
-
-
-    // Mostrar mensaje de finalización
-    const instructions = document.getElementById('instructions');
-    instructions.style.display = 'block';
-    instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
-    instructions.style.textAlign = 'center';
-    instructions.style.fontSize = '40px';
-    instructions.style.marginTop = '20px';
-    instructions.style.display = 'flex';
 
     downloadButton.addEventListener('click', function () {
         downloadAllCanvasImages();
@@ -530,7 +552,16 @@ function showDownloadButton() {
 }
 
 // Llamar a esta función cuando se complete la prueba
-function completeTest() {
+function testFinalizado() {
+    // Mostrar mensaje de finalización
+    const instructions = document.getElementById('instructions');
+    instructions.style.display = 'block';
+    instructions.style.rotate = '-90deg';
+    instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+    instructions.style.textAlign = 'center';
+    instructions.style.fontSize = '40px';
+    instructions.style.marginTop = '20px';
+    instructions.style.display = 'flex';
     // Aquí puedes agregar cualquier otra lógica necesaria al completar la prueba
     showDownloadButton();
 }
