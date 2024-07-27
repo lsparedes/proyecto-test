@@ -81,7 +81,7 @@ canvas {
     margin: 20px;
 }
 
-#validateButton, #showButton, #hideButton, #prevButton, #downloadCSVButton {
+#validateButton, #showButton, #hideButton, #prevButton, #downloadCSVButton,#showRotationErrorButton, #hideRotationErrorButton,#showUpdateErrorButton,#hideUpdateErrorButton {
     padding: 15px 30px;
     font-size: 25px;
     border: none;
@@ -104,7 +104,7 @@ canvas {
     gap: 10px;
 }
 
-#validateButton, #showButton, #hideButton, #nextButton, #prevButton {
+#validateButton, #showButton, #hideButton, #nextButton, #prevButton,#showRotationErrorButton, #hideRotationErrorButton,#showUpdateErrorButton,#hideUpdateErrorButton {
     font-size: 17px;
     padding: 8px 15px;
     border-radius: 5px;

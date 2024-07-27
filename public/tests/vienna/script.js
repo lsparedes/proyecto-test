@@ -50,19 +50,116 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const videos = [
-        { src: 'videos/Test_1.mp4', items: [{ x: 388, y: 170 }], indicator: 'E1' },
-        { src: 'videos/Test_2.mp4', items: [{ x: 310, y: 225 }], indicator: 'E2' },
-        { src: 'videos/Test_3.mp4', items: [{ x: 546, y: 185 }], indicator: 'E3' },
-        { src: 'videos/Test_4.mp4', items: [{ x: 135, y: 246 }], indicator: 'E4' },
-        { src: 'videos/Test_5.mp4', items: [{ x: 230, y: 220 }], indicator: 'E5' },
-        { src: 'videos/Test_5a.mp4', items: [{ x: 631, y: 265 }], indicator: 'E6' },
-        { src: 'videos/Test_6.mp4', items: [{ x: 2210, y: 720 }], indicator: 'E7' },
-        { src: 'videos/Test_7.mp4', items: [{ x: 356, y: 365 }], indicator: 'E8' },
-        { src: 'videos/Test_7a.mp4', items: [{ x: 701, y: 483 }], indicator: 'E9' },
-        { src: 'videos/Test_8.mp4', items: [{ x: 206, y: 500 }], indicator: 'E10' },
-        { src: 'videos/Test_9.mp4', items: [{ x: 99, y: 454 }], indicator: 'E11' },
-        { src: 'videos/Test_10.mp4', items: [{ x: 193, y: 425 }], indicator: 'E12' },
+        {
+            src: 'videos/Test_1.mp4',
+            items: {
+                correcto: [{ x: 388, y: 170 }],
+                error_rotacion: [],
+                error_actualizacion: [{ x: 402, y: 270 }],
+            },
+            indicator: 'E1'
+        },
+        {
+            src: 'videos/Test_2.mp4',
+            items: {
+                correcto: [{ x: 310, y: 225 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E2'
+        },
+        {
+            src: 'videos/Test_3.mp4',
+            items: {
+                correcto: [{ x: 546, y: 185 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E3'
+        },
+        {
+            src: 'videos/Test_4.mp4',
+            items: {
+                correcto: [{ x: 135, y: 246 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E4'
+        },
+        {
+            src: 'videos/Test_5.mp4',
+            items: {
+                correcto: [{ x: 230, y: 220 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E5'
+        },
+        {
+            src: 'videos/Test_5a.mp4',
+            items: {
+                correcto: [{ x: 631, y: 265 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E6'
+        },
+        {
+            src: 'videos/Test_6.mp4',
+            items: {
+                correcto: [{ x: 2210, y: 720 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E7'
+        },
+        {
+            src: 'videos/Test_7.mp4',
+            items: {
+                correcto: [{ x: 356, y: 365 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E8'
+        },
+        {
+            src: 'videos/Test_7a.mp4',
+            items: {
+                correcto: [{ x: 701, y: 483 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E9'
+        },
+        {
+            src: 'videos/Test_8.mp4',
+            items: {
+                correcto: [{ x: 206, y: 500 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E10'
+        },
+        {
+            src: 'videos/Test_9.mp4',
+            items: {
+                correcto: [{ x: 99, y: 454 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E11'
+        },
+        {
+            src: 'videos/Test_10.mp4',
+            items: {
+                correcto: [{ x: 193, y: 425 }],
+                error_rotacion: [],
+                error_actualizacion: [],
+            },
+            indicator: 'E12'
+        }
     ];
+    
 
     const showScreen = (index) => {
         screens.forEach((screen, i) => {
@@ -132,6 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const showButton = document.getElementById('showButton');
     const hideButton = document.getElementById('hideButton');
     const prevButton = document.getElementById('prevButton');
+    const showRotationErrorButton = document.getElementById('showRotationErrorButton');
+    const hideRotationErrorButton = document.getElementById('hideRotationErrorButton');
+    const showUpdateErrorButton = document.getElementById('showUpdateErrorButton');
+    const hideUpdateErrorButton = document.getElementById('hideUpdateErrorButton');
     const downloadCSVButton = document.getElementById('downloadCSVButton');
     const fullScreenButton = document.getElementById('fullScreenButton');
     const completionScreen = document.getElementById('completionScreen');
@@ -144,6 +245,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let clicksByImage = [];
         let resultsByImage = [];
         let showCorrectDoors = false;
+        let showRotationErrors = false; // Estado para mostrar errores de rotación
+        let showUpdateErrors = false; // Estado para mostrar errores de actualización
 
         const images = [
             'img/practica_1.png',
@@ -172,6 +275,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (showCorrectDoors) {
                 drawCorrectDoors();
             }
+            if (showRotationErrors) {
+                drawRotationErrors();
+            }
+            if (showUpdateErrors) {
+                drawUpdateErrors();
+            }
         };
 
         fullScreenButton.addEventListener('click', () => {
@@ -187,6 +296,12 @@ document.addEventListener('DOMContentLoaded', () => {
             drawImageScaled(imageCanvas, image);
             if (showCorrectDoors) {
                 drawCorrectDoors();
+            }
+            if (showRotationErrors) {
+                drawRotationErrors();
+            }
+            if (showUpdateErrors) {
+                drawUpdateErrors();
             }
         });
 
@@ -219,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function drawCircle(canvas, x, y, color) {
             const ctx = canvas.getContext('2d');
             ctx.beginPath();
-            ctx.arc(x, y, 10, 0, 2 * Math.PI, false); // Ajusta el tamaño del círculo según sea necesario
+            ctx.arc(x, y, 15, 0, 2 * Math.PI, false); // Ajusta el tamaño del círculo según sea necesario
             ctx.fillStyle = color;
             ctx.fill();
             ctx.lineWidth = 1;
@@ -228,21 +343,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function drawCorrectDoors() {
-            videos[contador].items.forEach(item => {
+            videos[contador].items.correcto.forEach(item => {
                 const x = item.x * (imageCanvas.width / 700);
                 const y = item.y * (imageCanvas.height / 400);
                 drawCircle(imageCanvas, x, y, 'red');
             });
         }
 
+        function drawRotationErrors() {
+            videos[contador].items.error_rotacion.forEach(item => {
+                const x = item.x * (imageCanvas.width / 700);
+                const y = item.y * (imageCanvas.height / 400);
+                drawCircle(imageCanvas, x, y, 'orange');
+            });
+        }
+
+        function drawUpdateErrors() {
+            videos[contador].items.error_actualizacion.forEach(item => {
+                const x = item.x * (imageCanvas.width / 700);
+                const y = item.y * (imageCanvas.height / 400);
+                drawCircle(imageCanvas, x, y, 'purple');
+            });
+        }
+
         function validateClicks() {
             let correctClicks = 0;
+            let rotationErrors = 0;
+            let updateErrors = 0;
             const results = [];
             drawImageScaled(imageCanvas, image);
             if (showCorrectDoors) drawCorrectDoors();
+            if (showRotationErrors) drawRotationErrors();
+            if (showUpdateErrors) drawUpdateErrors();
             clicks.forEach((click, index) => {
                 let isCorrect = false;
-                videos[contador].items.forEach(item => {
+                let isRotationError = false;
+                let isUpdateError = false;
+
+                videos[contador].items.correcto.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
                     if (Math.sqrt(dx * dx + dy * dy) < 20) {
@@ -250,18 +388,46 @@ document.addEventListener('DOMContentLoaded', () => {
                         correctClicks++;
                     }
                 });
-                drawCircle(imageCanvas,
-                    click.x * (imageCanvas.width / 700),
-                    click.y * (imageCanvas.height / 400),
-                    isCorrect ? 'green' : 'red'
-                );
-                results.push({ orden: index + 1, correcto: isCorrect ? 'Si' : 'No' });
+
+                videos[contador].items.error_rotacion.forEach(item => {
+                    const dx = click.x - item.x;
+                    const dy = click.y - item.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                        isRotationError = true;
+                        rotationErrors++;
+                    }
+                });
+
+                videos[contador].items.error_actualizacion.forEach(item => {
+                    const dx = click.x - item.x;
+                    const dy = click.y - item.y;
+                    if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                        isUpdateError = true;
+                        updateErrors++;
+                    }
+                });
+
+                let score = 0;
+                if (isCorrect) {
+                    score = 2;
+                    drawCircle(imageCanvas, click.x * (imageCanvas.width / 700), click.y * (imageCanvas.height / 400), 'green');
+                } else if (isRotationError || isUpdateError) {
+                    score = 1;
+                    drawCircle(imageCanvas, click.x * (imageCanvas.width / 700), click.y * (imageCanvas.height / 400), 'orange');
+                } else {
+                    drawCircle(imageCanvas, click.x * (imageCanvas.width / 700), click.y * (imageCanvas.height / 400), 'red');
+                }
+
+                results.push({ orden: index + 1, score });
             });
 
             resultsDiv.innerHTML = `
                 <p>Total de clics: ${clicks.length}</p>
+                <p>Puntaje total: ${results.reduce((sum, r) => sum + r.score, 0)}</p>
                 <p>Clics correctos: ${correctClicks}</p>
-                <p>Puertas correctas encontradas: ${correctClicks} de ${videos[contador].items.length}</p>
+                <p>Errores de rotación: ${rotationErrors}</p>
+                <p>Errores de actualización: ${updateErrors}</p>
+                <p>Puertas correctas encontradas: ${correctClicks} de ${videos[contador].items.correcto.length}</p>
             `;
 
             resultsByImage[contador] = results;
@@ -275,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     csvData.push({
                         image: videos[imageIndex].src,
                         orden: result.orden,
-                        correcto: result.correcto
+                        score: result.score
                     });
                 });
             });
@@ -344,6 +510,26 @@ document.addEventListener('DOMContentLoaded', () => {
         hideButton.addEventListener('click', () => {
             showCorrectDoors = false;
             drawImageScaled(imageCanvas, image);
+        });
+        showRotationErrorButton.addEventListener('click', () => {
+            showRotationErrors = true;
+            drawRotationErrors();
+        });
+        hideRotationErrorButton.addEventListener('click', () => {
+            showRotationErrors = false;
+            drawImageScaled(imageCanvas, image);
+            if (showCorrectDoors) drawCorrectDoors();
+            if (showUpdateErrors) drawUpdateErrors();
+        });
+        showUpdateErrorButton.addEventListener('click', () => {
+            showUpdateErrors = true;
+            drawUpdateErrors();
+        });
+        hideUpdateErrorButton.addEventListener('click', () => {
+            showUpdateErrors = false;
+            drawImageScaled(imageCanvas, image);
+            if (showCorrectDoors) drawCorrectDoors();
+            if (showRotationErrors) drawRotationErrors();
         });
         prevButton.addEventListener('click', () => {
             contador = (contador - 1 + videos.length) % videos.length;

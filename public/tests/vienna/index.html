@@ -166,14 +166,47 @@
               </div>
           </div>
           <div class="row">
-            <div id="results"></div>
+           
 
             <div id="buttons" style="">
-                <button id="validateButton">Validar Selecciones</button>
-                <button id="showButton">Mostrar Puertas Correctas</button>
-                <button id="hideButton">Ocultar Puertas Correctas</button>
-                <button id="prevButton">Imagen Anterior</button>
+                <div class="row">
+                    <div class="col-6">
+                        <button id="validateButton" class="btn btn-block btn-sm btn-light-outline">Validar Selecciones</button>
+                        <div class="row">
+                            <div class="col-6">
+                                <button id="showButton" class="btn btn-block btn-sm btn-light-outline">Mostrar Puertas Correctas</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="hideButton" class="btn btn-block btn-sm btn-light-outline">Ocultar Puertas Correctas</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <button id="showRotationErrorButton" class="btn btn-block btn-sm btn-light-outline">Mostrar Errores de Rotación</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="hideRotationErrorButton" class="btn btn-block btn-sm btn-light-outline">Ocultar Errores de Rotación</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <button id="showUpdateErrorButton" class="btn btn-block btn-sm btn-light-outline">Mostrar Errores de Actualización</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="hideUpdateErrorButton" class="btn btn-block btn-sm btn-light-outline">Ocultar Errores de Actualización</button>
+                            </div>
+                        </div>
+                    
+                        
+                        <!-- <button id="prevButton">Imagen Anterior</button> -->
+                    </div>
+                    <div class="col-6">
+                        <div id="results"></div>
+                    </div>
+                </div>
+                
             </div>
+            
           </div>
           <div class="button-container">
               <button id="nextButtonTest" class="arrow-button"></button>
