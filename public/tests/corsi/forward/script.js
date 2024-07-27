@@ -151,7 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
             createSequence(practiceSequences)
         } else{
             createSequence(fixedSequences);
-            startTime = new Date(); // Registrar la hora de inicio
         }
         sequenceDisplaying = true;
         displaySequence(0);
@@ -267,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
-        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta (s)","Tiempo Total (s)", "Mano Utilizada"];
+        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta (s)"];
         const rows = testData.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
             const userResponseIncremented = data.userResponse.map(num => num + 1);
@@ -278,8 +277,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 userResponseIncremented.join(""),
                 precision,
                 data.responseTime,
-                duration.toFixed(2),
-                selectedHand,
             ];
         });
 
@@ -288,9 +285,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const rowsToFill = desiredRowCount - currentRowCount;
     
         for (let i = 0; i < rowsToFill; i++) {
-            // Puedes reemplazar los valores vacíos con cualquier valor predeterminado que desees
-            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, "", "", ""]);
+            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
         }
+
+        rows.push(['\nTiempo Total (s): ' + duration.toFixed(2)]);
+        rows.push(['Mano Utilizada: ' + selectedHand]);
 
         let csvContent = "data:text/csv;charset=utf-8," 
         + headers.join(";") + "\n"
@@ -308,6 +307,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     startSequenceButton.addEventListener('click', () => {
+        if (!isPractice) {
+            startTime = new Date(); // Registrar la hora de inicio
+            console.log('Inicio Temporizador');
+        }
         startSequence();
     });
 

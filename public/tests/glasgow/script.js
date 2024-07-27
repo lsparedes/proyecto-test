@@ -49,10 +49,16 @@ let currentImageIndex = 0;
 let responses = [];
 let currentResponse = null;
 let startTime;
+let endTime;
+let optionSelected = false;
+let startTimeTotal;
+let endTimeTotal;
 
 function startTest() {
     document.getElementById('instruction-screen').style.display = 'none';
     document.getElementById('test-screen').style.display = 'block';
+    startTimeTotal = new Date();
+    console.log(startTimeTotal);
     showImage();
 }
 
@@ -72,6 +78,7 @@ function showImage() {
         document.getElementById('image').src = image.src;
         document.getElementById('trialIndicator').textContent = image.numero;
         currentResponse = null;
+        optionSelected = false;
         startTime = new Date();
     } else {
         endTest();
@@ -79,12 +86,20 @@ function showImage() {
 }
 
 document.getElementById('same-button').addEventListener('click', () => {
+    if (!optionSelected) {
+        endTime = new Date();
+        optionSelected = true;
+    }
     currentResponse = 'same';
     document.getElementById('same-button').classList.add('selected');
     document.getElementById('different-button').classList.remove('selected');
 });
 
-document.getElementById('different-button').addEventListener('click', () => {   
+document.getElementById('different-button').addEventListener('click', () => {
+    if (!optionSelected) {
+        endTime = new Date();
+        optionSelected = true;
+    }   
     currentResponse = 'different';
     document.getElementById('different-button').classList.add('selected');
     document.getElementById('same-button').classList.remove('selected');
@@ -94,7 +109,6 @@ document.getElementById('next-button').addEventListener('click', nextImage);
 
 function nextImage() {
     if (currentResponse !== null) {
-        const endTime = new Date();
         const responseTime = (endTime - startTime) / 1000;
 
         responses.push({ 
@@ -112,7 +126,9 @@ function nextImage() {
             currentImageIndex++;
             showImage();
         } else {
-            endTest();
+            document.getElementById('test-screen').style.display = 'none';
+            endTimeTotal = new Date();
+            showHandSelection();
         }
     } else {
         alert('Por favor selecciona una respuesta antes de continuar.');
@@ -120,29 +136,34 @@ function nextImage() {
 }
 
 function endTest() {
-    document.getElementById('test-screen').style.display = 'none';
     document.getElementById('end-screen').style.display = 'block';
     generarCSV();
 }
 
 function generarCSV() {
+    const duracionTest = (endTimeTotal - startTimeTotal) / 1000;
+
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
 
-    const csvData = [['Numero de Imagen', 'Ruta de Imagen', 'Es Igual', 'Respuesta del Usuario', 'Tiempo de Respuesta (segundos)']];
+    const csvData = [['Ensayo', 'Respuesta Correcta', 'Respuesta Participante', 'Precision', 'Tiempo de Respuesta (segundos)']];
     responses.forEach((response) => {
         const numeroImagen = response.imageIndex + 1; 
         const rutaImagen = response.imageSrc;
-        const esIgual = response.isSame ? 'Si' : 'No';
-        const respuestaUsuario = response.response === 'same' ? 'Iguales' : 'Diferentes';
+        const esIgual = response.isSame ? 'Misma' : 'Diferentes';
+        const respuestaUsuario = response.response === 'same' ? 'Misma' : 'Diferentes';
+        const precision = response.isSame === (response.response === 'same') ? 1 : 0;
         const tiempoRespuesta = response.responseTime;
 
-        csvData.push([numeroImagen, rutaImagen, esIgual, respuestaUsuario, tiempoRespuesta]);
+        csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta]);
     });
 
-    const csvContent = csvData.map(row => row.join(',')).join('\n');
+    csvData.push(['\nDuracion Total del Test (segundos): ' + duracionTest]);
+    csvData.push(['Mano Utilizada: ' + selectedHand]);
+
+    const csvContent = csvData.map(row => row.join(';')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     if (link.download !== undefined) {
@@ -156,3 +177,32 @@ function generarCSV() {
         document.body.removeChild(link);
     }
 }
+
+// SELECCION DE MANO JS
+
+const selectHandContainer = document.getElementById("selectHand");
+const handButton = document.getElementById("handButton");
+const handInputs = document.getElementsByName('hand');
+
+// Variable con la mano seleccionada
+let selectedHand = "";
+
+// Funcion para mostrar la pantalla de seleccion de mano
+function showHandSelection() {
+    selectHandContainer.style.display = "block";
+}
+
+// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+// En este caso fue mostrarFinalizacion()
+function confirmHandSelection() {
+    selectHandContainer.style.display = "none";
+    endTest();
+}
+
+// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+handInputs.forEach((input) => {
+    input.addEventListener('change', (e) => {
+        handButton.style.display = "block";
+        selectedHand = e.target.value;
+    });
+});

@@ -215,6 +215,7 @@ let indiceActual = 0;
 let presentacionIniciada = false;
 let itemStartTime;
 let startTime;
+let practice = true;
 const fullscreenButton = document.getElementById('fullscreenButton');
 
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
@@ -236,7 +237,7 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
 
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
-    imageContainer.innerHTML = ' ¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+    imageContainer.innerHTML = ' <h1>¡Has completado esta tarea con éxito!</h1> <br> <h1>¡Muchas gracias!</h1>';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.display = 'flex';
@@ -461,10 +462,14 @@ function cambiarImagen(selectedOptionIndex) {
     if (!respuestaSeleccionada) {
         return;
     }
-
     // Aquí se cambia la lógica para avanzar a la siguiente imagen
     indiceActual++;
     respuestaSeleccionada = false;
+    if (practice) {
+        practice = false;
+        mostrarInstrucciones();
+        return;
+    }
     if (indiceActual === imagenes.length) {
         const imageContainer = document.getElementById('imageContainer');
         imageContainer.style.display = 'none';
@@ -477,6 +482,23 @@ function cambiarImagen(selectedOptionIndex) {
     } else {
         mostrarImagen(indiceActual);
     }
+}
+
+function mostrarInstrucciones() {
+    const imageContainer = document.getElementById('imageContainer');
+    const instructionText = document.getElementById('instructionText');
+    const instrucciones = document.getElementById('instrucciones');
+    const startButton = document.getElementById('startButton');
+    instructionText.style.display = 'block';
+    instrucciones.style.display = 'block';
+    startButton.style.display = 'block';
+    imageContainer.style.display = 'none';
+    instructionText.textContent = 'Ahora comenzará la tarea de verdad. Por favor, responda tan rápido como pueda.';
+
+    // Cambia la fuente del audio
+    const audioElement = document.getElementById('instrucciones');
+    audioElement.src = 'instrucciones2.mp3';
+    audioElement.load(); // Carga la nueva fuente
 }
 
 

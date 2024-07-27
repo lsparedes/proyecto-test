@@ -19,6 +19,11 @@ body {
     max-width: 1500px;
 }
 
+#instrucciones {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 #image-container img {
     width: auto; /* Ancho automático para mantener la proporción */
     height: 85vh; /* Altura relativa al 70% de la altura de la ventana */
@@ -43,10 +48,10 @@ body {
 }
 
 #instructionText {
-    font-size: 39px;
+    font-size: 37px;
     text-align: justify;
-    margin-bottom: 150px;
-    margin-top: 110px;
+    margin-bottom: 1rem;
+    /* margin-top: 110px; */
 }
 
 #finalizacionText{
@@ -74,6 +79,22 @@ button {
 }
 
 #start-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+/* #start-button {
     padding: 15px 30px;
     font-size: 25px;
     color: white;
@@ -90,9 +111,25 @@ button {
 
 #start-button:active {
     transform: scale(0.98);
-}
+} */
 
 #fullscreen-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}
+
+/* #fullscreen-button {
     margin-top: 10px;
     padding: 15px 30px;
     font-size: 25px;
@@ -110,7 +147,7 @@ button {
 
 #fullscreen-button:active {
     transform: scale(0.98);
-}
+} */
 
 #next-button {
     background-color: transparent;
@@ -121,9 +158,9 @@ button {
     background-repeat: no-repeat;
     padding: 0;
     /* Elimina el relleno para alinear el icono verticalmente */
-    width: 90px;
+    width: 80px;
     /* Ajusta el ancho fijo */
-    height: 80px;
+    height: 65px;
     /* Ajusta la altura fija */
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
@@ -132,7 +169,7 @@ button {
     /* Ajustamos la distancia desde la parte inferior */
     right: 15px;
     /* Ajustamos la distancia desde el borde derecho */
-    margin: 0;
+    margin: 20px;
 }
 
 #same-button, #different-button {
@@ -189,4 +226,49 @@ button {
     color: white;
     padding: 10px 15px;
     border-radius: 5px;
+}
+
+/* SELECCION DE MANO CSS */
+
+#handButton {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    margin: 20px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+#selectHand {
+    display: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#selectHand h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#selectHand label {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#selectHand input[type="radio"] {
+    margin-right: 10px;
 }

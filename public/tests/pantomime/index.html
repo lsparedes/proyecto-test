@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test de Pantomima Uso de Objetos</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 </head>
@@ -14,8 +15,8 @@
 <body>
     <div id="container">
         <div id="start-screen" class="container">
-            <h1>Instrucciones</h1>
-            <p>En esta prueba, quiero que imagine que sostiene el objeto que le voy a mostrar a
+            <h1 id="titulo">Instrucciones</h1>
+            <p id="instructionText">En esta prueba, quiero que imagine que sostiene el objeto que le voy a mostrar a
                 continuación en su mano. Es importante que recuerde no usar su mano o dedos como si fuese el
                 objeto. Use los botones para grabar y detener la grabación.</p>
 
@@ -37,16 +38,37 @@
                 <source id="audio-source" src="" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
+            <video id="video-preview" autoplay muted></video>
+            
             <div class="controls">
                 <button id="audio-btn"></button>
+                <button id="recording-btn" disabled></button>
                 <button id="stop-btn" disabled></button>
             </div>
-            <video id="video-preview" autoplay muted></video>
             <button id="next-btn" style="display: none;"></button>
         </div>
-        
+
+        <div id="selectHand" class="screen hidden">
+            <h4>¿Con qué mano respondiste el test?</h4>
+            <div>
+                <input type="radio" id="right_hand" name="hand" value="derecha">
+                <label for="right_hand">Derecha</label>
+            </div>
+            <div>
+                <input type="radio" id="left_hand" name="hand" value="izquierda">
+                <label for="left_hand">Izquierda</label>
+            </div>
+            <div>
+                <input type="radio" id="both_hands" name="hand" value="ambas">
+                <label for="both_hands">Ambas</label>
+            </div>
+            <button id="handButton" onclick="confirmHandSelection()" style="display: none;"></button>
+        </div>
+
         <div id="completion-screen" class="screen hidden">
-            <p>Test finalizado, gracias por tus respuestas.</p>
+            <h1>¡Has completado esta tarea con éxito!</h1>
+            <br>
+            <h1>¡Muchas gracias!</h1>
         </div>
     </div>
     <script src="scripts.js"></script>

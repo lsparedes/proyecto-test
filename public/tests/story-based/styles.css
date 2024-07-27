@@ -38,6 +38,12 @@ img {
 
 }
 
+#instructionText {
+    font-size: 37px;
+    text-align: justify;
+    margin-bottom: 1rem;
+}
+
 #inicioImage {
     max-width: 100%;
     max-height: 80vh;
@@ -63,7 +69,8 @@ button {
 }
 
 audio {
-    margin-bottom: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .button-container {
