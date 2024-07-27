@@ -14,8 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const practiceCanvas1 = document.getElementById('practiceCanvas1');
     const practiceCanvas2 = document.getElementById('practiceCanvas2');
 
-    const ctx = imageCanvas.getContext('2d');
-
     const resizeCanvas = (canvas) => {
         const container = canvas.parentElement;
         canvas.width = container.clientWidth;
@@ -25,7 +23,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawImageScaled = (canvas, img) => {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
+        const x = (canvas.width / 2) - (img.width / 2) * scale;
+        const y = (canvas.height / 2) - (img.height / 2) * scale;
+        ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
     };
 
     const loadCanvasContent = (index) => {
@@ -49,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const videos = [
-        { src: 'videos/Test_1.mp4', items: [{ x: 450, y: 380 }], indicator: 'E1' },
+        { src: 'videos/Test_1.mp4', items: [{ x: 388, y: 170 }], indicator: 'E1' },
         { src: 'videos/Test_2.mp4', items: [{ x: 310, y: 225 }], indicator: 'E2' },
         { src: 'videos/Test_3.mp4', items: [{ x: 546, y: 185 }], indicator: 'E3' },
         { src: 'videos/Test_4.mp4', items: [{ x: 135, y: 246 }], indicator: 'E4' },
@@ -136,6 +137,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const completionScreen = document.getElementById('completionScreen');
     const testScreen = document.getElementById('testScreen');
 
+    
+
     if (imageCanvas && testVideo) {
         let clicks = [];
         let clicksByImage = [];
@@ -204,17 +207,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function handleClick(e) {
             const rect = imageCanvas.getBoundingClientRect();
-            const x = (e.clientX - rect.left) * (image.width / imageCanvas.width);
-            const y = (e.clientY - rect.top) * (image.height / imageCanvas.height);
-            clicks.push({ x, y });
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const scaleX = 700 / imageCanvas.width; // Ancho original de la imagen
+            const scaleY = 400 / imageCanvas.height; // Alto original de la imagen
+            clicks.push({ x: x * scaleX, y: y * scaleY });
             clicksByImage[contador] = clicks;
-            drawCircle(imageCanvas, e.clientX - rect.left, e.clientY - rect.top, 'blue');
+            drawCircle(imageCanvas, x, y, 'blue');
         }
 
         function drawCircle(canvas, x, y, color) {
             const ctx = canvas.getContext('2d');
             ctx.beginPath();
-            ctx.arc(x, y, 10, 0, 2 * Math.PI, false);
+            ctx.arc(x, y, 10, 0, 2 * Math.PI, false); // Ajusta el tamaño del círculo según sea necesario
             ctx.fillStyle = color;
             ctx.fill();
             ctx.lineWidth = 1;
@@ -224,7 +229,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function drawCorrectDoors() {
             videos[contador].items.forEach(item => {
-                drawCircle(imageCanvas, item.x * (imageCanvas.width / image.width), item.y * (imageCanvas.height / image.height), 'red');
+                const x = item.x * (imageCanvas.width / 700);
+                const y = item.y * (imageCanvas.height / 400);
+                drawCircle(imageCanvas, x, y, 'red');
             });
         }
 
@@ -244,8 +251,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
                 drawCircle(imageCanvas,
-                    click.x * (imageCanvas.width / image.width),
-                    click.y * (imageCanvas.height / image.height),
+                    click.x * (imageCanvas.width / 700),
+                    click.y * (imageCanvas.height / 400),
                     isCorrect ? 'green' : 'red'
                 );
                 results.push({ orden: index + 1, correcto: isCorrect ? 'Si' : 'No' });
@@ -327,6 +334,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 showCompletionScreen();
             }
         });
+
+        imageCanvas.addEventListener('click', handleClick, false); // Asegúrate de añadir el evento click aquí
+        validateButton.addEventListener('click', validateClicks, false);
+        showButton.addEventListener('click', () => {
+            showCorrectDoors = true;
+            drawCorrectDoors();
+        });
+        hideButton.addEventListener('click', () => {
+            showCorrectDoors = false;
+            drawImageScaled(imageCanvas, image);
+        });
+        prevButton.addEventListener('click', () => {
+            contador = (contador - 1 + videos.length) % videos.length;
+            loadCurrentVideo(contador);
+            clicks = clicksByImage[contador];
+            resultsDiv.innerHTML = '';
+        });
+        downloadCSVButton.addEventListener('click', downloadCSV, false);
+
+        window.dispatchEvent(new Event('resize')); // Forzar el redimensionamiento inicial
     } else {
         console.error('Canvas element not found');
     }
