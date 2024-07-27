@@ -2,12 +2,12 @@
 // document.getElementById('continueButtonB').addEventListener('click', () => {
 //     startPartB();
 // });
-
+let begining = null;
 window.onload = function () {
     startPartB();
-
+    begining = new Date();
     // Iniciar grabación para el primer canvas
-    // mediaRecorderCanvas = startRecording(canvasPartB, recordedChunksCanvasB);
+    mediaRecorderCanvas = startRecording(canvasPartB, recordedChunksCanvasB);
 
 };
 
@@ -74,6 +74,20 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
     }
 
     circlesArray.push({ x, y, label });
+}
+
+function startRecording(canvas, recordedChunks) {
+    const stream = canvas.captureStream();
+    const mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = function (event) {
+        if (event.data.size > 0) {
+            recordedChunks.push(event.data);
+        }
+    };
+
+    mediaRecorder.start();
+    return mediaRecorder;
 }
 
 function startPartB() {
@@ -374,6 +388,7 @@ function startPartB2() {
         const name = index === 0 ? firstCircleLabelB2 : (index === circleCoordinatesPartB2.length - 1 ? lastCircleLabelB2 : "");
         drawCircleWithLabel(ctxPartB2, coord.x, coord.y, label, circlesPartB2, name, 30);
     });
+    mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
     drawNextButtonB2();
 }
 
@@ -518,6 +533,19 @@ function drawNextButtonB2() {
         canvasPartB2.style.display = 'none';
         // Aquí puedes agregar la lógica para mostrar la siguiente sección o concluir la prueba
         nextButtonB2.remove();
+        const fin = new Date();
+        const executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea
+        const taskTime = (fin - begining) / 1000;
+        console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
+        // data.push([{ executionTime: executionTime}]);
+        data.push({
+            executionTime: executionTime,
+            commissionErrors: erroresComision,
+            correctLines: correctLines,
+            liftPenCount: liftPenCount,
+            penAirTime: penAirTime,
+            taskTime: taskTime
+        });
         showHandSelection(); // Llamar a completeTest aquí para mostrar el botón de descarga
     });
 
@@ -553,17 +581,73 @@ function showDownloadButton() {
 
 // Llamar a esta función cuando se complete la prueba
 function testFinalizado() {
-    // Mostrar mensaje de finalización
-    const instructions = document.getElementById('instructions');
-    instructions.style.display = 'block';
-    instructions.style.rotate = '-90deg';
-    instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
-    instructions.style.textAlign = 'center';
-    instructions.style.fontSize = '40px';
-    instructions.style.marginTop = '20px';
-    instructions.style.display = 'flex';
-    // Aquí puedes agregar cualquier otra lógica necesaria al completar la prueba
-    showDownloadButton();
+    // showDownloadButton(); // REVISAR (para ver como se implemento la descarga de las imagenes)
+    // Detener las grabaciones
+    mediaRecorderCanvas.stop();
+    mediaRecorderCanvasPartB2.stop();
+
+    mediaRecorderCanvas.onstop = () => {
+        const blob = new Blob(recordedChunksCanvasB, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'canvasRecording.webm';
+        link.click();
+    };
+
+    mediaRecorderCanvasPartB2.onstop = () => {
+        const blob = new Blob(recordedChunksCanvasPartB2, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'canvasPartB2Recording.webm';
+        link.click();
+    };
+
+    setTimeout(() => {
+        const zip = new JSZip();
+        zip.file("canvasBRecording.webm", new Blob(recordedChunksCanvasB, { type: 'video/webm' }));
+        zip.file("canvasPartB2Recording.webm", new Blob(recordedChunksCanvasPartB2, { type: 'video/webm' }));
+        const csvContent = generateCSV(data);
+        zip.file("test_result_TMT_part_B.csv", csvContent);
+
+
+        // Capturas de pantalla
+        canvasPartB.toBlob(function (blob) {
+            zip.file("canvasBScreenshot.png", blob);
+
+            canvasPartB2.toBlob(function (blobPartB2) {
+                zip.file("canvasPartB2Screenshot.png", blobPartB2);
+
+                zip.generateAsync({ type: 'blob' }).then(function (content) {
+                    saveAs(content, "test_results_TMT_part_B.zip");
+                });
+            });
+        });
+
+        // Mostrar mensaje de finalización
+        const instructions = document.getElementById('instructions');
+        instructions.style.display = 'flex';
+        instructions.style.rotate = '-90deg';
+        instructions.style.justifyContent = 'center'; // Centrar contenido horizontalmente
+        instructions.style.alignItems = 'center'; // Centrar contenido verticalmente
+        instructions.style.height = '100vh'; // Altura del viewport para permitir el centrado vertical
+        instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+        instructions.style.textAlign = 'center';
+        instructions.style.fontSize = '40px';
+        instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
+    }, 1000); // Ajustar tiempo si es necesario
+}
+
+function generateCSV(data) {
+    let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha),Numero de errores de comision,Numero de lineas correctas,Numero de veces en que el participante levanto el lápiz de la pantalla,Tiempo de ejecucion de la tarea,Tiempo total de lápiz en el aire desde la primera respuesta en el canvas,Tiempo dedicado a la tarea, mano utilizada\n";
+
+    data.forEach(row => {
+        let linea = `${row.executionTime},${row.commissionErrors},${row.correctLines},${row.liftPenCount},${row.executionTime},${row.penAirTime},${row.taskTime},${selectedHand}\n`;
+        csvContent += linea;
+    });
+
+    return new Blob([csvContent], { type: 'text/csv' });
 }
 
 // SELECCION DE MANO JS

@@ -138,10 +138,10 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         drawNextButton();
     }
-
+    let begining = null;
     window.onload = function () {
         startTest();
-
+        begining = new Date();
         // Iniciar grabación para el primer canvas
         mediaRecorderCanvas = startRecording(canvas, recordedChunksCanvas);
     }
@@ -515,6 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
             nextButtonA.remove(); // Eliminar el botón "Siguiente" después de hacer clic
             const fin = new Date();
             const executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea
+            const taskTime = (fin - begining) / 1000; // Tiempo total de la tarea en segundos
             console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
             // data.push([{ executionTime: executionTime}]);
             data.push({
