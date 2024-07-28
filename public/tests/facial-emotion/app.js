@@ -185,6 +185,10 @@ let presentacionIniciada = false;
 const emocionesSeleccionadas = [];
 // const emocionesDisponibles = ['Alegria', 'Asco', 'Enojo', 'Miedo', 'Neutro', 'Sorpresa', 'Tristeza'];
 const emocionesDisponibles = ['Alegria', 'Sorpresa', 'Neutro', 'Tristeza', 'Miedo', 'Asco', 'Enojo'];
+const tiemposRespuesta = [];
+let iniciaResp = null;
+let tiempoInicio = null;
+let tiempoFin = null;
 
 function mostrarEmociones() {
     const listaEmociones = document.getElementById('emotionsList');
@@ -206,6 +210,16 @@ function mostrarEmociones() {
 
             // Agregar la clase 'selected' al elemento clickeado
             listItem.classList.add('selected');
+
+            // Calcular el tiempo de respuesta
+            let ahora = new Date();
+            time = responseTime(ahora);
+            tiemposRespuesta[indiceActual] = time;
+            console.log(`Tiempo de respuesta: ${time} segundos.`);
+
+            emocionesSeleccionadas.forEach((emocion, index) => {
+                console.log(`Ensayo ${index + 1}: ${emocion}`);
+            });
         });
         listaEmociones.appendChild(listItem);
     });
@@ -224,20 +238,41 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
     }
 });
 
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
+    }
+});
+
 function mostrarFinalizacion() {
-    const imagenNumero = document.getElementById('imagenNumero');
-    document.getElementById('next-button').style.display = 'none';
+    // const imagenNumero = document.getElementById('imagenNumero');
+    // document.getElementById('next-button').style.display = 'none';
     clearTimeout(temporizador);
     const imageContainer = document.getElementById('imageContainer');
+    imageContainer.style.display = 'block';
     imageContainer.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.marginTop = '20px';
     imageContainer.style.display = 'flex';
-    imagenNumero.style.display = 'none';
+    // imagenNumero.style.display = 'none';
     imageContainer.style.backgroundColor = 'transparent';
-    document.getElementById('fullscreenButton').style.display = 'none';
-    generarCSV();
+    // document.getElementById('fullscreenButton').style.display = 'none';
+
+    tiempoFin = new Date(); // Guardar el tiempo de fin al finalizar la tarea
+    const tiempoTranscurrido = (tiempoFin - tiempoInicio) / 1000; // Calcular el tiempo transcurrido de milisegundos a segundos
+
+    console.log(`Tarea finalizada. Tiempo transcurrido: ${tiempoTranscurrido} segundos.`);
+
+    // Aquí podrías hacer lo que necesites con el tiempo transcurrido, como guardar en un archivo CSV, etc.
+
+    generarCSV(tiempoTranscurrido, tiemposRespuesta);
 }
 
 function iniciarPresentacion() {
@@ -259,7 +294,9 @@ function iniciarPresentacion() {
         startButton.style.display = 'none';
         mostrarImagen(indiceActual);
         mostrarEmociones();
-        reiniciarTemporizador();
+        iniciaResp = new Date(); // Guardar el tiempo de inicio al iniciar la tarea
+        // reiniciarTemporizador();
+        tiempoInicio = new Date(); // Guardar el tiempo de inicio al iniciar la tarea
     });
     if (imagenes.length > 0) {
         startButton.style.display = 'block';
@@ -274,9 +311,11 @@ function cambiarImagen() {
     document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button"
     indiceActual++;
     if (indiceActual === imagenes.length) {
-        mostrarFinalizacion();
+        showHandSelection();
+        // mostrarFinalizacion();
     } else {
         mostrarImagen(indiceActual);
+        iniciaResp = new Date(); // Guardar el tiempo de inicio al cambiar
         reiniciarTemporizador();
         mostrarEmociones();
 
@@ -289,21 +328,25 @@ function cambiarImagen() {
     }
 }
 
-function generarCSV() {
+function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
 
-    const csvData = [['Numero de Imagen', 'Emocion Seleccionada', 'Emocion Correcta']];
+    const csvData = [['Numero de ensayo', 'Respuesta correcta', 'Respuesta participante', 'Precision', 'Tiempo de respuesta', 'Tiempo dedicado a la tarea', 'Mano utilizada']];
 
-    emocionesSeleccionadas.forEach((emocionSeleccionada, indice) => {
-        const imagenData = imagenes[indice];
-        const numeroImagen = imagenData.numero;
-        const emocionCorrecta = imagenData.emocionCorrecta;
+    imagenes.forEach((img, index) => {
+        const numeroImagen = img.numero;
+        const emocionCorrecta = img.emocionCorrecta;
+        const emocionSeleccionada = emocionesSeleccionadas[index] != undefined ? emocionesSeleccionadas[index] : 'Omitido';
+        const response = tiemposRespuesta[index] != undefined ? tiemposRespuesta[index] : 'No aplica';
+        const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
 
-        csvData.push([numeroImagen, emocionSeleccionada, emocionCorrecta]);
+
+        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, response, tiempoTranscurrido, selectedHand]);
     });
+
 
     const csvContent = csvData.map(row => row.join(',')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -321,8 +364,21 @@ function generarCSV() {
 }
 
 function reiniciarTemporizador() {
+    const arrow = document.getElementById('next-button');
+    arrow.style.backgroundImage = "url('imagenes/flecha3.png')";
+
     clearTimeout(temporizador);
-    temporizador = setTimeout(cambiarImagen, 12000); // Cambia después de 12 segundos
+    temporizador = setTimeout(arrowToRed, 12000); // Cambia después de 12 segundos
+}
+
+function responseTime(ahora) {
+    return (ahora - iniciaResp) / 1000; // Calcular el tiempo transcurrido de milisegundos a segundos
+}
+
+function arrowToRed() {
+    const arrow = document.getElementById('next-button');
+    arrow.style.backgroundImage = "url('imagenes/flecha4.png')";
+
 }
 
 function mostrarImagen(indice) {
@@ -341,3 +397,41 @@ window.onload = function () {
     document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button" al cargar la página
     iniciarPresentacion();
 };
+
+// SELECCION DE MANO JS
+
+const selectHandContainer = document.getElementById("selectHand");
+const handButton = document.getElementById("handButton");
+const handInputs = document.getElementsByName('hand');
+
+// Variable con la mano seleccionada
+let selectedHand = "";
+
+// Funcion para mostrar la pantalla de seleccion de mano
+function showHandSelection() {
+    const imagenNumero = document.getElementById('imagenNumero');
+    imagenNumero.style.display = 'none';
+    document.getElementById('next-button').style.display = 'none';
+    document.getElementById('fullscreenButton').style.display = 'none';
+    document.getElementById('imageContainer').style.display = 'none';
+    document.getElementById('emotionsList').style.display = 'none';
+    selectHandContainer.style.display = "block";
+}
+
+// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+// En este caso fue mostrarFinalizacion()
+function confirmHandSelection() {
+    console.log('holi holi holi'+selectedHand);
+    selectHandContainer.style.display = "none";
+    handButton.style.display = "none";
+    document.getElementById('next-button').style.display = 'block';
+    mostrarFinalizacion();
+}
+
+// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+handInputs.forEach((input) => {
+    input.addEventListener('change', (e) => {
+        handButton.style.display = "block";
+        selectedHand = e.target.value;
+    });
+  });

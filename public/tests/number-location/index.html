@@ -34,7 +34,7 @@
             <img id="test-image" src="" alt="Imagen de prueba">
         </div>
         <div id="input-container">
-            <input type="text" id="number-input" placeholder="">
+            <input type="tel" id="number-input" pattern="[1-9]" oninput="validateInput(this);">
             <button id="submit-btn"><i class="fa-solid fa-arrow-rotate-right" style="color: #000000;"></i></button>
         </div>
         <button id="next-button" style="display: none;"></button>

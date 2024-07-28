@@ -9,48 +9,210 @@
 </head>
 <body>
   <div id="initialScreen" class="screen">
-      <p id="instructionText">A continuacion se mostraran imagenes aereas de los items del test de VIENNA, en las
-          cuales se podra seleccionar
-          las puertas que el usuario escogio en su test, luego de seleccionar la puerta elegida por el usuario, debera
-          'Validar selecciones' para guardar y verfificar si la respuesta fue correcta o no. Tambien tendra la opcion
-          de: 'Mostrar puertas correctas', para ver las respuestas, y podra 'Ocultar puertas correctas' para no
-          verlas.
-          Con el boton 'Siguiente imagen' pasara al siguiente item
-      </p>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p id="instructionText">A continuación, usted verá videos de una persona caminando en unos pasillos. Mientras hace esto, la persona se detiene en las puertas y en las intersecciones de los pasillos para mirar a su alrededor. La persona puede girar en un cruce o darse la vuelta y caminar de regreso.</p>
+                <audio controls>
+                    <source src="" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
+        </div>
+    </div>
       <div class="button-container">
-          <button id="startButton">Comenzar</button>
-          <button id="fullScreenButton">Pantalla Completa</button>
+          <button id="startButton"></button>
+          <button id="fullScreenButton"></button>
+      </div>
+  </div>
+
+  <div id="instructionScreen2" class="screen">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <p id="instructionText">Su tarea consistirá en intentar seguir mentalmente la ubicación actual de la persona e indicar, al final, qué puerta ha elegido usando el mapa que se muestra al lado del vídeo. El mapa no cambia su orientación; ni siquiera si la persona se da vuelta. Tan pronto como la persona haya elegido una puerta extendiendo su brazo hacia la manilla, por favor, toque la puerta correspondiente en el mapa.</p>
+                <audio controls>
+                    <source src="" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
+            </div>
+        </div>
+    </div>
+     <div class="button-container">
+          <button id="nextButton1" class="arrow-button"></button>
+      </div>
+  </div>
+
+  <div id="instructionScreen3" class="screen">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <p id="instructionText">Aquí usted puede ver un ejemplo de un mapa. Los iconos azules representan puertas en partes específicas del pasillo. La posición inicial de la persona está marcada en el mapa con la palabra 'Inicio'.</p>
+                <br>
+                <div class="d-flex">
+                 
+                <img src="img/ejemplo.png" alt="" class="m-auto">
+                </div>
+            </div>
+        </div>
+    </div>
+     
+      <div class="button-container">
+          <button id="nextButton2" class="arrow-button"></button>
+      </div>
+  </div>
+
+  <div id="instructionScreen4" class="screen">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <p id="instructionText">Ahora usted completará una ronda de práctica. Los videos NO SE PUEDEN pausar y NO SE PUEDEN repetir, así que, por favor, preste mucha atención mientras se reproducen los videos. El mapa estará en el lado derecho de la pantalla. Después de unos segundos, el video comenzará a reproducirse automáticamente. Aproveche este tiempo para ubicar la posición inicial de la persona en el mapa.</p>
+      
+            </div>
+        </div>
+    </div>
+      <div class="button-container">
+          <button id="nextButton3" class="arrow-button"></button>
+      </div>
+  </div>
+
+  <div id="practiceInstructionScreen" class="screen">
+    <div class="container-fliud">
+        <div id="header">
+            <h2 class="badge bg-light text-dark shadow" id="trialIndicator">I1</h2>
+        </div>
+        <div class="row p-5">
+            <div class="col-6 border">
+                <video id="practiceVideo1" src="videos/Instructions.mp4" width="100%" autoplay muted></video>
+            </div>
+            <div class="col-6 border text-center">
+                <img src="img/instrucciones.png" alt="" width="100%">
+            </div>
+        </div>
+          <div class="button-container">
+          <button id="nextButtonPracticeInstruction" class="arrow-button"></button>
+      </div>
+    </div> 
+  </div>
+
+  <div id="practiceScreen1" class="screen">
+    
+      <div class="container-fluid">
+        <div id="header">
+            <h2 class="badge bg-light text-dark shadow" id="trialIndicator">P1</h2>
+        </div>
+          <div class="row p-5">
+              <div class="col-6 border">
+                  <video id="practiceVideo2" src="videos/Practice_1.mp4" width="100%" autoplay muted></video>
+              </div>
+              <div class="col-6 border">
+                  <canvas id="practiceCanvas1" width="100%" ></canvas>
+              </div>
+          </div>
+          <div class="button-container">
+              <button id="nextButtonPractice1" class="arrow-button"></button>
+          </div>
+      </div>
+  </div>
+
+  <div id="practiceScreen2" class="screen">
+      <div class="container-fluid">
+        <div id="header">
+            <h2 class="badge bg-light text-dark shadow" id="trialIndicator">P2</h2>
+        </div>
+          <div class="row p-5">
+              <div class="col-6 border">
+                  <video id="practiceVideo3" src="videos/Practice_2.mp4" width="100%" autoplay muted></video>
+              </div>
+              <div class="col-6 border">
+                  <canvas id="practiceCanvas2" width="100%" ></canvas>
+              </div>
+          </div>
+          <div class="button-container">
+              <button id="nextButtonPractice2" class="arrow-button"></button>
+          </div>
+      </div>
+  </div>
+
+  <div id="preTestInstructionScreen" class="screen">
+    <div class="container">
+        <div class="row p-5">
+            <div class="col-12">
+                <p id="instructionText">Ahora comenzará la tarea de verdad. Recuerde intentar seguir mentalmente la ubicación actual de la persona en el mapa. Los videos no se pueden pausar ni repetir. Si no está seguro de qué puerta ha sido elegida, señale la opción que crea más probable. Por favor, responda tan rápido como pueda. ¿Está listo(a)?</p>
+            </div>
+        </div>
+    </div>
+      <div class="button-container">
+          <button id="nextButtonPreTestInstruction" class="arrow-button"></button>
       </div>
   </div>
 
   <div id="testScreen" class="screen">
       <div class="container-fluid">
           <div id="header">
-              <h2 class="badge bg-light text-dark shadow" id="trialIndicator">Instrucción</h2>
+              <h1 class="badge bg-light text-dark shadow" id="indicador"></h1>
+            
           </div>
-          <div class="row align-items-center">
-              <div class="col-8 d-flex justify-content-center align-items-center">
-                  <video id="testVideo" src="../vienna/videos/Test_1.mp4" autoplay muted width="100%"></video>
+          
+          
+          <div class="row p-5">
+              <div class="col-6 border p-0">
+                  <video id="testVideo" src="videos/Test_1.mp4" width="100%" autoplay muted class="m-0"></video>
               </div>
-              <div class="col-4 d-flex flex-column align-items-center ">
-                  <canvas id="imageCanvas" width="600" height="400"></canvas>
-                  <div id="buttons" style="display: none;">
-                      <button id="validateButton">Validar Selecciones</button>
-                      <button id="showButton">Mostrar Puertas Correctas</button>
-                      <button id="hideButton">Ocultar Puertas Correctas</button>
-                      <button id="prevButton">Imagen Anterior</button>
-                  </div>
-                  <div id="results"></div>
+              
+              <div class="col-6 border p-0">
+                  <canvas id="imageCanvas" class="m-0"></canvas>
+     
               </div>
           </div>
-          <div class="row" id="questionRow" style="display: none;">
-              <div class="col-12">
-                  <h3>¿Qué puerta eligió la persona?</h3>
-              </div>
+          <div class="row">
+           
+
+            <div id="buttons" style="">
+                <div class="row">
+                    <div class="col-6">
+                        <button id="validateButton" class="btn btn-block btn-sm btn-light-outline">Validar Selecciones</button>
+                        <div class="row">
+                            <div class="col-6">
+                                <button id="showButton" class="btn btn-block btn-sm btn-light-outline">Mostrar Puertas Correctas</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="hideButton" class="btn btn-block btn-sm btn-light-outline">Ocultar Puertas Correctas</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <button id="showRotationErrorButton" class="btn btn-block btn-sm btn-light-outline">Mostrar Errores de Rotación</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="hideRotationErrorButton" class="btn btn-block btn-sm btn-light-outline">Ocultar Errores de Rotación</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <button id="showUpdateErrorButton" class="btn btn-block btn-sm btn-light-outline">Mostrar Errores de Actualización</button>
+                            </div>
+                            <div class="col-6">
+                                <button id="hideUpdateErrorButton" class="btn btn-block btn-sm btn-light-outline">Ocultar Errores de Actualización</button>
+                            </div>
+                        </div>
+                    
+                        
+                        <!-- <button id="prevButton">Imagen Anterior</button> -->
+                    </div>
+                    <div class="col-6">
+                        <div id="results"></div>
+                    </div>
+                </div>
+                
+            </div>
+            
+          </div>
+          <div class="button-container">
+              <button id="nextButtonTest" class="arrow-button"></button>
           </div>
       </div>
   </div>
-  <button id="nextButton" class="arrow-button"></button>
 
   <div id="completionScreen" class="screen">
       <h2>Se han completado todas las imágenes.</h2>

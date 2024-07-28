@@ -8,17 +8,23 @@ body {
   font-family: Arial, sans-serif;
 }
 
-#instructions, #partA, #partB, #partB2 {
+#instructions,
+#partA,
+#partB,
+#partB2 {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 1100px;
+  max-width: 100vh;
   margin: 0 auto;
-  margin-top: 100px;
+  /* margin-top: 100px; */
 }
 
-#tmtCanvas, #tmtCanvasPartA, #tmtCanvasPartB, #tmtCanvasPartB2   {
+#tmtCanvas,
+#tmtCanvasPartA,
+#tmtCanvasPartB,
+#tmtCanvasPartB2 {
   border: 1px solid black;
   display: none;
 }
@@ -48,16 +54,24 @@ body {
   transform: scale(0.98);
 } */
 
-/* #fullscreenButton {
-  padding: 15px 30px;
-  font-size: 22px;
-  color: rgb(0, 0, 0);
-  background-color: #c7c7c7;
+#fullscreenButton {
+  background-color: transparent;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-} */
+
+  background-image: url('imagenes/full-screen.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding: 5px;
+  width: 80px;
+  height: 65px;
+  vertical-align: middle;
+
+  position: absolute;
+  bottom: 5vh;
+  right: 15px;
+  transform: rotate(-90deg);
+}
 
 /* #fullscreenButton:hover {
   background-color: #8f8f8f;
@@ -88,9 +102,12 @@ button {
 } */
 
 canvas {
-  display: block;  /* Eliminar cualquier espacio extra y alinear adecuadamente */
-  max-width: 99%; /* Asegura que el canvas no sea más grande que su contenedor */
-  height: auto;    /* Mantener la proporción de aspecto */
+  display: block;
+  /* Eliminar cualquier espacio extra y alinear adecuadamente */
+  max-width: 99%;
+  /* Asegura que el canvas no sea más grande que su contenedor */
+  height: auto;
+  /* Mantener la proporción de aspecto */
 }
 
 audio {
@@ -103,7 +120,7 @@ audio {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  background-image: url('flecha3.png');
+  background-image: url('imagenes/flecha3.png');
   background-size: contain;
   background-repeat: no-repeat;
   padding: 0;
@@ -111,6 +128,58 @@ audio {
   height: 80px;
   vertical-align: middle;
   position: absolute;
-  bottom: 15px;
+  top: 15px;
   right: 15px;
+  transform: rotate(-90deg);
+}
+
+/* SELECCION DE MANO CSS */
+
+#handButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  background-image: url('imagenes/flecha3.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding: 0;
+  /* Elimina el relleno para alinear el icono verticalmente */
+  width: 80px;
+  /* Ajusta el ancho fijo */
+  height: 65px;
+  /* Ajusta la altura fija */
+  vertical-align: middle;
+  /* Alineado verticalmente con el contenido */
+  position: absolute;
+  top: 15px;
+  /* Ajustamos la distancia desde la parte inferior */
+  right: 15px;
+  /* Ajustamos la distancia desde el borde derecho */
+  transform: rotate(270deg);
+  /* Rotación de 90 grados */
+}
+
+#selectHand {
+  display: none;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#selectHand h4 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+#selectHand label {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+#selectHand input[type="radio"] {
+  margin-right: 10px;
 }

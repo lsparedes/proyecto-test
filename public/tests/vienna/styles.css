@@ -45,9 +45,6 @@ canvas {
 
 .screen {
     display: none;
-}
-
-#initialScreen, #testScreen, #completionScreen {
     width: 100%;
     height: 100vh;
     display: flex;
@@ -66,12 +63,12 @@ canvas {
     margin-bottom: 100px;
 }
 
-#initialScreen {
+#initialScreen, #instructionScreen1, #instructionScreen2, #instructionScreen3, #instructionScreen4, #practiceInstructionScreen, #preTestInstructionScreen {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 1200px;
+ 
     margin: 0 auto;
 }
 
@@ -84,44 +81,20 @@ canvas {
     margin: 20px;
 }
 
-#startButton {
+#validateButton, #showButton, #hideButton, #prevButton, #downloadCSVButton,#showRotationErrorButton, #hideRotationErrorButton,#showUpdateErrorButton,#hideUpdateErrorButton {
     padding: 15px 30px;
     font-size: 25px;
-    color: white;
-    background-color: #007bff;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
 }
 
-#startButton:hover {
-    background-color: #0056b3;
-}
 
-#startButton:active {
-    transform: scale(0.98);
-}
 
-#fullScreenButton {
-    margin-top: 10px;
-    padding: 15px 30px;
-    font-size: 25px;
-    color: rgb(0, 0, 0);
-    background-color: #c7c7c7;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
 
-#fullScreenButton:hover {
-    background-color: #8f8f8f;
-}
 
-#fullScreenButton:active {
-    transform: scale(0.98);
-}
+
 
 #downloadCSVButton {
     font-size: 16px;
@@ -129,14 +102,9 @@ canvas {
     border-radius: 5px;
     margin-left: 20px;
     gap: 10px;
-    padding: 5px;
 }
 
-#validateButton,
-#showButton,
-#hideButton,
-#nextButton,
-#prevButton {
+#validateButton, #showButton, #hideButton, #nextButton, #prevButton,#showRotationErrorButton, #hideRotationErrorButton,#showUpdateErrorButton,#hideUpdateErrorButton {
     font-size: 17px;
     padding: 8px 15px;
     border-radius: 5px;
@@ -144,12 +112,7 @@ canvas {
     gap: 10px;
 }
 
-#validateButton:hover,
-#showButton:hover,
-#hideButton:hover,
-#nextButton:hover,
-#prevButton:hover,
-#downloadCSVButton:hover {
+#validateButton:hover, #showButton:hover, #hideButton:hover, #nextButton:hover, #prevButton:hover, #downloadCSVButton:hover {
     background-color: #007bff;
     color: white;
 }
@@ -177,7 +140,12 @@ canvas {
 
 #trialIndicator {
     font-size: 25px;
+   
 }
+#indicador{
+    font-size: 25px;
+}
+
 
 .align-items-center {
     display: flex;
@@ -193,3 +161,47 @@ canvas {
     background-color: #f8f9fa;
     border-top: 1px solid #dee2e6;
 }
+
+#startButton, #next-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+#fullScreenButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    left: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+

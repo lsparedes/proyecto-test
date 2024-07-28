@@ -148,7 +148,7 @@ function generarCSV() {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
 
-    const csvData = [['Ensayo', 'Respuesta Correcta', 'Respuesta Participante', 'Precision', 'Tiempo de Respuesta (segundos)', 'Tiempo de Tarea (segundos)', 'Mano Utilizada']];
+    const csvData = [['Ensayo', 'Respuesta Correcta', 'Respuesta Participante', 'Precision', 'Tiempo de Respuesta (segundos)']];
     responses.forEach((response) => {
         const numeroImagen = response.imageIndex + 1; 
         const rutaImagen = response.imageSrc;
@@ -157,8 +157,11 @@ function generarCSV() {
         const precision = response.isSame === (response.response === 'same') ? 1 : 0;
         const tiempoRespuesta = response.responseTime;
 
-        csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta, duracionTest, selectedHand]);
+        csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta]);
     });
+
+    csvData.push(['\nDuracion Total del Test (segundos): ' + duracionTest]);
+    csvData.push(['Mano Utilizada: ' + selectedHand]);
 
     const csvContent = csvData.map(row => row.join(';')).join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
