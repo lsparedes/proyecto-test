@@ -205,7 +205,7 @@ function validateClicks() {
             click.y * (imageCanvas.height / 1489),
             isCorrect ? 'green' : 'red'
         );
-        results.push({ orden: index + 1, x: click.x, y: click.y, correcto: isCorrect ? 'Sí' : 'No' });
+        results.push({ orden: index + 1, x: click.x, y: click.y, correcto: isCorrect ? 'Si' : 'No' });
         if (index > 0) {
             drawLine(
                 clicks[index - 1].x * (imageCanvas.width / 2105),
@@ -226,9 +226,9 @@ function validateClicks() {
         <button id="downloadVideo">Descargar Video</button>
     `;
 
-    let csvContent = 'Orden,X,Y,Correcto\n';
+    let csvContent = 'Orden;X;Y;Correcto\n';
     results.forEach(result => {
-        csvContent += `${result.orden},${result.x},${result.y},${result.correcto}\n`;
+        csvContent += `${result.orden};${result.x};${result.y};${result.correcto}\n`;
     });
 
     document.getElementById('downloadCSV').addEventListener('click', () => downloadCSV(csvContent, 'resultados.csv'));
