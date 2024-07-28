@@ -59,7 +59,11 @@ function showNextImage() {
 }
 
 function submitAnswer() {
-    const userAnswer = document.getElementById('number-input').value;
+    const numberInput = document.getElementById('number-input');
+    let userAnswer = numberInput.value.trim();
+    if (userAnswer === '') {
+        userAnswer = 'omitido';
+    }
     const correctAnswer = images[currentImageIndex].answer;
     const itemEndTime = new Date();
     const timeTaken = (itemEndTime - itemStartTime) / 1000; 
@@ -69,19 +73,19 @@ function submitAnswer() {
         title: images[currentImageIndex].title,
         userAnswer: userAnswer,
         correctAnswer: correctAnswer,
-        precision : precision,
+        precision: precision,
         timeTaken: timeTaken
     });
 
     if (currentImageIndex < 2) { // Si es uno de los ítems de práctica
         if (userAnswer === correctAnswer) {
-            document.getElementById('number-input').style.backgroundColor = 'green';
+            numberInput.style.backgroundColor = 'green';
             document.getElementById('next-button').style.display = 'block';
             document.getElementById('submit-btn').style.display = 'none';
         } else {
-            document.getElementById('number-input').style.backgroundColor = 'red';
+            numberInput.style.backgroundColor = 'red';
             setTimeout(() => {
-                document.getElementById('number-input').style.backgroundColor = '';
+                numberInput.style.backgroundColor = '';
                 numberInput.focus(); // Asegurarse de que el foco se mantenga en el campo
             }, 1200); // Resetear el color de fondo después de 1.2 segundos
         }
@@ -101,10 +105,10 @@ function generateCSV() {
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
 
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta(Milisegundos)\n";
+    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precisión;Tiempo respuesta(Milisegundos)\n";
 
     answers.forEach(answer => {
-        csvContent += `${answer.title};${answer.userAnswer};${answer.correctAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')}\n`;
+        csvContent += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')}\n`;
     });
 
     csvContent += `\nTiempo dedicado (Milisegundos): ${totalTestTime}\n`;
@@ -118,4 +122,11 @@ function generateCSV() {
     link.setAttribute("download", filename);
     document.body.appendChild(link);
     link.click();
+}
+
+function validateInput(input) {
+    let value = input.value;
+    if (!/^[1-9]$/.test(value)) {
+        input.value = '';
+    }
 }
