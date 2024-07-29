@@ -7,13 +7,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const recordingControls4 = document.getElementById('recordingControls4');
     const startRecordingButton4 = document.getElementById('startRecordingButton4');
     const stopRecordingButton4 = document.getElementById('stopRecordingButton4');
-    const recordingTime4 = document.getElementById('recordingTime4');
-    const recordingStatus4 = document.getElementById('recordingStatus4');
 
     let mediaRecorder;
     let audioChunks = [];
     let recordingInterval;
     let recordingSeconds = 0;
+    let startTime = new Date();
+    let finishTime;
+    let audioUrl;
 
     fullscreenButton.addEventListener('click', () => {
         if (!document.fullscreenElement) {
@@ -36,21 +37,22 @@ document.addEventListener('DOMContentLoaded', () => {
         audio1_ej2.style.display = 'none';
         fullscreenButton.style.display = 'none';
         recordingControls4.style.display = 'block';
-        startRecording(recordingTime4, recordingStatus4, startRecordingButton4, stopRecordingButton4, 'HVLT-R_Recuerdo_Libre_Diferido.mp3');
+        startRecording('HVLT-R_Recuerdo_Libre_Diferido.mp3');
     });
 
     startRecordingButton4.addEventListener('click', () => {
-        startRecording(recordingTime4, recordingStatus4, startRecordingButton4, stopRecordingButton4, 'HVLT-R_Recuerdo_Libre_Diferido.mp3');
+        startRecording('HVLT-R_Recuerdo_Libre_Diferido.mp3');
     });
 
     stopRecordingButton4.addEventListener('click', () => {
         recordingControls4.style.display = 'none';
         finishScreen.style.display = 'block';
-        stopRecording(recordingTime4, recordingStatus4, startRecordingButton4, stopRecordingButton4);
-        
+        stopRecording();
+        finishTime = new Date();
+        saveToCSV();
     });
 
-    function startRecording(timeDisplay, statusDisplay, startButton, stopButton, fileName) {
+    function startRecording(fileName) {
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
                 mediaRecorder = new MediaRecorder(stream);
@@ -63,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 mediaRecorder.addEventListener('stop', () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioUrl = URL.createObjectURL(audioBlob);
                     const a = document.createElement('a');
                     a.href = audioUrl;
                     a.download = fileName;
@@ -72,28 +74,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 recordingInterval = setInterval(() => {
                     recordingSeconds++;
-                    timeDisplay.textContent = recordingSeconds;
                 }, 1000);
 
-                statusDisplay.textContent = 'Grabando...';
-                startButton.disabled = true;
-                stopButton.disabled = false;
-
-                // Detener la grabación automáticamente después de 1 minuto
-                setTimeout(() => {
-                    stopRecording(timeDisplay, statusDisplay, startButton, stopButton);
-                }, 60 * 1000); // 1 minuto en milisegundos
+                startRecordingButton4.disabled = true;
+                stopRecordingButton4.disabled = false;
             });
     }
 
-    function stopRecording(timeDisplay, statusDisplay, startButton, stopButton) {
+    function stopRecording() {
         clearInterval(recordingInterval);
         recordingSeconds = 0;
         mediaRecorder.stop();
-
-        statusDisplay.textContent = 'Grabación finalizada.';
-        startButton.disabled = false;
-        stopButton.disabled = true;
+        startRecordingButton4.disabled = false;
+        stopRecordingButton4.disabled = true;
     }
 
     function startFinishTimer() {
@@ -105,5 +98,31 @@ document.addEventListener('DOMContentLoaded', () => {
     function playBeepSound() {
         const beep = new Audio('beep.wav');
         beep.play();
+    }
+
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+    
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    function saveToCSV() {
+        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
+        const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options); 
+        const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options); 
+        const timeSpent = (finishTime - startTime) / 1000; 
+        const timeSpentFormatted = formatTime(timeSpent);
+    
+        const csvContent = `data:text/csv;charset=utf-8,Start Time,Finish Time,Time Spent (HH:MM:SS),Audio URL\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
+    
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement('a');
+        link.setAttribute('href', encodedUri);
+        link.setAttribute('download', 'HVLT-R_Recuerdo_Libre_Diferido.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
 });
