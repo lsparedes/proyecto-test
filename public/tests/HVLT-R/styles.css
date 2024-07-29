@@ -39,6 +39,7 @@ body {
 }
 
 #main-screen,
+#main-screen2,
 #ensayo2{
     display: flex;
     flex-direction: column;
@@ -96,7 +97,8 @@ button:active {
 #nxbutton3,
 #nxbutton4,
 #nxbutton5,
-#nxbutton6{
+#nxbutton6,
+#startButton2{
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -113,7 +115,8 @@ button:active {
 #nxbutton3,
 #nxbutton4,
 #nxbutton5,
-#nxbutton6{
+#nxbutton6,
+#startButton2{
     background-image: url('flecha3.png');
     right: 15px;
     bottom: 15px;

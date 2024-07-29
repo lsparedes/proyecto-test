@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
     //ENDSCREEN
     const endScreen = document.getElementById('finish');
     const finishScreen = document.getElementById('finishScreen');
-
     const NXButton6 = document.getElementById('nxbutton6')
+
 
     let mediaRecorder;
     let audioChunks = [];
@@ -215,4 +215,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const beep = new Audio('beep.wav');
         beep.play();
     }
+
+
+
+
+
 });
