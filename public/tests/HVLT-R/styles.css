@@ -156,7 +156,87 @@ button:active {
 
 #instructionText {
     font-size: 37px;
-    text-align: justify;
-    margin-bottom: 1rem;
 }
 
+.audio-grid {
+    width: 100%;
+    height: 100%;
+    justify-content: space-evenly;
+    box-sizing: border-box;
+}
+
+.audio-options {
+    display: flex;
+    align-items: center;
+}
+
+.audio-options audio {
+    height: 40px;
+}
+
+.audio-column1 {
+    flex: 1;
+    max-width: 200px;
+}
+.audio-column2 {
+    flex: 1;
+    max-width: 200px;
+}
+
+.audio-item p {
+    margin: 0;
+}
+
+.options {
+    display: flex;
+    gap: 10px;
+}
+
+.option-btn {
+    margin: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid #333;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+#initRecordingButton1,
+#startRecordingButton1,
+#stopRecordingButton1,
+#initRecordingButton2,
+#startRecordingButton2,
+#stopRecordingButton2,
+#initRecordingButton3,
+#startRecordingButton3,
+#stopRecordingButton3,
+#startRecordingButton4,
+#stopRecordingButton4 {
+    background-size: cover;
+    background-position: center;
+    width: 100px; /* Ajusta el tamaño según sea necesario */
+    height: 100px; /* Ajusta el tamaño según sea necesario */
+    border: none;
+    cursor: pointer;
+}
+
+#initRecordingButton1,
+#initRecordingButton2,
+#initRecordingButton3,
+#startRecordingButton4 {
+    background-image: url('grabando.png');
+
+}
+
+#startRecordingButton1,
+#startRecordingButton2,
+#startRecordingButton3 {
+    background-image: url('grabar.png');
+}
+
+#stopRecordingButton1,
+#stopRecordingButton2,
+#stopRecordingButton3,
+#stopRecordingButton4 {
+    background-image: url('detenerr1.png');
+}

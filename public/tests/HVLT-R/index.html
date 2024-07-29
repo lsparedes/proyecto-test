@@ -6,7 +6,6 @@
     <title>Test de Figura Compleja de Benson - Copiar Figura</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Agregar favicon -->
 </head>
 <body>
     <div id="container">
@@ -41,9 +40,9 @@
 
         <!-- Controles de Grabación -->
         <div id="recordingControls1" style="display: none;">
-            <button id="startRecordingButton1">Empezar Grabación</button>
-            <button id="stopRecordingButton1" disabled>Terminar Grabación</button>
-            <p id="recordingStatus1">Grabando: <span id="recordingTime1">0</span> segundos</p>
+            <button id="startRecordingButton1"></button>
+            <button id="initRecordingButton1" style="display: none;"></button>
+            <button id="stopRecordingButton1" style="display: none;"></button>
         </div>
 
         <!-- Ensayo 2 -->
@@ -76,12 +75,12 @@
 
         <!-- Controles de Grabación Ensayo 2 -->
         <div id="recordingControls2" style="display: none;">
-            <button id="startRecordingButton2">Empezar Grabación</button>
-            <button id="stopRecordingButton2" disabled>Terminar Grabación</button>
-            <p id="recordingStatus2">Grabando: <span id="recordingTime2">0</span> segundos</p>
+            <button id="startRecordingButton2"></button>
+            <button id="initRecordingButton2" style="display: none;"></button>
+            <button id="stopRecordingButton2"  style="display: none;"></button>
         </div>
 
-                <!-- Ensayo 3 -->
+        <!-- Ensayo 3 -->
         <div id="ensayo3" style="display: none;">
             <h1 class="titulo">Instrucciones</h1>
             <p class="instructionText">Ahora vamos a hacer lo mismo una última vez, así que escuche atentamente.</p>
@@ -94,7 +93,7 @@
             </div>
         </div>
 
-                <!-- Palabras Ensayo 3 -->
+        <!-- Palabras Ensayo 3 -->
         <div id="words3" style="display: none;">
             <audio id="audio2_ensayo3" controls>
                 <source src="audio2.mp3" type="audio/mpeg">
@@ -111,11 +110,11 @@
 
         <!-- Controles de Grabación Ensayo 3 -->
         <div id="recordingControls3" style="display: none;">
-            <button id="startRecordingButton3">Empezar Grabación</button>
-            <button id="stopRecordingButton3" disabled>Terminar Grabación</button>
-            <p id="recordingStatus3">Grabando: <span id="recordingTime3">0</span> segundos</p>
+            <button id="startRecordingButton3"></button>
+            <button id="initRecordingButton3" style="display: none;"></button>
+            <button id="stopRecordingButton3" disabled style="display: none;"></button>
         </div>
-        
+
         <div id="finish" style="display: none;">
             <h1 class="titulo">Instrucciones</h1>
             <p class="instructionText">Es posible que se le pida recordar la lista de palabras nuevamente más adelante.</p>
@@ -130,7 +129,6 @@
 
         <!-- Pantalla Final -->
         <div id="finishScreen" style="display: none;">
-
             <h1>¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!</h1>
         </div>
     </div>
