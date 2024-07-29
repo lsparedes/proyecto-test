@@ -30,6 +30,10 @@ body {
     cursor: pointer;
   }
 
+  #demoButton,
+  #nextDemoButton,
+  #nextPracticeButton,
+  #continueToNextBlockButton,
   #startDemoButton {
     background-color: transparent;
     border: none;
@@ -44,6 +48,7 @@ body {
     position: absolute;
     bottom: 15px;
     right: 15px;
+    margin: 20px;
   }
 
   #fullscreenButton {
@@ -60,11 +65,18 @@ body {
     position: absolute;
     bottom: 15px;
     left: 15px;
+    margin: 20px;
   }
   
+  #instructionsText {
+    font-size: 37px;
+    text-align: justify;
+    margin-bottom: 1rem;
+}
   
   audio {
-    margin-bottom: 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
   
   .button-container {
@@ -80,7 +92,7 @@ body {
   
   #restartPracticeButton {
     position: absolute;
-    bottom: 15px;
+    bottom: 150px;
     right: 15px;
   }
   
@@ -107,9 +119,10 @@ body {
   }
   
   .range-labels span {
-    font-size: 14px;
+    font-size: 18px;
   }
   
+  #confidenceSliderPractice,
   #confidenceSlider {
     -webkit-appearance: none;
     width: 700px;
@@ -121,6 +134,7 @@ body {
     transition: opacity 0.2s;
   }
   
+  #confidenceSliderPractice::-webkit-slider-thumb,
   #confidenceSlider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -131,6 +145,7 @@ body {
     cursor: pointer;
   }
   
+  #confidenceSliderPractice::-moz-range-thumb,
   #confidenceSlider::-moz-range-thumb {
     width: 20px;
     height: 20px;
@@ -139,3 +154,55 @@ body {
     cursor: pointer;
   }
   
+  #pauseTime {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  #endScreen {
+    font-size: 40px;
+    margin-bottom: 70px;
+  }
+
+  #handButton {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    margin: 20px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+#selectHand {
+    display: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#selectHand h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#selectHand label {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#selectHand input[type="radio"] {
+    margin-right: 10px;
+}

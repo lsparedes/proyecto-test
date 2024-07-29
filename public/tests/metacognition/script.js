@@ -1,13 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
   const instructions = document.getElementById('instructions');
+  const instructionsText = document.getElementById('instructionsText');
+  const fullscreenButton = document.getElementById('fullscreenButton');
   const practiceContainer = document.getElementById('practiceContainer');
   const practiceFinishScreen = document.getElementById('practiceFinishScreen');
+  const demoFinishScreen = document.getElementById('demoFinishScreen');
   const questionScreen = document.getElementById('questionScreen');
   const feedbackScreen = document.getElementById('feedbackScreen');
   const confidenceScreen = document.getElementById('confidenceScreen');
   const testContainer = document.getElementById('testContainer');
   const blockFinishScreen = document.getElementById('blockFinishScreen');
   const endScreen = document.getElementById('endScreen');
+
+  const sliderPractice = document.getElementById('sliderPractice');
+  const confidenceSliderPractice = document.getElementById('confidenceSliderPractice');
+  const submitConfidenceButtonPractice = document.getElementById('submitConfidenceButtonPractice');
 
   const practiceCanvas = document.getElementById('practiceCanvas');
   const testCanvas = document.getElementById('testCanvas');
@@ -17,43 +24,70 @@ document.addEventListener('DOMContentLoaded', () => {
   const practiceTrialIndicator = document.getElementById('practiceTrialIndicator');
   const testTrialIndicator = document.getElementById('testTrialIndicator');
   const feedbackMessage = document.getElementById('feedbackMessage');
-  const pauseTimeDisplay = document.getElementById('pauseTime');
+  const cronometro = document.getElementById('pauseTime');
   const confidenceSlider = document.getElementById('confidenceSlider');
   const submitConfidenceButton = document.getElementById('submitConfidenceButton');
 
   let trialCount = 0;
-  let blockCount = 0;
+  let blockCount = 1;
   let maxTrials = 20;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
+  let trialInTimeout = false;
   let blockTimeout;
   let correctColor;
+  let lastColorAnswer;
   let results = [];
   let pauseStartTime;
+  let instructionsPhase = 0;
+  let blockType = 'demo';
+
+  let diferenciaInicial = 15;
+  let ajusteDificultad = 1;
+  let startTimeTotal = new Date();
+  let startTime;
+  let timeColor;
+  let timeConfidence;
+
+  function startDemoScreen() {
+    practiceContainer.style.display = 'block';
+    generateDots(practiceCtx);
+    practiceTrialIndicator.innerText = `P1`;
+    document.getElementById('demoButton').style.display = 'block';
+  }
+
+  function endDemoScreen() {
+    practiceContainer.style.display = 'none';
+    questionScreen.style.display = 'none';
+    confidenceScreen.style.display = 'none';
+    demoFinishScreen.style.display = 'block';
+    document.getElementById('restartPracticeButton').style.display = 'none';
+    blockType = 'practica';
+  }
 
   function startPracticeBlock() {
     trialCount = 0;
-    blockCount = 0;
+    // blockCount = 0;
     maxTime = 180;
+    blockType = 'practica';
     startBlock(practiceCtx, 'practica');
   }
 
   function startTestBlock() {
     trialCount = 0;
     blockCount++;
-    if (blockCount === 1) {
-      maxTime = 210;
-    } else {
-      maxTime = 210;
-    }
+    maxTime = 210;
+    blockType = 'test';
     startBlock(testCtx, 'test');
   }
 
   function startBlock(ctx, type) {
     clearTimeout(blockTimeout);
+    trialInTimeout = false;
     blockTimeout = setTimeout(() => {
-      endBlock(type);
+      // endBlock(type);
+      trialInTimeout = true;
     }, maxTime * 1000);
 
     startTrial(ctx, type);
@@ -61,26 +95,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function endBlock(type) {
     clearTimeout(trialTimeout);
+    // Completa los resultados faltantes con "no respondida"
+    for (let i = trialCount + 1; i <= maxTrials; i++) {
+      results.push({ block: blockCount, trial: i, correctColor: "N/A", answer: "No respondida", confidence: "N/A", isCorrect: false, diferencia: "N/A", timeCol: "N/A", timeConf: "N/A" , timeP: "N/A"});
+    }
     if (type === 'practica') {
+      reiniciarCronometro();
+      iniciarCronometro();
+      pauseStartTime = Date.now();
       practiceContainer.style.display = 'none';
       questionScreen.style.display = 'none';
       confidenceScreen.style.display = 'none';
       practiceFinishScreen.style.display = 'block';
+      blockType = 'test';
     } else {
       testContainer.style.display = 'none';
       questionScreen.style.display = 'none';
       confidenceScreen.style.display = 'none';
       if (blockCount < maxBlocks) {
+        reiniciarCronometro();
+        iniciarCronometro();
         blockFinishScreen.style.display = 'block';
         pauseStartTime = Date.now();
       } else {
-        endScreen.style.display = 'block';
+        showHandSelection();
       }
     }
-    // Completa los resultados faltantes con "no respondida"
-    for (let i = trialCount + 1; i <= maxTrials; i++) {
-      results.push({ block: blockCount, trial: i, answer: "no respondida", confidence: "N/A", isCorrect: false, time: new Date().toISOString() });
-    }
+  }
+
+  function endGame() {
+    endScreen.style.display = 'block';
+    document.getElementById('downloadResultsButton').click();
   }
 
   function startTrial(ctx, type) {
@@ -94,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
       testContainer.style.display = 'block';
     }
     trialTimeout = setTimeout(() => {
+      startTime = new Date();
       if (type === 'practica') {
         practiceContainer.style.display = 'none';
       } else {
@@ -111,23 +157,54 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function ajustarDificultad(respuesta) {
+    if (respuesta === true) { // Respuesta correcta
+      if (diferenciaInicial > 1) {
+        diferenciaInicial -= ajusteDificultad;
+      }
+    } else { // Respuesta incorrecta
+      diferenciaInicial += ajusteDificultad;
+    }
+  }
+
   function generateDots(ctx) {
-    const numRedDots = Math.floor(Math.random() * 50) + 50; // Between 50 and 100
-    const numBlueDots = 100 - numRedDots;
-    const totalDots = numRedDots + numBlueDots;
+    const numPuntosMayor = Math.floor(50 + diferenciaInicial / 2);
+    const numPuntosMenor = 100 - numPuntosMayor;
+    const totalDots = numPuntosMayor + numPuntosMenor;
     const colors = [];
-
-    for (let i = 0; i < numRedDots; i++) {
-      colors.push('red');
+    let colorMayor = Math.random() < 0.5 ? 'red' : 'blue';
+  
+    if (colorMayor === 'red') {
+      for (let i = 0; i < numPuntosMayor; i++) {
+        colors.push('red');
+      }
+      for (let i = 0; i < numPuntosMenor; i++) {
+        colors.push('blue');
+      }
+    } else {
+      for (let i = 0; i < numPuntosMayor; i++) {
+        colors.push('blue');
+      }
+      for (let i = 0; i < numPuntosMenor; i++) {
+        colors.push('red');
+      }
     }
-    for (let i = 0; i < numBlueDots; i++) {
-      colors.push('blue');
-    }
 
+    let numRedDots = 0;
+    let numBlueDots = 0;
+  
+    if (colorMayor === 'red') {
+      numRedDots = numPuntosMayor;
+      numBlueDots = numPuntosMenor;
+    } else {
+      numRedDots = numPuntosMenor;
+      numBlueDots = numPuntosMayor;
+    }
+  
     const dots = [];
     const dotRadius = 5;
     const minDistance = dotRadius * 8;
-
+  
     for (let i = 0; i < totalDots; i++) {
       let x, y, validPosition;
       do {
@@ -148,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillStyle = colors[i];
       ctx.fill();
     }
-
+  
     correctColor = numRedDots > numBlueDots ? 'red' : 'blue';
     console.log(`Correct color is ${correctColor}. Red: ${numRedDots}, Blue: ${numBlueDots}`);
   }
@@ -156,13 +233,17 @@ document.addEventListener('DOMContentLoaded', () => {
   function recordAnswer(answer) {
     const isCorrect = answer === correctColor;
     const confidence = confidenceSlider.value;
-    results.push({ block: blockCount, trial: trialCount, answer, confidence, isCorrect, time: new Date().toISOString() });
+    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: diferenciaInicial, timeCol: timeColor, timeConf: timeConfidence, timeP: 'N/A' });
+    ajustarDificultad(isCorrect);
   }
 
   function downloadResults() {
     const csvContent = "data:text/csv;charset=utf-8,"
-      + "Item,Respuesta seleccionada,Seguridad,Evaluación,Tiempo\n"
-      + results.map(e => `${e.trial},${e.answer},${e.confidence},${e.isCorrect ? 'Correcta' : 'Incorrecta'},${e.time}`).join("\n");
+      + "Bloque;Item;Respuesta correcta;Respuesta seleccionada;Seguridad;Precision;Dificultad;Tiempo Color(ms);Tiempo Seguridad(ms);Tiempo Pausa\n"
+      + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP}`).join("\n")
+      + "\n"
+      + "Tiempo total: " + (new Date() - startTimeTotal) + " ms\n"
+      + "Mano Utilizada: " + selectedHand + "\n";
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -175,51 +256,105 @@ document.addEventListener('DOMContentLoaded', () => {
   function showFeedback(answer) {
     const lastResult = results[results.length - 1];
     const isCorrect = lastResult.isCorrect;
-    feedbackMessage.innerText = isCorrect ? "¡Correcto!" : "Incorrecto";
+    feedbackMessage.innerText = isCorrect ? "" : "";
     feedbackScreen.style.display = 'block';
     setTimeout(() => {
       feedbackScreen.style.display = 'none';
-      if (trialCount < maxTrials) {
-        startTrial(practiceCtx, 'practica');
+      if (trialCount < maxTrials && !trialInTimeout) {
+        if (blockType === 'practica') {
+          startTrial(practiceCtx, 'practica');
+        } else {
+          startTrial(testCtx, 'test');
+        }
       } else {
-        endBlock('practica');
+        if (blockType === 'practica') {
+          endBlock('practica');
+        } else {
+          endBlock('test');
+        }
       }
-    }, 2000);
+    }, 500);
   }
 
   document.getElementById('startDemoButton').addEventListener('click', () => {
-    instructions.style.display = 'none';
+    if (instructionsPhase === 0) {
+      instructionsText.innerHTML = 'A lo largo de la tarea se utiliza una \
+      escala de calificación como la que se muestra aquí. Podrá calificar cuan seguro esta de sus decisiones posicionando \
+      el cursor en distintas partes de esta escala. <br>\
+      Si usted está muy seguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>SEGURO</b>.<br>\
+      Si usted está muy inseguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>INSEGURO</b>.<br>\
+      Una posición intermedia en la escala indica que usted no está ni completamente seguro(a) ni completamente inseguro(a) de haber tomado la decisión correcta.<br>\
+      Por favor, mueva el cursor a la posición deseada en la escala y presione <b>LISTO</b> para continuar.';
+      instructionsText.style.fontSize = '24px';
+      instructionsPhase++;
+      fullscreenButton.style.display = 'none';
+      document.getElementById('startDemoButton').style.display = 'none';
+      sliderPractice.style.display = 'block';
+    } else if (instructionsPhase === 1) {
+      document.getElementById('startDemoButton').style.display = 'block';
+      sliderPractice.style.display = 'none';
+      instructionsText.style.fontSize = '37px';
+      instructionsText.innerHTML = 'Ahora usted realizará una ronda de práctica. Por favor, indique si el recuadro contiene más puntos de color rojo o azul.<br>\
+      Posteriormente mueva el cursor a lo largo de la escala de calificación para expresar que tan seguro(a) o inseguro(a) se siente acerca de su decisión y presione <b>LISTO</b> para continuar.<br>';
+      instructionsPhase++;
+    } else {
+      instructions.style.display = 'none';
+      startDemoScreen();
+    }
+    
+  });
+
+  document.getElementById('nextDemoButton').addEventListener('click', () => {
+    demoFinishScreen.style.display = 'none';
     startPracticeBlock();
   });
 
   document.getElementById('nextPracticeButton').addEventListener('click', () => {
+    pausarCronometro();
+    const pauseTime = (Date.now() - pauseStartTime) / 1000;
+    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: 'N/A', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
     practiceFinishScreen.style.display = 'none';
-    blockCount = 1;
+    // blockCount = 1;
     startTestBlock();
   });
 
   document.getElementById('restartPracticeButton').addEventListener('click', () => {
-    practiceContainer.style.display = 'none';
-    practiceFinishScreen.style.display = 'none';
-    questionScreen.style.display = 'none';
-    feedbackScreen.style.display = 'none';
-    confidenceScreen.style.display = 'none';
-    trialCount = 0;
-    startPracticeBlock();
+    if (blockType === 'demo') {
+      practiceCtx.clearRect(0, 0, practiceCtx.canvas.width, practiceCtx.canvas.height);
+      generateDots(practiceCtx);
+    } else if(blockType === 'practica') {
+      practiceContainer.style.display = 'none';
+      practiceFinishScreen.style.display = 'none';
+      questionScreen.style.display = 'none';
+      feedbackScreen.style.display = 'none';
+      confidenceScreen.style.display = 'none';
+      trialCount = 0;
+      startPracticeBlock();
+    }
   });
 
   document.getElementById('redButton').addEventListener('click', () => {
     questionScreen.style.display = 'none';
     confidenceScreen.style.display = 'block';
+    if (blockType === 'practica' || blockType === 'test') {
+      lastColorAnswer = 'red';
+      timeColor = new Date() - startTime;
+      startTime = new Date();
+      // recordAnswer('red');
+    }
     resetConfidenceSlider();
-    recordAnswer('red');
   });
 
   document.getElementById('blueButton').addEventListener('click', () => {
     questionScreen.style.display = 'none';
     confidenceScreen.style.display = 'block';
+    if (blockType === 'practica' || blockType === 'test') {
+      lastColorAnswer = 'blue';
+      timeColor = new Date() - startTime;
+      startTime = new Date();
+      // recordAnswer('blue');
+    }
     resetConfidenceSlider();
-    recordAnswer('blue');
   });
 
   function resetConfidenceSlider() {
@@ -236,19 +371,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('submitConfidenceButton').addEventListener('click', () => {
     confidenceScreen.style.display = 'none';
-    const lastResult = results[results.length - 1];
-    showFeedback(lastResult.answer);
+    if (blockType === 'demo') {
+      endDemoScreen();
+    } else {
+      timeConfidence = new Date() - startTime;
+      recordAnswer(lastColorAnswer);
+      const lastResult = results[results.length - 1];
+      showFeedback(lastResult.answer);
+    }
+  });
+
+  confidenceSliderPractice.addEventListener('input', () => {
+    submitConfidenceButtonPractice.disabled = false;
+    submitConfidenceButtonPractice.classList.remove('btn-light');
+    submitConfidenceButtonPractice.classList.add('btn-primary');
+  });
+
+  document.getElementById('submitConfidenceButtonPractice').addEventListener('click', () => {
+    document.getElementById('startDemoButton').click();
   });
 
   document.getElementById('continueToNextBlockButton').addEventListener('click', () => {
+    pausarCronometro();
     const pauseTime = (Date.now() - pauseStartTime) / 1000;
-    results.push({ block: blockCount, trial: 'pausa', answer: 'N/A', confidence: 'N/A', isCorrect: 'N/A', time: `${pauseTime} segundos` });
+    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: 'N/A', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
     blockFinishScreen.style.display = 'none';
     if (blockCount < maxBlocks) {
       startTestBlock();
     } else {
       endScreen.style.display = 'block';
     }
+  });
+
+  let tiempo = 0;
+  let intervalo;
+  let pausado = true;
+
+  function actualizarCronometro() {
+      const horas = Math.floor(tiempo / 3600);
+      const minutos = Math.floor((tiempo % 3600) / 60);
+      const segundos = tiempo % 60;
+
+      cronometro.textContent = 
+          `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+  }
+
+  function iniciarCronometro() {
+      cronometro.style.display = 'block';
+      if (pausado) {
+          pausado = false;
+          intervalo = setInterval(() => {
+              tiempo++;
+              actualizarCronometro();
+          }, 1000);
+      }
+  }
+
+  function pausarCronometro() {
+      cronometro.style.display = 'none';
+      if (!pausado) {
+          pausado = true;
+          clearInterval(intervalo);
+      }
+  }
+
+  function reiniciarCronometro() {
+      pausado = true;
+      clearInterval(intervalo);
+      tiempo = 0;
+      actualizarCronometro();
+  }
+
+  document.getElementById('demoButton').addEventListener('click', () => {
+    practiceContainer.style.display = 'none';
+    document.getElementById('demoButton').style.display = 'none';
+    questionScreen.style.display = 'block';
   });
 
   document.getElementById('downloadResultsButton').addEventListener('click', () => {
@@ -260,4 +457,35 @@ document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.requestFullscreen();
     }
   });
+
+  // SELECCION DE MANO JS
+
+  const selectHandContainer = document.getElementById("selectHand");
+  const handButton = document.getElementById("handButton");
+  const handInputs = document.getElementsByName('hand');
+
+  // Variable con la mano seleccionada
+  let selectedHand = "";
+
+  // Funcion para mostrar la pantalla de seleccion de mano
+  function showHandSelection() {
+      selectHandContainer.style.display = "block";
+  }
+
+  // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+  // En este caso fue mostrarFinalizacion()
+  function confirmHandSelection() {
+      selectHandContainer.style.display = "none";
+      endGame();
+  }
+
+  // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+  handInputs.forEach((input) => {
+      input.addEventListener('change', (e) => {
+          handButton.style.display = "block";
+          selectedHand = e.target.value;
+      });
+  });
+
+  window.confirmHandSelection = confirmHandSelection;
 });
