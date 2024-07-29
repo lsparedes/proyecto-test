@@ -23,6 +23,7 @@ window.onload = function () {
     let mediaRecorder;
     let practiceRecordedChunks = [];
     let recordedChunks = [];
+    let temporizador = null;
 
     const points = [
         // Agregar las coordenadas de los puntos de cada cuadro
@@ -31,10 +32,12 @@ window.onload = function () {
     ];
     const connectedPoints = points.map(() => new Set());
 
-    document.getElementById('startButton').addEventListener('click', function () {
-        instructions.style.display = 'none';
+    const startButton = document.getElementById('startButton');
+
+    startButton.addEventListener('click', function () {
+        // instructions.style.display = 'none';
         practiceContainer.style.display = 'block';
-        practiceImage.src = 'practica.png';
+        practiceImage.src = 'image.png';
         practiceImage.onload = function () {
             practiceCtx.save();
             practiceCtx.translate(practiceCanvas.width / 2, practiceCanvas.height / 2);
@@ -45,16 +48,21 @@ window.onload = function () {
         startPracticeRecording('practiceCanvas');
         document.getElementById('practiceNextButton').style.display = 'block';
     });
+    startButton.click();
 
-    document.getElementById('practiceNextButton').addEventListener('click', function () {
-        stopPracticeRecording();
+    const practiceNextButton = document.getElementById('practiceNextButton');
+    practiceNextButton.addEventListener('click', function () {
+        instructions.style.display = 'none';
+        // stopPracticeRecording(); // REVISAR (debe ir al final la descarga)
         practiceContainer.style.display = 'none';
         practiceFinishScreen.style.display = 'block';
-        downloadCanvas(practiceCanvas, 'practice-drawing.png');
-        downloadPracticeVideo();
+        // downloadCanvas(practiceCanvas, 'practice-drawing.png'); // REVISAR (debe ir al final la descarga)
+        // downloadPracticeVideo(); // REVISAR (debe ir al final la descarga)
+        practiceNextButton.style.display = 'none';
     });
 
     document.getElementById('toMainTestButton').addEventListener('click', function () {
+        document.getElementById('instructionsE1').style.display = 'flex';
         practiceFinishScreen.style.display = 'none';
         canvasContainer.style.display = 'block';
         image.src = 'imagen2.png';
@@ -62,15 +70,15 @@ window.onload = function () {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         };
         startRecording('designCanvas');
+        reiniciarTemporizador();
     });
 
     document.getElementById('finishButton').addEventListener('click', function () {
+        document.getElementById('instructionsE1').style.display = 'none';
         stopRecording();
         canvasContainer.style.display = 'none';
+        showHandSelection();
         
-        finishScreen.style.display = 'block';
-        downloadCanvas(canvas, 'drawing.png');
-        downloadVideo();
     });
 
     document.getElementById('finishButton').style.display = 'block';
@@ -101,8 +109,8 @@ window.onload = function () {
     function stopPracticeRecording() {
         practiceMediaRecorder.stop();
         practiceMediaRecorder.onstop = () => {
-            const blob = new Blob(practiceRecordedChunks, { 
-                type: 'video/webm' 
+            const blob = new Blob(practiceRecordedChunks, {
+                type: 'video/webm'
 
             });
             const url = URL.createObjectURL(blob);
@@ -144,14 +152,14 @@ window.onload = function () {
         mediaRecorder.start();
 
 
-    
+
     }
 
     function stopRecording() {
         mediaRecorder.stop();
         mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunks, { 
-                type: 'video/webm' 
+            const blob = new Blob(recordedChunks, {
+                type: 'video/webm'
 
             });
             const url = URL.createObjectURL(blob);
@@ -213,5 +221,58 @@ window.onload = function () {
 
     canvas.addEventListener('mouseleave', function () {
         drawing = false;
+    });
+
+    function reiniciarTemporizador() {
+        clearTimeout(temporizador);
+        temporizador = setTimeout(arrowToRed, 60000); // Cambia después de 60 segundos
+        // temporizador = setTimeout(arrowToRed, 3000); // Cambia después de 3 segundos
+    }
+
+    function arrowToRed() {
+        const arrow = document.getElementById('finishButton');
+        arrow.style.backgroundImage = "url('flecha4.png')";
+
+    }
+
+    // SELECCION DE MANO JS
+
+    const selectHandContainer = document.getElementById("selectHand");
+    const handButton = document.getElementById("handButton");
+    const handInputs = document.getElementsByName('hand');
+
+    // Variable con la mano seleccionada
+    let selectedHand = "";
+
+    // Funcion para mostrar la pantalla de seleccion de mano
+    function showHandSelection() {
+        document.getElementById('finishButton').style.display = 'none';
+        selectHandContainer.style.display = "block";
+    }
+
+    document.getElementById('handButton').addEventListener('click', function () {
+        confirmHandSelection();
+        document.getElementById('endTestButton').style.display = 'none';
+    });
+
+    // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+    // En este caso fue mostrarFinalizacion()
+    function confirmHandSelection() {
+        console.log('holi holi holi' + selectedHand);
+        selectHandContainer.style.display = "none";
+        handButton.style.display = "none";
+        document.getElementById('finishButton').style.display = 'block';
+        
+        finishScreen.style.display = 'block';
+        downloadCanvas(canvas, 'drawing.png');
+        downloadVideo();
+    }
+
+    // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+    handInputs.forEach((input) => {
+        input.addEventListener('change', (e) => {
+            handButton.style.display = "block";
+            selectedHand = e.target.value;
+        });
     });
 };

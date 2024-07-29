@@ -39,15 +39,15 @@ audio {
   align-items: center;
   justify-content: center;
   max-width: 800px;
-  margin-top: 50px;
+  margin-top: 70px;
 
 
 }
 
 #instructionText {
-  font-size: 35px;
+  font-size: 20px;
   text-align: justify;
-  margin-bottom: 100px;
+  margin-bottom: 15px;
   margin-top: 50px;
 }
 
@@ -118,25 +118,25 @@ audio {
 }
 
 #practiceNextButton{
-  position: absolute;
+  position: fixed;
   bottom: 15px;
   right: 10px;
 }
 
 #toMainTestButton{
-  position: absolute;
+  position: fixed;
   bottom: 15px;
   right: 15px;
 }
 
 #finishButton{
-  position: absolute;
+  position: fixed;
   bottom: 15px;
   right: 15px;
 }
 
 #endTestButton{
-  position: absolute;
+  position: fixed;
   bottom: 15px;
   right: 15px;
 }
@@ -145,4 +145,53 @@ audio {
 
 .red-arrow {
   background-image: url("flecha4.png") !important;
+}
+
+/* SELECCION DE MANO CSS */
+
+#handButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  background-image: url('flecha3.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding: 0;
+  /* Elimina el relleno para alinear el icono verticalmente */
+  width: 80px;
+  /* Ajusta el ancho fijo */
+  height: 65px;
+  /* Ajusta la altura fija */
+  vertical-align: middle;
+  /* Alineado verticalmente con el contenido */
+  position: absolute;
+  bottom: 15px;
+  /* Ajustamos la distancia desde la parte inferior */
+  right: 15px;
+  /* Ajustamos la distancia desde el borde derecho */
+}
+
+#selectHand {
+  display: none;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#selectHand h4 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+#selectHand label {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+#selectHand input[type="radio"] {
+  margin-right: 10px;
 }
