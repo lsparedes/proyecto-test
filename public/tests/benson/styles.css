@@ -21,7 +21,7 @@ body {
     background: white;
 }
 
-.container1, .screen {
+.container1{
     width: 100%;
     height: 100%;
     display: flex;
