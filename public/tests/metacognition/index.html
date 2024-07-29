@@ -10,14 +10,31 @@
 <body>
   <div id="instructions" class="container">
     <h1>Instrucciones</h1>
-    <p>En este test, debes unir todos los puntos en cada uno de los cuadros de la imagen...</p>
+    <p id="instructionsText">A continuación, usted tendrá que decidir si un recuadro contiene más puntos de color rojo o azul, y, luego, indicar cuan seguro esta de su decisión.
+      <br>
+      Al comienzo de cada ensayo, aparecerá momentáneamente un recuadro con una cantidad de puntos rojos y otra cantidad de puntos azules. 
+      Se le pedirá que decida de cuál de estos dos colores había una mayor cantidad de puntos.
+      <br>
+      Después de responder, deberá calificar su confianza en su decisión usando una escala que se desplegará en la pantalla.
+    </p>
     <audio controls>
       <source src="Design-fluency.mp3" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
+    <div id="sliderPractice" style="display:none;">
+      <div  class="mt-5">
+        <input type="range" id="confidenceSliderPractice" min="-100" max="100" value="0">
+      </div>
+      <div class="range-labels">
+        <span><b>INSEGURO</b></span>
+        <span><b>SEGURO</b></span>
+      </div>
+      <br>
+      <button class="btn btn-light btn-lg shadow" id="submitConfidenceButtonPractice" disabled><b>LISTO</b></button>
+    </div>
     <div class="button-container">
-      <button id="startDemoButton" class="btn btn-primary btn-lg start-button"></button>
-      <button id="fullscreenButton" class="btn fullscreen-button btn-lg "></button>
+      <button id="startDemoButton"></button>
+      <button id="fullscreenButton"></button>
     </div>
   </div>
   
@@ -26,12 +43,35 @@
     <canvas id="practiceCanvas" width="1200" height="900"></canvas>
     <button id="restartPracticeButton" type="button" class="btn btn-light text-dark btn-lg shadow"><b>Reiniciar Práctica</b></button>
   </div>
-  
-  <div id="practiceFinishScreen" class="container" style="display: none;">
-    <h1>¡Práctica Completada!</h1>
-    <button id="nextPracticeButton">Continuar a Bloque 1</button>
+
+  <div id="demoFinishScreen" class="container" style="display: none;">
+
+    <h1>Instrucciones</h1>
+    <p id="instructionsText">
+      Ahora comenzará la tarea de verdad.
+      Recuerde: tiene que decidir si el recuadro que aparece momentáneamente en 
+      la pantalla contiene más punto de color rojo o azul. 
+      Por favor, responda tan rápido como pueda.
+    </p>
+    <audio controls>
+      <source src="Design-fluency.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+    <div class="button-container">
+      <button id="nextDemoButton"></button>
+    </div>
+    
   </div>
   
+  <div id="practiceFinishScreen" class="container" style="display: none;">
+    <h1>¡Bloque Completado!</h1>
+    <div class="button-container">
+      <button id="nextPracticeButton"></button>
+    </div>
+  </div>
+  
+  <button id="demoButton" style="display: none"></button>
+
   <div id="questionScreen" class="container" style="display: none;">
     <div class="container"></div>
     <h1>¿De qué color había más puntos?</h1>
@@ -41,14 +81,14 @@
         <center>
           <div class="circulo rojo"></div>
           <br>
-          <button type="button" class="btn btn-light btn-lg shadow" id="redButton"><b>Rojo</b></button>
+          <button type="button" class="btn btn-light btn-lg shadow" id="redButton"><b>ROJO</b></button>
         </center>
       </div>
       <div class="col-6 p-4">
         <center>
           <div class="circulo azul"></div>
           <br>
-          <button type="button" class="btn btn-light btn-lg shadow" id="blueButton"><b>Azul</b></button>
+          <button type="button" class="btn btn-light btn-lg shadow" id="blueButton"><b>AZUL</b></button>
         </center>
       </div>
     </div>
@@ -64,11 +104,11 @@
         <input type="range" id="confidenceSlider" min="-100" max="100" value="0">
       </div>
       <div class="range-labels">
-        <span>Totalmente inseguro</span>
-        <span>Totalmente seguro</span>
+        <span><b>INSEGURO</b></span>
+        <span><b>SEGURO</b></span>
       </div>
       <br><br><br><br>
-      <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>Listo</b></button>
+      <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>LISTO</b></button>
     </center>
   </div>
   
@@ -77,22 +117,39 @@
   </div>
   
   <div id="testContainer" class="container" style="display: none;">
-    <h2 class="imageText" id="testTrialIndicator">T-1</h2>
+    <h2 class="imageText"><span id="testTrialIndicator" class="badge bg-light text-dark shadow">New</span></h2>
     <canvas id="testCanvas" width="1200" height="900"></canvas>
   </div>
   
   <div id="blockFinishScreen" class="container" style="display: none;">
     <h1>¡Bloque Completado!</h1>
-    <p id="pauseTime" style="display: none;">Tiempo de pausa: 0 segundos</p>
-    <br>
-    <br>
-    <button id="continueToNextBlockButton btn btn-lg ">Continuar al Siguiente Bloque</button>
+    <button id="continueToNextBlockButton"></button>
   </div>
+
+  <div id="selectHand" style="display: none;">
+    <h4>¿Con qué mano respondiste el test?</h4>
+    <div>
+        <input type="radio" id="right_hand" name="hand" value="derecha">
+        <label for="right_hand">Derecha</label>
+    </div>
+    <div>
+        <input type="radio" id="left_hand" name="hand" value="izquierda">
+        <label for="left_hand">Izquierda</label>
+    </div>
+    <div>
+        <input type="radio" id="both_hands" name="hand" value="ambas">
+        <label for="both_hands">Ambas</label>
+    </div>
+    <button id="handButton" onclick="confirmHandSelection()" style="display: none;"></button>
+</div>
   
   <div id="endScreen" class="container" style="display: none;">
-    <h1>¡Test Completado!</h1>
-    <button id="downloadResultsButton">Descargar Resultados</button>
+    <h1> ¡Has completado esta tarea con éxito! </h1> <br>
+    <h1> ¡Muchas gracias!</h1>
+    <button id="downloadResultsButton" style="display: none;">Descargar Resultados</button>
   </div>
+
+  <p id="pauseTime" style="display: none;">Tiempo de pausa: 0 segundos</p>
   
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
