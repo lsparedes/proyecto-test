@@ -13,6 +13,7 @@ body {
     justify-content: center;
     text-align: center;
 }
+
 #image-container {
     position: relative;
     width: 98vh;
@@ -105,9 +106,6 @@ audio {
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
 }
-
-
-
 input {
     padding: 12px;
     border: 2px solid #ccc;
@@ -145,6 +143,7 @@ input {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
 #startButton {
     background-color: transparent;
     border: none;
@@ -166,6 +165,7 @@ input {
     right: 15px;
     /* Ajustamos la distancia desde el borde derecho */
 }
+
 #fullscreen-btn {
     background-color: transparent;
     border: none;

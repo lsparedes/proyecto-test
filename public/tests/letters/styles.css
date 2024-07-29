@@ -1,21 +1,17 @@
-body,
-html {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    height: 100%;
+body {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    height: 100vh;
 }
 
-#container {
+.container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
+    text-align: center;
 }
 
 canvas {
@@ -24,77 +20,25 @@ canvas {
     height: auto;
 }
 
-#buttons {
-    margin-left: 8px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-
-}
-
-#instructionsScreen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    max-width: 1000px;
-    margin-top: 50px;
-}
-
-#instructionsScreen audio {
-    margin: auto;
-}
-
-#startButton {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: white;
-    background-color: #007bff;
-    border: none;
-    border-radius: 5px;
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
 }
 
-.mainScreen {
-    width: 95%;
-    height: 95%;
-}
-
-#startButton:hover {
-    background-color: #0056b3;
-}
-
-#startButton:active {
-    transform: scale(0.98);
-}
-
-#fullscreenButton {
-    padding: 15px 30px;
-    font-size: 22px;
-    color: rgb(0, 0, 0);
-    background-color: #c7c7c7;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-#fullscreenButton:hover {
-    background-color: #8f8f8f;
-}
-
-#fullscreenButton:active {
-    transform: scale(0.98);
+audio {
+    margin-bottom: 30px;
 }
 
 .button-container {
-    margin-top: 20px;
-    text-align: center;
+    display: flex;
+    gap: 10px;
 }
 
-.button-container button {
-    margin: 20px;
+.mainScreen {
+    width: 60%;
+    height: 60%;
 }
 
 #validateButton,
@@ -105,7 +49,7 @@ canvas {
     border-radius: 5px;
     margin-left: 8px;
     gap: 10px;
-   
+
 }
 
 
@@ -139,9 +83,90 @@ p {
     margin-left: 20px;
 }
 
-#instrucciones {
-    font-size: 35px;
+#instructionText {
+    font-size: 37px;
     text-align: justify;
-    margin-bottom: 100px;
-    margin-top: 50px;
+    margin-bottom: 1rem;
+}
+
+#startButton,
+#next-button,
+#next-button-practice,
+#test-button,
+#handButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+
+#fullscreenButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 75px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    left: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+
+#end-screen {
+    text-align: center;
+}
+
+#selectHand {
+    display: none;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#selectHand h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#selectHand label {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#selectHand input[type="radio"] {
+    margin-right: 10px;
+}
+
+#clear-canvas-button {
+    margin-top: 10px; /* Ajusta el margen según sea necesario */
+    cursor: pointer;
 }
