@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const instructions = document.getElementById('instructions');
   const instructionsText = document.getElementById('instructionsText');
+  const instructionsAudio = document.getElementById('instructionsAudio');
   const fullscreenButton = document.getElementById('fullscreenButton');
   const practiceContainer = document.getElementById('practiceContainer');
   const practiceFinishScreen = document.getElementById('practiceFinishScreen');
@@ -30,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 1;
+  let maxTrials = 3;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
@@ -290,6 +291,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('startDemoButton').addEventListener('click', () => {
     if (instructionsPhase === 0) {
+      var audioContainer = instructionsAudio.parentNode;
+      audioContainer.pause();
       instructionsText.innerHTML = 'A lo largo de la tarea se utiliza una \
       escala de calificación como la que se muestra aquí. Podrá calificar cuan seguro esta de sus decisiones posicionando \
       el cursor en distintas partes de esta escala. <br>\
@@ -302,22 +305,30 @@ document.addEventListener('DOMContentLoaded', () => {
       fullscreenButton.style.display = 'none';
       document.getElementById('startDemoButton').style.display = 'none';
       sliderPractice.style.display = 'block';
+      instructionsAudio.src = 'metacognition2.mp3'
+      audioContainer.load();
     } else if (instructionsPhase === 1) {
+      var audioContainer = instructionsAudio.parentNode;
+      audioContainer.pause();
       document.getElementById('startDemoButton').style.display = 'block';
       sliderPractice.style.display = 'none';
       instructionsText.style.fontSize = '37px';
       instructionsText.innerHTML = 'Ahora usted realizará una ronda de práctica. Por favor, indique si el recuadro contiene más puntos de color rojo o azul.<br>\
       Posteriormente mueva el cursor a lo largo de la escala de calificación para expresar que tan seguro(a) o inseguro(a) se siente acerca de su decisión y presione <b>LISTO</b> para continuar.<br>';
       instructionsPhase++;
+      instructionsAudio.src = 'metacognition3.mp3'
+      audioContainer.load();
     } else {
+      var audioContainer = instructionsAudio.parentNode;
+      audioContainer.pause();
       instructions.style.display = 'none';
       startDemoScreen();
     }
-    
   });
 
   document.getElementById('nextDemoButton').addEventListener('click', () => {
     demoFinishScreen.style.display = 'none';
+    document.getElementById('instructionsAudio2').pause();
     startPracticeBlock();
   });
 
@@ -424,12 +435,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const minutos = Math.floor((tiempo % 3600) / 60);
       const segundos = tiempo % 60;
 
-      cronometro.textContent = 
-          `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+      const tiempoFormateado = 
+      `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+
+      // Mostrar el tiempo en el cronometro en pantalla
+      cronometro.textContent = tiempoFormateado;
+      // Mostrar el tiempo en la consola
+      console.log(tiempoFormateado);
   }
 
   function iniciarCronometro() {
-      cronometro.style.display = 'block';
+      // cronometro.style.display = 'block';
       if (pausado) {
           pausado = false;
           intervalo = setInterval(() => {
@@ -440,7 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function pausarCronometro() {
-      cronometro.style.display = 'none';
+      // cronometro.style.display = 'none';
       if (!pausado) {
           pausado = true;
           clearInterval(intervalo);
