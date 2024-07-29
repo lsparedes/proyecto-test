@@ -44,11 +44,23 @@ audio {
 
 }
 
-#instructionText {
-  font-size: 35px;
-  text-align: justify;
-  margin-bottom: 100px;
-  margin-top: 50px;
+h1 {
+  font-size: 40px;
+}
+
+h2 {
+  font-size: 30px;
+  margin-bottom: 80px;
+}
+
+p {
+  font-size: 30px;
+  text-align: center;
+}
+ol {
+  font-size: 30px;
+  margin-bottom: 150px;
+  text-align: center;
 }
 
 #startButton {
