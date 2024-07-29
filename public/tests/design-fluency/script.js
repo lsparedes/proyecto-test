@@ -12,6 +12,9 @@ window.onload = function () {
     const image = new Image();
     const finishScreen = document.getElementById('finishScreen');
     const endScreen = document.getElementById('endScreen');
+    const data = [];
+    const beginingTime = new Date();
+
 
     let drawing = false;
     let startX = 0;
@@ -53,7 +56,6 @@ window.onload = function () {
     const practiceNextButton = document.getElementById('practiceNextButton');
     practiceNextButton.addEventListener('click', function () {
         instructions.style.display = 'none';
-        // stopPracticeRecording(); // REVISAR (debe ir al final la descarga)
         practiceContainer.style.display = 'none';
         practiceFinishScreen.style.display = 'block';
         // downloadCanvas(practiceCanvas, 'practice-drawing.png'); // REVISAR (debe ir al final la descarga)
@@ -75,10 +77,9 @@ window.onload = function () {
 
     document.getElementById('finishButton').addEventListener('click', function () {
         document.getElementById('instructionsE1').style.display = 'none';
-        stopRecording();
         canvasContainer.style.display = 'none';
         showHandSelection();
-        
+
     });
 
     document.getElementById('finishButton').style.display = 'block';
@@ -113,15 +114,6 @@ window.onload = function () {
                 type: 'video/webm'
 
             });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'canvasPractice-recording.webm';
-            link.style.visibility = 'hidden';
-            link.click();
-            URL.revokeObjectURL(url);
-            practiceRecordedChunks = [];
-
         };
     }
 
@@ -162,14 +154,6 @@ window.onload = function () {
                 type: 'video/webm'
 
             });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'canvas-recording.webm';
-            link.style.visibility = 'hidden';
-            link.click();
-            URL.revokeObjectURL(url);
-            recordedChunks = [];
         };
     }
 
@@ -235,6 +219,50 @@ window.onload = function () {
 
     }
 
+    function generateCSV(data) {
+        let csvContent = "Tiempo dedicado a la tarea, mano utilizada\n";
+
+        data.forEach(row => {
+            let linea = `${row.taskTime},${selectedHand}\n`;
+            csvContent += linea;
+        });
+
+        return new Blob([csvContent], { type: 'text/csv' });
+    }
+
+    function testFinalizado() {
+        // Detener las grabaciones (ya se hace dentro de startPracticeRecording y startRecording)
+        stopPracticeRecording();
+        stopRecording();
+
+        setTimeout(() => {
+            const zip = new JSZip();
+
+            // Añadir los videos grabados al ZIP
+            zip.file("canvasPractice-recording.webm", new Blob(practiceRecordedChunks, { type: 'video/webm' }));
+            zip.file("canvas-recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
+
+            // Generar y añadir el archivo CSV al ZIP
+            const csvContent = generateCSV(data);
+            zip.file("test_result_TMT_part_A.csv", csvContent);
+
+            // Capturar las imágenes de los canvas y añadir al ZIP
+            canvas.toBlob(function (blob) {
+                zip.file("canvasScreenshot.png", blob);
+
+                practiceCanvas.toBlob(function (blobPractice) {
+                    zip.file("canvasPracticeScreenshot.png", blobPractice);
+
+                    // Generar el archivo ZIP y descargar
+                    zip.generateAsync({ type: 'blob' }).then(function (content) {
+                        saveAs(content, "metricsDesignFluency.zip");
+                    });
+                });
+            });
+        }, 1000);
+    }
+
+
     // SELECCION DE MANO JS
 
     const selectHandContainer = document.getElementById("selectHand");
@@ -253,6 +281,11 @@ window.onload = function () {
     document.getElementById('handButton').addEventListener('click', function () {
         confirmHandSelection();
         document.getElementById('endTestButton').style.display = 'none';
+        const now = new Date();
+        const taskTime = (now - beginingTime) / 1000;
+        data.push({
+            taskTime: taskTime
+        });
     });
 
     // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
@@ -262,10 +295,8 @@ window.onload = function () {
         selectHandContainer.style.display = "none";
         handButton.style.display = "none";
         document.getElementById('finishButton').style.display = 'block';
-        
         finishScreen.style.display = 'block';
-        downloadCanvas(canvas, 'drawing.png');
-        downloadVideo();
+        testFinalizado();
     }
 
     // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv

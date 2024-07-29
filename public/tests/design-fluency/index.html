@@ -34,10 +34,11 @@
 
   <div id="practiceFinishScreen" class="container" style="display: none;">
     <div id="practica" style="text-align: center;">
-      <p id="instructionText" style="margin-top: 0px;">Aquí hay dos cuadrados, cada uno con cinco puntos dentro. Usted
-        va a hacer diseños en cada cuadrado conectando los puntos con líneas rectas.Hay una única regla: tienen que
-        haber 4 líneas rectas que conectan puntos. No importa cómo se vea el diseño, cuáles puntos use o cuántos puntos
-        use, y está bien si las líneas se entrecruzan.</p>
+      <ol>
+        <li>Haga diseños dibujando 4 líneas rectas que conecten puntos.</li>
+        <li>No importa cómo se vea el diseño, cuáles puntos use o cuántos puntos use.</li>
+        <li>Está bien si las líneas se entrecruzan.</li>
+      </ol>
       <audio controls style="margin-bottom: 10px;">
         <source src="Design-fluency.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
@@ -54,9 +55,7 @@
   <div class="cont"
     style="display: flex; justify-content: space-around; max-width: 100vw; width: 100vw; max-height: 100vh;">
     <div id="instructionsE1" class="container1" style="display: none; margin-top: 50px; max-width: 20vw;">
-      <p id="instructionText" style="margin-top: 0px;">Ahora dibuje tantos diseños diferentes como pueda en un minuto.
-        Recuerde usar solo 4 líneas rectas para conectar los puntos. Trabaje tan rápido como pueda y trate de que cada
-        diseño sea diferente. ¡Empiece!</p>
+      
       <audio controls style="margin-bottom: 10px;">
         <source src="desing-fluency-instructions2.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
@@ -108,6 +107,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </body>
 
 </html>
