@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 20;
+  let maxTrials = 1;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
@@ -245,10 +245,22 @@ document.addEventListener('DOMContentLoaded', () => {
       + "Tiempo total: " + (new Date() - startTimeTotal) + " ms\n"
       + "Mano Utilizada: " + selectedHand + "\n";
 
+    // Obtener la fecha y hora actuales
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+
+    // Formatear la fecha y hora para el nombre del archivo
+    const dateTime = `${year}${month}${day}_${hours}${minutes}${seconds}`;
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", "test_results.csv");
+    link.setAttribute("download", `resultados_metacognicion_${dateTime}.csv`);
     document.body.appendChild(link);
     link.click();
   }
