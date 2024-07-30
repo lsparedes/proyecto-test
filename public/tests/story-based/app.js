@@ -466,7 +466,7 @@ function generarArchivoCSV() {
         csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa}\n`;
     });
 
-    csvContent += `\n\nTiempo dedicado (Milisegundos): ${totalTestTime}\n`;
+    csvContent += `\n\nTiempo dedicado (segundos): ${totalTestTime/1000}\n`;
     csvContent += `Mano utilizada: ${selectedHand}\n`;
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
