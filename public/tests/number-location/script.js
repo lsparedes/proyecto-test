@@ -111,7 +111,7 @@ function generateCSV() {
         csvContent += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')}\n`;
     });
 
-    csvContent += `\nTiempo dedicado (Milisegundos): ${totalTestTime}\n`;
+    csvContent += `\nTiempo dedicado (Segundos): ${totalTestTime/1000}\n`;
 
     const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
     const filename = `respuestas_number_location_${dateTime}.csv`;
