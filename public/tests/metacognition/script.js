@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 3;
+  let maxTrials = 20;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
       + "Bloque;Item;Respuesta correcta;Respuesta seleccionada;Seguridad;Precision;Dificultad;Tiempo Color(ms);Tiempo Seguridad(ms);Tiempo Pausa\n"
       + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP}`).join("\n")
       + "\n"
-      + "Tiempo total: " + (new Date() - startTimeTotal) + " ms\n"
+      + "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
       + "Mano Utilizada: " + selectedHand + "\n";
 
     // Obtener la fecha y hora actuales
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('nextPracticeButton').addEventListener('click', () => {
     pausarCronometro();
     const pauseTime = (Date.now() - pauseStartTime) / 1000;
-    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: '', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
+    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: 'N/A', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
     practiceFinishScreen.style.display = 'none';
     // blockCount = 1;
     startTestBlock();
@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('continueToNextBlockButton').addEventListener('click', () => {
     pausarCronometro();
     const pauseTime = (Date.now() - pauseStartTime) / 1000;
-    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: '', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
+    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: 'N/A', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
     blockFinishScreen.style.display = 'none';
     if (blockCount < maxBlocks) {
       startTestBlock();

@@ -429,7 +429,7 @@ fullscreenButton.addEventListener('click', requestFullscreen);
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
 
-    imageContainer.innerHTML = '<h1> ¡Has completado esta tarea con éxito! </h1> <br> <h1> ¡Muchas gracias!</h1>';
+    imageContainer.innerHTML = '<h1> ¡Ha completado esta tarea con éxito! </h1> <br> <h1> ¡Muchas gracias!</h1>';
 
     // Ajustes de estilo
     imageContainer.style.textAlign = 'center';
@@ -478,7 +478,7 @@ function generarArchivoRespuestas() {
 
 function generarArchivoRespuestasCSV() {
     endTime = new Date(); // Registrar la hora de finalización
-    const duration = (endTime - startTime); // Duración en segundos
+    const duration = (endTime - startTime) / 1000; // Calcular la duración de la tarea en segundos
 
     // Verificar si hay respuestas seleccionadas
     if (respuestasSeleccionadas.length === 0) {
@@ -499,7 +499,7 @@ function generarArchivoRespuestasCSV() {
         }
     });
 
-    csvContent += `\nTiempo total de la tarea: ${duration} ms\n`;
+    csvContent += `\nTiempo total(s): ${duration}\n`;
     csvContent += 'Mano utilizada: ' + selectedHand + '\n';
 
     // Crear un blob a partir del contenido del CSV

@@ -146,7 +146,7 @@ function endTest() {
 }
 
 function generarCSV() {
-    const duracionTest = (endTimeTotal - startTimeTotal);
+    const duracionTest = (endTimeTotal - startTimeTotal) / 1000;
 
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago' };
@@ -165,7 +165,7 @@ function generarCSV() {
         csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta]);
     });
 
-    csvData.push(['\nDuracion Total del Test(ms): ' + duracionTest]);
+    csvData.push(['\nDuracion Total del Test(s): ' + duracionTest]);
     csvData.push(['Mano Utilizada: ' + selectedHand]);
 
     const csvContent = csvData.map(row => row.join(';')).join('\n');
