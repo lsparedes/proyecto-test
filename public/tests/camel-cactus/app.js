@@ -429,7 +429,7 @@ fullscreenButton.addEventListener('click', requestFullscreen);
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
 
-    imageContainer.innerHTML = '<h1> ¡Has completado esta tarea con éxito! </h1> <br> <h1> ¡Muchas gracias!</h1>';
+    imageContainer.innerHTML = '<h1> ¡Ha completado esta tarea con éxito! </h1> <br> <h1> ¡Muchas gracias!</h1>';
 
     // Ajustes de estilo
     imageContainer.style.textAlign = 'center';
@@ -478,7 +478,7 @@ function generarArchivoRespuestas() {
 
 function generarArchivoRespuestasCSV() {
     endTime = new Date(); // Registrar la hora de finalización
-    const duration = (endTime - startTime); // Duración en segundos
+    const duration = (endTime - startTime) / 1000; // Calcular la duración de la tarea en segundos
 
     // Verificar si hay respuestas seleccionadas
     if (respuestasSeleccionadas.length === 0) {
@@ -499,7 +499,7 @@ function generarArchivoRespuestasCSV() {
         }
     });
 
-    csvContent += `\nTiempo total de la tarea: ${duration} ms\n`;
+    csvContent += `\nTiempo total(s): ${duration}\n`;
     csvContent += 'Mano utilizada: ' + selectedHand + '\n';
 
     // Crear un blob a partir del contenido del CSV
@@ -560,6 +560,7 @@ function iniciarPresentacion() {
     imageContainer.style.display = 'block';
     instructionText.style.display = 'none';
     startButton.style.display = 'none';
+    nextButton.style.display = 'block'; // Mostrar el botón "Next"
     fullscreenButton.style.display = 'none'; // Ocultar el botón al iniciar la presentación
 
     interaccionHabilitada = true;
@@ -658,9 +659,6 @@ function verificarRespuesta(event) {
     };
 
     respuestaSeleccionada = true;
-
-    // Mostrar el botón "Next"
-    nextButton.style.display = 'block';
 }
 
 // Al hacer clic en "Next", avanzar a la siguiente imagen
@@ -669,11 +667,12 @@ nextButton.addEventListener('click', function () {
         endTimeE = new Date(); // Registrar la hora de finalización
         respuesta['tiempoDedicado'] = endTimeE - startTimeE;
         respuestasSeleccionadas.push(respuesta);
+        startTimeE = new Date(); // Registrar la hora de inicio
+        cambioHabilitado = true; // Permitir cambiar de imagen
+        cambiarImagen();
+    } else {
+        alert('Por favor, selecciona una respuesta antes de continuar.');
     }
-    startTimeE = new Date(); // Registrar la hora de inicio
-    nextButton.style.display = 'none'; // Ocultar el botón "Next" nuevamente
-    cambioHabilitado = true; // Permitir cambiar de imagen
-    cambiarImagen();
 });
 
 // Agregar evento click a todas las opciones

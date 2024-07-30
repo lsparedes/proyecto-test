@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 3;
+  let maxTrials = 20;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(trialTimeout);
     // Completa los resultados faltantes con "no respondida"
     for (let i = trialCount + 1; i <= maxTrials; i++) {
-      results.push({ block: blockCount, trial: i, correctColor: "N/A", answer: "No respondida", confidence: "N/A", isCorrect: false, diferencia: "N/A", timeCol: "N/A", timeConf: "N/A" , timeP: "N/A"});
+      results.push({ block: blockCount, trial: i, correctColor: "N/A", answer: "", confidence: "N/A", isCorrect: false, diferencia: "N/A", timeCol: "N/A", timeConf: "N/A" , timeP: "N/A"});
     }
     if (type === 'practica') {
       reiniciarCronometro();
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
       + "Bloque;Item;Respuesta correcta;Respuesta seleccionada;Seguridad;Precision;Dificultad;Tiempo Color(ms);Tiempo Seguridad(ms);Tiempo Pausa\n"
       + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP}`).join("\n")
       + "\n"
-      + "Tiempo total: " + (new Date() - startTimeTotal) + " ms\n"
+      + "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
       + "Mano Utilizada: " + selectedHand + "\n";
 
     // Obtener la fecha y hora actuales
@@ -296,8 +296,8 @@ document.addEventListener('DOMContentLoaded', () => {
       instructionsText.innerHTML = 'A lo largo de la tarea se utiliza una \
       escala de calificación como la que se muestra aquí. Podrá calificar cuan seguro esta de sus decisiones posicionando \
       el cursor en distintas partes de esta escala. <br>\
-      Si usted está muy seguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>SEGURO</b>.<br>\
-      Si usted está muy inseguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>INSEGURO</b>.<br>\
+      Si usted está muy seguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>TOTALMENTE SEGURO</b>.<br>\
+      Si usted está muy inseguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>TOTALMENTE INSEGURO</b>.<br>\
       Una posición intermedia en la escala indica que usted no está ni completamente seguro(a) ni completamente inseguro(a) de haber tomado la decisión correcta.<br>\
       Por favor, mueva el cursor a la posición deseada en la escala y presione <b>LISTO</b> para continuar.';
       instructionsText.style.fontSize = '24px';

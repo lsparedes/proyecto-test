@@ -9,7 +9,6 @@
 </head>
 <body>
   <div id="instructions" class="container">
-    <h1>Instrucciones</h1>
     <p id="instructionsText">A continuación, usted tendrá que decidir si un recuadro contiene más puntos de color rojo o azul, y, luego, indicar cuan seguro esta de su decisión.
       <br>
       Al comienzo de cada ensayo, aparecerá momentáneamente un recuadro con una cantidad de puntos rojos y otra cantidad de puntos azules. 
@@ -26,8 +25,8 @@
         <input type="range" id="confidenceSliderPractice" min="-100" max="100" value="0">
       </div>
       <div class="range-labels">
-        <span><b>INSEGURO</b></span>
-        <span><b>SEGURO</b></span>
+        <span><b>TOTALMENTE INSEGURO</b></span>
+        <span><b>TOTALMENTE SEGURO</b></span>
       </div>
       <br>
       <button class="btn btn-light btn-lg shadow" id="submitConfidenceButtonPractice" disabled><b>LISTO</b></button>
@@ -46,7 +45,6 @@
 
   <div id="demoFinishScreen" class="container" style="display: none;">
 
-    <h1>Instrucciones</h1>
     <p id="instructionsText">
       Ahora comenzará la tarea de verdad.
       Recuerde: tiene que decidir si el recuadro que aparece momentáneamente en 
@@ -104,8 +102,8 @@
         <input type="range" id="confidenceSlider" min="-100" max="100" value="0">
       </div>
       <div class="range-labels">
-        <span><b>INSEGURO</b></span>
-        <span><b>SEGURO</b></span>
+        <span><b>TOTALMENTE INSEGURO</b></span>
+        <span><b>TOTALMENTE SEGURO</b></span>
       </div>
       <br><br><br><br>
       <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>LISTO</b></button>
@@ -144,7 +142,7 @@
 </div>
   
   <div id="endScreen" class="container" style="display: none;">
-    <h1> ¡Has completado esta tarea con éxito! </h1> <br>
+    <h1> ¡Ha completado esta tarea con éxito! </h1> <br>
     <h1> ¡Muchas gracias!</h1>
     <button id="downloadResultsButton" style="display: none;">Descargar Resultados</button>
   </div>

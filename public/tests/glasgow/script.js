@@ -108,30 +108,35 @@ document.getElementById('different-button').addEventListener('click', () => {
 document.getElementById('next-button').addEventListener('click', nextImage);
 
 function nextImage() {
-    if (currentResponse !== null) {
-        const responseTime = (endTime - startTime) / 1000;
 
+    if (currentResponse !== null) {
         responses.push({ 
             imageIndex: currentImageIndex, 
             imageSrc: images[currentImageIndex].src, 
             isSame: images[currentImageIndex].isSame, 
             response: currentResponse,
-            responseTime: responseTime.toFixed(2)
+            responseTime: (endTime - startTime)
         });
-
-        document.getElementById('same-button').classList.remove('selected');
-        document.getElementById('different-button').classList.remove('selected');
-
-        if (currentImageIndex < images.length - 1) {
-            currentImageIndex++;
-            showImage();
-        } else {
-            document.getElementById('test-screen').style.display = 'none';
-            endTimeTotal = new Date();
-            showHandSelection();
-        }
     } else {
-        alert('Por favor selecciona una respuesta antes de continuar.');
+        responses.push({ 
+            imageIndex: currentImageIndex, 
+            imageSrc: images[currentImageIndex].src,
+            isSame: 'N/A', 
+            response: '',
+            responseTime: (new Date() - startTime)
+        });
+    }
+
+    document.getElementById('same-button').classList.remove('selected');
+    document.getElementById('different-button').classList.remove('selected');
+
+    if (currentImageIndex < images.length - 1) {
+        currentImageIndex++;
+        showImage();
+    } else {
+        document.getElementById('test-screen').style.display = 'none';
+        endTimeTotal = new Date();
+        showHandSelection();
     }
 }
 
@@ -148,19 +153,19 @@ function generarCSV() {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
 
-    const csvData = [['Ensayo', 'Respuesta Correcta', 'Respuesta Participante', 'Precision', 'Tiempo de Respuesta (segundos)']];
+    const csvData = [['Ensayo', 'Respuesta Correcta', 'Respuesta Participante', 'Precision', 'Tiempo de Respuesta(ms)']];
     responses.forEach((response) => {
         const numeroImagen = response.imageIndex + 1; 
         const rutaImagen = response.imageSrc;
         const esIgual = response.isSame ? 'Misma' : 'Diferentes';
-        const respuestaUsuario = response.response === 'same' ? 'Misma' : 'Diferentes';
+        const respuestaUsuario = response.response === '' ? '' : (response.response === 'same' ? 'Misma' : 'Diferentes');
         const precision = response.isSame === (response.response === 'same') ? 1 : 0;
         const tiempoRespuesta = response.responseTime;
 
         csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta]);
     });
 
-    csvData.push(['\nDuracion Total del Test (segundos): ' + duracionTest]);
+    csvData.push(['\nDuracion Total del Test(s): ' + duracionTest]);
     csvData.push(['Mano Utilizada: ' + selectedHand]);
 
     const csvContent = csvData.map(row => row.join(';')).join('\n');
