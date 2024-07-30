@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
                     endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                    startSequence();
-                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+                    startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
+                }, 500);
             } else {
                 endPractice();
             }
@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
                     endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                    startSequence();
-                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+                    startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
+                }, 500);
             }
         }
     }
@@ -293,14 +293,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startTestButton.addEventListener('click', () => {
+        if (isPractice) {
+            startTime = new Date(); // Registrar la hora de inicio
+            console.log('Inicio');
+        }
         startTest();
     });
 
     startSequenceButton.addEventListener('click', () => {
-        if (!isPractice) {
-            startTime = new Date(); // Registrar la hora de inicio
-            console.log('Inicio Temporizador');
-        }
+        // if (!isPractice) {
+        //     startTime = new Date(); // Registrar la hora de inicio
+        //     console.log('Inicio Temporizador');
+        // }
         startSequence();
     });
 

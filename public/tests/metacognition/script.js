@@ -296,8 +296,8 @@ document.addEventListener('DOMContentLoaded', () => {
       instructionsText.innerHTML = 'A lo largo de la tarea se utiliza una \
       escala de calificación como la que se muestra aquí. Podrá calificar cuan seguro esta de sus decisiones posicionando \
       el cursor en distintas partes de esta escala. <br>\
-      Si usted está muy seguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>SEGURO</b>.<br>\
-      Si usted está muy inseguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>INSEGURO</b>.<br>\
+      Si usted está muy seguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>TOTALMENTE SEGURO</b>.<br>\
+      Si usted está muy inseguro(a) de haber tomado la decisión correcta, debería mover el cursor a la posición <b>TOTALMENTE INSEGURO</b>.<br>\
       Una posición intermedia en la escala indica que usted no está ni completamente seguro(a) ni completamente inseguro(a) de haber tomado la decisión correcta.<br>\
       Por favor, mueva el cursor a la posición deseada en la escala y presione <b>LISTO</b> para continuar.';
       instructionsText.style.fontSize = '24px';

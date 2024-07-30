@@ -560,6 +560,7 @@ function iniciarPresentacion() {
     imageContainer.style.display = 'block';
     instructionText.style.display = 'none';
     startButton.style.display = 'none';
+    nextButton.style.display = 'block'; // Mostrar el botón "Next"
     fullscreenButton.style.display = 'none'; // Ocultar el botón al iniciar la presentación
 
     interaccionHabilitada = true;
@@ -658,9 +659,6 @@ function verificarRespuesta(event) {
     };
 
     respuestaSeleccionada = true;
-
-    // Mostrar el botón "Next"
-    nextButton.style.display = 'block';
 }
 
 // Al hacer clic en "Next", avanzar a la siguiente imagen
@@ -669,11 +667,10 @@ nextButton.addEventListener('click', function () {
         endTimeE = new Date(); // Registrar la hora de finalización
         respuesta['tiempoDedicado'] = endTimeE - startTimeE;
         respuestasSeleccionadas.push(respuesta);
+        startTimeE = new Date(); // Registrar la hora de inicio
+        cambioHabilitado = true; // Permitir cambiar de imagen
+        cambiarImagen();
     }
-    startTimeE = new Date(); // Registrar la hora de inicio
-    nextButton.style.display = 'none'; // Ocultar el botón "Next" nuevamente
-    cambioHabilitado = true; // Permitir cambiar de imagen
-    cambiarImagen();
 });
 
 // Agregar evento click a todas las opciones

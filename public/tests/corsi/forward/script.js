@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let highestCount = 0;
     let totalCorrectBlocks = 0;
     let sequenceCount = 0;
-    let startTime;
+    let startTime = 0;
     let endTime;
     let repeatCount = 0; // Contador de repeticiones de la secuencia actual
     let testData = [];
@@ -203,8 +203,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
                     endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                    startSequence();
-                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+                    startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
+                }, 500); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
             } else {
                 endPractice();
             }
@@ -223,8 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
                     endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                    startSequence();
-                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+                    startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
+                }, 500);
             }
         }
     }
@@ -303,14 +303,18 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startTestButton.addEventListener('click', () => {
+        if (isPractice) {
+            startTime = new Date(); // Registrar la hora de inicio
+            console.log('Inicio');
+        }
         startTest();
     });
 
     startSequenceButton.addEventListener('click', () => {
-        if (!isPractice) {
-            startTime = new Date(); // Registrar la hora de inicio
-            console.log('Inicio Temporizador');
-        }
+        // if (!isPractice && startTime === 0) {
+        //     startTime = new Date(); // Registrar la hora de inicio
+        //     console.log('Inicio Test');
+        // }
         startSequence();
     });
 
