@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const finishScreen = document.getElementById('finishScreen');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const startButton = document.getElementById('startButton');
-    const audioGrid = document.getElementById('audio-grid');
-    const audios = document.querySelectorAll('audio');
+    const audioContainer = document.getElementById('audio-container');
+    const audioItems = document.querySelectorAll('.audio-item');
     const NXButton = document.getElementById('nxbutton');
     let answers = {};
+    let currentAudioIndex = 0;
     let startTime = new Date();  // Guardar la hora de inicio automáticamente al cargar la página
     let finishTime;
     const correctAnswers = {
@@ -34,19 +35,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startButton.addEventListener('click', () => {
         mainScreen.style.display = 'none';
-        audioGrid.style.display = 'flex';
+        audioContainer.style.display = 'block';
+        
     });
 
-    audios.forEach((audio, index) => {
-        audio.addEventListener('ended', () => {
-            const options = document.getElementById(`options${index + 0}`);
-            options.style.display = 'flex';
-            audios.disabled = true; // Deshabilitar el audio después de que se termine de reproducir
-        });
-    });
+    
 
     NXButton.addEventListener('click', () => {
-        audioGrid.style.display = 'none';
+        audioContainer.style.display = 'none';
         finishScreen.style.display = 'block';
         finishTime = new Date();
         console.log(`${finishTime}`);
@@ -55,22 +51,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.option-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            const audioNumber = e.target.getAttribute('data-audio');
+            // Obtener el índice del audio actual
+            const audioIndex = parseInt(e.target.getAttribute('data-audio'));
             const answer = e.target.getAttribute('data-answer');
-            answers[audioNumber] = answer;
-
-            // Deshabilitar todos los botones de opciones para el audio actual
-            document.querySelectorAll(`#options${audioNumber} .option-btn`).forEach(btn => {
-                btn.disabled = true;
-            });
-
-            // Ocultar las opciones una vez seleccionada una respuesta
-            const options = document.getElementById(`options${audioNumber}`);
-            options.style.display = 'none';
-
-            console.log(`Audio ${audioNumber}: ${answer}`);
+            answers[audioIndex] = answer; // Usar audioIndex en lugar de audioItems
+            // Ocultar el audio y las opciones actuales
+            audioItems[audioIndex - 1].style.display = 'none';
+            
+            // Mostrar el siguiente audio si existe
+            if (audioIndex < audioItems.length) {
+                audioItems[audioIndex].style.display = 'block';
+            }
+            console.log(answer);
         });
     });
+    
+
+    
 
     function createCSV() {
         const total = Object.keys(correctAnswers).length;

@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const audio2 = document.getElementById('audio2');
     const audio3 = document.getElementById('audio3');
     const recordingControls1 = document.getElementById('recordingControls1');
-    const startRecordingButton1 = document.getElementById('startRecordingButton1');
     const initRecordingButton1 = document.getElementById('initRecordingButton1');
     const stopRecordingButton1 = document.getElementById('stopRecordingButton1');
 
@@ -22,7 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const audio2_e = document.getElementById('audio2_ensayo2');
     const audio3_e = document.getElementById('audio3_ensayo2');
     const recordingControls2 = document.getElementById('recordingControls2');
-    const startRecordingButton2 = document.getElementById('startRecordingButton2');
     const initRecordingButton2 = document.getElementById('initRecordingButton2');
     const stopRecordingButton2 = document.getElementById('stopRecordingButton2');
 
@@ -34,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const audio2_e3 = document.getElementById('audio2_ensayo3');
     const audio3_e3 = document.getElementById('audio3_ensayo3');
     const recordingControls3 = document.getElementById('recordingControls3');
-    const startRecordingButton3 = document.getElementById('startRecordingButton3');
     const initRecordingButton3 = document.getElementById('initRecordingButton3');
     const stopRecordingButton3 = document.getElementById('stopRecordingButton3');
 
@@ -45,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let mediaRecorder;
     let audioChunks = [];
-    let recordingInterval;
     let startTime = new Date();
     let finishTime;
 
@@ -117,49 +113,43 @@ document.addEventListener('DOMContentLoaded', () => {
     audio3.addEventListener('ended', () => {
         audio3.style.display = 'none';
         recordingControls1.style.display = 'block';
+        startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.mp3');
     });
 
     audio3_e.addEventListener('ended', () => {
         audio3_e.style.display = 'none';
         recordingControls2.style.display = 'block';
+        startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.mp3');
     });
 
     audio3_e3.addEventListener('ended', () => {
         audio3_e3.style.display = 'none';
         recordingControls3.style.display = 'block';
+        startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.mp3');
     });
 
-    startRecordingButton1.addEventListener('click', () => {
+    initRecordingButton1.addEventListener('click', () => {
         startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.mp3');
-        initRecordingButton1.style.display = 'block';
-        stopRecordingButton1.style.display = 'block';
-        startRecordingButton1.style.display = 'none';
+    });
+
+    initRecordingButton2.addEventListener('click', () => {
+        startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.mp3');
+    });
+
+    initRecordingButton3.addEventListener('click', () => {
+        startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.mp3');
     });
 
     stopRecordingButton1.addEventListener('click', () => {
-        stopRecording(initRecordingButton1, stopRecordingButton1, startRecordingButton1);
-    });
-
-    startRecordingButton2.addEventListener('click', () => {
-        startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.mp3');
-        initRecordingButton2.style.display = 'block';
-        stopRecordingButton2.style.display = 'block';
-        startRecordingButton2.style.display = 'none';
+        stopRecording(initRecordingButton1, stopRecordingButton1);
     });
 
     stopRecordingButton2.addEventListener('click', () => {
-        stopRecording(initRecordingButton2, stopRecordingButton2, startRecordingButton2);
-    });
-
-    startRecordingButton3.addEventListener('click', () => {
-        startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.mp3');
-        initRecordingButton3.style.display = 'block';
-        stopRecordingButton3.style.display = 'block';
-        startRecordingButton3.style.display = 'none';
+        stopRecording(initRecordingButton2, stopRecordingButton2);
     });
 
     stopRecordingButton3.addEventListener('click', () => {
-        stopRecording(initRecordingButton3, stopRecordingButton3, startRecordingButton3);
+        stopRecording(initRecordingButton3, stopRecordingButton3);
     });
 
     function startRecording(initButton, stopButton, fileName) {
@@ -182,43 +172,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     a.click();
                 });
 
-                stopButton.textContent = '';
                 initButton.disabled = true;
                 stopButton.disabled = false;
+            })
+            .catch(err => {
+                console.error('Error accessing media devices.', err);
             });
     }
 
-    function stopRecording(initButton, stopButton, startButton) {
-        clearInterval(recordingInterval);
-        recordingSeconds = 0;
+    function stopRecording(initButton, stopButton) {
         mediaRecorder.stop();
 
-        stopButton.textContent = '';
-        initButton.disabled = false;
         stopButton.disabled = true;
-        startButton.style.display = 'block';
-        initButton.style.display = 'none';
-        stopButton.style.display = 'none';
+        initButton.disabled = false;
     }
 
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = Math.floor(seconds % 60);
-    
+
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
-    
+
     function saveToCSV() {
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
-        const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options); 
-        const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options); 
-    
-        const timeSpent = (finishTime - startTime) / 1000; 
+        const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options);
+        const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options);
+
+        const timeSpent = (finishTime - startTime) / 1000;
         const timeSpentFormatted = formatTime(timeSpent);
-    
+
         const csvContent = `data:text/csv;charset=utf-8,Start Time,Finish Time,Time Spent (HH:MM:SS)\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
-    
+
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement('a');
         link.setAttribute('href', encodedUri);
@@ -227,7 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
         link.click();
         document.body.removeChild(link);
     }
-    
 
     function startFinishTimer() {
         setTimeout(() => {
