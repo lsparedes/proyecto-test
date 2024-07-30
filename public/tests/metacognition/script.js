@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(trialTimeout);
     // Completa los resultados faltantes con "no respondida"
     for (let i = trialCount + 1; i <= maxTrials; i++) {
-      results.push({ block: blockCount, trial: i, correctColor: "N/A", answer: "No respondida", confidence: "N/A", isCorrect: false, diferencia: "N/A", timeCol: "N/A", timeConf: "N/A" , timeP: "N/A"});
+      results.push({ block: blockCount, trial: i, correctColor: "N/A", answer: "", confidence: "N/A", isCorrect: false, diferencia: "N/A", timeCol: "N/A", timeConf: "N/A" , timeP: "N/A"});
     }
     if (type === 'practica') {
       reiniciarCronometro();
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('nextPracticeButton').addEventListener('click', () => {
     pausarCronometro();
     const pauseTime = (Date.now() - pauseStartTime) / 1000;
-    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: 'N/A', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
+    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: '', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
     practiceFinishScreen.style.display = 'none';
     // blockCount = 1;
     startTestBlock();
@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('continueToNextBlockButton').addEventListener('click', () => {
     pausarCronometro();
     const pauseTime = (Date.now() - pauseStartTime) / 1000;
-    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: 'N/A', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
+    results.push({ block: blockCount, trial: 'pausa', correctColor: 'N/A', answer: '', confidence: 'N/A', isCorrect: 'N/A', diferencia: 'N/A', timeCol: 'N/A', timeConf: 'N/A', timeP: `${pauseTime} segundos` });
     blockFinishScreen.style.display = 'none';
     if (blockCount < maxBlocks) {
       startTestBlock();

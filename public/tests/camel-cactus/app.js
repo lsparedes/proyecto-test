@@ -670,6 +670,8 @@ nextButton.addEventListener('click', function () {
         startTimeE = new Date(); // Registrar la hora de inicio
         cambioHabilitado = true; // Permitir cambiar de imagen
         cambiarImagen();
+    } else {
+        alert('Por favor, selecciona una respuesta antes de continuar.');
     }
 });
 
