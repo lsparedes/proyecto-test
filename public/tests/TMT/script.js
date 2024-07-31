@@ -582,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
             instructions.style.justifyContent = 'center'; // Centrar contenido horizontalmente
             instructions.style.alignItems = 'center'; // Centrar contenido verticalmente
             instructions.style.height = '100vh'; // Altura del viewport para permitir el centrado vertical
-            instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+            instructions.innerHTML = '¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!';
             instructions.style.textAlign = 'center';
             instructions.style.fontSize = '40px';
             instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario

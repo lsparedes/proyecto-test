@@ -237,7 +237,7 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
 
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
-    imageContainer.innerHTML = ' <h1>¡Has completado esta tarea con éxito!</h1> <br> <h1>¡Muchas gracias!</h1>';
+    imageContainer.innerHTML = ' <h1>¡Ha completado esta tarea con éxito!</h1> <br> <h1>¡Muchas gracias!</h1>';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.display = 'flex';

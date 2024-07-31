@@ -256,7 +256,7 @@ function mostrarFinalizacion() {
     clearTimeout(temporizador);
     const imageContainer = document.getElementById('imageContainer');
     imageContainer.style.display = 'block';
-    imageContainer.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+    imageContainer.innerHTML = '¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.marginTop = '20px';
