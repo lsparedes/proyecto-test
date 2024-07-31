@@ -282,17 +282,18 @@ function validateClicks() {
 
 
     endTime = new Date();
-    const testDuration = (endTime - startItemTime) / 1000;
+    const testDuration = (endTime - startItemTime);
     const totalDuration = (endTime - totalStartTime) / 1000;
-
+    const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
+    const testDurationFormatted = testDuration.toLocaleString('es-CL');
     const fechaActual = new Date();
     const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
     const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_'); // Reemplaza caracteres no válidos en nombres de archivo
     const baseFileName = `resultados_letter_A_${fechaFormateada}`;
 
     let csvContent = 'Descripcion;Valor\n';
-    csvContent += `Tiempo dedicado Tarea;${totalDuration}\n`;
-    csvContent += `Tiempo respuesta;${testDuration}\n`;
+    csvContent += `Tiempo dedicado Tarea (Segundos);${totalDurationFormatted}\n`;
+    csvContent += `Tiempo respuesta (Milisegundos);${testDurationFormatted}\n`;
     csvContent += `Mano Utilizada;${selectedHand}\n`;
     csvContent += `Aciertos;${correctClicks}\n`;
     csvContent += `Errores de omision;${totalErrors}\n`;
