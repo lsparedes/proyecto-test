@@ -260,7 +260,7 @@ function iniciarPresentacion() {
     const startButton = document.getElementById('startButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     startTime = new Date(); // Registrar el tiempo de inicio del test
-    h1.style.display = 'none';
+    
     instructionText.style.display = 'none';
     instrucciones.style.display = 'none';
     startButton.style.display = 'none';
@@ -410,7 +410,7 @@ function cambiarImagen(selectedOptionIndex) {
             if (!respuestaSeleccionada) {
                 respuestasSeleccionadas.push({
                     item: imagenes[indiceActual].textoDistintivo,
-                    opcionSeleccionada: 'omitido',
+                    opcionSeleccionada: '',
                     respuestaCorrecta: imagenes[indiceActual].correct,
                     tiempo: Date.now() - tiempoInicio
                 });
