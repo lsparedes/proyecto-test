@@ -141,6 +141,7 @@ imageCanvas.addEventListener('click', handleClick, false);
 practiceCanvas.addEventListener('click', handleClickPractice, false);
 
 startButton.addEventListener('click', () => {
+    document.getElementById('instructionAudio1').pause();
     instructionsScreenP.style.display = 'none';
     mainScreenP.style.display = 'block';
     testButton.style.display = 'block';  // Asegura que el botón 'next' esté visible
@@ -155,6 +156,7 @@ nextButtonP.addEventListener('click', () => {
 });
 
 testButton.addEventListener('click', () => {
+    document.getElementById('instructionAudio2').pause();
     instructionsScreen.style.display = 'none';
     mainScreen.style.display = 'block';
     nextButton.style.display = 'block';  // Asegura que el botón 'next' esté visible

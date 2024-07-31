@@ -284,6 +284,7 @@ function drawNextButtonB() {
     nextButtonB.style.display = 'inline-block';
 
     nextButtonB.addEventListener('click', () => {
+        document.getElementById('instructionAudio1').pause();
         canvasPartB.style.display = 'none';
         document.getElementById('partB').style.display = 'none';
         document.getElementById('partB2').style.display = 'flex';
@@ -529,6 +530,7 @@ function drawNextButtonB2() {
     nextButtonB2.style.display = 'inline-block';
 
     nextButtonB2.addEventListener('click', () => {
+        document.getElementById('instructionAudio').pause();
         document.getElementById('partB2').style.display = 'none';
         canvasPartB2.style.display = 'none';
         // Aquí puedes agregar la lógica para mostrar la siguiente sección o concluir la prueba
