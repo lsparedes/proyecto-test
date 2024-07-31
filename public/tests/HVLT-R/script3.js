@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         finishScreen.style.display = 'block';
         finishTime = new Date();
         console.log(`${finishTime}`);
-        createCSV();
+        downloadZip();
     });
 
     document.querySelectorAll('.option-btn').forEach(button => {
@@ -61,6 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Mostrar el siguiente audio si existe
             if (audioIndex < audioItems.length) {
                 audioItems[audioIndex].style.display = 'block';
+            } else{
+                finishScreen.style.display = 'block';
+                finishTime = new Date();
+                console.log(`${finishTime}`);
+                downloadZip();
             }
             console.log(answer);
         });
@@ -93,14 +98,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         
         csvContent += `\nTiempo dedicado a la tarea:,${formattedTime}\n`;
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', 'Respuestas HVLT-R Reconocimiento.csv');
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        return csvContent;
     }
+
+    function downloadZip() {
+        if (typeof JSZip === 'undefined') {
+            console.error('JSZip is not loaded.');
+            return;
+        }
+
+        const zip = new JSZip();
+        
+
+
+        // Agregar el archivo CSV al zip
+        const csvContent = createCSV();
+        zip.file('HVLT-R_Reconocimiento.csv', csvContent);
+
+        // Generar y descargar el zip
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(content);
+            a.download = 'HVLT-R Reconocimiento.zip';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
+    }
+
+
 });
