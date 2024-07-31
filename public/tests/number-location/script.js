@@ -1,4 +1,5 @@
 document.getElementById('startButton').addEventListener('click', () => {
+    document.getElementById('instrucciones').pause();
     document.getElementById('start-screen').style.display = 'none';
     startTime = new Date(); // Registrar el tiempo de inicio del test
     showNextImage();

@@ -252,8 +252,8 @@ function mostrarFinalizacion() {
 
 
 function iniciarPresentacion() {
+    document.getElementById('instrucciones').pause();
     presentacionIniciada = true;
-    const h1 = document.getElementById('titulo');
     const imageContainer = document.getElementById('imageContainer');
     const instructionText = document.getElementById('instructionText');
     const instrucciones = document.getElementById('instrucciones');

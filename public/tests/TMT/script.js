@@ -272,6 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nextButton.style.display = 'inline-block';
 
         nextButton.addEventListener('click', () => {
+            document.getElementById('instructionAudio1').pause();
             document.getElementById('instructions').style.display = 'none';
             canvas.style.display = 'none'; // Ocultar el canvas actual
             document.getElementById('partA').style.display = 'flex'; // Mostrar instrucciones para la Parte B
@@ -510,6 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nextButtonA.style.display = 'inline-block';
 
         nextButtonA.addEventListener('click', () => {
+            document.getElementById('instructionAudio').pause();
             document.getElementById('partA').style.display = 'none';
             canvasPartA.style.display = 'none'; // Ocultar el canvas actual
             nextButtonA.remove(); // Eliminar el botón "Siguiente" después de hacer clic

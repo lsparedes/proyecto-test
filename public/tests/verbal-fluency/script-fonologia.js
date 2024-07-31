@@ -1,6 +1,7 @@
 let startTime;
 
 document.getElementById('startTestButton').addEventListener('click', () => {
+    document.getElementById('mainInstructionAudio').pause();
     startTime = Date.now();
     document.getElementById('instructions').style.display = 'none';
     document.getElementById('testSection1').style.display = 'block';
@@ -103,10 +104,12 @@ function nextSection(part) {
     if (part === 1) {
         document.getElementById('testSection1').style.display = 'none';
         document.getElementById('testSection2').style.display = 'block';
+        document.getElementById('instructionAudio1').pause();
         loadAudio(2); // Cargar el segundo audio
     } else if (part === 2) {
         document.getElementById('testSection2').style.display = 'none';
         document.getElementById('completionMessage').style.display = 'block';
+        document.getElementById('instructionAudio2').pause();
         downloadRecordingAndTime();
     }
 }

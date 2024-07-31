@@ -517,34 +517,13 @@ function generarArchivoRespuestasCSV() {
     // Formatear la fecha y la hora
     const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
 
-    // Define la variable que quieres guardar en el archivo .txt
-    const miVariable = (endTime - startTime);
-
-    // Crea un Blob con el contenido
-    const txtBlob = new Blob([miVariable], { type: 'text/plain' });
-
-    // Crear un archivo ZIP que contenga el CSV y el TXT
-    const zip = new JSZip();
-    zip.file(`respuestas_12_camel_${fechaHoraFormateada}.csv`, csvBlob);
-    zip.file(`tiempo_total_ms_12_camel_${fechaHoraFormateada}.txt`, txtBlob);
-
-    // Generar el archivo ZIP y crear un enlace de descarga
-    zip.generateAsync({ type: 'blob' }).then(function (zipBlob) {
-        const url = URL.createObjectURL(zipBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `archivos_12_camel_${fechaHoraFormateada}.zip`;
-        a.click();
-        URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
-    });
-
-    // // Crear un enlace de descarga para el archivo CSV
-    // const url = URL.createObjectURL(blob);
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = `respuestas_modified_camel_${fechaHoraFormateada}.csv`;
-    // a.click();
-    // URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
+    // Crear un enlace de descarga para el archivo CSV
+    const url = URL.createObjectURL(csvBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `respuestas_12_camel_${fechaHoraFormateada}.csv`;
+    a.click();
+    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
 }
 
 
