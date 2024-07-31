@@ -671,7 +671,19 @@ nextButton.addEventListener('click', function () {
         cambioHabilitado = true; // Permitir cambiar de imagen
         cambiarImagen();
     } else {
-        alert('Por favor, selecciona una respuesta antes de continuar.');
+        endTimeE = new Date(); // Registrar la hora de finalización
+        respuesta = {
+            textoDistintivo: imagenes[indiceActual].textoDistintivo,
+            imagen: imagenes[indiceActual].item,
+            respuestaCorrecta: imagenes[indiceActual].options.find(option => option.correct).item,
+            respuestaSeleccion: "",
+            esCorrecta: 0,
+        };
+        respuesta['tiempoDedicado'] = endTimeE - startTimeE;
+        respuestasSeleccionadas.push(respuesta);
+        startTimeE = new Date(); // Registrar la hora de inicio
+        cambioHabilitado = true; // Permitir cambiar de imagen
+        cambiarImagen();
     }
 });
 
@@ -682,9 +694,9 @@ opciones.forEach(opcion => {
 });
 
 function cambiarImagen() {
-    if (!respuestaSeleccionada) {
-        return; // Si no se ha seleccionado una respuesta, no cambiar de imagen
-    }
+    // if (!respuestaSeleccionada) {
+    //     return; // Si no se ha seleccionado una respuesta, no cambiar de imagen
+    // }
 
     indiceActual++;
     respuestaSeleccionada = false; // Restablecer la bandera de respuesta seleccionada
