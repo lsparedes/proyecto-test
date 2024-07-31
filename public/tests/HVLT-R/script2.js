@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let recordingSeconds = 0;
     let startTime = new Date();
     let finishTime;
-    let audioUrl;
+    let audioBlob;  // Guardar el audioBlob aquí para uso posterior
+    const audioFiles = [];
 
     fullscreenButton.addEventListener('click', () => {
         if (!document.fullscreenElement) {
@@ -37,11 +38,11 @@ document.addEventListener('DOMContentLoaded', () => {
         audio1_ej2.style.display = 'none';
         fullscreenButton.style.display = 'none';
         recordingControls4.style.display = 'block';
-        startRecording('HVLT-R_Recuerdo_Libre_Diferido.mp3');
+        startRecording('HVLT-R Ensayo 1.mp3');
     });
 
     startRecordingButton4.addEventListener('click', () => {
-        startRecording('HVLT-R_Recuerdo_Libre_Diferido.mp3');
+        startRecording();
     });
 
     stopRecordingButton4.addEventListener('click', () => {
@@ -65,11 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 mediaRecorder.addEventListener('stop', () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                    audioUrl = URL.createObjectURL(audioBlob);
-                    const a = document.createElement('a');
-                    a.href = audioUrl;
-                    a.download = fileName;
-                    a.click();
+                    audioFiles.push({blob: audioBlob, fileName: fileName})
+                    generateZip();
                 });
 
                 recordingInterval = setInterval(() => {
@@ -115,14 +113,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeSpent = (finishTime - startTime) / 1000; 
         const timeSpentFormatted = formatTime(timeSpent);
     
-        const csvContent = `data:text/csv;charset=utf-8,Start Time,Finish Time,Time Spent (HH:MM:SS),Audio URL\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
-    
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', 'HVLT-R_Recuerdo_Libre_Diferido.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const csvContent = `Start Time,Finish Time,Time Spent (HH:MM:SS),Audio URL\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
+        return csvContent;
+    }
+
+    function generateZip() {
+
+
+
+        const zip = new JSZip();
+
+        audioFiles.forEach((file) => {
+            zip.file(file.fileName, file.blob);
+        });
+
+        const csvContent = saveToCSV();
+        zip.file('HVLT-R_Recuerdo_Libre_Diferido.csv', csvContent);
+
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = 'HVLT-R RecuerdoLibreDiferido.zip';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
     }
 });

@@ -45,6 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime = new Date();
     let finishTime;
 
+    // An array to hold all the audio files to be zipped
+    const audioFiles = [];
+
+    // Include JSZip script
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js';
+    document.head.appendChild(script);
+
     console.log(`${startTime}`);
     fullscreenButton.addEventListener('click', () => {
         if (!document.fullscreenElement) {
@@ -93,9 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
         endScreen.style.display = 'none';
         finishScreen.style.display = 'block';
         finishTime = new Date();
-        console.log(`${finishTime}`)
+        console.log(`${finishTime}`);
         startFinishTimer();
-        saveToCSV();
+        downloadZip();
     });
 
     audio2.addEventListener('ended', () => {
@@ -165,11 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 mediaRecorder.addEventListener('stop', () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    const a = document.createElement('a');
-                    a.href = audioUrl;
-                    a.download = fileName;
-                    a.click();
+                    audioFiles.push({ blob: audioBlob, fileName: fileName });
                 });
 
                 initButton.disabled = true;
@@ -182,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function stopRecording(initButton, stopButton) {
         mediaRecorder.stop();
-
         stopButton.disabled = true;
         initButton.disabled = false;
     }
@@ -203,23 +206,44 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeSpent = (finishTime - startTime) / 1000;
         const timeSpentFormatted = formatTime(timeSpent);
 
-        const csvContent = `data:text/csv;charset=utf-8,Start Time,Finish Time,Time Spent (HH:MM:SS)\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
+        const csvContent = `Start Time,Finish Time,Time Spent (HH:MM:SS)\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
+        return csvContent;
+    }
 
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', 'HVLT-R_Recuerdo_Libre_Inmediato.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+    function downloadZip() {
+        if (typeof JSZip === 'undefined') {
+            console.error('JSZip is not loaded.');
+            return;
+        }
+
+        const zip = new JSZip();
+        
+        // Agregar archivos de audio al zip
+        audioFiles.forEach((file) => {
+            zip.file(file.fileName, file.blob);
+        });
+
+        // Agregar el archivo CSV al zip
+        const csvContent = saveToCSV();
+        zip.file('HVLT-R_Recuerdo_Libre_Inmediato.csv', csvContent);
+
+        // Generar y descargar el zip
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(content);
+            a.download = 'HVLT-R RecuerdoLibreInmediato.zip';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        });
     }
 
     function startFinishTimer() {
         setTimeout(() => {
             playBeepSound();
-        }, 20 * 60 * 1000); // 20 minutos en milisegundos
+        }, 0.1 * 60 * 1000); // 20 minutos en milisegundos
     }
-
+    
     function playBeepSound() {
         const beep = new Audio('beep.wav');
         beep.play();
