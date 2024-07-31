@@ -33,8 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTimeExecution, endTimeExecution;
     let executionStartTime;
 
-    initAudioContext();
-
 
 
     fullscreenButton.addEventListener('click', () => {
@@ -177,8 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     selectHandContainer.style.display = "block";
                 });
             }
-            stopCanvasRecording('DrawWithFigure');
-            downloadCanvas('drawing-canvas', 'DrawWithFigure.png');
+
 
             finishresponse1();
         });
@@ -201,8 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectHandContainer.style.display = 'none';
                 finishScreen.style.display = 'none';
             }
-            stopCanvasRecording('DrawFromMemory');
-            downloadCanvas('memory-canvas', 'DrawFromMemory.png');
+
             endTime2 = new Date();
             localStorage.setItem('secondTestEndTime', endTime2.getTime().toString());
             finishresponse2();
@@ -230,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.click();
                 participantAnswer = selectedFigure.alt;
                 accuracy = (correctAnswer === participantAnswer) ? 1 : 0;
-                stopCanvasRecording('IdentifyFigure');
+
                 finishresponse3();
             } else {
                 alert('Por favor, selecciona una figura antes de continuar.');
@@ -269,18 +265,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 finishScreenReached(); // Calcula endTimeExecution y executionTime
                 executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
                 saveResultsToCSV('DibujoConFigura', pageLoadTime, endTimeExecution, startTime1, endTime1, selectedHand, "", "", "");
+                stopCanvasRecording('DrawWithFigure');
+                downloadCanvas('drawing-canvas', 'DrawWithFigure.png');
             }
             if (finishDrawingFromMemoryButton) {
                 finishScreenReached();
                 executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
                 saveResultsToCSV('DibujoDesdeMemoria', pageLoadTime, endTimeExecution, startTime2, endTime2, selectedHand, "", "", "");
+                stopCanvasRecording('DrawFromMemory');
+                downloadCanvas('memory-canvas', 'DrawFromMemory.png');
             }
             if (finishIdentifyingFigureButton) {
                 finishScreenReached();
                 executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
                 saveResultsToCSV('IdentificacionDeFigura', pageLoadTime, endTimeExecution, startTime3, endTime2, selectedHand, correctAnswer, participantAnswer, accuracy);
+                stopCanvasRecording('IdentifyFigure');
             }
-    
+
+
+
             // Ocultar todos los otros elementos
             container2.style.display = 'none';
             selectHandContainer.style.display = 'none';
@@ -300,21 +303,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initCanvas(canvasId, clearButtonId, downloadButtonId) {
         const canvas = document.getElementById(canvasId);
+        const clearButton = document.getElementById(clearButtonId);
         const ctx = canvas.getContext('2d');
-
+    
         setCanvasBackground(canvas, 'white');
         ctx.strokeStyle = 'black';
-
+    
         let drawing = false;
         let x = 0;
         let y = 0;
-
+    
+        function getTouchPos(canvas, touchEvent) {
+            const rect = canvas.getBoundingClientRect();
+            const touch = touchEvent.touches[0];
+    
+            // Ajustar para la rotación de 270 grados
+            const rotatedX = rect.bottom - touch.clientY;
+            const rotatedY = touch.clientX - rect.left;
+    
+            return {
+                x: rotatedX,
+                y: rotatedY
+            };
+        }
+    
         canvas.addEventListener('mousedown', (e) => {
             x = e.offsetX;
             y = e.offsetY;
             drawing = true;
         });
-
+    
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touchPos = getTouchPos(canvas, e);
+            x = touchPos.x;
+            y = touchPos.y;
+            drawing = true;
+        });
+    
         canvas.addEventListener('mousemove', (e) => {
             if (drawing) {
                 ctx.beginPath();
@@ -325,24 +351,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 y = e.offsetY;
             }
         });
-
+    
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (drawing) {
+                const touchPos = getTouchPos(canvas, e);
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(touchPos.x, touchPos.y);
+                ctx.stroke();
+                x = touchPos.x;
+                y = touchPos.y;
+            }
+        });
+    
         canvas.addEventListener('mouseup', () => {
             drawing = false;
         });
-
+    
+        canvas.addEventListener('touchend', () => {
+            drawing = false;
+        });
+    
         canvas.addEventListener('mouseleave', () => {
             drawing = false;
         });
-
-        document.getElementById(clearButtonId).addEventListener('click', () => {
+    
+        canvas.addEventListener('touchleave', () => {
+            drawing = false;
+        });
+    
+        clearButton.addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             setCanvasBackground(canvas, 'white');
         });
-
+    
         document.getElementById(downloadButtonId).addEventListener('click', () => {
             downloadCanvas(canvasId, canvasId + '.png');
         });
     }
+    
+    
+    
 
     function downloadCanvas(canvasId, filename) {
         const canvas = document.getElementById(canvasId);
