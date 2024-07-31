@@ -297,14 +297,12 @@ document.addEventListener('DOMContentLoaded', () => {
             startTime = new Date(); // Registrar la hora de inicio
             console.log('Inicio');
         }
+        var audioContainer = instructionsAudio.parentNode;
+        audioContainer.pause();
         startTest();
     });
 
     startSequenceButton.addEventListener('click', () => {
-        // if (!isPractice) {
-        //     startTime = new Date(); // Registrar la hora de inicio
-        //     console.log('Inicio Temporizador');
-        // }
         startSequence();
     });
 

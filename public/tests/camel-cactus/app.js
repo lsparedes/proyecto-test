@@ -563,6 +563,8 @@ function iniciarPresentacion() {
     nextButton.style.display = 'block'; // Mostrar el botón "Next"
     fullscreenButton.style.display = 'none'; // Ocultar el botón al iniciar la presentación
 
+    document.getElementById('instructionAudio').pause();
+
     interaccionHabilitada = true;
     mostrarImagen(indiceActual);
 }

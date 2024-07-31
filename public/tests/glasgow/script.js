@@ -57,6 +57,7 @@ let endTimeTotal;
 function startTest() {
     document.getElementById('instruction-screen').style.display = 'none';
     document.getElementById('test-screen').style.display = 'block';
+    document.getElementById('instrucciones').pause();
     startTimeTotal = new Date();
     console.log(startTimeTotal);
     showImage();
