@@ -10,21 +10,15 @@
 <body>
     <div id="container">
         <div class="container2" style="display: block;">
-            <div id="main-screen" class="screen">
-                <ol>
-                    <p>Copiar la Figura:</p>
-                    <p>Se presentará una figura, la cual debe copiar lo más exacta posible</p>
-                </ol>
+            <div id="main-screen">
                 <audio id="audio1" controls>
                     <source src="audio1.mp3" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
-                <div class="button-container">
-                    <button id="fullscreen-button">Pantalla Completa</button>
-                </div>
+
             </div>
 
-            <div id="draw-with-figure-screen" class="screen" >
+            <div id="draw-with-figure-screen" >
                 <div class="drawing-container">
                     <img src="figura1.png" alt="Figura de Benson" id="figure-image">
                     <div class="controls controls-left">
@@ -35,11 +29,18 @@
                 </div>
                 
             </div>
-            <button id="finish-drawing-with-figure"></button>
+            <div class="button-container">
+                <button id="fullscreen-button"></button>
+                <button id="finish-drawing-with-figure"></button>
+            </div>
+
         </div>
 
         <div id="instruccionesdespues" class="screen" style="display: none;">
-            <p>Recuerda esta figura para más adelante:</p>
+            <audio id="audio1_2" controls>
+                <source src="recordarimg.wav" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
             <img src="figura1.png" alt="Figura de Benson" id="figure-image">
             <button id="finalize-button"></button>
         </div>

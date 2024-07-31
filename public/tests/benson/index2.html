@@ -11,18 +11,11 @@
     <div id="container">
         <div class="container2" style="display: block;">
             <div id="main-screen" class="screen">
-                <ol>
-                    <p>Recuerdo Diferido:</p>
-                    <p>Pasado un tiempo, deberá dibujar la misma figura de memoria,</p>
-                    <p>sin ayuda</p>
-                </ol>
                 <audio id="audio2" controls >
                     <source src="audio2.mp3" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
-                <div class="button-container">
-                    <button id="fullscreen-button">Pantalla Completa</button>
-                </div>
+                
             </div>
     
             <div id="draw-from-memory-screen" class="screen">
@@ -35,7 +28,11 @@
                         <canvas id="memory-canvas" width="820" height="550"></canvas>
                     </div>
                 </div>
-                <button id="finish-drawing-from-memory"></button>
+                <div class="button-container">
+                    <button id="fullscreen-button"></button>
+                    <button id="finish-drawing-from-memory"></button>
+                </div>
+
             </div>
         </div>
         

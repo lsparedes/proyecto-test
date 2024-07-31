@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
             setTimeout(() => {
                 finishDrawingWithFigureButton.classList.add('red-arrow');
-            }, 5000); // 10 segundos
+            }, 4 * 60 * 1000); // 10 segundos
             startTime1 = new Date();
             console.log("Tiempo de inicio Tarea: ", formatDate(startTime1));
         });
