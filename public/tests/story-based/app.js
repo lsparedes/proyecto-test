@@ -303,7 +303,7 @@ function mostrarImagenPrincipal() {
 }
 
 function handleContinueClick() {
-    cambiarImagen(); // Llama a cambiarImagen sin argumentos para manejar el caso 'omitido'
+    cambiarImagen(); 
 }
 
 

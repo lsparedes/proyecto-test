@@ -62,7 +62,7 @@ function submitAnswer() {
     const numberInput = document.getElementById('number-input');
     let userAnswer = numberInput.value.trim();
     if (userAnswer === '') {
-        userAnswer = 'omitido';
+        userAnswer = '';
     }
     const correctAnswer = images[currentImageIndex].answer;
     const itemEndTime = new Date();
