@@ -159,7 +159,7 @@ input {
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-#startButton {
+#startButton,#final-button,#next-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -203,23 +203,17 @@ input {
     /* Ajustamos la distancia desde el borde derecho */
 }
 
-#next-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('img/flecha3.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 0;
-    width: 80px;
-    /* Ajusta el ancho fijo */
-    height: 75px;
-    /* Ajusta la altura fija */
-    vertical-align: middle;
-    /* Alineado verticalmente con el contenido */
+
+#enterID {
+    display: inline-block;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     position: absolute;
     bottom: 15px;
-    /* Ajustamos la distancia desde la parte inferior */
-    right: 15px;
-    /* Ajustamos la distancia desde el borde derecho */
+    height: 30%;
+    width: 25%;
+    margin: 0 !important;
 }
