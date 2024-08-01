@@ -244,3 +244,18 @@ audio-container {
 #stopRecordingButton4 {
     background-image: url('detenerr1.png');
 }
+
+#enterID{
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    height: 30%;
+    width: 25%;
+
+    margin: 0 !important;
+  }
