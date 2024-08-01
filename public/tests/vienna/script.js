@@ -13,11 +13,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageCanvas = document.getElementById('imageCanvas');
     const practiceCanvas1 = document.getElementById('practiceCanvas1');
     const practiceCanvas2 = document.getElementById('practiceCanvas2');
+    const instructionCanvas = document.getElementById('instructionCanvas');
 
     const resizeCanvas = (canvas) => {
-        const container = canvas.parentElement;
-        canvas.width = container.clientWidth;
-        canvas.height = container.clientHeight;
+        if (canvas && canvas.parentElement) {
+            const container = canvas.parentElement;
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        } else {
+            console.error('Canvas or its parent element not found:', canvas);
+        }
     };
 
     const drawImageScaled = (canvas, img) => {
@@ -30,7 +35,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const loadCanvasContent = (index) => {
-        if (index === 5) {
+        if (index === 4) {
+            const instructionImage = new Image();
+            instructionImage.src = 'img/instrucciones.png';
+            instructionImage.onload = function () {
+                resizeCanvas(instructionCanvas);
+                drawImageScaled(instructionCanvas, instructionImage);
+                console.log('Mostrando imagen: img/instrucciones.png en instructionCanvas');
+            };
+        } else if (index === 5) {
             const practiceImage1 = new Image();
             practiceImage1.src = 'img/practica_1.png';
             practiceImage1.onload = function () {
@@ -276,6 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let showUpdateErrors = false; // Estado para mostrar errores de actualización
 
         const images = [
+            'img/instrucciones.png',
             'img/practica_1.png',
             'img/practica_2.png',
             'img/1.png',
@@ -292,8 +306,8 @@ document.addEventListener('DOMContentLoaded', () => {
             'img/12.png',
         ];
 
-        clicksByImage = videos.map(() => []);
-        resultsByImage = videos.map(() => []);
+        clicksByImage = images.map(() => []);
+        resultsByImage = images.map(() => []);
 
         const image = new Image();
         image.onload = function () {
@@ -342,8 +356,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function loadCurrentVideo(contador) {
             testVideo.src = videos[contador].src;
-            image.src = images[contador + 2]; // Offset by 2 to account for practice images
-            console.log(`Mostrando video: ${videos[contador].src} y imagen: ${images[contador + 2]}`);
+            image.src = images[contador + 3]; // Offset by 3 to account for instruction and practice images
+            console.log(`Mostrando video: ${videos[contador].src} y imagen: ${images[contador + 3]}`);
             updateTrialIndicator(); // Actualizar el indicador de prueba
         }
 
@@ -356,7 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const scaleY = 400 / canvas.height; // Alto original de la imagen
             const click = { x: x * scaleX, y: y * scaleY };
 
-            if (canvas === practiceCanvas1) {
+            if (canvas === instructionCanvas) {
+                clicksByImage[4].push(click); // Guardar clics para I1
+            } else if (canvas === practiceCanvas1) {
                 clicksByImage[5].push(click); // Guardar clics para P1
             } else if (canvas === practiceCanvas2) {
                 clicksByImage[6].push(click); // Guardar clics para P2
@@ -513,8 +529,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-       
-
         // Inicializar la primera carga de video e imagen
         showScreen(currentScreenIndex);
 
@@ -537,6 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         imageCanvas.addEventListener('click', handleClick, false); // Asegúrate de añadir el evento click aquí
+        instructionCanvas.addEventListener('click', handleClick, false); // Asegúrate de añadir el evento click aquí
         practiceCanvas1.addEventListener('click', handleClick, false); // Asegúrate de añadir el evento click aquí
         practiceCanvas2.addEventListener('click', handleClick, false); // Asegúrate de añadir el evento click aquí
         validateButton.addEventListener('click', validateClicks, false);
