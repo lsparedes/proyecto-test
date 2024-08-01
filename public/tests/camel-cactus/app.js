@@ -429,7 +429,7 @@ fullscreenButton.addEventListener('click', requestFullscreen);
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
 
-    imageContainer.innerHTML = '<h1> ¡Has completado esta tarea con éxito! </h1> <br> <h1> ¡Muchas gracias!</h1>';
+    imageContainer.innerHTML = '<h1> ¡Ha completado esta tarea con éxito! </h1> <br> <h1> ¡Muchas gracias!</h1>';
 
     // Ajustes de estilo
     imageContainer.style.textAlign = 'center';
@@ -478,7 +478,7 @@ function generarArchivoRespuestas() {
 
 function generarArchivoRespuestasCSV() {
     endTime = new Date(); // Registrar la hora de finalización
-    const duration = (endTime - startTime); // Duración en segundos
+    const duration = (endTime - startTime) / 1000; // Calcular la duración de la tarea en segundos
 
     // Verificar si hay respuestas seleccionadas
     if (respuestasSeleccionadas.length === 0) {
@@ -499,7 +499,7 @@ function generarArchivoRespuestasCSV() {
         }
     });
 
-    csvContent += `\nTiempo total de la tarea: ${duration} ms\n`;
+    csvContent += `\nTiempo total(s): ${duration}\n`;
     csvContent += 'Mano utilizada: ' + selectedHand + '\n';
 
     // Crear un blob a partir del contenido del CSV
@@ -517,34 +517,13 @@ function generarArchivoRespuestasCSV() {
     // Formatear la fecha y la hora
     const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
 
-    // Define la variable que quieres guardar en el archivo .txt
-    const miVariable = (endTime - startTime);
-
-    // Crea un Blob con el contenido
-    const txtBlob = new Blob([miVariable], { type: 'text/plain' });
-
-    // Crear un archivo ZIP que contenga el CSV y el TXT
-    const zip = new JSZip();
-    zip.file(`respuestas_12_camel_${fechaHoraFormateada}.csv`, csvBlob);
-    zip.file(`tiempo_total_ms_12_camel_${fechaHoraFormateada}.txt`, txtBlob);
-
-    // Generar el archivo ZIP y crear un enlace de descarga
-    zip.generateAsync({ type: 'blob' }).then(function (zipBlob) {
-        const url = URL.createObjectURL(zipBlob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `archivos_12_camel_${fechaHoraFormateada}.zip`;
-        a.click();
-        URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
-    });
-
-    // // Crear un enlace de descarga para el archivo CSV
-    // const url = URL.createObjectURL(blob);
-    // const a = document.createElement('a');
-    // a.href = url;
-    // a.download = `respuestas_modified_camel_${fechaHoraFormateada}.csv`;
-    // a.click();
-    // URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
+    // Crear un enlace de descarga para el archivo CSV
+    const url = URL.createObjectURL(csvBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `respuestas_12_camel_${fechaHoraFormateada}.csv`;
+    a.click();
+    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
 }
 
 
@@ -560,7 +539,10 @@ function iniciarPresentacion() {
     imageContainer.style.display = 'block';
     instructionText.style.display = 'none';
     startButton.style.display = 'none';
+    nextButton.style.display = 'block'; // Mostrar el botón "Next"
     fullscreenButton.style.display = 'none'; // Ocultar el botón al iniciar la presentación
+
+    document.getElementById('instructionAudio').pause();
 
     interaccionHabilitada = true;
     mostrarImagen(indiceActual);
@@ -658,9 +640,6 @@ function verificarRespuesta(event) {
     };
 
     respuestaSeleccionada = true;
-
-    // Mostrar el botón "Next"
-    nextButton.style.display = 'block';
 }
 
 // Al hacer clic en "Next", avanzar a la siguiente imagen
@@ -669,11 +648,24 @@ nextButton.addEventListener('click', function () {
         endTimeE = new Date(); // Registrar la hora de finalización
         respuesta['tiempoDedicado'] = endTimeE - startTimeE;
         respuestasSeleccionadas.push(respuesta);
+        startTimeE = new Date(); // Registrar la hora de inicio
+        cambioHabilitado = true; // Permitir cambiar de imagen
+        cambiarImagen();
+    } else {
+        endTimeE = new Date(); // Registrar la hora de finalización
+        respuesta = {
+            textoDistintivo: imagenes[indiceActual].textoDistintivo,
+            imagen: imagenes[indiceActual].item,
+            respuestaCorrecta: imagenes[indiceActual].options.find(option => option.correct).item,
+            respuestaSeleccion: "",
+            esCorrecta: 0,
+        };
+        respuesta['tiempoDedicado'] = endTimeE - startTimeE;
+        respuestasSeleccionadas.push(respuesta);
+        startTimeE = new Date(); // Registrar la hora de inicio
+        cambioHabilitado = true; // Permitir cambiar de imagen
+        cambiarImagen();
     }
-    startTimeE = new Date(); // Registrar la hora de inicio
-    nextButton.style.display = 'none'; // Ocultar el botón "Next" nuevamente
-    cambioHabilitado = true; // Permitir cambiar de imagen
-    cambiarImagen();
 });
 
 // Agregar evento click a todas las opciones
@@ -683,9 +675,9 @@ opciones.forEach(opcion => {
 });
 
 function cambiarImagen() {
-    if (!respuestaSeleccionada) {
-        return; // Si no se ha seleccionado una respuesta, no cambiar de imagen
-    }
+    // if (!respuestaSeleccionada) {
+    //     return; // Si no se ha seleccionado una respuesta, no cambiar de imagen
+    // }
 
     indiceActual++;
     respuestaSeleccionada = false; // Restablecer la bandera de respuesta seleccionada

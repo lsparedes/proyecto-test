@@ -90,7 +90,7 @@ const imagenes = [
     {
         preliminar: "imagenes/2-SET-CI/2/2_SET-CI_item2.jpg",
         src: "imagenes/2-SET-CI/2/2_SET-CI_item2.1.jpg",
-        textoDistintivo: "CI 2",
+        textoDistintivo: "CI2",
         options: [
             { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.2.jpg", letter: 'a' },
             { src: "imagenes/2-SET-CI/2/2_SET-CI_item2.3.jpg", letter: 'b' },
@@ -237,7 +237,7 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
 
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');
-    imageContainer.innerHTML = ' <h1>¡Has completado esta tarea con éxito!</h1> <br> <h1>¡Muchas gracias!</h1>';
+    imageContainer.innerHTML = ' <h1>¡Ha completado esta tarea con éxito!</h1> <br> <h1>¡Muchas gracias!</h1>';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.display = 'flex';
@@ -252,15 +252,15 @@ function mostrarFinalizacion() {
 
 
 function iniciarPresentacion() {
+    document.getElementById('instrucciones').pause();
     presentacionIniciada = true;
-    const h1 = document.getElementById('titulo');
     const imageContainer = document.getElementById('imageContainer');
     const instructionText = document.getElementById('instructionText');
     const instrucciones = document.getElementById('instrucciones');
     const startButton = document.getElementById('startButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     startTime = new Date(); // Registrar el tiempo de inicio del test
-    h1.style.display = 'none';
+    
     instructionText.style.display = 'none';
     instrucciones.style.display = 'none';
     startButton.style.display = 'none';
@@ -275,27 +275,20 @@ function mostrarImagenPrincipal() {
     const storyImage = document.getElementById('storyImage');
     const optionsContainer = document.getElementById('optionsContainer');
     const continueButton = document.getElementById('continueButton');
-    instructionText.style.display = 'none';
-    instrucciones.style.display = 'none';
-    // Ocultar imagen preliminar y botón "Mostrar imagen principal"
+
     preliminaryImage.style.display = 'none';
     showMainButton.style.display = 'none';
 
-    // Mostrar imagen principal
     storyImage.src = imagenes[indiceActual].src;
     storyImage.style.display = 'block';
     continueButton.style.display = 'block';
 
-    // Limpiar opciones anteriores
     optionsContainer.innerHTML = '';
-
-    // Mostrar opciones
     imagenes[indiceActual].options.forEach((option, index) => {
         const optionImage = document.createElement('img');
         optionImage.src = option.src;
         optionImage.classList.add('option');
 
-        // Agregar event listener a cada opción para verificar respuesta
         optionImage.addEventListener('click', () => {
             verificarRespuesta(index);
         });
@@ -304,10 +297,13 @@ function mostrarImagenPrincipal() {
     });
     optionsContainer.style.display = 'flex';
 
-    // Agregar event listener al botón "continueButton"
-    continueButton.addEventListener('click', () => {
-        cambiarImagen();
-    });
+    // Limpiar event listener previo del botón continueButton
+    continueButton.removeEventListener('click', handleContinueClick);
+    continueButton.addEventListener('click', handleContinueClick);
+}
+
+function handleContinueClick() {
+    cambiarImagen(); 
 }
 
 
@@ -371,11 +367,9 @@ document.getElementById('showMainButton').addEventListener('click', function () 
 });
 
 
-let cambioHabilitado = true; // Variable para controlar si se puede cambiar de imagen
 let respuestaSeleccionada = false; // Variable para verificar si se seleccionó una respuesta
 
-// Array para almacenar la información de las respuestas seleccionadas
-let respuestasSeleccionadas = [];
+let respuestasSeleccionadas = []; // Array para almacenar las respuestas seleccionadas
 
 function verificarRespuesta(selectedOptionIndex) {
     const itemActual = imagenes[indiceActual];
@@ -385,27 +379,68 @@ function verificarRespuesta(selectedOptionIndex) {
 
     const tiempoTranscurrido = Date.now() - tiempoInicio;
 
-    respuestasSeleccionadas.push({
-        item: itemActual.textoDistintivo,
-        opcionSeleccionada: letraSeleccionada,
-        respuestaCorrecta: letraCorrecta,
-        tiempo: tiempoTranscurrido
-    });
+    // Solo registrar la respuesta si no se ha registrado una para este ítem
+    if (!respuestaSeleccionada) {
+        respuestasSeleccionadas.push({
+            item: itemActual.textoDistintivo,
+            opcionSeleccionada: letraSeleccionada,
+            respuestaCorrecta: letraCorrecta,
+            tiempo: tiempoTranscurrido
+        });
+
+        respuestaSeleccionada = true;
+    }
 
     document.querySelectorAll('.option').forEach(option => {
         option.classList.remove('selected');
     });
     document.querySelectorAll('.option')[selectedOptionIndex].classList.add('selected');
 
-    respuestaSeleccionada = true;
-    cambioHabilitado = false;
-
-    setTimeout(() => {
-        if (!respuestaSeleccionada) {
-            cambioHabilitado = true;
-        }
-    }, 900);
 }
+
+function cambiarImagen(selectedOptionIndex) {
+    if (indiceActual >= imagenes.length) {
+        console.error("Índice fuera de rango:", indiceActual);
+        return;
+    }
+
+    if (respuestaSeleccionada || selectedOptionIndex === undefined) {
+        if (selectedOptionIndex === undefined) {
+            // Solo agregar respuesta omitida si no se ha registrado una respuesta
+            if (!respuestaSeleccionada) {
+                respuestasSeleccionadas.push({
+                    item: imagenes[indiceActual].textoDistintivo,
+                    opcionSeleccionada: '',
+                    respuestaCorrecta: imagenes[indiceActual].correct,
+                    tiempo: Date.now() - tiempoInicio
+                });
+            }
+        }
+
+        respuestaSeleccionada = false; // Reiniciar la variable para el siguiente ítem
+        indiceActual++;
+        respuestaSeleccionada = false;
+        if (practice) {
+            practice = false;
+            mostrarInstrucciones();
+            return;
+        }
+        if (indiceActual === imagenes.length) {
+            const imageContainer = document.getElementById('imageContainer');
+            imageContainer.style.display = 'none';
+            document.getElementById('continueButton').style.display = 'none';
+            const previousImageText = document.querySelector('.imageText');
+            if (previousImageText) {
+                previousImageText.remove();
+            }
+            showHandSelection();
+        } else {
+            mostrarImagen(indiceActual);
+        }
+    }
+}
+
+
 
 // Función para generar el archivo CSV al finalizar el test
 function generarArchivoCSV() {
@@ -431,7 +466,7 @@ function generarArchivoCSV() {
         csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa}\n`;
     });
 
-    csvContent += `\n\nTiempo dedicado (Milisegundos): ${totalTestTime}\n`;
+    csvContent += `\n\nTiempo dedicado (segundos): ${totalTestTime/1000}\n`;
     csvContent += `Mano utilizada: ${selectedHand}\n`;
 
     const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -458,31 +493,6 @@ function generarArchivoCSV() {
 
 
 
-function cambiarImagen(selectedOptionIndex) {
-    if (!respuestaSeleccionada) {
-        return;
-    }
-    // Aquí se cambia la lógica para avanzar a la siguiente imagen
-    indiceActual++;
-    respuestaSeleccionada = false;
-    if (practice) {
-        practice = false;
-        mostrarInstrucciones();
-        return;
-    }
-    if (indiceActual === imagenes.length) {
-        const imageContainer = document.getElementById('imageContainer');
-        imageContainer.style.display = 'none';
-        document.getElementById('continueButton').style.display = 'none'; // Ocultar el botón "Next"
-        const previousImageText = document.querySelector('.imageText');
-        if (previousImageText) {
-            previousImageText.remove();
-        }
-        showHandSelection();
-    } else {
-        mostrarImagen(indiceActual);
-    }
-}
 
 function mostrarInstrucciones() {
     const imageContainer = document.getElementById('imageContainer');
@@ -528,4 +538,4 @@ handInputs.forEach((input) => {
         handButton.style.display = "block";
         selectedHand = e.target.value;
     });
-  });
+});

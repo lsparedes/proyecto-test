@@ -1,10 +1,9 @@
 let mediaRecorder;
 let chunks = [];
-let timerInterval;
 const downloadLinks = [];
-let audioStream = null; // Guardar el stream de audio
-let audioreproducido = false;
+let audioStream = null;
 let recordingStartTime;
+let timerInterval;
 
 document.addEventListener('DOMContentLoaded', () => {
     requestMicrophonePermission();
@@ -18,7 +17,7 @@ function requestMicrophonePermission() {
 
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            audioStream = stream; // Guardar el stream de audio
+            audioStream = stream;
             document.getElementById('permission-message').classList.add('hidden');
         })
         .catch(err => {
@@ -63,22 +62,12 @@ function startTest(type) {
         const stopImg = document.createElement('img');
         stopImg.src = 'img/detenerr1.png';
         stopImg.classList.add('img-button', 'stop-img', 'hidden');
-        stopImg.addEventListener('click', () => stopRecording(timerSpan, index + 1, itemDiv));
+        stopImg.addEventListener('click', () => stopRecording(timerSpan, index + 1, itemDiv, type));
 
         const nextButton = document.createElement('button');
         nextButton.textContent = '';
         nextButton.classList.add('hidden', 'next-button');
-        nextButton.addEventListener('click', () => {
-            clearInterval(timerInterval);
-            updateTimerDisplay(timerSpan, 0);
-            itemDiv.classList.add('hidden');
-            if (itemDiv.nextSibling) {
-                itemDiv.nextSibling.classList.remove('hidden');
-            } else {
-                document.getElementById('test-items-' + type).classList.add('hidden');
-                mostrarFinalizacion(type);
-            }
-        });
+        nextButton.addEventListener('click', () => stopRecording(timerSpan, index + 1, itemDiv, type));
 
         itemDiv.appendChild(titleElement);
         itemDiv.appendChild(audio);
@@ -115,36 +104,42 @@ function startRecording(itemDiv, titleElement, index) {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
     }
-    chunks = []; // Limpiar los chunks previos
+    chunks = [];
 
     mediaRecorder = new MediaRecorder(audioStream);
     mediaRecorder.ondataavailable = e => {
-        chunks.push(e.data);
+        if (e.data.size > 0) {
+            chunks.push(e.data);
+        }
     };
     mediaRecorder.onstop = () => {
+        console.log('Grabación detenida. Chunks:', chunks);
         if (chunks.length > 0) {
             const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
             const audioURL = window.URL.createObjectURL(blob);
             const recordingTime = new Date();
-            const duration = (recordingTime - recordingStartTime);
-            // Guardar el enlace con el título y el índice
+            const duration = recordingTime - recordingStartTime;
             downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob, duration: duration });
 
-            // Ocultar el botón de grabación y mostrar el botón de siguiente
+            console.log(`Grabación ${index} finalizada. Duración: ${duration} ms`);
+            console.log(downloadLinks);
+
             const stopImg = itemDiv.querySelector('.stop-img');
             stopImg.classList.add('hidden');
             const nextButton = itemDiv.querySelector('.next-button');
             nextButton.classList.remove('hidden');
-
-            const message = document.createElement('div');
-            message.textContent = 'Grabación creada';
-            message.classList.add('recording-message');
-            itemDiv.appendChild(message);
+        } else {
+            console.warn('No se encontraron datos en los chunks.');
         }
     };
+
+    mediaRecorder.onerror = (event) => {
+        console.error('Error en la grabación:', event.error);
+    };
+
     mediaRecorder.start();
     recordingStartTime = new Date();
-    // Mostrar el botón de detener y el nuevo botón al iniciar la grabación
+
     const stopImg = itemDiv.querySelector('.stop-img');
     stopImg.classList.remove('hidden');
 
@@ -152,33 +147,50 @@ function startRecording(itemDiv, titleElement, index) {
     newButton.classList.add('img-button', 'new-button');
     newButton.style.backgroundImage = "url('img/boton-rec.png')";
 
-    // Verificar si ya existe un botón nuevo y eliminarlo antes de agregar uno nuevo
     const existingNewButton = itemDiv.querySelector('.new-button');
     if (existingNewButton) {
         existingNewButton.parentNode.removeChild(existingNewButton);
     }
 
-    // Insertar el nuevo botón justo antes de stopImg
     stopImg.parentNode.insertBefore(newButton, stopImg);
+
+    const nextButton = itemDiv.querySelector('.next-button');
+    nextButton.classList.remove('hidden');
 
     startTimer(itemDiv.querySelector('.timer'));
 }
 
-function stopRecording(timerSpan, index, itemDiv) {
+function stopRecording(timerSpan, index, itemDiv, type) {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
         clearInterval(timerInterval);
+        updateTimerDisplay(timerSpan, 0);
 
-        // Mostrar el botón de siguiente y ocultar el nuevo botón si existe
-        const nextButton = itemDiv.querySelector('.next-button');
-        nextButton.classList.remove('hidden');
+        // Añadimos un pequeño retraso solo al final del proceso
+        if (itemDiv.nextElementSibling === null) {
+            itemDiv.classList.add('hidden');
 
-        const newButton = itemDiv.querySelector('.new-button');
-        if (newButton) {
-            newButton.parentNode.removeChild(newButton);
+            document.getElementById('test-items-' + type).classList.add('hidden');
+            mostrarFinalizacion(type);
+        } else {
+            // Si no es el último ítem, avanzamos inmediatamente al siguiente ítem
+            itemDiv.classList.add('hidden');
+
+            let nextItem = itemDiv.nextElementSibling;
+            if (nextItem) {
+                nextItem.classList.remove('hidden');
+            }
+
+            console.log(`Ítem ${index} grabado y oculto.`);
+            console.log(`Mostrando siguiente ítem.`);
         }
+
+        console.log("Contenido de downloadLinks:", downloadLinks);
+    } else {
+        console.log("No se está grabando en este momento.");
     }
 }
+
 
 function startTimer(displayElement) {
     let time = 0;
@@ -210,11 +222,15 @@ function mostrarFinalizacion(type) {
     completionMessage.style.fontSize = '35px';
     completionMessage.style.marginTop = '13px';
     completionMessage.style.display = 'flex';
-    crearZip(type);
+
+    // Aplicamos el retraso solo aquí
+    setTimeout(() => {
+        crearZip(type);
+    }, 1500); 
 }
+
 function generarCSV() {
-    let csvContent = "";
-    csvContent += "Prueba;Tiempo Dedicado en milisegundos\n";
+    let csvContent = "Prueba;Tiempo Dedicado en milisegundos\n";
 
     downloadLinks.forEach(linkData => {
         if (linkData.title && linkData.duration) {
@@ -227,7 +243,6 @@ function generarCSV() {
 }
 
 function crearZip(type) {
-    // Verificar si `downloadLinks` no está vacío
     if (!downloadLinks.length) {
         console.error("No hay datos en downloadLinks.");
         return;
@@ -236,16 +251,18 @@ function crearZip(type) {
     const zip = new JSZip();
     const audioFolder = zip.folder('audios');
 
-    // Verificar si `JSZip` está disponible
     if (!audioFolder) {
         console.error("No se pudo crear la carpeta 'audios' en el archivo ZIP.");
         return;
     }
 
+    console.log("Contenido de downloadLinks:", downloadLinks);
+
     downloadLinks.forEach(linkData => {
         if (linkData.title && linkData.blob) {
-            const fileName = `${type}_${linkData.title}.mp3`;
+            const fileName = `${type}_${linkData.title}.ogg`;
             audioFolder.file(fileName, linkData.blob);
+            console.log(`Archivo añadido al ZIP: ${fileName}`);
         } else {
             console.warn("Datos incompletos en linkData:", linkData);
         }
@@ -254,12 +271,12 @@ function crearZip(type) {
     const csvContent = generarCSV();
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
 
-    // Obtener la fecha actual y formatearla
+    console.log("Contenido del CSV:", csvContent);
+
     const fechaActual = new Date();
     const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
-    const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_'); // Reemplaza caracteres no válidos en nombres de archivo
+    const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_');
 
-    // Añadir el archivo CSV al ZIP
     zip.file(`respuestas_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
 
     zip.generateAsync({ type: "blob" })
@@ -282,5 +299,3 @@ function crearZip(type) {
             console.error("Error generando el archivo ZIP:", err);
         });
 }
-
-

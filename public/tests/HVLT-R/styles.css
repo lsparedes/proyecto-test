@@ -1,0 +1,246 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #ffffff;
+    transform-origin: center;
+    overflow: hidden;
+}
+
+#container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: white;
+}
+
+.container1, .screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.container1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1000px;
+    margin-top: 50px;
+}
+
+#main-screen,
+#main-screen2,
+#ensayo2{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+
+h1 {
+    font-size: 40px;
+}
+
+h2 {
+    font-size: 30px;
+    margin-bottom: 80px;
+}
+
+p {
+    font-size: 30px;
+    text-align: center;
+}
+
+ol {
+    font-size: 30px;
+    margin-bottom: 150px;
+    text-align: center;
+}
+
+button {
+    margin: 20px;
+    padding: 15px 30px;
+    border-radius: 5px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    display: inline-flex;
+    align-items: center;
+}
+
+button:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+#fullscreenButton,
+#startButton,
+#nxbutton,
+#nxbutton2,
+#nxbutton3,
+#nxbutton4,
+#nxbutton5,
+#nxbutton6,
+#startButton2{
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 90px;
+    height: 80px;
+    position: absolute;
+}
+
+#nxbutton,
+#nxbutton2,
+#nxbutton3,
+#nxbutton4,
+#nxbutton5,
+#nxbutton6,
+#startButton2{
+    background-image: url('flecha3.png');
+    right: 15px;
+    bottom: 15px;
+}
+
+
+#startButton {
+    background-image: url('flecha3.png');
+    right: 15px;
+    bottom: 15px;
+}
+
+#fullscreenButton {
+    background-image: url('full-screen.png');
+    left: 15px;
+    bottom: 15px;
+}
+
+#fullscreenButton:hover {
+    background-color: #8f8f8f;
+}
+
+#fullscreen-button:active {
+    transform: scale(0.98);
+}
+
+.controls i {
+    font-size: 30px;
+    margin: 0 10px;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.controls i:hover {
+    transform: scale(1.1);
+}
+
+#instructionText {
+    font-size: 37px;
+}
+
+audio-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.audio-options {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.audio-options audio {
+    margin-right: 10px;
+}
+
+.audio-item p {
+    margin: 0;
+}
+
+.audio-item:not(#audioItem1) {
+    display: none;
+}
+
+.option-btn {
+    margin: 0 10px;
+}
+
+.options {
+    display: flex;
+    gap: 10px;
+}
+
+.option-btn {
+    margin: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid #333;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+#initRecordingButton1,
+#startRecordingButton1,
+#stopRecordingButton1,
+#initRecordingButton2,
+#startRecordingButton2,
+#stopRecordingButton2,
+#initRecordingButton3,
+#startRecordingButton3,
+#stopRecordingButton3,
+#startRecordingButton4,
+#stopRecordingButton4 {
+    background-size: cover;
+    background-position: center;
+    width: 100px; /* Ajusta el tamaño según sea necesario */
+    height: 100px; /* Ajusta el tamaño según sea necesario */
+    border: none;
+    cursor: pointer;
+}
+
+#initRecordingButton1,
+#initRecordingButton2,
+#initRecordingButton3,
+#startRecordingButton4 {
+    background-image: url('grabando.png');
+
+}
+
+#startRecordingButton1,
+#startRecordingButton2,
+#startRecordingButton3 {
+    background-image: url('grabar.png');
+}
+
+#stopRecordingButton1,
+#stopRecordingButton2,
+#stopRecordingButton3,
+#stopRecordingButton4 {
+    background-image: url('detenerr1.png');
+}

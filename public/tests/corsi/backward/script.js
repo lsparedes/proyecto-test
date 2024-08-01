@@ -192,8 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
                     endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                    startSequence();
-                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+                    startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
+                }, 500);
             } else {
                 endPractice();
             }
@@ -212,8 +212,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
                     endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                    startSequence();
-                }, 2000); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+                    startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
+                }, 500);
             }
         }
     }
@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
-        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta (s)"];
+        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta(ms)"];
         const rows = testData.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
             const userResponseIncremented = data.userResponse.map(num => num + 1);
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
         }
 
-        rows.push(['\nTiempo Total (s): ' + duration.toFixed(2)]);
+        rows.push(['\nTiempo Total(s): ' + duration.toFixed(2)]);
         rows.push(['Mano Utilizada: ' + selectedHand]);
 
         let csvContent = "data:text/csv;charset=utf-8," 
@@ -293,14 +293,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     startTestButton.addEventListener('click', () => {
+        if (isPractice) {
+            startTime = new Date(); // Registrar la hora de inicio
+            console.log('Inicio');
+        }
+        var audioContainer = instructionsAudio.parentNode;
+        audioContainer.pause();
         startTest();
     });
 
     startSequenceButton.addEventListener('click', () => {
-        if (!isPractice) {
-            startTime = new Date(); // Registrar la hora de inicio
-            console.log('Inicio Temporizador');
-        }
         startSequence();
     });
 
@@ -312,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 exerciseTitle: fixedTitles[sequenceCount],
                 correctAnswer: sequence,
                 userResponse: playerSequence,
-                responseTime: (milliseconds / 1000).toFixed(2),
+                responseTime: milliseconds,
             };
             testData.push(exerciseData);
         }

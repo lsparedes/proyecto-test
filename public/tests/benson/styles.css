@@ -21,7 +21,7 @@ body {
     background: white;
 }
 
-.container1, .screen {
+.container1{
     width: 100%;
     height: 100%;
     display: flex;
@@ -99,24 +99,21 @@ button:active {
 }
 
 #fullscreen-button {
-    margin-top: 10px;
-    padding: 15px 30px;
-    font-size: 22px;
-    color: rgb(0, 0, 0);
-    background-color: #c7c7c7;
+    background-color: transparent;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+    background-image: url('full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 70px;
+    vertical-align: middle;
+    position: relative;
+    top: 15px;
+    right: 15px;
 }
 
-#fullscreen-button:hover {
-    background-color: #8f8f8f;
-}
-
-#fullscreen-button:active {
-    transform: scale(0.98);
-}
 
 .option-button {
     font-size: 28px;
@@ -158,11 +155,6 @@ button:active {
     margin-right: 20px;
 }
 
-.drawing-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
 
 .drawing-part {
     margin: 10px;
@@ -318,11 +310,8 @@ canvas {
 /* SELECCION DE MANO CSS */
 
 #selectHand {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     height: 100%;
     width: 100vh;
 }

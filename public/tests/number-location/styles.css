@@ -8,11 +8,26 @@ body {
 
 .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+
     align-items: center;
     justify-content: center;
     text-align: center;
 }
+
+.left {
+    flex: 1;
+    padding: 10px;
+    justify-content: center;
+}
+.right {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #image-container {
     position: relative;
     width: 98vh;
@@ -30,8 +45,9 @@ body {
     text-align: center;
 }
 
+
 #instructionText {
-    font-size: 37px;
+    font-size: 28px;
     text-align: justify;
     margin-bottom: 1rem;
 }
@@ -105,9 +121,6 @@ audio {
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
 }
-
-
-
 input {
     padding: 12px;
     border: 2px solid #ccc;
@@ -123,7 +136,7 @@ input {
     /* Espacio entre el input y la imagen */
 }
 
-#number-input {
+#number-input, #practice-input {
     padding: 8px;
     /* Reducir el padding */
     flex: 0;
@@ -145,6 +158,7 @@ input {
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
+
 #startButton {
     background-color: transparent;
     border: none;
@@ -166,6 +180,7 @@ input {
     right: 15px;
     /* Ajustamos la distancia desde el borde derecho */
 }
+
 #fullscreen-btn {
     background-color: transparent;
     border: none;

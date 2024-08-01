@@ -288,6 +288,7 @@ function iniciarPresentacion() {
     imageContainer.style.display = 'none';
     startButton.style.display = 'none';
     startButton.addEventListener('click', () => {
+        document.getElementById('instructionAudio').pause();
         imagenNumero.style.display = 'block';
         imageContainer.style.display = 'block';
         next_button.style.display = 'block';

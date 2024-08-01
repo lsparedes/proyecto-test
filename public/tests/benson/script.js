@@ -33,8 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTimeExecution, endTimeExecution;
     let executionStartTime;
 
-    initAudioContext();
-
 
 
     fullscreenButton.addEventListener('click', () => {
@@ -49,31 +47,28 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function enterContainer2() {
         startTimeExecution = new Date();
-        console.log("Tiempo de inicio: ", startTimeExecution); // Debugging
+        console.log("Tiempo de inicio: ", formatDate(startTimeExecution));
     }
 
     function finishScreenReached() {
         endTimeExecution = new Date();
-        console.log("Tiempo de finalización: ", endTimeExecution); // Debugging
+        console.log("Tiempo de finalización: ", formatDate(endTimeExecution));
         const executionTime = (endTimeExecution - startTimeExecution) / 1000; // Tiempo en segundos
-        console.log("Tiempo de ejecución: ", executionTime); // Debugging
+        console.log("Tiempo de ejecución: ", executionTime); 
     }
-
 
     function finishresponse1() {
         endTime1 = new Date();
-        console.log("Tiempo de finalización de tarea: ", endTime1); // Debugging
-        const responseTime1 = (endTime1 - startTime1) / 1000; // Tiempo en segundos
+        console.log("Tiempo de finalización de tarea: ", formatDate(endTime1));
     }
     function finishresponse2() {
         endTime2 = new Date();
-        console.log("Tiempo de finalización de tarea: ", endTime2); // Debugging
-        const responseTime2 = (endTime2 - startTime2) / 1000; // Tiempo en segundos
+        console.log("Tiempo de finalización de tarea: ", formatDate(endTime2)); 
+       
     }
     function finishresponse3() {
         endTime3 = new Date();
-        console.log("Tiempo de finalización de tarea: ", endTime3); // Debugging
-        const responseTime3 = (endTime3 - startTime3) / 1000; // Tiempo en segundos
+        console.log("Tiempo de finalización de tarea: ", formatDate(endTime3)); 
     }
 
     // Audio
@@ -87,9 +82,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
             setTimeout(() => {
                 finishDrawingWithFigureButton.classList.add('red-arrow');
-            }, 5000); // 10 segundos
+            }, 4 * 60 * 1000); // 10 segundos
             startTime1 = new Date();
-            console.log("Tiempo de inicio Tarea: ", startTime1); // Debugging
+            console.log("Tiempo de inicio Tarea: ", formatDate(startTime1));
         });
     }
 
@@ -98,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audioElement2.addEventListener('ended', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
             startTime2 = new Date();
-            console.log("Tiempo de inicio Tarea: ", startTime2); // Debugging
+            console.log("Tiempo de inicio Tarea: ", formatDate(startTime2));
         });
     }
 
@@ -107,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audioElement3.addEventListener('ended', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
             startTime3 = new Date();
-            console.log("Tiempo de inicio Tarea: ", startTime3); // Debugging
+            console.log("Tiempo de inicio Tarea: ", formatDate(startTime3));
         });
     }
 
@@ -115,26 +110,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const beepAudio = new Audio('beep.wav');
 
-    /*if (drawFromMemoryScreen || identifyFigureScreen) {
-        const firstTestEndTime = localStorage.getItem('firstTestEndTime');
-        const secondTestEndTime = localStorage.getItem('secondTestEndTime');
-        if (firstTestEndTime) {
-            const now = new Date().getTime();
-            const endTime = new Date(parseInt(firstTestEndTime)).getTime();
-            const timeLeft = endTime + 0.05 * 60 * 1000 - now;
-            if (timeLeft > 0) {
-                disableStartButton(timeLeft);
+    function startCountdown(duration) {
+        let timeLeft = duration;
+        const countdownElement = document.getElementById('contador');
+
+        countdownInterval = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                beepAudio.play(); // Reproduce el beep cuando el tiempo llega a 0
+            } else {
+                timeLeft -= 1000; // Disminuye el tiempo en 1 segundo (1000 ms)
+                updateCountdown(timeLeft);
             }
+        }, 1000);
+    }
+
+    function enterFinishScreen() {
+        finishScreen.style.display = 'block';
+        startCountdown(10 * 60 * 1000); // 10 minutos en milisegundos
+    }
+
+    function finishScreenReached() {
+        endTimeExecution = new Date();
+        console.log("Tiempo de finalización: ", formatDate(endTimeExecution));
+        const executionTime = (endTimeExecution - startTimeExecution) / 1000; // Tiempo en segundos
+        console.log("Tiempo de ejecución: ", executionTime);
+        enterFinishScreen(); // Muestra la pantalla de finalización y comienza el temporizador
+    }
+
+
+
+    function updateCountdown(timeLeft) {
+        const minutes = Math.floor(timeLeft / 60000);
+        const seconds = Math.floor((timeLeft % 60000) / 1000);
+        const countdownElement = document.getElementById('contador');
+
+        if (countdownElement) {
+            countdownElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
         }
-        if (secondTestEndTime) {
-            const now = new Date().getTime();
-            const endTime = new Date(parseInt(secondTestEndTime)).getTime();
-            const timeLeft = endTime + 0.05 * 60 * 1000 - now;
-            if (timeLeft > 0) {
-                disableStartButton(timeLeft);
-            }
-        }
-    }*/
+    }
 
     // Practica 1
     if (finishDrawingWithFigureButton) {
@@ -153,7 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 handButton.style.display = 'block';
             } else{
                 handButton.style.display = 'none';
-                finishScreen.style.display = 'block';
+                finishScreenReached();
             }
             if (finishRememberingFigureButton) {
                 finishRememberingFigureButton.addEventListener('click', () => {
@@ -161,10 +175,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     selectHandContainer.style.display = "block";
                 });
             }
-            stopCanvasRecording('DrawWithFigure');
-            downloadCanvas('drawing-canvas', 'DrawWithFigure.png');
-            endTime1 = new Date();
-            localStorage.setItem('firstTestEndTime', endTime1.getTime().toString());
+
+
             finishresponse1();
         });
         initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
@@ -186,8 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 selectHandContainer.style.display = 'none';
                 finishScreen.style.display = 'none';
             }
-            stopCanvasRecording('DrawFromMemory');
-            downloadCanvas('memory-canvas', 'DrawFromMemory.png');
+
             endTime2 = new Date();
             localStorage.setItem('secondTestEndTime', endTime2.getTime().toString());
             finishresponse2();
@@ -215,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 link.click();
                 participantAnswer = selectedFigure.alt;
                 accuracy = (correctAnswer === participantAnswer) ? 1 : 0;
-                stopCanvasRecording('IdentifyFigure');
+
                 finishresponse3();
             } else {
                 alert('Por favor, selecciona una figura antes de continuar.');
@@ -249,26 +260,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (handButton) {
         handButton.addEventListener('click', () => {
             let executionTime; // Definimos la variable executionTime
-            let finishresponse1;
-            let finishresponse2;
-            let finishresponse3;
     
             if (finishRememberingFigureButton) {
                 finishScreenReached(); // Calcula endTimeExecution y executionTime
                 executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
-                saveResultsToCSV('DibujoConFigura', pageLoadTime, endTime1, selectedHand, "", "", "", finishresponse1, executionTime);
+                saveResultsToCSV('DibujoConFigura', pageLoadTime, endTimeExecution, startTime1, endTime1, selectedHand, "", "", "");
+                stopCanvasRecording('DrawWithFigure');
+                downloadCanvas('drawing-canvas', 'DrawWithFigure.png');
             }
             if (finishDrawingFromMemoryButton) {
                 finishScreenReached();
                 executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
-                saveResultsToCSV('DibujoDesdeMemoria', pageLoadTime, endTime2, selectedHand, "", "", "", finishresponse2, executionTime);
+                saveResultsToCSV('DibujoDesdeMemoria', pageLoadTime, endTimeExecution, startTime2, endTime2, selectedHand, "", "", "");
+                stopCanvasRecording('DrawFromMemory');
+                downloadCanvas('memory-canvas', 'DrawFromMemory.png');
             }
             if (finishIdentifyingFigureButton) {
                 finishScreenReached();
                 executionTime = (endTimeExecution - startTimeExecution) / 1000; // Calcula el tiempo de ejecución
-                saveResultsToCSV('IdentificacionDeFigura', pageLoadTime, endTime3, selectedHand, correctAnswer, participantAnswer, accuracy, finishresponse3, executionTime);
+                saveResultsToCSV('IdentificacionDeFigura', pageLoadTime, endTimeExecution, startTime3, endTime2, selectedHand, correctAnswer, participantAnswer, accuracy);
+                stopCanvasRecording('IdentifyFigure');
             }
-    
+
+
+
             // Ocultar todos los otros elementos
             container2.style.display = 'none';
             selectHandContainer.style.display = 'none';
@@ -279,18 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
 
-    function startCountdown(duration) {
-        let timeLeft = duration;
-        countdownInterval = setInterval(() => {
-            timeLeft--;
-        }, 10000);
-    }
-
-    function updateCountdown(timeLeft) {
-        const minutes = Math.floor(timeLeft / 60000);
-        const seconds = Math.floor((timeLeft % 60000) / 1000);
-        const countdownElement = document.getElementById('contador');
-    }
 
     function setCanvasBackground(canvas, color) {
         const ctx = canvas.getContext('2d');
@@ -300,21 +303,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function initCanvas(canvasId, clearButtonId, downloadButtonId) {
         const canvas = document.getElementById(canvasId);
+        const clearButton = document.getElementById(clearButtonId);
         const ctx = canvas.getContext('2d');
-
+    
         setCanvasBackground(canvas, 'white');
         ctx.strokeStyle = 'black';
-
+    
         let drawing = false;
         let x = 0;
         let y = 0;
-
+    
+        function getTouchPos(canvas, touchEvent) {
+            const rect = canvas.getBoundingClientRect();
+            const touch = touchEvent.touches[0];
+    
+            // Ajustar para la rotación de 270 grados
+            const rotatedX = rect.bottom - touch.clientY;
+            const rotatedY = touch.clientX - rect.left;
+    
+            return {
+                x: rotatedX,
+                y: rotatedY
+            };
+        }
+    
         canvas.addEventListener('mousedown', (e) => {
             x = e.offsetX;
             y = e.offsetY;
             drawing = true;
         });
-
+    
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const touchPos = getTouchPos(canvas, e);
+            x = touchPos.x;
+            y = touchPos.y;
+            drawing = true;
+        });
+    
         canvas.addEventListener('mousemove', (e) => {
             if (drawing) {
                 ctx.beginPath();
@@ -325,24 +351,48 @@ document.addEventListener('DOMContentLoaded', () => {
                 y = e.offsetY;
             }
         });
-
+    
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+            if (drawing) {
+                const touchPos = getTouchPos(canvas, e);
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(touchPos.x, touchPos.y);
+                ctx.stroke();
+                x = touchPos.x;
+                y = touchPos.y;
+            }
+        });
+    
         canvas.addEventListener('mouseup', () => {
             drawing = false;
         });
-
+    
+        canvas.addEventListener('touchend', () => {
+            drawing = false;
+        });
+    
         canvas.addEventListener('mouseleave', () => {
             drawing = false;
         });
-
-        document.getElementById(clearButtonId).addEventListener('click', () => {
+    
+        canvas.addEventListener('touchleave', () => {
+            drawing = false;
+        });
+    
+        clearButton.addEventListener('click', () => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             setCanvasBackground(canvas, 'white');
         });
-
+    
         document.getElementById(downloadButtonId).addEventListener('click', () => {
             downloadCanvas(canvasId, canvasId + '.png');
         });
     }
+    
+    
+    
 
     function downloadCanvas(canvasId, filename) {
         const canvas = document.getElementById(canvasId);
@@ -391,15 +441,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     }
 
-    function saveResultsToCSV(activity, startTime, endTime, hand, correctAnswer, participantAnswer, accuracy, responseTime, executionTime) {
+    function saveResultsToCSV(activity, startTime, endTime, taskStartTime, taskEndTime, hand, correctAnswer, participantAnswer, accuracy, executionTime) {
         const totalTime = (endTime - startTime) / 1000; // en segundos
         const rows = [
-            ["Actividad", "Tiempo de Inicio", "Tiempo de Fin", "Tiempo Total (s)", "Tiempo de Respuesta (s)", "Tiempo de Ejecución (s)", "Mano Utilizada", "Respuesta Correcta", "Respuesta Participante", "Precisión"],
-            [activity, formatDate(startTime), formatDate(endTime), totalTime, responseTime, executionTime, hand, correctAnswer, participantAnswer, accuracy]
+            ["Actividad", "Tiempo de Inicio", "Tiempo de Fin", "Tiempo Total (s)", "Tiempo Inicio de Tarea (s)", "Tiempo de Finalizacion de Tarea (s)", "Mano Utilizada", "Respuesta Correcta", "Respuesta Participante", "Precisión"],
+            [activity, formatDate(startTime), formatDate(endTime), totalTime, formatDate(taskStartTime), formatDate(taskEndTime), hand, correctAnswer, participantAnswer, accuracy]
         ];
     
         let csvContent = "data:text/csv;charset=utf-8," 
-            + rows.map(e => e.join(",")).join("\n");
+            + rows.map(e => e.join(";")).join("\n");
     
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
@@ -412,7 +462,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function formatDate(date) {
         if (!date) return '';
-        const d = new Date(date);
-        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}`;
+        const options = { 
+            weekday: 'short', 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit', 
+            hour12: false 
+        };
+        return date.toLocaleString('en-US', options).replace(',', '');
     }
 });

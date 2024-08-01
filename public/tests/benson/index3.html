@@ -6,22 +6,18 @@
     <title>Test de Figura Compleja de Benson - Identificar Figura</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 </head>
 <body>
     <div id="container">
         <div class="container2" style="display: block;">
             <div id="main-screen" class="screen">
-                <ol>
-                    <p>Identificar figura:</p>
-                    <p>Se presentará una sección para identificar la figura dibujada</p>
-                </ol>
                 <audio id="audio3" controls>
                     <source src="audio3.mp3" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
-                <div class="button-container">
-                    <button id="fullscreen-button">Pantalla Completa</button>
-                </div>
+
             </div>
     
             <div id="identify-figure-screen" class="screen">
@@ -31,7 +27,11 @@
                     <img src="figura2-3.png" alt="Figura 2-3" class="identify-figure-image selectable" data-figure="figura2-3">
                     <img src="figura2-4.png" alt="Figura 2-4" class="identify-figure-image selectable" data-figure="figura2-4">
                 </div>
-                <button id="finish-identifying-figure"></button>
+                <div class="button-container">
+                    <button id="fullscreen-button"></button>
+                    <button id="finish-identifying-figure"></button>
+                </div>
+
             </div>
         </div>
 
@@ -53,7 +53,7 @@
         </div>
 
         <div id="finishScreen" class="container1" style="display: none;">
-            <h1>¡Has completado esta tarea con éxito! <br> ¡Muchas gracias! </h1>
+            <h1>¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias! </h1>
         </div>
     </div>
 

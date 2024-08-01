@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+    
   </head>
 
 <body>
     <div id="container">
         <div id="welcome-screen">
-            <h1 id="titulo">Instrucciones</h1>
             <p>Ahora le voy a pedir que me repita unos números, pero en orden inverso a los que yo le digo. Espere hasta que termine de decir los números y después me los repite en orden inverso o al revés. Por ejemplo, si yo le digo 3-7-4, usted me dice 4-7-3. Si yo le digo 7-3 6, ¿qué me diría?.</p>
             <audio controls>
                 <source src="audio/digit-span-backward.mp3" type="audio/mpeg">
@@ -27,7 +27,6 @@
         </div>
 
         <div id="instruction-screen" class="hidden">
-            <h1 id="instrucciones">Instrucciones</h1>
             <p id="instruction">Repita únicamente los números que yo le diga en orden inverso o al revés. Un sonido de alarma le indicará que es momento de iniciar su respuesta.</p>
             <audio controls>
                 <source src="audio/backward/backward-instructions.mp3" type="audio/mpeg">
@@ -44,7 +43,7 @@
         </div>
 
         <div id="completion-message" class="hidden">
-            <h2>El test ha finalizado. ¡Gracias por sus respuestas!</h2>
+            <h1> ¡Ha completado esta tarea con éxito!<br>¡Muchas gracias! </h1> 
         </div>
     </div>
 
