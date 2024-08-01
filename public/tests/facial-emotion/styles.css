@@ -249,7 +249,7 @@ audio {
     /* Ajustamos la distancia desde el borde derecho */
 }
 
-#enterID {
+/* #enterID {
     display: inline-block;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
@@ -261,7 +261,7 @@ audio {
     height: 30%;
     width: 25%;
     margin: 0 !important;
-}
+} */
 
 .card-body h4 {
     margin-bottom: 20px;
@@ -275,7 +275,7 @@ audio {
     justify-content: space-between;
 }
 
-#selectHand {
+/* #selectHand {
     display: none;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
@@ -286,7 +286,7 @@ audio {
     bottom: 15px;
     height: 30%;
     width: 30%;
-}
+} */
 
 #selectHand h4 {
     margin-bottom: 20px;
