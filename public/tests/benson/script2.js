@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let csvContent = "data:text/csv;charset=utf-8,";
         csvContent += "Actividad,Tiempo de inicio,Tiempo de Termino,Comenzó a dibujar,Terminó de dibujar,Mano Seleccionada\n";
-        csvContent += `Dibujo,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${formatDate(startDrawingTime)},${formatDate(endDrawingTime)},${selectedHand}\n`;
+        csvContent += `DrawFromMemory,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${formatDate(startDrawingTime)},${formatDate(endDrawingTime)},${selectedHand}\n`;
 
         return csvContent;
     }

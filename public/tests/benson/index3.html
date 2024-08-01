@@ -8,10 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
     <div id="container">
-        <div class="container2" style="display: block;">
+        <div id="container2" style="display: block;">
             <div id="main-screen" class="screen">
                 <audio id="audio3" controls>
                     <source src="audio3.mp3" type="audio/mpeg">
@@ -35,28 +36,41 @@
             </div>
         </div>
 
-        <div id="selectHand" class="screen" style="display: none;">
-            <h4>¿Con qué mano respondiste el test?</h4>
-            <div>
-                <input type="radio" id="right_hand" name="hand" value="derecha">
-                <label for="right_hand">Derecha</label>
-            </div>
-            <div>
-                <input type="radio" id="left_hand" name="hand" value="izquierda">
-                <label for="left_hand">Izquierda</label>
-            </div>
-            <div>
-                <input type="radio" id="both_hands" name="hand" value="ambas">
-                <label for="both_hands">Ambas</label>
-            </div>
-            <button id="handButton"></button>
-        </div>
-
         <div id="finishScreen" class="container1" style="display: none;">
             <h1>¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias! </h1>
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-md-4">
+                        <div id="enterID" class="card opacity-75" style="display: none;">
+                            <div class="card-body">
+                                <h4>Indique el ID del participante</h4>
+                                <input type="number" id="participantID" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div id="selectHand" class="card opacity-75" style="display: none;">
+                            <div class="card-body" style="padding: 0;">
+                                <h4>Indique con qué mano el participante respondió el test</h4>
+                                <div>
+                                    <input type="radio" id="right_hand" name="hand" value="derecha">
+                                    <label for="right_hand">Derecha</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="left_hand" name="hand" value="izquierda">
+                                    <label for="left_hand">Izquierda</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="both_hands" name="hand" value="ambas">
+                                    <label for="both_hands">Ambas</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <script src="script.js"></script>
+    <script src="script3.js"></script>
 </body>
 </html>
