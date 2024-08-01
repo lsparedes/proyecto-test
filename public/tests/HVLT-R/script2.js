@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const recordingControls4 = document.getElementById('recordingControls4');
     const startRecordingButton4 = document.getElementById('startRecordingButton4');
     const stopRecordingButton4 = document.getElementById('stopRecordingButton4');
-
+    const enterID = document.getElementById('enterID');
     let mediaRecorder;
     let audioChunks = [];
     let recordingInterval;
@@ -48,9 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
     stopRecordingButton4.addEventListener('click', () => {
         recordingControls4.style.display = 'none';
         finishScreen.style.display = 'block';
+        enterID.style.display = 'inline-block';
+        startRecordingButton4.style.display = 'none';
         stopRecording();
         finishTime = new Date();
-        saveToCSV();
     });
 
     function startRecording(fileName) {
@@ -66,8 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 mediaRecorder.addEventListener('stop', () => {
                     const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                    audioFiles.push({blob: audioBlob, fileName: fileName})
-                    generateZip();
+                    audioFiles.push({ blob: audioBlob, fileName: fileName })
                 });
 
                 recordingInterval = setInterval(() => {
@@ -102,41 +102,59 @@ document.addEventListener('DOMContentLoaded', () => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = Math.floor(seconds % 60);
-    
+
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
-    
+
     function saveToCSV() {
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
-        const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options); 
-        const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options); 
-        const timeSpent = (finishTime - startTime) / 1000; 
+        const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options);
+        const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options);
+        const timeSpent = (finishTime - startTime) / 1000;
         const timeSpentFormatted = formatTime(timeSpent);
-    
+
         const csvContent = `Start Time,Finish Time,Time Spent (HH:MM:SS),Audio URL\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
         return csvContent;
     }
 
+    document.getElementById('participantID').addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            validateInputs();
+            generateZip();
+        }
+    });
+
+    let participantID = 0;
+
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+    }
+
     function generateZip() {
-
-
+        if (typeof JSZip === 'undefined') {
+            console.error('JSZip is not loaded.');
+            return;
+        }
 
         const zip = new JSZip();
 
+        // Agregar archivos de audio al zip
         audioFiles.forEach((file) => {
             zip.file(file.fileName, file.blob);
         });
 
+        // Agregar el archivo CSV al zip
         const csvContent = saveToCSV();
-        zip.file('HVLT-R_Recuerdo_Libre_Diferido.csv', csvContent);
+        zip.file('HVLT-R_Recuerdo_Libre_Diferido_.csv', csvContent);
 
+        // Generar y descargar el zip
         zip.generateAsync({ type: 'blob' }).then((content) => {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(content);
-            link.download = 'HVLT-R RecuerdoLibreDiferido.zip';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(content);
+            a.download = `HVLT-R RecuerdoLibreDiferido-${participantID}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         });
     }
 });

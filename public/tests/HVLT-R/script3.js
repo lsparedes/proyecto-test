@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const audioContainer = document.getElementById('audio-container');
     const audioItems = document.querySelectorAll('.audio-item');
     const NXButton = document.getElementById('nxbutton');
+    const enterID = document.getElementById('enterID');
+
     let answers = {};
     let currentAudioIndex = 0;
     let startTime = new Date();  // Guardar la hora de inicio automáticamente al cargar la página
@@ -43,10 +45,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     NXButton.addEventListener('click', () => {
         audioContainer.style.display = 'none';
+        enterID.style.display = 'inline-block';
         finishScreen.style.display = 'block';
         finishTime = new Date();
         console.log(`${finishTime}`);
-        downloadZip();
     });
 
     document.querySelectorAll('.option-btn').forEach(button => {
@@ -63,9 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 audioItems[audioIndex].style.display = 'block';
             } else{
                 finishScreen.style.display = 'block';
+                enterID.style.display = 'inline-block';
                 finishTime = new Date();
                 console.log(`${finishTime}`);
-                downloadZip();
             }
             console.log(answer);
         });
@@ -77,16 +79,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function createCSV() {
         const total = Object.keys(correctAnswers).length;
         let csvContent = 'nro,palabra,respuesta_correcta,respuesta_participante,precisión\n';
-
+    
         for (let i = 1; i <= total; i++) {
             const word = words[i];
             const correctAnswer = correctAnswers[i];
-            const participantAnswer = answers[i] || 'no';
+            const participantAnswer = answers[i] || ''; // Dejar en blanco si no hay respuesta
             const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
-
+    
             csvContent += `${i},${word},${correctAnswer},${participantAnswer},${isCorrect}\n`;
         }
-
+    
         const endTime = new Date(); // Obtener la hora de finalización
         const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
         
@@ -100,26 +102,39 @@ document.addEventListener('DOMContentLoaded', () => {
         csvContent += `\nTiempo dedicado a la tarea:,${formattedTime}\n`;
         return csvContent;
     }
+    
 
+    document.getElementById('participantID').addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            validateInputs();
+            downloadZip();
+        }
+    });
+    
+    let participantID = 0;
+    
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+    }
+    
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
             return;
         }
-
+    
         const zip = new JSZip();
         
-
-
+    
         // Agregar el archivo CSV al zip
         const csvContent = createCSV();
-        zip.file('HVLT-R_Reconocimiento.csv', csvContent);
-
+        zip.file('HVLT-R_Reconocimiento_.csv', csvContent);
+    
         // Generar y descargar el zip
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = 'HVLT-R Reconocimiento.zip';
+            a.download = `HVLT-R Reconocimiento-${participantID}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
