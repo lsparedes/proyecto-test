@@ -310,24 +310,44 @@ canvas {
 /* SELECCION DE MANO CSS */
 
 #selectHand {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
     padding: 20px;
     border-radius: 10px;
-    height: 100%;
-    width: 100vh;
-}
-
-#selectHand h4 {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 30%;
+    width: 30%;
+    top: 43vh;
+    right: 16vw;
+    position: relative;
+  }
+  
+  #selectHand h4 {
     margin-bottom: 20px;
     font-size: 20px;
     font-weight: bold;
     text-align: center;
-}
-
-#selectHand label {
+  }
+  
+  #selectHand label {
     font-weight: bold;
     margin-bottom: 15px;
-}
-
-#selectHand input[type="radio"] {
+  }
+  
+  #selectHand input[type="radio"] {
     margin-right: 10px;
-}
+  }
+
+#enterID{
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    height: 30%;
+    width: 30%;
+    margin: 0 !important;
+    top: 58vh;
+    left: 16vw;
+    position: relative;
+  }
