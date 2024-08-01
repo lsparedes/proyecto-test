@@ -360,6 +360,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.stroke();
     };
 
+    const responses = []; // Array para almacenar las respuestas de los ensayos
+    let trialStartTime = Date.now(); // Tiempo de inicio de la prueba
+    let clickStartTime = 0; // Tiempo de inicio para calcular el tiempo de respuesta
+
     const handleClick = (e) => {
         const canvas = e.target;
         const rect = canvas.getBoundingClientRect();
@@ -369,17 +373,71 @@ document.addEventListener('DOMContentLoaded', () => {
         const scaleY = 400 / canvas.height;
         const click = { x: x * scaleX, y: y * scaleY };
 
+        let videoIndex;
+
         if (canvas === instructionCanvas) {
             clicksByImage[0].push(click);
+            videoIndex = 0;
         } else if (canvas === practiceCanvas1) {
             clicksByImage[1].push(click);
+            videoIndex = 1;
         } else if (canvas === practiceCanvas2) {
             clicksByImage[2].push(click);
+            videoIndex = 2;
         } else {
             clicksByImage[contador].push(click);
+            videoIndex = contador;
         }
 
+        const responseTime = Date.now() - clickStartTime;
+        recordResponse(videoIndex, click, responseTime);
+
         drawCircle(canvas, x, y, 'blue');
+    };
+
+    const recordResponse = (videoIndex, click, responseTime) => {
+        const videoData = videos[videoIndex];
+        const response = {
+            ensayo: videoData.indicator,
+            respuestaCorrecta: videoData.items.correcto.map(c => `(${c.x}, ${c.y})`).join('; '),
+            errorActualizacion: '',
+            errorRotacion: '',
+            respuestaParticipante: `(${click.x.toFixed(2)}, ${click.y.toFixed(2)})`,
+            precision: 0,
+            tiempoRespuesta: responseTime / 1000, // Convertir a segundos
+            tiempoDedicado: (Date.now() - trialStartTime) / 1000, // Convertir a segundos
+            manoUtilizada: '' // Actualmente vacío
+        };
+
+        videoData.items.error_actualizacion.forEach(item => {
+            const dx = click.x - item.x;
+            const dy = click.y - item.y;
+            if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                response.errorActualizacion = `(${item.x}, ${item.y})`;
+            }
+        });
+
+        videoData.items.error_rotacion.forEach(item => {
+            const dx = click.x - item.x;
+            const dy = click.y - item.y;
+            if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                response.errorRotacion = `(${item.x}, ${item.y})`;
+            }
+        });
+
+        videoData.items.correcto.forEach(item => {
+            const dx = click.x - item.x;
+            const dy = click.y - item.y;
+            if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                response.precision = 2;
+            }
+        });
+
+        if (response.precision === 0 && (response.errorActualizacion || response.errorRotacion)) {
+            response.precision = 1;
+        }
+
+        responses.push(response);
     };
 
     const validateClicksForCanvas = (canvas, videoIndex, resultsDiv) => {
@@ -492,16 +550,17 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const downloadCSV = () => {
-        const csvData = [];
-        resultsByImage.forEach((results, imageIndex) => {
-            results.forEach(result => {
-                csvData.push({
-                    image: videos[imageIndex].src,
-                    orden: result.orden,
-                    score: result.score
-                });
-            });
-        });
+        const csvData = responses.map(response => ({
+            ensayo: response.ensayo,
+            respuesta_correcta: response.respuestaCorrecta,
+            error_actualizacion: response.errorActualizacion,
+            error_rotacion: response.errorRotacion,
+            respuesta_participante: response.respuestaParticipante,
+            precision: response.precision,
+            tiempo_respuesta: response.tiempoRespuesta,
+            tiempo_dedicado: response.tiempoDedicado,
+            mano_utilizada: response.manoUtilizada
+        }));
 
         const csv = Papa.unparse(csvData);
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -527,6 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (completionScreen) {
             completionScreen.style.display = 'flex';
+            downloadCSV(); // Descargar automáticamente el CSV al mostrar la pantalla de finalización
         } else {
             console.error('completionScreen element not found');
         }
@@ -541,6 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawImageScaled(imageCanvas, img);
         };
         console.log(`Mostrando video: ${videos[contador].src}`);
+        clickStartTime = Date.now(); // Reiniciar el tiempo de inicio para calcular el tiempo de respuesta
     };
 
     if (imageCanvas && testVideo) {
@@ -698,3 +759,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicializar la primera carga de video e imagen
     showScreen(currentScreenIndex);
 });
+
