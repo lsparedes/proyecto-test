@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const screens = document.querySelectorAll('.screen');
-    let currentScreenIndex = 0;
+    let currentScreenIndex = 0; // Iniciar en la pantalla correcta
     let contador = 0; // Nuevo índice para los tests
     const trialIndicator = document.getElementById('trialIndicator');
     const indicador = document.getElementById('indicador'); // Selecciona el elemento span con id indicador
@@ -209,17 +209,46 @@ document.addEventListener('DOMContentLoaded', () => {
         showScreen(currentScreenIndex);
     };
 
-    document.getElementById('startButton').addEventListener('click', incrementScreenIndex);
-    document.getElementById('nextButton1').addEventListener('click', incrementScreenIndex);
-    document.getElementById('nextButton2').addEventListener('click', incrementScreenIndex);
-    document.getElementById('nextButton3').addEventListener('click', incrementScreenIndex);
-    document.getElementById('nextButtonPracticeInstruction').addEventListener('click', incrementScreenIndex);
-    document.getElementById('nextButtonPractice1').addEventListener('click', incrementScreenIndex);
-    document.getElementById('nextButtonPractice2').addEventListener('click', goToPreTestInstruction);
-    document.getElementById('nextButtonPreTestInstruction').addEventListener('click', () => {
-        incrementScreenIndex();
-        showTestScreen();
-    });
+    const showTestScreen = () => {
+        currentScreenIndex = 8; // Ajustar al índice correcto de la primera pantalla de test
+        showScreen(currentScreenIndex);
+        loadCurrentVideo(contador);
+        updateTrialIndicator();
+    };
+
+    // Añadir event listeners solo si los elementos existen
+    const startButton = document.getElementById('startButton');
+    if (startButton) {
+        startButton.addEventListener('click', incrementScreenIndex);
+    }
+    const nextButton1 = document.getElementById('nextButton1');
+    if (nextButton1) {
+        nextButton1.addEventListener('click', incrementScreenIndex);
+    }
+    const nextButton2 = document.getElementById('nextButton2');
+    if (nextButton2) {
+        nextButton2.addEventListener('click', incrementScreenIndex);
+    }
+    const nextButton3 = document.getElementById('nextButton3');
+    if (nextButton3) {
+        nextButton3.addEventListener('click', incrementScreenIndex);
+    }
+    const nextButtonPracticeInstruction = document.getElementById('nextButtonPracticeInstruction');
+    if (nextButtonPracticeInstruction) {
+        nextButtonPracticeInstruction.addEventListener('click', incrementScreenIndex);
+    }
+    const nextButtonPractice1 = document.getElementById('nextButtonPractice1');
+    if (nextButtonPractice1) {
+        nextButtonPractice1.addEventListener('click', incrementScreenIndex);
+    }
+    const nextButtonPractice2 = document.getElementById('nextButtonPractice2');
+    if (nextButtonPractice2) {
+        nextButtonPractice2.addEventListener('click', goToPreTestInstruction);
+    }
+    const nextButtonPreTestInstruction = document.getElementById('nextButtonPreTestInstruction');
+    if (nextButtonPreTestInstruction) {
+        nextButtonPreTestInstruction.addEventListener('click', showTestScreen);
+    }
 
     const testVideo = document.getElementById('testVideo');
     const nextButtonTest = document.getElementById('nextButtonTest');
@@ -237,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullScreenButton = document.getElementById('fullScreenButton');
     const completionScreen = document.getElementById('completionScreen');
     const testScreen = document.getElementById('testScreen');
-
 
     if (imageCanvas && testVideo) {
         let clicks = [];
@@ -320,14 +348,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function handleClick(e) {
-            const rect = imageCanvas.getBoundingClientRect();
+            const canvas = e.target;
+            const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            const scaleX = 700 / imageCanvas.width; // Ancho original de la imagen
-            const scaleY = 400 / imageCanvas.height; // Alto original de la imagen
-            clicks.push({ x: x * scaleX, y: y * scaleY });
-            clicksByImage[contador] = clicks;
-            drawCircle(imageCanvas, x, y, 'blue');
+            const scaleX = 700 / canvas.width; // Ancho original de la imagen
+            const scaleY = 400 / canvas.height; // Alto original de la imagen
+            const click = { x: x * scaleX, y: y * scaleY };
+
+            if (canvas === practiceCanvas1) {
+                clicksByImage[5].push(click); // Guardar clics para P1
+            } else if (canvas === practiceCanvas2) {
+                clicksByImage[6].push(click); // Guardar clics para P2
+            } else {
+                clicksByImage[contador].push(click); // Guardar clics para las demás pantallas
+            }
+
+            drawCircle(canvas, x, y, 'blue');
         }
 
         function drawCircle(canvas, x, y, color) {
@@ -374,7 +411,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (showCorrectDoors) drawCorrectDoors();
             if (showRotationErrors) drawRotationErrors();
             if (showUpdateErrors) drawUpdateErrors();
-            clicks.forEach((click, index) => {
+            clicksByImage[contador].forEach((click, index) => {
                 let isCorrect = false;
                 let isRotationError = false;
                 let isUpdateError = false;
@@ -421,7 +458,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             resultsDiv.innerHTML = `
-                <p>Total de clics: ${clicks.length}</p>
+                <p>Total de clics: ${clicksByImage[contador].length}</p>
                 <p>Puntaje total: ${results.reduce((sum, r) => sum + r.score, 0)}</p>
                 <p>Clics correctos: ${correctClicks}</p>
                 <p>Errores de rotación: ${rotationErrors}</p>
@@ -434,7 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
 
             resultsByImage[contador] = results;
-            clicks = [];
+            clicksByImage[contador] = [];
         }
 
         function downloadCSV() {
@@ -476,12 +513,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        function showTestScreen() {
-            contador = 0;
-            loadCurrentVideo(contador);
-            showScreen(currentScreenIndex); // Muestra la primera ventana de test
-            updateTrialIndicator(); // Actualiza el indicador al mostrar la primera ventana de test
-        }
+       
 
         // Inicializar la primera carga de video e imagen
         showScreen(currentScreenIndex);
@@ -491,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (contador < videos.length - 1) {
                 contador++; // Incrementar el índice antes de cargar el video y la imagen
                 loadCurrentVideo(contador);
-                clicks = clicksByImage[contador];
+                clicksByImage[contador] = [];
                 resultsDiv.innerHTML = '';
                 if (questionRow) {
                     questionRow.style.display = 'none';
@@ -505,6 +537,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         imageCanvas.addEventListener('click', handleClick, false); // Asegúrate de añadir el evento click aquí
+        practiceCanvas1.addEventListener('click', handleClick, false); // Asegúrate de añadir el evento click aquí
+        practiceCanvas2.addEventListener('click', handleClick, false); // Asegúrate de añadir el evento click aquí
         validateButton.addEventListener('click', validateClicks, false);
         showButton.addEventListener('click', () => {
             showCorrectDoors = true;
@@ -537,7 +571,7 @@ document.addEventListener('DOMContentLoaded', () => {
         prevButton.addEventListener('click', () => {
             contador = (contador - 1 + videos.length) % videos.length;
             loadCurrentVideo(contador);
-            clicks = clicksByImage[contador];
+            clicksByImage[contador] = [];
             resultsDiv.innerHTML = '';
         });
         downloadCSVButton.addEventListener('click', downloadCSV, false);
