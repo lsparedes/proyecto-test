@@ -93,9 +93,9 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Instructions.mp4',
             items: {
-                correcto: [{ x: 150, y: 100 }],
-                error_rotacion: [{ x: 250, y: 150 }],
-                error_actualizacion: [{ x: 350, y: 200 }],
+                correcto: [{ x: 303, y: 138 }],
+                error_rotacion: [],
+                error_actualizacion: [],
             },
             indicator: 'I1',
             imageSrc: 'img/instrucciones.png'
@@ -103,9 +103,9 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Practice_1.mp4',
             items: {
-                correcto: [{ x: 160, y: 110 }],
-                error_rotacion: [{ x: 260, y: 160 }],
-                error_actualizacion: [{ x: 360, y: 210 }],
+                correcto: [{ x: 315, y: 187 }],
+                error_rotacion: [],
+                error_actualizacion: [],
             },
             indicator: 'P1',
             imageSrc: 'img/practica_1.png'
@@ -113,9 +113,9 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Practice_2.mp4',
             items: {
-                correcto: [{ x: 170, y: 120 }],
-                error_rotacion: [{ x: 270, y: 170 }],
-                error_actualizacion: [{ x: 370, y: 220 }],
+                correcto: [{ x: 399, y: 232 }],
+                error_rotacion: [],
+                error_actualizacion: [],
             },
             indicator: 'P2',
             imageSrc: 'img/practica_2.png'
