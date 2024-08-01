@@ -542,8 +542,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'canvasRecording.webm';
-            link.click();
         };
 
         mediaRecorderCanvasPartA.onstop = () => {
@@ -551,8 +549,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'canvasPartARecording.webm';
-            link.click();
         };
 
         setTimeout(() => {
@@ -571,22 +567,22 @@ document.addEventListener('DOMContentLoaded', function () {
                     zip.file("canvasPartAScreenshot.png", blobPartA);
 
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, "test_results_TMT_part_A.zip");
+                        saveAs(content, `ID_${participantID}_test_results_TMT_part_A.zip`);
                     });
                 });
             });
 
-            // Mostrar mensaje de finalización
-            const instructions = document.getElementById('instructions');
-            instructions.style.display = 'flex';
-            instructions.style.justifyContent = 'center'; // Centrar contenido horizontalmente
-            instructions.style.alignItems = 'center'; // Centrar contenido verticalmente
-            instructions.style.height = '100vh'; // Altura del viewport para permitir el centrado vertical
-            instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
-            instructions.style.textAlign = 'center';
-            instructions.style.fontSize = '40px';
-            instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
         }, 1000); // Ajustar tiempo si es necesario
+        // Mostrar mensaje de finalización
+        const instructions = document.getElementById('instructions');
+        instructions.style.display = 'flex';
+        instructions.style.justifyContent = 'center'; // Centrar contenido horizontalmente
+        instructions.style.alignItems = 'center'; // Centrar contenido verticalmente
+        instructions.style.height = '100vh'; // Altura del viewport para permitir el centrado vertical
+        instructions.innerHTML = '¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!';
+        instructions.style.textAlign = 'center';
+        instructions.style.fontSize = '40px';
+        instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
     }
 
     fullscreenButton.addEventListener('click', () => {
@@ -617,21 +613,41 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectHandContainer = document.getElementById("selectHand");
     const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
+    const enterIDContainer = document.getElementById("enterID");
 
     // Variable con la mano seleccionada
     let selectedHand = "";
 
     // Funcion para mostrar la pantalla de seleccion de mano
     function showHandSelection() {
+        document.getElementById('preEnd').style.display = 'block';
+        document.getElementById('fin').style.display = 'block';
         selectHandContainer.style.display = "block";
+        enterIDContainer.style.display = "block";
     }
 
     handButton.addEventListener('click', confirmHandSelection);
 
     // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
     // En este caso fue testFinalizado()
+
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+    let participantID = 0;
+
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+        if (participantID && selectedHand) {
+            handButton.style.display = 'block';
+        }
+    }
+
+    document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
     function confirmHandSelection() {
         selectHandContainer.style.display = "none";
+        document.getElementById('preEnd').style.display = 'none';
         handButton.style.display = "none";
         testFinalizado();
     }
@@ -639,7 +655,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
     handInputs.forEach((input) => {
         input.addEventListener('change', (e) => {
-            handButton.style.display = "block";
+            validateInputs();
             selectedHand = e.target.value;
         });
     });

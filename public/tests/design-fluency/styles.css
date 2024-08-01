@@ -70,7 +70,7 @@ audio {
   transform: scale(0.98);
 }
 
-#fullscreenButton {
+/* #fullscreenButton {
   padding: 15px 30px;
   font-size: 22px;
   color: rgb(0, 0, 0);
@@ -79,15 +79,57 @@ audio {
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s, transform 0.2s;
-}
+} */
+#fullscreenButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 
-#fullscreenButton:hover {
+  background-image: url('full-screen.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  padding: 5px;
+  width: 80px;
+  height: 65px;
+  vertical-align: middle;
+
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+}
+#enterID{
+  display: inline-block;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  bottom: 15px;
+  height: 30%;
+  width: 25%;
+  margin: 0 !important;
+}
+.card-body h4 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+.containerCards {
+  width: 100vw;
+  /* position: absolute;
+  bottom: 0;
+  left: 0; */
+  justify-content: space-between;
+}
+/* #fullscreenButton:hover {
   background-color: #8f8f8f;
 }
 
 #fullscreenButton:active {
   transform: scale(0.98);
-}
+} */
 
 .finish-button {
   background-color: transparent;
@@ -178,6 +220,10 @@ audio {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  bottom: 15px;
+  height: 30%;
+  width: 30%;
 }
 
 #selectHand h4 {

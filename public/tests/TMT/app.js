@@ -264,7 +264,6 @@ canvasPartB.addEventListener('touchend', function (event) {
     const touch = event.changedTouches[0];
     const rect = canvas.getBoundingClientRect();
     endDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
-    airStartTime = new Date(); // REVISAR (no estoy segura si va aqui)
 });
 
 
@@ -521,6 +520,7 @@ canvasPartB2.addEventListener('touchend', function (event) {
     const rect = canvasPartA.getBoundingClientRect();
     endDrawingPartB2(touch.clientX - rect.left, touch.clientY - rect.top);
     liftPenCount++;
+    airStartTime = new Date();
 });
 
 function drawNextButtonB2() {
@@ -535,7 +535,7 @@ function drawNextButtonB2() {
         nextButtonB2.remove();
         const fin = new Date();
         const executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea
-        const taskTime = (fin - begining) / 1000;
+        const taskTime = (fin - begining) / 1000; // Tiempo total dedicado a la tarea
         console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
         // data.push([{ executionTime: executionTime}]);
         data.push({
@@ -591,8 +591,8 @@ function testFinalizado() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'canvasRecording.webm';
-        link.click();
+        // link.download = 'canvasRecording.webm';
+        // link.click();
     };
 
     mediaRecorderCanvasPartB2.onstop = () => {
@@ -600,8 +600,8 @@ function testFinalizado() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = 'canvasPartB2Recording.webm';
-        link.click();
+        // link.download = 'canvasPartB2Recording.webm';
+        // link.click();
     };
 
     setTimeout(() => {
@@ -620,7 +620,7 @@ function testFinalizado() {
                 zip.file("canvasPartB2Screenshot.png", blobPartB2);
 
                 zip.generateAsync({ type: 'blob' }).then(function (content) {
-                    saveAs(content, "test_results_TMT_part_B.zip");
+                    saveAs(content, `ID_${participantID}_test_results_TMT_part_B.zip`);
                 });
             });
         });
@@ -632,7 +632,7 @@ function testFinalizado() {
         instructions.style.justifyContent = 'center'; // Centrar contenido horizontalmente
         instructions.style.alignItems = 'center'; // Centrar contenido verticalmente
         instructions.style.height = '100vh'; // Altura del viewport para permitir el centrado vertical
-        instructions.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+        instructions.innerHTML = '¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!';
         instructions.style.textAlign = 'center';
         instructions.style.fontSize = '40px';
         instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
@@ -655,20 +655,40 @@ function generateCSV(data) {
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
+const enterIDContainer = document.getElementById("enterID");
 
 // Variable con la mano seleccionada
 let selectedHand = "";
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
+    document.getElementById('preEnd').style.display = 'block';
+    document.getElementById('fin').style.display = 'block';
     selectHandContainer.style.display = "block";
+    enterIDContainer.style.display = "block";
 }
 
 handButton.addEventListener('click', confirmHandSelection);
 
 // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
 // En este caso fue testFinalizado()
+
+document.getElementById('participantID').addEventListener('input', validateInputs);
+let participantID = 0;
+
+function validateInputs() {
+    participantID = document.getElementById('participantID').value;
+    selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    }
+}
+
+document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
 function confirmHandSelection() {
+    document.getElementById('preEnd').style.display = 'none';
     selectHandContainer.style.display = "none";
     handButton.style.display = "none";
     testFinalizado();
@@ -677,7 +697,7 @@ function confirmHandSelection() {
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 handInputs.forEach((input) => {
     input.addEventListener('change', (e) => {
-        handButton.style.display = "block";
+        validateInputs();
         selectedHand = e.target.value;
     });
 });

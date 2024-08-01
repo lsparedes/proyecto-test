@@ -252,11 +252,12 @@ fullscreenButton.addEventListener('click', () => {
 
 function mostrarFinalizacion() {
     // const imagenNumero = document.getElementById('imagenNumero');
-    // document.getElementById('next-button').style.display = 'none';
+    document.getElementById('enterID').style.display = 'none';
+    document.getElementById('next-button').style.display = 'none';
     clearTimeout(temporizador);
     const imageContainer = document.getElementById('imageContainer');
     imageContainer.style.display = 'block';
-    imageContainer.innerHTML = '¡Has completado esta tarea con éxito! <br> ¡Muchas gracias!';
+    imageContainer.innerHTML = '¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!';
     imageContainer.style.textAlign = 'center';
     imageContainer.style.fontSize = '40px';
     imageContainer.style.marginTop = '20px';
@@ -295,7 +296,7 @@ function iniciarPresentacion() {
         mostrarImagen(indiceActual);
         mostrarEmociones();
         iniciaResp = new Date(); // Guardar el tiempo de inicio al iniciar la tarea
-        // reiniciarTemporizador();
+        reiniciarTemporizador();
         tiempoInicio = new Date(); // Guardar el tiempo de inicio al iniciar la tarea
     });
     if (imagenes.length > 0) {
@@ -311,6 +312,7 @@ function cambiarImagen() {
     document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button"
     indiceActual++;
     if (indiceActual === imagenes.length) {
+        document.getElementById('fin').style.display = 'block'; // Ocultar el botón "next-button"
         showHandSelection();
         // mostrarFinalizacion();
     } else {
@@ -339,8 +341,8 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;
         const emocionCorrecta = img.emocionCorrecta;
-        const emocionSeleccionada = emocionesSeleccionadas[index] != undefined ? emocionesSeleccionadas[index] : 'Omitido';
-        const response = tiemposRespuesta[index] != undefined ? tiemposRespuesta[index] : 'No aplica';
+        const emocionSeleccionada = emocionesSeleccionadas[index];
+        const response = tiemposRespuesta[index];
         const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
 
 
@@ -352,7 +354,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     if (link.download !== undefined) {
-        const nombreArchivo = `respuestas_facial_emotion_${fechaFormateada}.csv`;
+        const nombreArchivo = `ID_${participantID}_respuestas_facial_emotion_${fechaFormateada}.csv`;
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
         link.setAttribute('download', nombreArchivo);
@@ -364,6 +366,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
 }
 
 function reiniciarTemporizador() {
+    console.log('Reiniciando temporizador...');
     const arrow = document.getElementById('next-button');
     arrow.style.backgroundImage = "url('imagenes/flecha3.png')";
 
@@ -372,7 +375,7 @@ function reiniciarTemporizador() {
 }
 
 function responseTime(ahora) {
-    return (ahora - iniciaResp) / 1000; // Calcular el tiempo transcurrido de milisegundos a segundos
+    return (ahora - iniciaResp); // Calcular el tiempo transcurrido en milisegundos
 }
 
 function arrowToRed() {
@@ -403,6 +406,7 @@ window.onload = function () {
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
+const enterIDContainer = document.getElementById("enterID");
 
 // Variable con la mano seleccionada
 let selectedHand = "";
@@ -416,22 +420,40 @@ function showHandSelection() {
     document.getElementById('imageContainer').style.display = 'none';
     document.getElementById('emotionsList').style.display = 'none';
     selectHandContainer.style.display = "block";
+    enterIDContainer.style.display = "block";
 }
 
 // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
 // En este caso fue mostrarFinalizacion()
+document.getElementById('participantID').addEventListener('input', validateInputs);
+let participantID = 0;
+
+function validateInputs() {
+    participantID = document.getElementById('participantID').value;
+    selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+    
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    } 
+}
+
+// onclick="confirmHandSelection()"
+document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
 function confirmHandSelection() {
     console.log('holi holi holi'+selectedHand);
     selectHandContainer.style.display = "none";
     handButton.style.display = "none";
     document.getElementById('next-button').style.display = 'block';
+    document.getElementById('fin').style.display = 'none';
     mostrarFinalizacion();
 }
 
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 handInputs.forEach((input) => {
     input.addEventListener('change', (e) => {
-        handButton.style.display = "block";
+        // handButton.style.display = "block";
+        validateInputs();
         selectedHand = e.target.value;
     });
   });

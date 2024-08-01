@@ -232,6 +232,7 @@ window.onload = function () {
 
     function testFinalizado() {
         // Detener las grabaciones (ya se hace dentro de startPracticeRecording y startRecording)
+        document.getElementById('enterID').style.display = 'none';
         stopPracticeRecording();
         stopRecording();
 
@@ -255,7 +256,7 @@ window.onload = function () {
 
                     // Generar el archivo ZIP y descargar
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, "metricsDesignFluency.zip");
+                        saveAs(content, `${participantID}_metricsDesignFluency.zip`);
                     });
                 });
             });
@@ -268,6 +269,7 @@ window.onload = function () {
     const selectHandContainer = document.getElementById("selectHand");
     const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
+    const enterIDContainer = document.getElementById("enterID");
 
     // Variable con la mano seleccionada
     let selectedHand = "";
@@ -275,7 +277,9 @@ window.onload = function () {
     // Funcion para mostrar la pantalla de seleccion de mano
     function showHandSelection() {
         document.getElementById('finishButton').style.display = 'none';
+        document.getElementById('fin').style.display = 'block';
         selectHandContainer.style.display = "block";
+        enterIDContainer.style.display = "block";
     }
 
     document.getElementById('handButton').addEventListener('click', function () {
@@ -290,20 +294,45 @@ window.onload = function () {
 
     // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
     // En este caso fue mostrarFinalizacion()
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+    let participantID = 0;
+
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+        if (participantID && selectedHand) {
+            handButton.style.display = 'block';
+        }
+    }
+
     function confirmHandSelection() {
         console.log('holi holi holi' + selectedHand);
         selectHandContainer.style.display = "none";
         handButton.style.display = "none";
-        document.getElementById('finishButton').style.display = 'block';
+        document.getElementById('fin').style.display = 'none';
         finishScreen.style.display = 'block';
+        document.getElementById('fin').style.display = 'none';
         testFinalizado();
     }
 
     // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
     handInputs.forEach((input) => {
         input.addEventListener('change', (e) => {
-            handButton.style.display = "block";
+            validateInputs();
             selectedHand = e.target.value;
         });
+    });
+
+    fullscreenButton.addEventListener('click', () => {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+            document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            document.exitFullscreen();
+        } else {
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
+        }
     });
 };

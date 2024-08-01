@@ -159,6 +159,41 @@ audio {
   /* Rotación de 90 grados */
 }
 
+
+.container {
+  border: 1px solid #ffffff;
+  background: #fff;
+  padding: 20px;
+  text-align: center;
+
+}
+
+#enterID {
+  display: inline-block;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  bottom: 15px;
+  height: 35vh;
+  width: 20vw;
+  margin: 0 !important;
+}
+
+.card-body h4 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.containerCards {
+  width: 100vw;
+  justify-content: space-between;
+}
+
 #selectHand {
   display: none;
   background-color: #f9f9f9;
@@ -166,6 +201,10 @@ audio {
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  bottom: 15px;
+  height: 35vh;
+  width: 20vw;
 }
 
 #selectHand h4 {

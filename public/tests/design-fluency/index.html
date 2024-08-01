@@ -30,7 +30,7 @@
       <button id="practiceNextButton" class="finish-button"></button>
     </div>
   </div>
-
+  <button id="fullscreenButton" class="fullscreen-button"></button>
 
   <div id="practiceFinishScreen" class="container" style="display: none;">
     <div id="practica" style="text-align: center;">
@@ -55,7 +55,7 @@
   <div class="cont"
     style="display: flex; justify-content: space-around; max-width: 100vw; width: 100vw; max-height: 100vh;">
     <div id="instructionsE1" class="container1" style="display: none; margin-top: 50px; max-width: 20vw;">
-      
+
       <audio controls style="margin-bottom: 10px;">
         <source src="desing-fluency-instructions2.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
@@ -73,31 +73,56 @@
   </div>
 
   <!-- SELECCION DE MANO HTML -->
-  <div id="selectHand" style="display: none;">
-    <h4>¿Con qué mano respondiste el test?</h4>
-    <div>
-      <input type="radio" id="right_hand" name="hand" value="derecha">
-      <label for="right_hand">Derecha</label>
-    </div>
-    <div>
-      <input type="radio" id="left_hand" name="hand" value="izquierda">
-      <label for="left_hand">Izquierda</label>
-    </div>
-    <div>
-      <input type="radio" id="both_hands" name="hand" value="ambas">
-      <label for="both_hands">Ambas</label>
-    </div>
-  </div>
-  <button id="handButton" style="display: none;"></button>
-
-  <div id="finishScreen" class="container" style="display: none;">
-    <div id="prueba" style="text-align: center;">
-      <h1>¡Has completado esta tarea con éxito!</h1>
+  <div class="container" style="margin: 0px; padding: 0px;">
+    <div id="fin" class="container" style="display: none;  margin-bottom: 15vh;">
+      <h1>¡Ha completado esta tarea con éxito!</h1>
       <br>
       <h1>¡Muchas gracias!</h1>
     </div>
-    <button id="endTestButton" class="finish-button"></button>
+    <div id="finishScreen" class="container" style="display: none;">
+      <div id="prueba" style="text-align: center;">
+        <h1>¡Ha completado esta tarea con éxito!</h1>
+        <br>
+        <h1>¡Muchas gracias!</h1>
+      </div>
+      <button id="endTestButton" class="finish-button"></button>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row justify-content-center">
+        <div class="col-md-4">
+          <div id="enterID" class="card opacity-75" style="display: none;">
+            <div class="card-body">
+              <h4>Indique el ID del participante</h4>
+              <input type="number" id="participantID" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div id="selectHand" class="card opacity-75" style="display: none;">
+            <div class="card-body" style="padding: 0;">
+              <h4>Indique con qué mano el participante respondió el test</h4>
+              <div>
+                <input type="radio" id="right_hand" name="hand" value="derecha">
+                <label for="right_hand">Derecha</label>
+              </div>
+              <div>
+                <input type="radio" id="left_hand" name="hand" value="izquierda">
+                <label for="left_hand">Izquierda</label>
+              </div>
+              <div>
+                <input type="radio" id="both_hands" name="hand" value="ambas">
+                <label for="both_hands">Ambas</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button id="handButton" style="display: none;"></button>
+
   </div>
+
 
   <div id="endScreen" class="container1" style="display: none;text-align: center;">
     <h1>Test Completado</h1>
