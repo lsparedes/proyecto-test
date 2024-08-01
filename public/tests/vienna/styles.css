@@ -63,7 +63,7 @@ canvas {
     margin-bottom: 100px;
 }
 
-#initialScreen, #instructionScreen1, #instructionScreen2, #instructionScreen3, #instructionScreen4, #practiceInstructionScreen, #preTestInstructionScreen {
+#initialScreen, #instructionScreen1, #instructionScreen2, #instructionScreen3, #instructionScreen4, #preTestInstructionScreen {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -204,4 +204,3 @@ canvas {
     left: 15px;
     /* Ajustamos la distancia desde el borde derecho */
 }
-

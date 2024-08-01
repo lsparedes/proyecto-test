@@ -516,6 +516,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        const showQuestion = () => {
+            const questionText = document.createElement('h2');
+            questionText.textContent = '¿Qué puerta eligió la persona?';
+            questionText.style.textAlign = 'center';
+            questionText.style.fontSize = '32px';
+            questionText.id = 'questionText'; // Add an ID for easier removal
+            const currentScreen = screens[currentScreenIndex];
+            currentScreen.appendChild(questionText);
+        };
+
+        [testVideo, practiceVideo1, practiceVideo2, practiceVideo3].forEach(video => {
+            video.addEventListener('ended', showQuestion);
+        });
+        
+
         function showCompletionScreen() {
             if (testScreen) {
                 testScreen.style.display = 'none';
