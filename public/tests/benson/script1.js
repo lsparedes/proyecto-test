@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const instruccionesDespues = document.getElementById('instruccionesdespues');
     const finishScreen = document.getElementById('finishScreen');
     const selectHandContainer = document.getElementById("selectHand");
-    const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
     const enterID = document.getElementById('enterID');
 
@@ -44,6 +43,17 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Terminó de dibujar: ", endDrawingTime)
 
     });
+
+    const audioElement1 = document.getElementById('audio1');
+
+    if (audioElement1) {
+        audioElement1.addEventListener('ended', () => {
+            console.log("El audio ha terminado."); // Verificación de evento de audio
+            setTimeout(() => {
+                finishdrawingwithfigure.classList.add('red-arrow');
+            }, 4 * 60 * 1000); // 
+        });
+    }
 
     finishRememberingFigureButton.addEventListener('click', () => {
         instruccionesDespues.style.display = 'none';
@@ -234,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let csvContent = "data:text/csv;charset=utf-8,";
         csvContent += "Actividad,Tiempo de inicio,Tiempo de Termino,Comenzó a dibujar,Terminó de dibujar,Mano Seleccionada\n";
-        csvContent += `Dibujo,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${formatDate(startDrawingTime)},${formatDate(endDrawingTime)},${selectedHand}\n`;
+        csvContent += `DrawWithFigure,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${formatDate(startDrawingTime)},${formatDate(endDrawingTime)},${selectedHand}\n`;
 
         return csvContent;
     }
