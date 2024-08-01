@@ -53,35 +53,35 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_1.mp4',
             items: {
-                correcto: [{ x: 388, y: 170 }],
-                error_rotacion: [],
-                error_actualizacion: [{ x: 402, y: 270 }],
+                correcto: [{ x: 390, y: 170 }],
+                error_rotacion: [{ x: 310, y: 170 }],
+                error_actualizacion: [{ x: 390, y: 235 }, { x: 390, y: 85 }],
             },
             indicator: 'E1'
         },
         {
             src: 'videos/Test_2.mp4',
             items: {
-                correcto: [{ x: 310, y: 225 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 335, y: 70 }],
+                error_rotacion: [{ x: 404, y: 65 }],
+                error_actualizacion: [{ x: 335, y: 35 },{ x: 335, y: 99 }],
             },
             indicator: 'E2'
         },
         {
             src: 'videos/Test_3.mp4',
             items: {
-                correcto: [{ x: 546, y: 185 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 382, y: 69 }],
+                error_rotacion: [{ x: 316, y: 69 }],
+                error_actualizacion: [{ x: 382, y: 30 },{ x: 382, y: 109 }],
             },
             indicator: 'E3'
         },
         {
             src: 'videos/Test_4.mp4',
             items: {
-                correcto: [{ x: 135, y: 246 }],
-                error_rotacion: [],
+                correcto: [{ x: 192, y: 122 }],
+                error_rotacion: [{ x: 508, y: 122 }],
                 error_actualizacion: [],
             },
             indicator: 'E4'
@@ -89,77 +89,77 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_5.mp4',
             items: {
-                correcto: [{ x: 230, y: 220 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 263, y: 108 }],
+                error_rotacion: [{ x: 263, y: 188 }],
+                error_actualizacion: [{ x: 225, y: 108 },{ x: 309, y: 108 }],
             },
             indicator: 'E5'
         },
         {
             src: 'videos/Test_5a.mp4',
             items: {
-                correcto: [{ x: 631, y: 265 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 461, y: 101 }],
+                error_rotacion: [{ x: 459, y: 15 },{ x: 232, y: 15 }],
+                error_actualizacion: [{ x: 408, y: 101 },{ x: 513, y: 101 },{ x: 461, y: 281 }],
             },
             indicator: 'E6'
         },
         {
             src: 'videos/Test_6.mp4',
             items: {
-                correcto: [{ x: 2210, y: 720 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 583, y: 243 }],
+                error_rotacion: [{ x: 664, y: 243 }],
+                error_actualizacion: [{ x: 455, y: 243 },{ x: 609, y: 287 }],
             },
             indicator: 'E7'
         },
         {
             src: 'videos/Test_7.mp4',
             items: {
-                correcto: [{ x: 356, y: 365 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 123, y: 117 }],
+                error_rotacion: [{ x: 123, y: 263 },{ x: 589, y: 263 }],
+                error_actualizacion: [{ x: 77, y: 143 },{ x: 312, y: 117 }],
             },
             indicator: 'E8'
         },
         {
             src: 'videos/Test_7a.mp4',
             items: {
-                correcto: [{ x: 701, y: 483 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 377, y: 217 }],
+                error_rotacion: [{ x: 445, y: 217 },{ x: 445, y: 50 }],
+                error_actualizacion: [{ x: 377, y: 181 },{ x: 250, y: 217 }],
             },
             indicator: 'E9'
         },
         {
             src: 'videos/Test_8.mp4',
             items: {
-                correcto: [{ x: 206, y: 500 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 273, y: 249 }],
+                error_rotacion: [{ x: 415, y: 246 }],
+                error_actualizacion: [{ x: 273, y: 130 }],
             },
             indicator: 'E10'
         },
         {
             src: 'videos/Test_9.mp4',
             items: {
-                correcto: [{ x: 99, y: 454 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 226, y: 203 }],
+                error_rotacion: [{ x: 470, y: 203 }],
+                error_actualizacion: [{ x: 273, y: 146 },{ x: 273, y: 264 }],
             },
             indicator: 'E11'
         },
         {
             src: 'videos/Test_10.mp4',
             items: {
-                correcto: [{ x: 193, y: 425 }],
-                error_rotacion: [],
-                error_actualizacion: [],
+                correcto: [{ x: 304, y: 173 }],
+                error_rotacion: [{ x: 399, y: 173 }],
+                error_actualizacion: [{ x: 304, y: 109 },{ x: 304, y: 234 }],
             },
             indicator: 'E12'
         }
     ];
-    
+
 
     const showScreen = (index) => {
         screens.forEach((screen, i) => {
@@ -238,7 +238,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const completionScreen = document.getElementById('completionScreen');
     const testScreen = document.getElementById('testScreen');
 
-    
 
     if (imageCanvas && testVideo) {
         let clicks = [];
@@ -418,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     drawCircle(imageCanvas, click.x * (imageCanvas.width / 700), click.y * (imageCanvas.height / 400), 'red');
                 }
 
-                results.push({ orden: index + 1, score });
+                results.push({ orden: index + 1, score, coords: { x: click.x, y: click.y } }); // Agregar coordenadas
             });
 
             resultsDiv.innerHTML = `
@@ -428,6 +427,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p>Errores de rotación: ${rotationErrors}</p>
                 <p>Errores de actualización: ${updateErrors}</p>
                 <p>Puertas correctas encontradas: ${correctClicks} de ${videos[contador].items.correcto.length}</p>
+                <p>Coordenadas de los puntos clickeados:</p>
+                <ul>
+                    ${results.map(r => `<li>Orden: ${r.orden}, Coordenadas: (${r.coords.x.toFixed(2)}, ${r.coords.y.toFixed(2)})</li>`).join('')}
+                </ul>
             `;
 
             resultsByImage[contador] = results;
