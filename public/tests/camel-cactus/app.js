@@ -521,7 +521,7 @@ function generarArchivoRespuestasCSV() {
     const url = URL.createObjectURL(csvBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ID_${participantID}_respuestas_12_camel_${fechaHoraFormateada}.csv`;
+    a.download = `ID_${participantID}_respuestas_camel_${fechaHoraFormateada}.csv`;
     a.click();
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
 }
