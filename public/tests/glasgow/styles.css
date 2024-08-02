@@ -272,3 +272,10 @@ button {
 #selectHand input[type="radio"] {
     margin-right: 10px;
 }
+
+.card-body h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}

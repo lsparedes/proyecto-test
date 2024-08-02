@@ -521,7 +521,7 @@ function generarArchivoRespuestasCSV() {
     const url = URL.createObjectURL(csvBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `respuestas_12_camel_${fechaHoraFormateada}.csv`;
+    a.download = `ID_${participantID}_respuestas_12_camel_${fechaHoraFormateada}.csv`;
     a.click();
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
 }
@@ -705,15 +705,18 @@ const handInputs = document.getElementsByName('hand');
 
 // Variable con la mano seleccionada
 let selectedHand = "";
+let participantID = 0;
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
+    document.getElementById("preEnd").style.display = 'block';
     selectHandContainer.style.display = "block";
 }
 
 // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
 // En este caso fue mostrarFinalizacion()
 function confirmHandSelection() {
+    document.getElementById("preEnd").style.display = 'none';
     selectHandContainer.style.display = "none";
     mostrarFinalizacion();
     handButton.style.display = "none";
@@ -722,7 +725,19 @@ function confirmHandSelection() {
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 handInputs.forEach((input) => {
     input.addEventListener('change', (e) => {
-        handButton.style.display = "block";
+        validateInputs();
         selectedHand = e.target.value;
     });
-  });
+});
+
+document.getElementById('participantID').addEventListener('input', validateInputs);
+
+document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
+function validateInputs() {
+    participantID = document.getElementById('participantID').value;
+    selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    }
+}

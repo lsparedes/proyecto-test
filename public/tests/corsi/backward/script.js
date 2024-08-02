@@ -128,9 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
         errorCount = 0;
         if (isPractice) {
             createBlocks();
-            indicator.textContent = `P${sequenceCount+1}`;
+            indicator.textContent = `P${sequenceCount + 1}`;
         } else {
-            indicator.textContent = `S${count}-${repeatCount+1}`;
+            indicator.textContent = `S${count}-${repeatCount + 1}`;
         }
     }
 
@@ -138,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playerSequence = [];
         if (isPractice) {
             createSequence(practiceSequences)
-        } else{
+        } else {
             createSequence(fixedSequences);
         }
         sequenceDisplaying = true;
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sequenceCount++; // Incrementar la cuenta de secuencias
 
         if (isPractice) {
-            indicator.textContent = `P${sequenceCount+1}`;
+            indicator.textContent = `P${sequenceCount + 1}`;
             if (sequenceCount < practiceSequences.length) {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     repeatCount = 0; // Reiniciar el contador de repeticiones
                     errorCount = 0; // Reiniciar el contador de errores
                 }
-                indicator.textContent = `S${count}-${repeatCount+1}`;
+                indicator.textContent = `S${count}-${repeatCount + 1}`;
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
                     endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
@@ -272,20 +272,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const desiredRowCount = fixedSequences.length;
         const currentRowCount = rows.length;
         const rowsToFill = desiredRowCount - currentRowCount;
-    
+
         for (let i = 0; i < rowsToFill; i++) {
             // Puedes reemplazar los valores vacíos con cualquier valor predeterminado que desees
-            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
+            rows.push([fixedTitles[currentRowCount + i], fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
         }
 
         rows.push(['\nTiempo Total(s): ' + duration.toFixed(2)]);
         rows.push(['Mano Utilizada: ' + selectedHand]);
 
-        let csvContent = "data:text/csv;charset=utf-8," 
-        + headers.join(";") + "\n"
-        + rows.map(e => e.join(";")).join("\n");
+        let csvContent = "data:text/csv;charset=utf-8,"
+            + headers.join(";") + "\n"
+            + rows.map(e => e.join(";")).join("\n");
         const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        const fileName = `CorsiBackwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
+        const fileName = `ID_${participantID}_CorsiBackwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
         saveAs(csvContent, fileName);
         // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
         // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -339,20 +339,20 @@ document.addEventListener('DOMContentLoaded', () => {
     async function startCanvasRecording(canvasId) {
         const canvas = document.getElementById(canvasId);
         const stream = canvas.captureStream(30); // 30 FPS
-    
+
         mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'video/webm;codecs=vp9'
         });
-    
+
         mediaRecorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
                 recordedChunks.push(event.data);
             }
         };
-    
+
         mediaRecorder.start();
     }
-    
+
     function stopCanvasRecording() {
         mediaRecorder.stop();
         mediaRecorder.onstop = () => {
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playBeep() {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const audioUrl = 'beep.wav';
-    
+
         fetch(audioUrl)
             .then(response => response.arrayBuffer())
             .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
@@ -390,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
         milliseconds = 0; // Reiniciar los milisegundos
         timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
     }
-    
+
     function stopTimer() {
         clearInterval(timer);
     }
@@ -410,15 +410,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Variable con la mano seleccionada
     let selectedHand = "";
+    let participantID = 0;
+
 
     // Funcion para mostrar la pantalla de seleccion de mano
     function showHandSelection() {
+        document.getElementById("preEnd").style.display = 'block';
         selectHandContainer.style.display = "block";
     }
-
+    
     // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
     // En este caso fue mostrarFinalizacion()
     function confirmHandSelection() {
+        document.getElementById("preEnd").style.display = 'none';
         selectHandContainer.style.display = "none";
         endGame();
     }
@@ -426,10 +430,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
     handInputs.forEach((input) => {
         input.addEventListener('change', (e) => {
-            handButton.style.display = "block";
+            validateInputs();
             selectedHand = e.target.value;
         });
     });
+
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+
+    document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+        if (participantID && selectedHand) {
+            handButton.style.display = 'block';
+        }
+    }
 
     window.confirmHandSelection = confirmHandSelection;
 });

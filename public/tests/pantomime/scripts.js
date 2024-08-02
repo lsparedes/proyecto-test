@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Manages the hand selection
     handInputs.forEach((input) => {
         input.addEventListener('change', (e) => {
-            handButton.style.display = "block";
+            validateInputs();
             selectedHand = e.target.value;
         });
     });

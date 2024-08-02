@@ -1,27 +1,33 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Perceptual Discrimination - Metacognition Test</title>
   <link rel="stylesheet" href="styles.css">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
+
 <body>
   <div id="instructions" class="container">
-    <p id="instructionsText">A continuación, usted tendrá que decidir si un recuadro contiene más puntos de color rojo o azul, y, luego, indicar cuan seguro esta de su decisión.
+    <p id="instructionsText">A continuación, usted tendrá que decidir si un recuadro contiene más puntos de color rojo o
+      azul, y, luego, indicar cuan seguro esta de su decisión.
       <br>
-      Al comienzo de cada ensayo, aparecerá momentáneamente un recuadro con una cantidad de puntos rojos y otra cantidad de puntos azules. 
+      Al comienzo de cada ensayo, aparecerá momentáneamente un recuadro con una cantidad de puntos rojos y otra cantidad
+      de puntos azules.
       Se le pedirá que decida de cuál de estos dos colores había una mayor cantidad de puntos.
       <br>
-      Después de responder, deberá calificar su confianza en su decisión usando una escala que se desplegará en la pantalla.
+      Después de responder, deberá calificar su confianza en su decisión usando una escala que se desplegará en la
+      pantalla.
     </p>
     <audio controls>
-      <source src="metacognition1.mp3" type="audio/mpeg" id="instructionsAudio" >
+      <source src="metacognition1.mp3" type="audio/mpeg" id="instructionsAudio">
       Tu navegador no soporta el elemento de audio.
     </audio>
     <div id="sliderPractice" style="display:none;">
-      <div  class="mt-5">
+      <div class="mt-5">
         <input type="range" id="confidenceSliderPractice" min="-100" max="100" value="0">
       </div>
       <div class="range-labels">
@@ -36,19 +42,20 @@
       <button id="fullscreenButton"></button>
     </div>
   </div>
-  
+
   <div id="practiceContainer" class="container" style="display: none;">
     <h2 class="imageText"><span id="practiceTrialIndicator" class="badge bg-light text-dark shadow">New</span></h2>
     <canvas id="practiceCanvas" width="1200" height="900"></canvas>
-    <button id="restartPracticeButton" type="button" class="btn btn-light text-dark btn-lg shadow"><b>Reiniciar Práctica</b></button>
+    <button id="restartPracticeButton" type="button" class="btn btn-light text-dark btn-lg shadow"><b>Reiniciar
+        Práctica</b></button>
   </div>
 
   <div id="demoFinishScreen" class="container" style="display: none;">
 
     <p id="instructionsText">
       Ahora comenzará la tarea de verdad.
-      Recuerde: tiene que decidir si el recuadro que aparece momentáneamente en 
-      la pantalla contiene más punto de color rojo o azul. 
+      Recuerde: tiene que decidir si el recuadro que aparece momentáneamente en
+      la pantalla contiene más punto de color rojo o azul.
       Por favor, responda tan rápido como pueda.
     </p>
     <audio id="instructionsAudio2" controls>
@@ -58,16 +65,16 @@
     <div class="button-container">
       <button id="nextDemoButton"></button>
     </div>
-    
+
   </div>
-  
+
   <div id="practiceFinishScreen" class="container" style="display: none;">
     <h1>¡Bloque Completado!</h1>
     <div class="button-container">
       <button id="nextPracticeButton"></button>
     </div>
   </div>
-  
+
   <button id="demoButton" style="display: none"></button>
 
   <div id="questionScreen" class="container" style="display: none;">
@@ -91,14 +98,14 @@
       </div>
     </div>
   </div>
-  
+
   <div id="confidenceScreen" class="container" style="display: none;">
     <center>
       <div class="mb-5">
-        <h1 >¿Qué tan seguro está de su decisión?</h1>
+        <h1>¿Qué tan seguro está de su decisión?</h1>
       </div>
       <br><br><br>
-      <div  class="mt-5">
+      <div class="mt-5">
         <input type="range" id="confidenceSlider" min="-100" max="100" value="0">
       </div>
       <div class="range-labels">
@@ -109,38 +116,60 @@
       <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>LISTO</b></button>
     </center>
   </div>
-  
+
   <div id="feedbackScreen" class="container" style="display: none;">
     <h1 id="feedbackMessage"></h1>
   </div>
-  
+
   <div id="testContainer" class="container" style="display: none;">
     <h2 class="imageText"><span id="testTrialIndicator" class="badge bg-light text-dark shadow">New</span></h2>
     <canvas id="testCanvas" width="1200" height="900"></canvas>
   </div>
-  
+
   <div id="blockFinishScreen" class="container" style="display: none;">
     <h1>¡Bloque Completado!</h1>
     <button id="continueToNextBlockButton"></button>
   </div>
 
-  <div id="selectHand" style="display: none;">
-    <h4>¿Con qué mano respondiste el test?</h4>
-    <div>
-        <input type="radio" id="right_hand" name="hand" value="derecha">
-        <label for="right_hand">Derecha</label>
+  <!-- SELECCION DE MANO HTML -->
+  <div class="container" id="preEnd" style="display: none; margin: 0px; padding: 0px;">
+    <div id="fin" class="text-center" style="margin-bottom: 15vh;">
+      <h1>¡Ha completado esta tarea con éxito!</h1>
+      <br>
+      <h1>¡Muchas gracias!</h1>
     </div>
-    <div>
-        <input type="radio" id="left_hand" name="hand" value="izquierda">
-        <label for="left_hand">Izquierda</label>
+    <div class="container-fluid d-flex justify-content-center">
+      <div class="row justify-content-center" style="position: absolute; bottom: 15px;">
+        <div id="enterID" class="card opacity-75 col-3 col-md-4 col-xl-6 me-3 p-3"
+          style="width: 35%; background-color: #f9f9f9;">
+          <div class="card-body" style="padding: 0;">
+            <h4>Indique el ID del participante</h4>
+            <input type="number" id="participantID" class="form-control">
+          </div>
+        </div>
+        <div id="selectHand" class="card opacity-75 col-3 col-md-4 col-xl-6  ms-3 p-3"
+          style="width: 35%; background-color: #f9f9f9;">
+          <div class="card-body" style="padding: 0;">
+            <h4>Indique con qué mano el participante respondió el test</h4>
+            <div>
+              <input type="radio" id="right_hand" name="hand" value="derecha">
+              <label for="right_hand">Derecha</label>
+            </div>
+            <div>
+              <input type="radio" id="left_hand" name="hand" value="izquierda">
+              <label for="left_hand">Izquierda</label>
+            </div>
+            <div>
+              <input type="radio" id="both_hands" name="hand" value="ambas">
+              <label for="both_hands">Ambas</label>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-        <input type="radio" id="both_hands" name="hand" value="ambas">
-        <label for="both_hands">Ambas</label>
-    </div>
-    <button id="handButton" onclick="confirmHandSelection()" style="display: none;"></button>
-</div>
-  
+  </div>
+  <button id="handButton" style="display: none;"></button>
+
   <div id="endScreen" class="container" style="display: none;">
     <h1> ¡Ha completado esta tarea con éxito! </h1> <br>
     <h1> ¡Muchas gracias!</h1>
@@ -148,8 +177,11 @@
   </div>
 
   <p id="pauseTime" style="display: none;">Tiempo de pausa: 0 segundos</p>
-  
+
   <script src="script.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
 </body>
+
 </html>
