@@ -772,6 +772,8 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Canvas element not found');
     }
 
+    // SELECCION DE MANO JS
+
     let selectedHand = "";
     let participantID = 0;
     const handInputs = document.getElementsByName('hand');

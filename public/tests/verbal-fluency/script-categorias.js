@@ -108,10 +108,14 @@ function nextSection(part) {
         loadAudio(2); // Cargar el segundo audio
     } else if (part === 2) {
         document.getElementById('categoryFluency2').style.display = 'none';
-        document.getElementById('completionMessage').style.display = 'block';
         document.getElementById('instructionAudio2').pause();
-        downloadRecordingAndTime();
+        showHandSelection();
     }
+}
+
+function endGame() {
+    document.getElementById('completionMessage').style.display = 'block';
+    downloadRecordingAndTime();
 }
 
 function loadAudio(part) {
@@ -155,6 +159,9 @@ document.getElementById('startRecButton2').addEventListener('click', () => {
 
 function showRecordingCreatedMessage(part) {
     const messageElement = document.getElementById('recordingCreatedMessage' + part);
+    if (!messageElement) {
+        return;
+    }
     messageElement.style.display = 'block';
 }
 
@@ -163,13 +170,15 @@ function downloadRecordingAndTime() {
     const totalTimeMs = totalTime;
     const totalTimeSecs = (totalTime / 1000).toFixed(2);
 
-    const timeBlob = new Blob([`Tiempo total: ${totalTimeMs} ms (${totalTimeSecs} s)`], { type: 'text/plain' });
+    // Crear el contenido del archivo .txt con la mano utilizada
+    const txtContent = `Tiempo total: ${totalTimeMs} ms (${totalTimeSecs} s)\nMano utilizada: ${selectedHand}`;
+    const timeBlob = new Blob([txtContent], { type: 'text/plain' });
     const timeUrl = URL.createObjectURL(timeBlob);
 
     const link = document.createElement('a');
     link.href = timeUrl;
     link.download = 'tiempo_total.txt';
-    link.click();
+    // link.click();
 
     const zip = new JSZip();
     zip.file("tiempo_total.txt", timeBlob);
@@ -183,7 +192,62 @@ function downloadRecordingAndTime() {
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
         zipLink.href = URL.createObjectURL(content);
-        zipLink.download = 'Grabaciones Fluidez Verbal - Categoría.zip';
+
+        // Obtener la fecha actual en formato YYYYMMDD
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${year}${month}${day}`;
+        
+        // Construir el nombre del archivo ZIP
+        const fileName = `${participantID}_TEST_4_VERBAL_FLUENCY_CATEGORIA_${formattedDate}.zip`;
+
+        zipLink.download = fileName;
         zipLink.click();
     });
+}
+
+// SELECCION DE MANO JS
+
+const selectHandContainer = document.getElementById("selectHand");
+const handButton = document.getElementById("handButton");
+const handInputs = document.getElementsByName('hand');
+
+// Variable con la mano seleccionada
+let selectedHand = "";
+let participantID = 0;
+
+// Funcion para mostrar la pantalla de seleccion de mano
+function showHandSelection() {
+    document.getElementById("preEnd").style.display = 'block';
+    selectHandContainer.style.display = "block";
+}
+
+// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+// En este caso fue mostrarFinalizacion()
+function confirmHandSelection() {
+    document.getElementById("preEnd").style.display = 'none';
+    selectHandContainer.style.display = "none";
+    endGame();
+}
+
+// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+handInputs.forEach((input) => {
+    input.addEventListener('change', (e) => {
+        validateInputs();
+        selectedHand = e.target.value;
+    });
+});
+
+document.getElementById('participantID').addEventListener('input', validateInputs);
+document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
+function validateInputs() {
+    participantID = document.getElementById('participantID').value;
+    selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    }
 }
