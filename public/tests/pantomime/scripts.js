@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const zip = new JSZip();
 
     startBtn.addEventListener('click', () => {
+        stopAllAudios();
         testStartTime = Date.now();
         startScreen.classList.remove('active');
         startScreen.classList.add('hidden');
@@ -125,10 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     stopBtn.addEventListener('click', () => {
+        stopAllAudios();
         stopRecording(true);
     });
 
     nextBtn.addEventListener('click', () => {
+        stopAllAudios();
         stopRecording(true);
     });
 
@@ -250,6 +253,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     handButton.addEventListener('click', () => {
+        stopAllAudios();
         showCompletionScreen();
     });
+
+    function stopAllAudios() {
+        const audios = document.querySelectorAll('audio');
+        audios.forEach(audio => audio.pause());
+    }
 });
