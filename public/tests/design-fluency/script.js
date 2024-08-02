@@ -38,6 +38,7 @@ window.onload = function () {
     const startButton = document.getElementById('startButton');
 
     startButton.addEventListener('click', function () {
+        stopAllAudios();
         // instructions.style.display = 'none';
         practiceContainer.style.display = 'block';
         practiceImage.src = 'image.png';
@@ -55,6 +56,7 @@ window.onload = function () {
 
     const practiceNextButton = document.getElementById('practiceNextButton');
     practiceNextButton.addEventListener('click', function () {
+        stopAllAudios();
         instructions.style.display = 'none';
         practiceContainer.style.display = 'none';
         practiceFinishScreen.style.display = 'block';
@@ -64,6 +66,7 @@ window.onload = function () {
     });
 
     document.getElementById('toMainTestButton').addEventListener('click', function () {
+        stopAllAudios();
         document.getElementById('instructionsE1').style.display = 'flex';
         practiceFinishScreen.style.display = 'none';
         canvasContainer.style.display = 'block';
@@ -76,6 +79,7 @@ window.onload = function () {
     });
 
     document.getElementById('finishButton').addEventListener('click', function () {
+        stopAllAudios();
         document.getElementById('instructionsE1').style.display = 'none';
         canvasContainer.style.display = 'none';
         showHandSelection();
@@ -85,6 +89,7 @@ window.onload = function () {
     document.getElementById('finishButton').style.display = 'block';
 
     document.getElementById('endTestButton').addEventListener('click', function () {
+        stopAllAudios();
         finishScreen.style.display = 'none';
         endScreen.style.display = 'block';
     });
@@ -283,6 +288,7 @@ window.onload = function () {
     }
 
     document.getElementById('handButton').addEventListener('click', function () {
+        stopAllAudios();
         confirmHandSelection();
         document.getElementById('endTestButton').style.display = 'none';
         const now = new Date();
@@ -335,4 +341,9 @@ window.onload = function () {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
+
+    function stopAllAudios() {
+        const audios = document.querySelectorAll('audio');
+        audios.forEach(audio => audio.pause());
+    }
 };
