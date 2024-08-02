@@ -6,71 +6,78 @@
         <header class="bg-dark py-3" style="margin-top: 60px;">
             <div class="container px-5">
                 <div class="row gx-5 justify-content-center align-items-center">
-                    <div class="back-button-container ">
-                        <!-- Botón de Volver -->
-                        <a href="{{ url('/') }}" class="back-button">
-                            <i class="fas fa-arrow-left"></i> Volver
-                        </a>
+                    <div class="row">
+                        <div class="back-button-container ">
+                            <!-- Botón de Volver -->
+                            <a href="{{ url('/') }}" class="back-button">
+                                <i class="fas fa-arrow-left"></i> Volver
+                            </a>
+                        </div>
                     </div>
-                    <div class="col-lg-7">
-                        <div class="text-center my-4">
-                            <div class="header-container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="text-center my-4">
+                                <div class="header-container">
 
-                                <div class="text-container">
-                                    <!-- Título y descripciones -->
-                                    <h1 class="display-5 fw-bolder text-white mb-2">{{ $test->name_test }}</h1>
-                                    <p class="lead text-white-50 mb-4">{{ $test->tipoTest->descripcion }}</p>
-                                    <p class="lead text-white-50 mb-5">{{ $test->tipoTest->descripcion_test }}</p>
-                                    <p class="lead text-white-50 mb-1"><i class="fas fa-clock"></i> Duración estimada:
-                                        {{ $test->duracion_minutos }} minutos</p>
-                                    <p class="lead text-white-50 mb-1">
-                                        <i class="fa-solid fa-globe"></i>
-                                        Fuente:
-                                        <span id="fuenteContainer" class="fuente-container">
-                                            <span id="fuenteText" class="fuente-text">{{ $test->tipoTest->fuente }}</span>
+                                    <div class="text-container">
+                                        <!-- Título y descripciones -->
+                                        <h1 class="display-5 fw-bolder text-white mb-2">{{ $test->name_test }}</h1>
+                                        
+                                        <p class="lead text-white-50 mb-1"><i class="fas fa-clock"></i> Duración estimada:
+                                            {{ $test->duracion_minutos }} minutos</p>
+                                        <p class="lead text-white-50 mb-1">
+                                            <i class="fa-solid fa-globe"></i>
+                                            Fuente:
+                                            <span id="fuenteContainer" class="fuente-container">
+                                                <span id="fuenteText" class="fuente-text">{{ $test->tipoTest->fuente }}</span>
+                                                @if (!empty($test->tipoTest->link_fuente))
+                                                    <i class="fas fa-chevron-down" id="fuenteArrow"></i>
+                                                @endif
+                                            </span>
                                             @if (!empty($test->tipoTest->link_fuente))
-                                                <i class="fas fa-chevron-down" id="fuenteArrow"></i>
+                                                <ul id="fuenteDropdown" class="fuente-dropdown">
+                                                    <li><a href="{{ $test->tipoTest->link_fuente }}" target="_blank">Ver
+                                                            fuente</a></li>
+                                                </ul>
                                             @endif
-                                        </span>
-                                        @if (!empty($test->tipoTest->link_fuente))
-                                            <ul id="fuenteDropdown" class="fuente-dropdown">
-                                                <li><a href="{{ $test->tipoTest->link_fuente }}" target="_blank">Ver
-                                                        fuente</a></li>
-                                            </ul>
-                                        @endif
-                                    </p>
+                                        </p>
 
-                                </div>
-                                <div class="buttons-container">
-                                    <!-- Botones para cada enlace -->
-                                    @if (!empty($test->url_test))
-                                        <a href="/{{ $test->url_test }}" target="_blank" class="circular-button">
-                                            <i class="fas fa-play"></i>
-                                            <span>{{$test->nombre_url}}</span>
-                                        </a>
-                                    @endif
-                                    @if (!empty($test->url_adicional))
-                                        <a href="/{{ $test->url_adicional }}" target="_blank"
-                                            class="circular-button additional">
-                                            <i class="fas fa-play"></i>
-                                            <span>{{$test->nombre_url_opcional}}</span>
-                                        </a>
-                                    @endif
-                                    @if (!empty($test->link_millisecond))
-                                        <a href="/{{ $test->link_millisecond }}" target="_blank"
-                                            class="circular-button additional">
-                                            <i class="fas fa-play"></i>
-                                        </a>
-                                    @endif
-                                    @if (!empty($test->link_millisecond2))
-                                        <a href="/{{ $test->link_millisecond2 }}" target="_blank"
-                                            class="circular-button additional">
-                                            <i class="fas fa-play"></i>
-                                            <span>Millisecond</span>
-                                        </a>
-                                    @endif
+                                    </div>
+                                    
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="container mb-5">
+                        <div class="row justify-content-center ">
+                            @if (!empty($test->url_test))
+                            <div class="col-auto ">
+                                <a href="/{{ $test->url_test }}" target="_blank" class="col">     
+                                    <button type="button" class="btn btn-outline-light btn-lg btn-block"> <i class="fas fa-play"></i> <span>{{$test->nombre_url}}</span></button>
+                                </a>
+                            </div>
+                            @endif
+                            @if (!empty($test->url_adicional))
+                            <div class="col-auto ">
+                                <a href="/{{ $test->url_adicional }}" target="_blank" class="col">            
+                                    <button type="button" class="btn btn-outline-light btn-lg btn-block"><i class="fas fa-play"></i> <span>{{$test->nombre_url_opcional}}</span></button>        
+                                </a>
+                            </div>
+                            @endif
+                            @if (!empty($test->link_millisecond))
+                            <div class="col-auto ">
+                                <a href="/{{ $test->link_millisecond }}" target="_blank" class="col" >          
+                                    <button type="button" class="btn btn-outline-light btn-lg btn-block"><i class="fas fa-play"></i> <span>{{$test->nombre_url_opcional}}</span></button>
+                                </a>
+                            </div>
+                            @endif
+                            @if (!empty($test->link_millisecond2))
+                            <div class="col-auto ">
+                                <a href="/{{ $test->link_millisecond2 }}" target="_blank" class="col">            
+                                    <button type="button" class="btn btn-outline-light btn-lg btn-block"><i class="fas fa-play"></i> <span>{{$test->nombre_url_opcional}}</span></button>
+                                </a>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -80,36 +87,12 @@
 
         <div class="container my-5">
             <div class="row ">
-                <div class="col-sm-6">
-                    <div class="card p-4 h-100">
+             
+                <div class="col-sm-12">
+                    <div class="card p-4 pb-0 h-100">
                         <div class="card-body">
-                            @if (!empty($test->tipoTest->instrucciones_adicionales))
-                            <div class="my-4"></div>
-                                <h5 class="card-title"><i class="fas fa-arrow-right me-2"></i>Instrucciones de instalacion</h5>
-                                <div class="d-flex align-items-center mb-3">
-                                    <p class="card-text text-justify">{{ $test->tipoTest->instrucciones_adicionales }}</p>
-                                </div>
-                            @endif
-                            @if (!empty($test->tipoTest->enlace_descarga))
-                                <div class="text-center">
-                                    <a href="{{ $test->tipoTest->enlace_descarga }}" class="btn btn-primary" target="_blank">Descargar Aplicación</a>
-                                </div>
-                            @endif
-                            <div class="my-4"></div>
-                            <h5 class="card-title fw-bolder mb-5" style="text-align:center;font-size: 24px;">Instrucciones del test</h5>
-                            <p class="card-text text-justify" style="font-size: 18px;">{{ $test->tipoTest->instruccion_test }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6">
-                    <div class="card p-4 h-100">
-                        <div class="card-body">
-                            <div class="my-4"></div>
-                            <h5 class="card-title fw-bolder mb-5" style="text-align:center;font-size: 24px;">Audio de Instrucciones</h5>
-                            <audio class="w-100" controls>
-                                <source src="{{ asset('uploads/' . $test->tipoTest->audio_instruccion) }}"
-                                    type="audio/mp3" />
-                            </audio>
+                           <p class="lead text-dark-50 mb-4"><b>{{ $test->tipoTest->descripcion }}</b></p>
+                            <p class="lead text-dark-50 ">{{ $test->tipoTest->descripcion_test }}</p>
                         </div>
                     </div>
                 </div>

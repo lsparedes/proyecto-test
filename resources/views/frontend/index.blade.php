@@ -10,8 +10,8 @@
                     <div class="col-lg-6">
                         <div class="text-center my-5">
                             <h1 class="display-4 fw-bolder text-white mb-4">Tests protocolo neurocognitivo</h1>
-                            <p class="lead text-white-50 mb-3">Quickly design and customize responsive mobile-first sites
-                                with Bootstrap, the world’s most popular front-end open source toolkit!</p>
+                            <!-- <p class="lead text-white-50 mb-3">Quickly design and customize responsive mobile-first sites
+                                with Bootstrap, the world’s most popular front-end open source toolkit!</p> -->
                             <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
 
                             </div>
@@ -26,7 +26,7 @@
 
             <div class="bg-light my-4 py-3 text-center">
                 <div>
-                    <h2>Listado de Tests</h2>
+                    <!-- <h2>Listado de Tests</h2> -->
                     <!-- Busqueda test-->
                     <form id="searchForm">
                         <div class="input-group mb-3">
