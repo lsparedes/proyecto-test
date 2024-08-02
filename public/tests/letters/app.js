@@ -294,10 +294,11 @@ function validateClicks() {
     const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
     const testDurationFormatted = testDuration.toLocaleString('es-CL');
     const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago' };
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric'};
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
-    const baseFileName = `resultados_letter_A_${fechaFormateada}`;
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
+    const baseFileName = `CancellationTasks_${fechaFormateada}`;
 
     let csvContent = 'Descripcion;Valor\n';
     csvContent += `Tiempo dedicado Tarea (Segundos);${totalDurationFormatted}\n`;
