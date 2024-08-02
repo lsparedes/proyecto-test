@@ -39,7 +39,8 @@ function startTest(type) {
         const itemDiv = document.createElement('div');
         itemDiv.classList.add('test-item');
 
-        const titleElement = document.createElement('h3');
+        const titleElement = document.createElement('div');
+        titleElement.classList.add('imageText');
         titleElement.textContent = title;
 
         const audio = document.createElement('audio');
@@ -214,20 +215,36 @@ function padTime(time) {
 function updateTimerDisplay(displayElement, time) {
     displayElement.textContent = formatTime(time);
 }
+const finalButton = document.getElementById('final-button');
+let participantID = 0;
 
 function mostrarFinalizacion(type) {
+    console.log("Mostrando mensaje de finalización...");
     const completionMessage = document.getElementById('completion-message');
-
-    completionMessage.style.textAlign = 'center';
-    completionMessage.style.fontSize = '35px';
-    completionMessage.style.marginTop = '13px';
-    completionMessage.style.display = 'flex';
-
-    // Aplicamos el retraso solo aquí
-    setTimeout(() => {
-        crearZip(type);
-    }, 1500); 
+    completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
+    const fin = document.getElementById('fin');
+    const enterID = document.getElementById('enterID');
+    fin.style.display = 'block';
+    enterID.style.display = 'block';
+    document.getElementById('final-button').addEventListener('click', () => {
+        const participantID = document.getElementById('participantID').value.trim();
+        crearZip(type,participantID);
+    });
 }
+
+
+
+
+document.getElementById('participantID').addEventListener('input', () => {
+    const participantID = document.getElementById('participantID').value.trim();
+    const finalButton = document.getElementById('final-button');
+    if (participantID) {
+        finalButton.style.display = 'block';
+    } else {
+        finalButton.style.display = 'none';
+    }
+});
+
 
 function generarCSV() {
     let csvContent = "Prueba;Tiempo Dedicado en milisegundos\n";
@@ -242,7 +259,9 @@ function generarCSV() {
     return csvContent;
 }
 
-function crearZip(type) {
+function crearZip(type,participantID) {
+    document.getElementById('enterID').style.display = 'none';
+    document.getElementById('final-button').style.display = 'none';
     if (!downloadLinks.length) {
         console.error("No hay datos en downloadLinks.");
         return;
@@ -277,13 +296,13 @@ function crearZip(type) {
     const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
     const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_');
 
-    zip.file(`respuestas_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`ID_${participantID}_respuestas_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
-            downloadLink.download = `respuestas_digital_span_${type}_${fechaFormateada}.zip`;
+            downloadLink.download = `ID_${participantID}_respuestas_digital_span_${type}_${fechaFormateada}.zip`;
             downloadLink.textContent = 'Descargar todas las grabaciones';
             document.body.appendChild(downloadLink);
 
