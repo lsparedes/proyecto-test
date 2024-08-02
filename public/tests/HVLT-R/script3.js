@@ -7,12 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const audioItems = document.querySelectorAll('.audio-item');
     const NXButton = document.getElementById('nxbutton');
     const enterID = document.getElementById('enterID');
-
+    const DownloadButton = document.getElementById('download');
     let answers = {};
     let currentAudioIndex = 0;
     let startTime = new Date();  // Guardar la hora de inicio automáticamente al cargar la página
     let finishTime;
-
+    let fecha = new Date();
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
     let año = fecha.getFullYear();
@@ -54,8 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
         audioContainer.style.display = 'none';
         enterID.style.display = 'inline-block';
         finishScreen.style.display = 'block';
+        DownloadButton.style.display = 'block'
         finishTime = new Date();
         console.log(`${finishTime}`);
+    });
+    
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        downloadZip();
     });
 
     document.querySelectorAll('.option-btn').forEach(button => {
@@ -111,14 +117,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
     
-
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-            downloadZip();
-        }
-    });
-    
     let participantID = 0;
     
     function validateInputs() {
@@ -146,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `ID-${participantID}-HVLT-R Reconocimiento-${diaStr}-${mesStr}-${añoStr}.zip`;
+            a.download = `ID-${participantID}_HVLT-R_Reconocimiento-${diaStr}-${mesStr}-${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
