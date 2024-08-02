@@ -39,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const endScreen = document.getElementById('finish');
     const finishScreen = document.getElementById('finishScreen');
     const NXButton6 = document.getElementById('nxbutton6');
+    const enterID = document.getElementById('enterID');
 
     let mediaRecorder;
     let audioChunks = [];
@@ -99,11 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     NXButton6.addEventListener('click', () => {
         endScreen.style.display = 'none';
+        enterID.style.display = 'inline-block';
         finishScreen.style.display = 'block';
         finishTime = new Date();
         console.log(`${finishTime}`);
         startFinishTimer();
-        downloadZip();
     });
 
     audio2.addEventListener('ended', () => {
@@ -150,14 +151,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     stopRecordingButton1.addEventListener('click', () => {
         stopRecording(initRecordingButton1, stopRecordingButton1);
+        initRecordingButton1.style.display = 'none';
     });
 
     stopRecordingButton2.addEventListener('click', () => {
         stopRecording(initRecordingButton2, stopRecordingButton2);
+        initRecordingButton2.style.display = 'none';
     });
 
     stopRecordingButton3.addEventListener('click', () => {
         stopRecording(initRecordingButton3, stopRecordingButton3);
+        initRecordingButton3.style.display = 'none';
     });
 
     function startRecording(initButton, stopButton, fileName) {
@@ -210,38 +214,51 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
 
+    document.getElementById('participantID').addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            validateInputs();
+            downloadZip();
+        }
+    });
+    
+    let participantID = 0;
+    
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+    }
+    
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
             return;
         }
-
+    
         const zip = new JSZip();
         
         // Agregar archivos de audio al zip
         audioFiles.forEach((file) => {
             zip.file(file.fileName, file.blob);
         });
-
+    
         // Agregar el archivo CSV al zip
         const csvContent = saveToCSV();
-        zip.file('HVLT-R_Recuerdo_Libre_Inmediato.csv', csvContent);
-
+        zip.file('HVLT-R_Recuerdo_Libre_Inmediato_.csv', csvContent);
+    
         // Generar y descargar el zip
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = 'HVLT-R RecuerdoLibreInmediato.zip';
+            a.download = `HVLT-R RecuerdoLibreInmediato-${participantID}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
         });
     }
-
+    
     function startFinishTimer() {
         setTimeout(() => {
             playBeepSound();
-        }, 0.1 * 60 * 1000); // 20 minutos en milisegundos
+        }, 20 * 60 * 1000); // 20 minutos en milisegundos
     }
     
     function playBeepSound() {
