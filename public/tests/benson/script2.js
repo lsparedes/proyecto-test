@@ -7,7 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedHand = ""; 
     let participantID = 0; 
     let mediaRecorder = null;
-
+    let fecha = new Date();
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
     //Botones
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishDrawingFromMemoryButton = document.getElementById('finish-drawing-from-memory');
@@ -33,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function enterContainer2() {
+        container2.style.display = 'flex';
         startTimeExecution = new Date();
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
@@ -235,6 +238,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
     
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+
     async function GenerateZIP() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
@@ -261,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `Benson_Draw_From_Memory_Figure-${participantID}.zip`;
+                    link.download = `${participantID}-Benson_Draw_From_Memory_Figure-${diaStr}-${mesStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);

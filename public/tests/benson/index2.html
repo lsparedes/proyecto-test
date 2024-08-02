@@ -15,29 +15,29 @@
 <body>
     <div id="container">
         <div id="container2" style="display: block;">
-            <div id="main-screen" class="screen">
+            <div id="main-screen">
                 <audio id="audio2" controls>
                     <source src="audio2.mp3" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
 
-            </div>
-
-            <div id="draw-from-memory-screen" class="screen">
-                <div class="controls controls-left">
-                    <i id="clear-memory-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
-                    <i id="download-memory-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
-                </div>
-                <div class="drawing-container">
-                    <div class="drawing-part">
-                        <canvas id="memory-canvas" width="820" height="550"></canvas>
+                <div id="draw-from-memory-screen">
+                    <div class="controls controls-left">
+                        <i id="clear-memory-canvas-button" class="fas fa-eraser" title="Limpiar Lienzo"></i>
+                        <i id="download-memory-canvas-button" class="fas fa-download" title="Descargar Dibujo"></i>
+                    </div>
+                    <div class="drawing-container">
+                        <div class="drawing-part">
+                            <canvas id="memory-canvas" width="820" height="550"></canvas>
+                        </div>
+                    </div>
+                    <div class="button-container">
+                        <button id="fullscreen-button"></button>
+                    </div>
+                    <div class="button-container2">
+                        <button id="finish-drawing-from-memory"></button>
                     </div>
                 </div>
-                <div class="button-container">
-                    <button id="fullscreen-button"></button>
-                    <button id="finish-drawing-from-memory"></button>
-                </div>
-
             </div>
         </div>
 

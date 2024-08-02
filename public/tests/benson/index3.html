@@ -13,27 +13,29 @@
 <body>
     <div id="container">
         <div id="container2" style="display: block;">
-            <div id="main-screen" class="screen">
+            <div id="main-screen">
                 <audio id="audio3" controls>
                     <source src="audio3.mp3" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
-
+                <div id="identify-figure-screen">
+                    <div id="identify-figure-grid">
+                        <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image selectable" data-figure="figura2-1">
+                        <img src="figura2-2.png" alt="Figura 2-2" class="identify-figure-image selectable" data-figure="figura2-2">
+                        <img src="figura2-3.png" alt="Figura 2-3" class="identify-figure-image selectable" data-figure="figura2-3">
+                        <img src="figura2-4.png" alt="Figura 2-4" class="identify-figure-image selectable" data-figure="figura2-4">
+                    </div>
+                    <div class="button-container">
+                        <button id="fullscreen-button"></button>
+                    </div>
+                    <div class="button-container2">
+                        <button id="finish-identifying-figure"></button>
+                    </div>
+    
+                </div>
             </div>
     
-            <div id="identify-figure-screen" class="screen">
-                <div id="identify-figure-grid">
-                    <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image selectable" data-figure="figura2-1">
-                    <img src="figura2-2.png" alt="Figura 2-2" class="identify-figure-image selectable" data-figure="figura2-2">
-                    <img src="figura2-3.png" alt="Figura 2-3" class="identify-figure-image selectable" data-figure="figura2-3">
-                    <img src="figura2-4.png" alt="Figura 2-4" class="identify-figure-image selectable" data-figure="figura2-4">
-                </div>
-                <div class="button-container">
-                    <button id="fullscreen-button"></button>
-                    <button id="finish-identifying-figure"></button>
-                </div>
 
-            </div>
         </div>
 
         <div id="finishScreen" class="container1" style="display: none;">
