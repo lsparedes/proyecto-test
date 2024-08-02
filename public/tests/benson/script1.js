@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectHandContainer = document.getElementById("selectHand");
     const handInputs = document.getElementsByName('hand');
     const enterID = document.getElementById('enterID');
+    const DownloadButton = document.getElementById('download');
 
     enterContainer2(); 
     initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
@@ -68,18 +69,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('audio1_2').pause();
         instruccionesDespues.style.display = 'none';
         finishScreen.style.display = 'block';
-        selectHandContainer.style.display = 'inline-block';
+        selectHandContainer.style.display = 'block';
         enterID.style.display = 'inline-block';
+        DownloadButton.style.display = 'block';
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
         startFinishTimer();
     });
 
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-            GenerateZIP();
-        }
+
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        GenerateZIP();
     });
     
     handInputs.forEach(input => {
@@ -247,10 +248,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     function generateCSV() {
-        if (!startTimeExecution || !endTimeExecution || !startDrawingTime || !endDrawingTime || !selectedHand) {
-            console.error("Datos incompletos para generar CSV");
-            return;
-        }
 
         let csvContent = "data:text/csv;charset=utf-8,";
         csvContent += "Actividad,Tiempo de inicio,Tiempo de Termino,Comenzó a dibujar,Terminó de dibujar,Mano Seleccionada\n";

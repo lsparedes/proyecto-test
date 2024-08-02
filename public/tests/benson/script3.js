@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectHandContainer = document.getElementById("selectHand");
     const selectableImages = document.querySelectorAll('.selectable');
     const handInputs = document.querySelectorAll('input[name="hand"]');
+    const DownloadButton = document.getElementById('download');
 
     enterContainer2();
 
@@ -38,9 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('audio3').pause();
         container2.style.display = 'none';
         finishScreen.style.display = 'block';
+        DownloadButton.style.display = 'block';
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
-        selectHandContainer.style.display = 'inline-block';
+        selectHandContainer.style.display = 'block';
         enterID.style.display = 'inline-block';
         calculateAccuracy(); // Calcular el accuracy cuando se termina de identificar la figura
     });
@@ -57,13 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-            GenerateZIP();
-        }
-    });
 
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        GenerateZIP();
+    });
+    
     handInputs.forEach(input => {
         input.addEventListener('change', () => {
             selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
@@ -91,10 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV() {
-        if (!startTimeExecution || !endTimeExecution || !selectedHand || !participantID) {
-            console.error("Datos incompletos para generar CSV");
-            return;
-        }
 
         let csvContent = "Actividad,Tiempo de inicio,Tiempo de Termino,Mano Seleccionada, FiguraCorrecta, FiguraSeleccionada, Precision\n";
         csvContent += `IdentifyFigure,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${selectedHand},${correctAnswer},${participantAnswer},${accuracy}\n`;

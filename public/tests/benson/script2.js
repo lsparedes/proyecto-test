@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const enterID = document.getElementById('enterID');
     const selectHandContainer = document.getElementById('selectHand');
     const handInputs = document.getElementsByName('hand');
-
+    const DownloadButton = document.getElementById('download');
 
     enterContainer2();
     initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
@@ -45,21 +45,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('audio2').pause();
         container2.style.display = 'none';
         finishScreen.style.display = 'block';
-
+        DownloadButton.style.display = 'block';
         endDrawingTime = new Date();
         console.log("Terminó de Dibujar: ", endDrawingTime);
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
-        selectHandContainer.style.display = 'inline-block';
+        selectHandContainer.style.display = 'block';
         enterID.style.display = 'inline-block';
     });
 
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-            GenerateZIP();
-        }
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        GenerateZIP();
     });
+    
 
     handInputs.forEach(input => {
         input.addEventListener('change', () => {
@@ -227,11 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV() {
-        if (!startTimeExecution || !endTimeExecution || !startDrawingTime || !endDrawingTime || !selectedHand) {
-            console.error("Datos incompletos para generar CSV");
-            return;
-        }
-
         let csvContent = "data:text/csv;charset=utf-8,";
         csvContent += "Actividad,Tiempo de inicio,Tiempo de Termino,Comenzó a dibujar,Terminó de dibujar,Mano Seleccionada\n";
         csvContent += `DrawFromMemory,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${formatDate(startDrawingTime)},${formatDate(endDrawingTime)},${selectedHand}\n`;
