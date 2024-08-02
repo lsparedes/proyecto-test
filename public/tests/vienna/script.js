@@ -564,17 +564,27 @@ document.addEventListener('DOMContentLoaded', () => {
             respuesta_participante: response.respuestaParticipante,
             precision: response.precision,
             tiempo_respuesta: response.tiempoRespuesta,
-            tiempo_dedicado: response.tiempoDedicado,
-            mano_utilizada: response.manoUtilizada
+            tiempo_dedicado: response.tiempoDedicado
         }));
-
-        const csv = Papa.unparse(csvData);
+    
+        let csv = Papa.unparse(csvData, { delimiter: ';' });
+        csv += `\n\nmano_utilizada;${selectedHand}`;
+    
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
         if (link.download !== undefined) {
             const url = URL.createObjectURL(blob);
+
+            // Obtener la fecha actual en formato YYYYMMDD
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const formattedDate = `${year}${month}${day}`;
+            const fileName = `${participantID}_TEST_13_VIENNA_${formattedDate}.csv`;
+            
             link.setAttribute('href', url);
-            link.setAttribute('download', 'results.csv');
+            link.setAttribute('download', fileName);
             link.style.visibility = 'hidden';
             document.body.appendChild(link);
             link.click();
@@ -583,12 +593,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const showCompletionScreen = () => {
-        const testScreen = document.getElementById('testScreen');
+        const preEndScreen = document.getElementById('preEnd');
         const completionScreen = document.getElementById('completionScreen');
-        if (testScreen) {
-            testScreen.style.display = 'none';
+        if (preEndScreen) {
+            preEndScreen.style.display = 'none';
         } else {
-            console.error('testScreen element not found');
+            console.error('preEndScreen element not found');
         }
         if (completionScreen) {
             completionScreen.style.display = 'flex';
@@ -652,7 +662,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateTrialIndicator();
             } else {
                 console.log('End of videos reached');
-                showCompletionScreen();
+                showPreEnd();
             }
         });
 
@@ -760,6 +770,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     } else {
         console.error('Canvas element not found');
+    }
+
+    let selectedHand = "";
+    let participantID = 0;
+    const handInputs = document.getElementsByName('hand');
+
+    document.getElementById('handButton').addEventListener('click', showCompletionScreen);
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+
+    const showPreEnd = () => {
+        const testScreen = document.getElementById('testScreen');
+        const preEndScreen = document.getElementById('preEnd');
+        if (testScreen) {
+            testScreen.style.display = 'none';
+        } else {
+            console.error('testScreen element not found');
+        }
+        if (preEndScreen) {
+            preEndScreen.style.display = 'flex';
+        } else {
+            console.error('preEndScreen element not found');
+        }
+    };
+
+    handInputs.forEach((input) => {
+        input.addEventListener('change', (e) => {
+            validateInputs();
+            selectedHand = e.target.value;
+        });
+    });
+
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+    
+        if (participantID && selectedHand) {
+            handButton.style.display = 'block';
+        }
     }
 
     // Inicializar la primera carga de video e imagen

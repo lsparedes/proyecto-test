@@ -204,3 +204,50 @@ canvas {
     left: 15px;
     /* Ajustamos la distancia desde el borde derecho */
 }
+
+/* SELECCION DE MANO CSS */
+
+#handButton {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 5px;
+    width: 80px;
+    height: 65px;
+    margin: 20px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+/* #fin {
+    margin-top: 30vh;
+} */
+
+#selectHand h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+#selectHand label {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+#selectHand input[type="radio"] {
+    margin-right: 10px;
+}
+
+.card-body h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
