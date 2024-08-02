@@ -41,7 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'img-jpg/19.jpg',
         'img-jpg/20.jpg'
     ];
-
     const audios = [
         'audio/1.mp3',
         'audio/2.mp3',
@@ -64,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'audio/19.mp3',
         'audio/20.mp3'
     ];
-
     recordingMessage.className = 'recording-message';
     recordingMessage.textContent = 'Grabación creada';
     testScreen.appendChild(recordingMessage);
@@ -135,6 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
         stopRecording(true);
     });
 
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+    let participantID = 0;
+
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+        if (participantID && selectedHand) {
+            handButton.style.display = 'block';
+        }
+    }
+
     function stopRecording(showNextButton) {
         if (mediaRecorder) {
             mediaRecorder.stop();
@@ -183,18 +193,21 @@ document.addEventListener('DOMContentLoaded', () => {
         videoPreview.classList.add('hidden');
     }
 
-    function showHandSelection() {
-        testScreen.classList.remove('active');
-        testScreen.classList.add('hidden');
-        selectHandContainer.classList.remove('hidden');
-        selectHandContainer.classList.add('active');
+    function showHandSelection() { 
+        testScreen.style.display = 'none';
+        audioBtn.style.display = 'none';
+        currentItem.style.display = 'none';
+        fin.style.display = 'block';
+        selectHandContainer.style.display = "block";
+        enterID.style.display = 'block';
+
+        handButton.addEventListener('click', function () {
+            createZipAndDownload();
+        });
     }
 
     function showCompletionScreen() {
-        selectHandContainer.classList.remove('active');
-        selectHandContainer.classList.add('hidden');
-        completionScreen.classList.remove('hidden');
-        completionScreen.classList.add('active');
+
         createZipAndDownload();
     }
 
@@ -214,10 +227,12 @@ document.addEventListener('DOMContentLoaded', () => {
         timerDisplay.textContent = '00:00';
     }
 
+    const fechaActual = new Date();
+    const options = { timeZone: 'America/Santiago' };
+    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
     function createCsvFile() {
-        const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
-        const filename = `respuestas_pantomime_${date}.csv`;
-
+        const filename = `respuestas_pantomime_${fechaFormateada}.csv`;
         // Definir el contenido del archivo CSV
         const csvContent = `Tiempo dedicado (Milisegundos);Mano utilizada\n${totalTestTime};${selectedHand}\n`;
         const blob = new Blob([csvContent], { type: 'text/csv' });
@@ -227,11 +242,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createZipAndDownload() {
+        handButton.style.display = "none";
+        selectHandContainer.style.display = "none";
+        enterID.style.display = 'none';
         createCsvFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
-            const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
-            const zipname = `pantomime_${date}.zip`;
+            const zipname = `ID_${participantID}_pantomime_${fechaFormateada}.zip`;
 
             link.href = URL.createObjectURL(content);
             link.download = zipname;

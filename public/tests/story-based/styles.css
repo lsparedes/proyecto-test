@@ -4,7 +4,6 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
-
 }
 
 .container {
@@ -148,6 +147,7 @@ audio {
 .hidden {
     display: none;
 }
+
 .option.selected {
     border: 2px solid #007bff;
     /* Cambia el borde para mostrar que está seleccionada */
@@ -175,7 +175,9 @@ audio {
     /* Ajustamos la distancia desde el borde derecho */
 }
 
-#startButton, #nextButton, #handButton {
+#startButton,
+#nextButton,
+#handButton {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -196,6 +198,7 @@ audio {
     right: 15px;
     /* Ajustamos la distancia desde el borde derecho */
 }
+
 #fullscreenButton {
     background-color: transparent;
     border: none;
@@ -218,6 +221,54 @@ audio {
     /* Ajustamos la distancia desde el borde derecho */
 }
 
+#handButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('imagenes/flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    /* Elimina el relleno para alinear el icono verticalmente */
+    width: 80px;
+    /* Ajusta el ancho fijo */
+    height: 65px;
+    /* Ajusta la altura fija */
+    vertical-align: middle;
+    /* Alineado verticalmente con el contenido */
+    position: absolute;
+    bottom: 15px;
+    /* Ajustamos la distancia desde la parte inferior */
+    right: 15px;
+    /* Ajustamos la distancia desde el borde derecho */
+}
+
+#enterID {
+    display: inline-block;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 15px;
+    height: 30%;
+    width: 25%;
+    margin: 0 !important;
+}
+
+.card-body h4 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.containerCards {
+    width: 100vw;
+    justify-content: space-between;
+}
+
 #selectHand {
     display: none;
     background-color: #f9f9f9;
@@ -225,6 +276,10 @@ audio {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 15px;
+    height: 30%;
+    width: 30%;
 }
 
 #selectHand h4 {
@@ -241,4 +296,12 @@ audio {
 
 #selectHand input[type="radio"] {
     margin-right: 10px;
+}
+
+.container-hand {
+    border: 1px solid #ffffff;
+    background: #fff;
+    padding: 20px;
+    text-align: center;
+
 }
