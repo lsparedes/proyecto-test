@@ -333,9 +333,10 @@ function cambiarImagen() {
 
 function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago' };
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
 
     const csvData = [['Numero de ensayo', 'Respuesta correcta', 'Respuesta participante', 'Precision', 'Tiempo de respuesta', 'Tiempo dedicado a la tarea', 'Mano utilizada']];
 
@@ -355,7 +356,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     if (link.download !== undefined) {
-        const nombreArchivo = `ID_${participantID}_respuestas_facial_emotion_${fechaFormateada}.csv`;
+        const nombreArchivo = `${participantID}_FacialEmotion_${fechaFormateada}.csv`;
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
         link.setAttribute('download', nombreArchivo);

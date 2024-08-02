@@ -294,10 +294,11 @@ function validateClicks() {
     const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
     const testDurationFormatted = testDuration.toLocaleString('es-CL');
     const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago' };
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric'};
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
-    const baseFileName = `resultados_letter_A_${fechaFormateada}`;
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
+    const baseFileName = `CancellationTasks_${fechaFormateada}`;
 
     let csvContent = 'Descripcion;Valor\n';
     csvContent += `Tiempo dedicado Tarea (Segundos);${totalDurationFormatted}\n`;
@@ -313,15 +314,15 @@ function validateClicks() {
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
             const zip = new JSZip();
-            zip.file(`ID_${participantID}_${baseFileName}.csv`, csvBlob);
-            zip.file(`ID_${participantID}_${baseFileName}.png`, canvasBlob);
-            zip.file(`ID_${participantID}_${baseFileName}.webm`, videoBlob);
+            zip.file(`${participantID}_${baseFileName}.csv`, csvBlob);
+            zip.file(`${participantID}_${baseFileName}.png`, canvasBlob);
+            zip.file(`${participantID}_${baseFileName}.webm`, videoBlob);
             zip.generateAsync({ type: 'blob' }).then(content => {
                 // Define la fecha actual y la formateas
                 const url = URL.createObjectURL(content);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `ID_${participantID}_${baseFileName}.zip`;
+                link.download = `${participantID}_${baseFileName}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

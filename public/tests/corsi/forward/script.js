@@ -294,8 +294,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let csvContent = "data:text/csv;charset=utf-8," 
         + headers.join(";") + "\n"
         + rows.map(e => e.join(";")).join("\n");
-        const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        const fileName = `ID_${participantID}_CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
+        // const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
+        // Obtener la fecha y hora actuales
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+    
+        // Formatear la fecha para el nombre del archivo
+        const date = `${day}_${month}_${year}`;
+        const fileName = `${participantID}_corsi_directo_${date}.csv`;
         saveAs(csvContent, fileName);
         // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
         // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

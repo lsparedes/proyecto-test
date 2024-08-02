@@ -74,13 +74,13 @@
     <script src="scripts.js"></script>
     <script>
         document.getElementById('next-button').addEventListener('click', () => {
-            document.getElementById('audio1').pause();
+            stopAllAudios();
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('instruction-screen').classList.remove('hidden');
         });
 
         document.getElementById('start-button').addEventListener('click', () => {
-            document.getElementById('audio2').pause();
+            stopAllAudios();
             document.getElementById('instruction-screen').classList.add('hidden');
             document.getElementById('test-items-backward').classList.remove('hidden');
             startTest('backward');
@@ -91,6 +91,11 @@
                 document.documentElement.requestFullscreen();
             }
         });
+
+        function stopAllAudios() {
+            const audios = document.querySelectorAll('audio');
+            audios.forEach(audio => audio.pause());
+        }
     </script>
 </body>
 

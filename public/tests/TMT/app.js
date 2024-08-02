@@ -585,6 +585,12 @@ function showDownloadButton() {
 function testFinalizado() {
     // showDownloadButton(); // REVISAR (para ver como se implemento la descarga de las imagenes)
     // Detener las grabaciones
+    const fechaActual = new Date();
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
+    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
+
     mediaRecorderCanvas.stop();
     mediaRecorderCanvasPartB2.stop();
 
@@ -622,7 +628,7 @@ function testFinalizado() {
                 zip.file("canvasPartB2Screenshot.png", blobPartB2);
 
                 zip.generateAsync({ type: 'blob' }).then(function (content) {
-                    saveAs(content, `ID_${participantID}_test_results_TMT_part_B.zip`);
+                    saveAs(content, `${participantID}_TMTPartB_${fechaFormateada}.zip`);
                 });
             });
         });

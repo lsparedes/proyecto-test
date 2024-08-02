@@ -153,7 +153,7 @@ function generarCSV() {
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
+    // const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
 
     const csvData = [['Ensayo', 'Respuesta Correcta', 'Respuesta Participante', 'Precision', 'Tiempo de Respuesta(ms)']];
     responses.forEach((response) => {
@@ -174,7 +174,14 @@ function generarCSV() {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     if (link.download !== undefined) {
-        const nombreArchivo = `ID_${participantID}_respuestas_glasgow_face_matching_${fechaFormateada}.csv`;
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        // Formatear la fecha para el nombre del archivo
+        const date = `${day}_${month}_${year}`;
+
+        const nombreArchivo = `${participantID}_glasgow_face_matching_${date}.csv`;
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
         link.setAttribute('download', nombreArchivo);

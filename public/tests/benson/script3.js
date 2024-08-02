@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let fecha = new Date();
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishIdentifyingFigureButton = document.getElementById('finish-identifying-figure');
 
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectHandContainer = document.getElementById("selectHand");
     const selectableImages = document.querySelectorAll('.selectable');
     const handInputs = document.querySelectorAll('input[name="hand"]');
+    const DownloadButton = document.getElementById('download');
 
     enterContainer2();
 
@@ -37,9 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('audio3').pause();
         container2.style.display = 'none';
         finishScreen.style.display = 'block';
+        DownloadButton.style.display = 'block';
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
-        selectHandContainer.style.display = 'inline-block';
+        selectHandContainer.style.display = 'block';
         enterID.style.display = 'inline-block';
         calculateAccuracy(); // Calcular el accuracy cuando se termina de identificar la figura
     });
@@ -56,13 +59,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-            GenerateZIP();
-        }
-    });
 
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        GenerateZIP();
+    });
+    
     handInputs.forEach(input => {
         input.addEventListener('change', () => {
             selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
@@ -90,10 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV() {
-        if (!startTimeExecution || !endTimeExecution || !selectedHand || !participantID) {
-            console.error("Datos incompletos para generar CSV");
-            return;
-        }
 
         let csvContent = "Actividad,Tiempo de inicio,Tiempo de Termino,Mano Seleccionada, FiguraCorrecta, FiguraSeleccionada, Precision\n";
         csvContent += `IdentifyFigure,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${selectedHand},${correctAnswer},${participantAnswer},${accuracy}\n`;
@@ -103,6 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
 
     async function GenerateZIP() {
         if (typeof JSZip === 'undefined') {
@@ -125,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(function(content) {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
-                a.download = `${participantID}-Benson_Identifying_Figure-${diaStr}-${mesStr}.zip`;
+                a.download = `ID-${participantID}-Benson_Identifying_Figure-${diaStr}-${mesStr}-${añoStr}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);

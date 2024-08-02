@@ -114,7 +114,7 @@ ol {
   bottom: 15px;
   left: 15px;
 }
-#enterID{
+/* #enterID{
   display: inline-block;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
@@ -126,7 +126,7 @@ ol {
   height: 30%;
   width: 25%;
   margin: 0 !important;
-}
+} */
 .card-body h4 {
   margin-bottom: 20px;
   font-size: 20px;
@@ -230,7 +230,7 @@ ol {
   /* Ajustamos la distancia desde el borde derecho */
 }
 
-#selectHand {
+/* #selectHand {
   display: none;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
@@ -241,7 +241,7 @@ ol {
   bottom: 15px;
   height: 30%;
   width: 30%;
-}
+} */
 
 #selectHand h4 {
   margin-bottom: 20px;
