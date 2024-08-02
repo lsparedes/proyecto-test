@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedHand = "";
     let participantID = "";
     let accuracy = null;
-
+    let fecha = new Date();
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishIdentifyingFigureButton = document.getElementById('finish-identifying-figure');
 
@@ -70,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function enterContainer2() {
+        container2.style.display = 'flex';
         startTimeExecution = new Date();
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
@@ -98,6 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
 
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+
     async function GenerateZIP() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
@@ -119,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(function(content) {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
-                a.download = `Benson_Identifying_Figure-${participantID}.zip`;
+                a.download = `${participantID}-Benson_Identifying_Figure-${diaStr}-${mesStr}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
