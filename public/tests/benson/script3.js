@@ -59,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('participantID').addEventListener('keyup', (event) => {
         if (event.key === 'Enter') {
             validateInputs();
-            GenerateZIP();
         }
     });
 
@@ -77,12 +76,24 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
 
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+        if (participantID && selectedHand) {
+            document.getElementById('end-button').style.display = "block";
+        }
         console.log("ID del participante: ", participantID);
         console.log("Mano seleccionada: ", selectedHand);
     }
+
+    document.getElementById('end-button').addEventListener('click', () => {
+        GenerateZIP();
+        document.getElementById('end-button').style.display = "none";
+        document.getElementById('finishScreen').style.display = "none";
+        document.getElementById('thanksScreen').style.display = "block";
+    });
 
     function calculateAccuracy() {
         accuracy = (participantAnswer === correctAnswer) ? 1 : 0;
