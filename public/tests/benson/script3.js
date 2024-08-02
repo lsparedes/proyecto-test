@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     finishIdentifyingFigureButton.addEventListener('click', () => {
+        document.getElementById('audio3').pause();
         container2.style.display = 'none';
         finishScreen.style.display = 'block';
         endTimeExecution = new Date(); 

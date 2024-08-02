@@ -70,6 +70,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let showRotationErrors = false;
     let showUpdateErrors = false;
 
+    function stopAllAudios() {
+        const audios = document.querySelectorAll('audio');
+        audios.forEach(audio => audio.pause());
+    }
+
     const resizeCanvas = (canvas) => {
         if (canvas && canvas.parentElement) {
             const container = canvas.parentElement;
@@ -300,6 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const incrementScreenIndex = (event) => {
+        stopAllAudios();
         console.log('Current Screen Index: ', currentScreenIndex);
         if (currentScreenIndex < screens.length - 1) {
             currentScreenIndex++;

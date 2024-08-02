@@ -66,39 +66,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     startButton.addEventListener('click', () => {
+        pauseAudios();
         mainScreen.style.display = 'none';
         wordsScreen.style.display = 'block';
     });
 
     NXButton.addEventListener('click', () => {
+        pauseAudios();
         wordsScreen.style.display = 'none';
         recordingControls1.style.display = 'none';
         Ensayo2Screen.style.display = 'block';
     });
 
     NXButton2.addEventListener('click', () => {
+        pauseAudios();
         Ensayo2Screen.style.display = 'none';
         wordsScreen2.style.display = 'block';
     });
 
     NXButton3.addEventListener('click', () => {
+        pauseAudios();
         wordsScreen2.style.display = 'none';
         recordingControls2.style.display = 'none';
         Ensayo3Screen.style.display = 'block';
     });
 
     NXButton4.addEventListener('click', () => {
+        pauseAudios();
         Ensayo3Screen.style.display = 'none';
         wordsScreen3.style.display = 'block';
     });
 
     NXButton5.addEventListener('click', () => {
+        pauseAudios();
         wordsScreen3.style.display = 'none';
         recordingControls3.style.display = 'none';
         endScreen.style.display = 'block';
     });
 
     NXButton6.addEventListener('click', () => {
+        pauseAudios();
         endScreen.style.display = 'none';
         enterID.style.display = 'inline-block';
         finishScreen.style.display = 'block';
@@ -264,5 +271,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function playBeepSound() {
         const beep = new Audio('beep.wav');
         beep.play();
+    }
+
+    function pauseAudios() {
+        document.getElementById('audio1').pause();
+        document.getElementById('audio2').pause();
+        document.getElementById('audio3').pause();
+        document.getElementById('audio4').pause();
+        document.getElementById('audio5').pause();
+        document.getElementById('audio7').pause();
+        document.getElementById('audio2_ensayo2').pause();
+        document.getElementById('audio3_ensayo2').pause();
+        document.getElementById('audio2_ensayo3').pause();
+        document.getElementById('audio3_ensayo3').pause();
     }
 });

@@ -36,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(`${startTime}`);
 
     startButton.addEventListener('click', () => {
+        pauseAudios();
         mainScreen.style.display = 'none';
         audioContainer.style.display = 'block';
         
@@ -44,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     NXButton.addEventListener('click', () => {
+        pauseAudios();
         audioContainer.style.display = 'none';
         enterID.style.display = 'inline-block';
         finishScreen.style.display = 'block';
@@ -53,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.option-btn').forEach(button => {
         button.addEventListener('click', (e) => {
+            pauseAudios();
             // Obtener el índice del audio actual
             const audioIndex = parseInt(e.target.getAttribute('data-audio'));
             const answer = e.target.getAttribute('data-answer');
@@ -141,5 +144,32 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function pauseAudios() {
+        document.getElementById('audio1_ejercicio3').pause();
+        document.getElementById('audio1').pause();
+        document.getElementById('audio2').pause();
+        document.getElementById('audio3').pause();
+        document.getElementById('audio4').pause();
+        document.getElementById('audio5').pause();
+        document.getElementById('audio6').pause();
+        document.getElementById('audio7').pause();
+        document.getElementById('audio8').pause();
+        document.getElementById('audio9').pause();
+        document.getElementById('audio10').pause();
+        document.getElementById('audio11').pause();
+        document.getElementById('audio12').pause();
+        document.getElementById('audio13').pause();
+        document.getElementById('audio14').pause();
+        document.getElementById('audio15').pause();
+        document.getElementById('audio16').pause();
+        document.getElementById('audio17').pause();
+        document.getElementById('audio18').pause();
+        document.getElementById('audio19').pause();
+        document.getElementById('audio20').pause();
+        document.getElementById('audio21').pause();
+        document.getElementById('audio22').pause();
+        document.getElementById('audio23').pause();
+        document.getElementById('audio24').pause();
+    }
 
 });

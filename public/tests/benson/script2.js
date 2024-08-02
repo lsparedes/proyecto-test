@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     finishDrawingFromMemoryButton.addEventListener('click', () => {
+        document.getElementById('audio2').pause();
         container2.style.display = 'none';
         finishScreen.style.display = 'block';
 

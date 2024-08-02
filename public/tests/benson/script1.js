@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     finishdrawingwithfigure.addEventListener('click', () => {
+        document.getElementById('audio1').pause();
+        document.getElementById('audio1_2').pause();
         container2.style.display = 'none';
         instruccionesDespues.style.display = 'block';
         endDrawingTime = new Date();
@@ -56,6 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     finishRememberingFigureButton.addEventListener('click', () => {
+        document.getElementById('audio1').pause();
+        document.getElementById('audio1_2').pause();
         instruccionesDespues.style.display = 'none';
         finishScreen.style.display = 'block';
         selectHandContainer.style.display = 'inline-block';

@@ -62,12 +62,19 @@ function startTest(type) {
         const stopImg = document.createElement('img');
         stopImg.src = 'img/detenerr1.png';
         stopImg.classList.add('img-button', 'stop-img', 'hidden');
-        stopImg.addEventListener('click', () => stopRecording(timerSpan, index + 1, itemDiv, type));
+        stopImg.addEventListener('click', () => {
+            stopRecording(timerSpan, index + 1, itemDiv, type);
+            stopAllAudios();
+        });
+    
 
         const nextButton = document.createElement('button');
         nextButton.textContent = '';
         nextButton.classList.add('hidden', 'next-button');
-        nextButton.addEventListener('click', () => stopRecording(timerSpan, index + 1, itemDiv, type));
+        nextButton.addEventListener('click', () => {
+            stopRecording(timerSpan, index + 1, itemDiv, type);
+            stopAllAudios();
+        });
 
         itemDiv.appendChild(titleElement);
         itemDiv.appendChild(audio);
@@ -161,6 +168,7 @@ function startRecording(itemDiv, titleElement, index) {
 }
 
 function stopRecording(timerSpan, index, itemDiv, type) {
+
     if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
         clearInterval(timerInterval);
@@ -299,3 +307,8 @@ function crearZip(type) {
             console.error("Error generando el archivo ZIP:", err);
         });
 }
+
+function stopAllAudios() {
+    const audios = document.querySelectorAll('audio');
+    audios.forEach(audio => audio.pause());
+  }

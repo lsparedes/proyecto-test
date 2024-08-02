@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     startButton2.addEventListener('click', () => {
+        pauseAudios();
         mainScreen2.style.display = 'none';
         finishScreen.style.display = 'block';
         startFinishTimer();
@@ -156,5 +157,9 @@ document.addEventListener('DOMContentLoaded', () => {
             a.click();
             document.body.removeChild(a);
         });
+    }
+
+    function pauseAudios() {
+        document.getElementById('audio1_ejercicio2').pause();
     }
 });

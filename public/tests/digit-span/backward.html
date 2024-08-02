@@ -15,7 +15,7 @@
     <div id="container">
         <div id="welcome-screen">
             <p>Ahora le voy a pedir que me repita unos números, pero en orden inverso a los que yo le digo. Espere hasta que termine de decir los números y después me los repite en orden inverso o al revés. Por ejemplo, si yo le digo 3-7-4, usted me dice 4-7-3. Si yo le digo 7-3 6, ¿qué me diría?.</p>
-            <audio controls>
+            <audio id="audio1" controls>
                 <source src="audio/digit-span-backward.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
@@ -28,7 +28,7 @@
 
         <div id="instruction-screen" class="hidden">
             <p id="instruction">Repita únicamente los números que yo le diga en orden inverso o al revés. Un sonido de alarma le indicará que es momento de iniciar su respuesta.</p>
-            <audio controls>
+            <audio id="audio2" controls>
                 <source src="audio/backward/backward-instructions.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
@@ -50,11 +50,13 @@
     <script src="scripts.js"></script>
     <script>
         document.getElementById('next-button').addEventListener('click', () => {
+            document.getElementById('audio1').pause();
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('instruction-screen').classList.remove('hidden');
         });
 
         document.getElementById('start-button').addEventListener('click', () => {
+            document.getElementById('audio2').pause();
             document.getElementById('instruction-screen').classList.add('hidden');
             document.getElementById('test-items-backward').classList.remove('hidden');
             startTest('backward');
