@@ -221,28 +221,6 @@ audio {
     /* Ajustamos la distancia desde el borde derecho */
 }
 
-#handButton {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('imagenes/flecha3.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 0;
-    /* Elimina el relleno para alinear el icono verticalmente */
-    width: 80px;
-    /* Ajusta el ancho fijo */
-    height: 65px;
-    /* Ajusta la altura fija */
-    vertical-align: middle;
-    /* Alineado verticalmente con el contenido */
-    position: absolute;
-    bottom: 15px;
-    /* Ajustamos la distancia desde la parte inferior */
-    right: 15px;
-    /* Ajustamos la distancia desde el borde derecho */
-}
-
 #enterID {
     display: inline-block;
     background-color: #f9f9f9;

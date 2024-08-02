@@ -238,6 +238,11 @@ function downloadVideo(callback) {
 }
 
 function validateClicks() {
+    fin.style.display = 'block';
+    enterID.style.display = 'none';
+    selectHandContainer.style.display = "none";
+    mainScreen.style.display = 'none';
+    handButton.style.display = 'none';
     let correctClicks = 0;
     let totalErrors = 0;
     let leftClicks = 0;
@@ -289,8 +294,9 @@ function validateClicks() {
     const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
     const testDurationFormatted = testDuration.toLocaleString('es-CL');
     const fechaActual = new Date();
-    const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
-    const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_'); // Reemplaza caracteres no válidos en nombres de archivo
+    const options = { timeZone: 'America/Santiago' };
+    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
     const baseFileName = `resultados_letter_A_${fechaFormateada}`;
 
     let csvContent = 'Descripcion;Valor\n';
@@ -307,15 +313,15 @@ function validateClicks() {
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
             const zip = new JSZip();
-            zip.file(`${baseFileName}.csv`, csvBlob);
-            zip.file(`${baseFileName}.png`, canvasBlob);
-            zip.file(`${baseFileName}.webm`, videoBlob);
+            zip.file(`ID_${participantID}_${baseFileName}.csv`, csvBlob);
+            zip.file(`ID_${participantID}_${baseFileName}.png`, canvasBlob);
+            zip.file(`ID_${participantID}_${baseFileName}.webm`, videoBlob);
             zip.generateAsync({ type: 'blob' }).then(content => {
                 // Define la fecha actual y la formateas
                 const url = URL.createObjectURL(content);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `${baseFileName}.zip`;
+                link.download = `ID_${participantID}_${baseFileName}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -350,40 +356,64 @@ function stopRecording() {
 
 
 // SELECCION DE MANO JS
-
+const fin = document.getElementById('fin');
+const enterID = document.getElementById('enterID');
 const selectHandContainer = document.getElementById("selectHand");
+const participantIDInput = document.getElementById('participantID');
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
 
 // Variable con la mano seleccionada
-let selectedHand = "";
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
+    fin.style.display = 'block';
+    enterID.style.display = 'block';
     selectHandContainer.style.display = "block";
     mainScreen.style.display = 'none';
-
+    handButton.addEventListener('click', function () {
+        stopRecording();
+        validateClicks();
+    });
 }
 
 // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
 // En este caso fue mostrarFinalizacion()
 function confirmHandSelection() {
     selectHandContainer.style.display = "none";
+    fin.style.display = 'none';
+    enterID.style.display = 'none';
     endScreen.style.display = 'block';
-    stopRecording(); // Asegúrate de detener la grabación antes de procesar
-    validateClicks(); // Mueve la validación de clics aquí para asegurar que el ZIP se genere después de parar la grabación
-
 }
+let participantID = 0;
+let selectedHand = "";
+
+// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+// Actualiza el participantID cuando se cambia el input
+participantIDInput.addEventListener('input', (e) => {
+    participantID = e.target.value;
+    validateHandSelection();
+});
 
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 handInputs.forEach((input) => {
     input.addEventListener('change', (e) => {
-        handButton.style.display = "block";
         selectedHand = e.target.value;
+        validateHandSelection();
     });
 });
 
+// Valida que ambos campos estén llenos antes de mostrar el botón
+function validateHandSelection() {
+    if (participantID && selectedHand) {
+        handButton.style.display = "block";
+    } else {
+        handButton.style.display = "none";
+    }
+}
+
 window.confirmHandSelection = confirmHandSelection;
+
 
 nextButton.addEventListener('click', () => {
     showHandSelection();

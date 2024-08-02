@@ -207,7 +207,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showCompletionScreen() {
-
         createZipAndDownload();
     }
 
