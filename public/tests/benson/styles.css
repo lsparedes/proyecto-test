@@ -378,3 +378,17 @@ canvas {
     left: 16vw;
     position: relative;
   }
+
+#end-button {
+    display: none;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 70px;
+    vertical-align: middle;
+}
