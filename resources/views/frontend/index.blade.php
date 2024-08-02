@@ -47,9 +47,8 @@
                             class="card h-100 text-decoration-none ">
 
                             <div class="card-header text-center">
-                                <i class="fas {{ $test->tipoTest->icono }}" data-toggle="tooltip"
-                                    title="{{ $test->tipoTest->icono === 'fa-solid fa-download' ? 'Necesita Descargar' : 'Vista Web' }}"></i>
-                                <p class="card-text"> {{ $test->tipoTest->implementacion}}</p>
+                                
+                                <p class="card-text"> </p>
                             </div>
 
                             <div class="card-body text-center">
@@ -61,7 +60,7 @@
                                     {{ $test->duracion_minutos }} minutos</p>
                                 <div class="card-footer ">
                                     <p class="card-text"><i class="fa-solid fa-globe"></i> Fuente:
-                                        {{ $test->tipoTest->fuente }}</p>
+                                        {{ $test->tipoTest->fuente }} ({{ $test->tipoTest->implementacion}})</p>
                                 </div>
                             </div>
                         </a>

@@ -67,7 +67,7 @@
                             @if (!empty($test->link_millisecond))
                             <div class="col-auto ">
                                 <a href="/{{ $test->link_millisecond }}" target="_blank" class="col" >          
-                                    <button type="button" class="btn btn-outline-light btn-lg btn-block"><i class="fas fa-play"></i> <span>{{$test->nombre_url_opcional}}</span></button>
+                                    <button type="button" class="btn btn-outline-light btn-lg btn-block"><i class="fas fa-play"></i> <span>Reconocimiento</span></button>
                                 </a>
                             </div>
                             @endif
