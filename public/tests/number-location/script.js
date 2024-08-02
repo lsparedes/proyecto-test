@@ -31,6 +31,22 @@ let currentImageIndex = -1;
 let startTime;
 let answers = [];
 let itemStartTime;
+let participantID = '';
+
+document.getElementById('final-button').addEventListener('click', () => {
+    const participantID = document.getElementById('participantID').value.trim();
+    generateCSV(participantID);
+});
+
+document.getElementById('participantID').addEventListener('input', () => {
+    const participantID = document.getElementById('participantID').value.trim();
+    const finalButton = document.getElementById('final-button');
+    if (participantID) {
+        finalButton.style.display = 'block';
+    } else {
+        finalButton.style.display = 'none';
+    }
+});
 
 function showNextImage() {
     currentImageIndex++;
@@ -55,7 +71,6 @@ function showNextImage() {
     } else {
         document.getElementById('test-screen').style.display = 'none';
         document.getElementById('end-screen').style.display = 'block';
-        generateCSV();
     }
 }
 
@@ -101,7 +116,9 @@ function toggleFullScreen() {
     }
 }
 
-function generateCSV() {
+function generateCSV(participantID) {
+    document.getElementById('enterID').style.display = 'none';
+    document.getElementById('final-button').style.display = 'none';
     const endTime = new Date();
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
 
@@ -114,8 +131,10 @@ function generateCSV() {
 
     csvContent += `\nTiempo dedicado (Segundos): ${totalTestTime/1000}\n`;
 
-    const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
-    const filename = `respuestas_number_location_${dateTime}.csv`;
+    const options = { timeZone: 'America/Santiago' };
+    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
+    const filename = `ID_${participantID}_respuestas_number_location_${fechaFormateada}.csv`;
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");

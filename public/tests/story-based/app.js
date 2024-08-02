@@ -234,23 +234,6 @@ document.getElementById('fullscreenButton').addEventListener('click', function (
     }
 });
 
-
-function mostrarFinalizacion() {
-    const imageContainer = document.getElementById('imageContainer');
-    imageContainer.innerHTML = ' <h1>¡Ha completado esta tarea con éxito!</h1> <br> <h1>¡Muchas gracias!</h1>';
-    imageContainer.style.textAlign = 'center';
-    imageContainer.style.fontSize = '40px';
-    imageContainer.style.display = 'flex';
-    imageContainer.style.justifyContent = 'center';
-    imageContainer.style.alignItems = 'center';
-    imageContainer.style.height = '90vh';
-    imageContainer.style.margin = '0';
-    imageContainer.style.backgroundColor = 'transparent';
-    fullscreenButton.style.display = 'none';
-    generarArchivoCSV();
-}
-
-
 function iniciarPresentacion() {
     document.getElementById('instrucciones').pause();
     presentacionIniciada = true;
@@ -304,6 +287,18 @@ function mostrarImagenPrincipal() {
 
 function handleContinueClick() {
     cambiarImagen(); 
+}
+
+document.getElementById('participantID').addEventListener('input', validateInputs);
+let participantID = 0;
+
+function validateInputs() {
+    participantID = document.getElementById('participantID').value;
+    selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+    
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    } 
 }
 
 
@@ -440,10 +435,10 @@ function cambiarImagen(selectedOptionIndex) {
     }
 }
 
-
-
 // Función para generar el archivo CSV al finalizar el test
 function generarArchivoCSV() {
+    selectHandContainer.style.display = "none";
+    enterID.style.display = 'none';
     if (respuestasSeleccionadas.length === 0) {
         console.log('No hay respuestas seleccionadas.');
         return;
@@ -466,6 +461,8 @@ function generarArchivoCSV() {
         csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa}\n`;
     });
 
+    
+
     csvContent += `\n\nTiempo dedicado (segundos): ${totalTestTime/1000}\n`;
     csvContent += `Mano utilizada: ${selectedHand}\n`;
 
@@ -473,26 +470,30 @@ function generarArchivoCSV() {
 
     // Obtener la fecha y la hora actuales
     const fechaActual = new Date();
-    const año = fechaActual.getFullYear();
-    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-    const dia = String(fechaActual.getDate()).padStart(2, '0');
-    const horas = String(fechaActual.getHours()).padStart(2, '0');
-    const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
-    // Formatear la fecha y la hora
-    const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}`;
+    const options = { timeZone: 'America/Santiago' };
+    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
 
     // Crear un enlace de descarga para el archivo CSV
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `respuestas_story_based_${fechaHoraFormateada}.csv`;
+    a.download = `ID_${participantID}_respuestas_story_based_${fechaFormateada}.csv`;
     a.click();
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URLr un blob a partir del contenido del CSV
 
 }
+function verificarCamposCompletos() {
+    const participantID = document.getElementById('participantID').value;
+    const selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
-
-
+    // Solo mostrar el botón si ambos campos están completos
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    } else {
+        handButton.style.display = 'none';
+    }
+}
 
 function mostrarInstrucciones() {
     const imageContainer = document.getElementById('imageContainer');
@@ -518,24 +519,42 @@ mostrarImagen(indiceActual); // Mostrar la primera imagen al cargar la página
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
+const fin = document.getElementById('fin');
+const enterID = document.getElementById('enterID');
 
 // Variable con la mano seleccionada
 let selectedHand = "";
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
+    fin.style.display = 'block';
     selectHandContainer.style.display = "block";
+    enterID.style.display = 'block';
+
+    handButton.addEventListener('click', function () {
+        generarArchivoCSV();
+    });
 }
 
 function confirmHandSelection() {
     selectHandContainer.style.display = "none";
-    mostrarFinalizacion();
+    generarArchivoCSV();
 }
 
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
-handInputs.forEach((input) => {
-    input.addEventListener('change', (e) => {
-        handButton.style.display = "block";
-        selectedHand = e.target.value;
-    });
+handInputs.forEach(input => {
+    input.addEventListener('change', verificarCamposCompletos);
 });
+
+function verificarCamposCompletos() {
+    const participantID = document.getElementById('participantID').value;
+    const selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+    // Solo mostrar el botón si ambos campos están completos
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    } else {
+        handButton.style.display = 'none';
+    }
+}
+
