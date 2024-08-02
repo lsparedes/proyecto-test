@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let fecha = new Date();
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
-    
+    let año = fecha.getFullYear();
+
 
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishdrawingwithfigure = document.getElementById('finish-drawing-with-figure');
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectHandContainer = document.getElementById("selectHand");
     const handInputs = document.getElementsByName('hand');
     const enterID = document.getElementById('enterID');
+    const DownloadButton = document.getElementById('download');
 
     enterContainer2(); 
     initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
@@ -67,20 +69,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('audio1_2').pause();
         instruccionesDespues.style.display = 'none';
         finishScreen.style.display = 'block';
-        selectHandContainer.style.display = 'inline-block';
+        selectHandContainer.style.display = 'block';
         enterID.style.display = 'inline-block';
+        DownloadButton.style.display = 'block';
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
         startFinishTimer();
     });
 
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-        }
-    });
 
-    document.getElementById('participantID').addEventListener('input', validateInputs);
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        GenerateZIP();
+    });
     
     handInputs.forEach(input => {
         input.addEventListener('change', () => {
@@ -93,19 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
-        if (participantID && selectedHand) {
-            document.getElementById('end-button').style.display = "block";
-        }
         console.log("ID del participante: ", participantID);
         console.log("Mano seleccionada: ", selectedHand);
     }
-
-    document.getElementById('end-button').addEventListener('click', () => {
-        GenerateZIP();
-        document.getElementById('end-button').style.display = "none";
-        document.getElementById('finishScreen').style.display = "none";
-        document.getElementById('thanksScreen').style.display = "block";
-    });
 
     function setCanvasBackground(canvas, color) {
         const ctx = canvas.getContext('2d');
@@ -257,10 +248,11 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     function generateCSV() {
+
         let csvContent = "data:text/csv;charset=utf-8,";
         csvContent += "Actividad,Tiempo de inicio,Tiempo de Termino,Comenzó a dibujar,Terminó de dibujar,Mano Seleccionada\n";
-        csvContent += `DrawWithFigure,${startTimeExecution ? formatDate(startTimeExecution) : ''},${endTimeExecution ? formatDate(endTimeExecution) : ''},${startDrawingTime ? formatDate(startDrawingTime) : ''},${endDrawingTime ? formatDate(endDrawingTime) : ''},${selectedHand ? selectedHand : ''}\n`;
-    
+        csvContent += `DrawWithFigure,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${formatDate(startDrawingTime)},${formatDate(endDrawingTime)},${selectedHand}\n`;
+
         return csvContent;
     }
 
@@ -292,6 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
 
     async function GenerateZIP() {
         if (typeof JSZip === 'undefined') {
@@ -310,44 +303,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const canvasImage = canvas.toDataURL('image/png').split(',')[1];
         zip.file('Draw_With_figure.png', canvasImage, { base64: true });
     
-        // Añadir video del canvas al ZIP (solo si se ha grabado)
+        // Añadir video del canvas al ZIP
         try {
             const blob = await stopCanvasRecording();
-            if (blob) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    zip.file('DrawWithFigure.webm', reader.result.split(',')[1], { base64: true });
-                    zip.generateAsync({ type: 'blob' }).then((content) => {
-                        const link = document.createElement('a');
-                        link.href = URL.createObjectURL(content);
-                        link.download = `${participantID}-Benson_Draw_With_Figure-${diaStr}-${mesStr}.zip`;
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    });
-                };
-                reader.readAsDataURL(blob);
-            } else {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                zip.file('DrawWithFigure.webm', reader.result.split(',')[1], { base64: true });
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `${participantID}-Benson_Draw_With_Figure-${diaStr}-${mesStr}.zip`;
+                    link.download = `ID-${participantID}-Benson_Draw_With_Figure-${diaStr}-${mesStr}-${añoStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                 });
-            }
+            };
+            reader.readAsDataURL(blob);
         } catch (error) {
             console.error(`Error stopping canvas recording: ${error}`);
-            // Si hay un error, simplemente no se adjunta la grabación
-            zip.generateAsync({ type: 'blob' }).then((content) => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(content);
-                link.download = `${participantID}-Benson_Draw_With_Figure-${diaStr}-${mesStr}.zip`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
         }
     }
     

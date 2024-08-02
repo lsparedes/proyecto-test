@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainScreen = document.getElementById('main-screen');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const startButton = document.getElementById('startButton');
-
+    const DownloadButton = document.getElementById('download');
     // ENSAYO 1
     const wordsScreen = document.getElementById('words');
     const NXButton = document.getElementById('nxbutton');
@@ -45,6 +45,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioChunks = [];
     let startTime = new Date();
     let finishTime;
+    let fecha = new Date();
+
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
+
 
     // An array to hold all the audio files to be zipped
     const audioFiles = [];
@@ -108,10 +114,16 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         endScreen.style.display = 'none';
         enterID.style.display = 'inline-block';
+        DownloadButton.style.display = 'block';
         finishScreen.style.display = 'block';
         finishTime = new Date();
         console.log(`${finishTime}`);
         startFinishTimer();
+    });
+
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        downloadZip();
     });
 
     audio2.addEventListener('ended', () => {
@@ -220,19 +232,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const csvContent = `Start Time,Finish Time,Time Spent (HH:MM:SS)\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
         return csvContent;
     }
-
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-            downloadZip();
-        }
-    });
     
     let participantID = 0;
     
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
     }
+
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
     
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
@@ -255,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `HVLT-R RecuerdoLibreInmediato-${participantID}.zip`;
+            a.download = `ID-${participantID}_HVLT-R_Inmediato-${diaStr}-${mesStr}-${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

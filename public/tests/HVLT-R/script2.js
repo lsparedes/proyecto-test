@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const startRecordingButton4 = document.getElementById('startRecordingButton4');
     const stopRecordingButton4 = document.getElementById('stopRecordingButton4');
     const enterID = document.getElementById('enterID');
+    const DownloadButton = document.getElementById('download');
+
     let mediaRecorder;
     let audioChunks = [];
     let recordingInterval;
@@ -15,6 +17,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime = new Date();
     let finishTime;
     let audioBlob;  // Guardar el audioBlob aquí para uso posterior
+    let fecha = new Date();
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
+
     const audioFiles = [];
 
     fullscreenButton.addEventListener('click', () => {
@@ -31,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         mainScreen2.style.display = 'none';
         finishScreen.style.display = 'block';
+        enterID.style.display = 'inline-block';
+        DownloadButton.style.display = 'block';
         startFinishTimer();
     });
 
@@ -51,8 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
         finishScreen.style.display = 'block';
         enterID.style.display = 'inline-block';
         startRecordingButton4.style.display = 'none';
+        DownloadButton.style.display = 'block';
         stopRecording();
         finishTime = new Date();
+    });
+
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        generateZip();
     });
 
     function startRecording(fileName) {
@@ -118,18 +133,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
 
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-            generateZip();
-        }
-    });
 
     let participantID = 0;
 
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
     }
+
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
 
     function generateZip() {
         if (typeof JSZip === 'undefined') {
@@ -152,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `HVLT-R RecuerdoLibreDiferido-${participantID}.zip`;
+            a.download = `ID-${participantID}_HVLT-R_Diferido-${diaStr}-${mesStr}-${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
