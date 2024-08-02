@@ -12,6 +12,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentAudioIndex = 0;
     let startTime = new Date();  // Guardar la hora de inicio automáticamente al cargar la página
     let finishTime;
+
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
+
     const correctAnswers = {
         1: 'si', 2: 'no', 3: 'si', 4: 'no', 5: 'no', 6: 'no', 7: 'si', 8: 'si', 9: 'si', 10: 'no', 11: 'no', 12: 'si',
         13: 'si', 14: 'no', 15: 'si', 16: 'no', 17: 'si', 18: 'no', 19: 'no', 20: 'si', 21: 'no', 22: 'si', 23: 'si', 24: 'no'
@@ -119,6 +124,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
     }
+
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
     
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
@@ -137,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `HVLT-R Reconocimiento-${participantID}.zip`;
+            a.download = `ID-${participantID}-HVLT-R Reconocimiento-${diaStr}-${mesStr}-${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

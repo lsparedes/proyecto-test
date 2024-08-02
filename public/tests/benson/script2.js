@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let fecha = new Date();
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
     //Botones
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishDrawingFromMemoryButton = document.getElementById('finish-drawing-from-memory');
@@ -240,6 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
 
     async function GenerateZIP() {
         if (typeof JSZip === 'undefined') {
@@ -267,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `${participantID}-Benson_Draw_From_Memory_Figure-${diaStr}-${mesStr}.zip`;
+                    link.download = `ID-${participantID}-Benson_Draw_From_Memory_Figure-${diaStr}-${mesStr}-${añoStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);

@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let fecha = new Date();
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishIdentifyingFigureButton = document.getElementById('finish-identifying-figure');
 
@@ -103,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
 
     async function GenerateZIP() {
         if (typeof JSZip === 'undefined') {
@@ -125,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(function(content) {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
-                a.download = `${participantID}-Benson_Identifying_Figure-${diaStr}-${mesStr}.zip`;
+                a.download = `ID-${participantID}-Benson_Identifying_Figure-${diaStr}-${mesStr}-${añoStr}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);

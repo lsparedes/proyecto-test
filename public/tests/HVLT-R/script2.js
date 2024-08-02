@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime = new Date();
     let finishTime;
     let audioBlob;  // Guardar el audioBlob aquí para uso posterior
+
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
+
     const audioFiles = [];
 
     fullscreenButton.addEventListener('click', () => {
@@ -131,6 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
         participantID = document.getElementById('participantID').value;
     }
 
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
+
     function generateZip() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
@@ -152,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `HVLT-R RecuerdoLibreDiferido-${participantID}.zip`;
+            a.download = `ID-${participantID}-HVLT-R RecuerdoLibreDiferido-${diaStr}-${mesStr}-${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

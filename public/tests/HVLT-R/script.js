@@ -46,6 +46,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime = new Date();
     let finishTime;
 
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
+
+
     // An array to hold all the audio files to be zipped
     const audioFiles = [];
 
@@ -233,6 +238,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
     }
+
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
     
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
@@ -255,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `HVLT-R RecuerdoLibreInmediato-${participantID}.zip`;
+            a.download = `ID-${participantID}-HVLT-R RecuerdoLibreInmediato-${diaStr}-${mesStr}-${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
