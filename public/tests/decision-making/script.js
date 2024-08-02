@@ -129,15 +129,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   
     function resetSlotMachines() {
-      leftSlot.src = 'slot-machine-left-up.png';
-      rightSlot.src = 'slot-machine-right-up.png';
+      leftSlot.src = 'img/slot-machine-left-up.png';
+      rightSlot.src = 'img/slot-machine-right-up.png';
     }
   
     function selectMachine(side) {
       if (side === 'left') {
-        leftSlot.src = 'slot-machine-left-down.png';
+        leftSlot.src = 'img/slot-machine-left-down.png';
       } else {
-        rightSlot.src = 'slot-machine-right-down.png';
+        rightSlot.src = 'img/slot-machine-right-down.png';
       }
   
       setTimeout(() => {
@@ -148,8 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function showFeedback(side) {
       const trial = trials[currentTrial];
       const reward = trial[`${side}Reward`];
-      feedbackImage1.src = reward ? 'win.jpg' : 'lose.jpg';
-      feedbackImage2.src = reward ? '5000.png' : '1000.png';
+      feedbackImage1.src = reward ? 'img/win.jpg' : 'img/lose.jpg';
+      feedbackImage2.src = reward ? 'img/5000.png' : 'img/1000.png';
       feedbackMessage.innerText = reward ? '¡Ganaste!' : '¡Perdiste!';
       score += reward ? 5000 : -1000;
       scoreAmount.innerText = `$${score}`;

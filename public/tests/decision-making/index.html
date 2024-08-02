@@ -10,9 +10,13 @@
 <body>
   <div id="instructions" class="container">
     <p>En este experimento verás aparecer dos máquinas tragamonedas en la pantalla y deberás seleccionar una de ellas...</p>
+    <audio controls id="instructionAudio">
+      <source src="camel-cactus.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+  </audio>
     <div class="button-container">
-      <button id="startPracticeButton" class="start-button">Comenzar Práctica</button>
-      <button id="fullscreenButton" class="fullscreen-button">Pantalla Completa</button>
+      <button id="startPracticeButton" class="start-button"></button>
+      <button id="fullscreenButton" class="fullscreen-button"></button>
     </div>
   </div>
 
@@ -23,11 +27,11 @@
       <div class="container">
         <div class="row">
           <div class="col-5">
-            <img id="leftSlot" src="slot-machine-left-up.png" class="slot-machine" alt="Máquina tragamonedas izquierda">
+            <img id="leftSlot" src="img/slot-machine-left-up.png" class="slot-machine" alt="Máquina tragamonedas izquierda">
           </div>
           <div class="col-2"></div>
           <div class="col-5">
-            <img id="rightSlot" src="slot-machine-right-up.png" class="slot-machine" alt="Máquina tragamonedas derecha">
+            <img id="rightSlot" src="img/slot-machine-right-up.png" class="slot-machine" alt="Máquina tragamonedas derecha">
           </div>
         </div>
       </div>
