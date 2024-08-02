@@ -245,23 +245,20 @@ document.addEventListener('DOMContentLoaded', () => {
       + "\n"
       + "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
       + "Mano Utilizada: " + selectedHand + "\n";
-
+  
     // Obtener la fecha y hora actuales
     const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
     const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
-
-    // Formatear la fecha y hora para el nombre del archivo
-    const dateTime = `${year}${month}${day}_${hours}${minutes}${seconds}`;
-
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+  
+    // Formatear la fecha para el nombre del archivo
+    const date = `${day}_${month}_${year}`;
+  
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${participantID}_resultados_metacognicion_${dateTime}.csv`);
+    link.setAttribute("download", `${participantID}_metacognicion_${date}.zip`);
     document.body.appendChild(link);
     link.click();
   }
