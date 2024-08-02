@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         + headers.join(";") + "\n"
         + rows.map(e => e.join(";")).join("\n");
         const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        const fileName = `CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
+        const fileName = `ID_${participantID}_CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
         saveAs(csvContent, fileName);
         // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
         // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -420,15 +420,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Variable con la mano seleccionada
     let selectedHand = "";
+    let participantID = 0;
 
     // Funcion para mostrar la pantalla de seleccion de mano
     function showHandSelection() {
+        document.getElementById("preEnd").style.display = 'block';
         selectHandContainer.style.display = "block";
     }
-
+    
     // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
     // En este caso fue mostrarFinalizacion()
     function confirmHandSelection() {
+        document.getElementById("preEnd").style.display = 'none';
         selectHandContainer.style.display = "none";
         endGame();
     }
@@ -436,10 +439,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
     handInputs.forEach((input) => {
         input.addEventListener('change', (e) => {
-            handButton.style.display = "block";
+            validateInputs();
             selectedHand = e.target.value;
         });
     });
+
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+
+    document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+    
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+    
+        if (participantID && selectedHand) {
+            handButton.style.display = 'block';
+        }
+    }
 
     window.confirmHandSelection = confirmHandSelection;
 });

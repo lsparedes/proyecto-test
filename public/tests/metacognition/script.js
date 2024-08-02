@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `resultados_metacognicion_${dateTime}.csv`);
+    link.setAttribute("download", `ID_${participantID}_resultados_metacognicion_${dateTime}.csv`);
     document.body.appendChild(link);
     link.click();
   }
@@ -494,26 +494,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Variable con la mano seleccionada
   let selectedHand = "";
+  let participantID = 0;
 
   // Funcion para mostrar la pantalla de seleccion de mano
   function showHandSelection() {
-      selectHandContainer.style.display = "block";
-  }
+    document.getElementById("preEnd").style.display = 'block';
+    selectHandContainer.style.display = "block";
+}
 
-  // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
-  // En este caso fue mostrarFinalizacion()
-  function confirmHandSelection() {
-      selectHandContainer.style.display = "none";
+// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+// En este caso fue mostrarFinalizacion()
+function confirmHandSelection() {
+    document.getElementById("preEnd").style.display = 'none';
+    selectHandContainer.style.display = "none";
       endGame();
   }
 
   // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
   handInputs.forEach((input) => {
       input.addEventListener('change', (e) => {
-          handButton.style.display = "block";
+          validateInputs();
           selectedHand = e.target.value;
       });
   });
+ 
+document.getElementById('participantID').addEventListener('input', validateInputs);
+
+document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
+function validateInputs() {
+    participantID = document.getElementById('participantID').value;
+    selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    }
+}
 
   window.confirmHandSelection = confirmHandSelection;
 });

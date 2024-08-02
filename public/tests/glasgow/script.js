@@ -142,6 +142,7 @@ function nextImage() {
 }
 
 function endTest() {
+    document.getElementById("preEnd").style.display = 'none';
     document.getElementById('end-screen').style.display = 'block';
     generarCSV();
 }
@@ -173,7 +174,7 @@ function generarCSV() {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     if (link.download !== undefined) {
-        const nombreArchivo = `respuestas_glasgow_face_matching_${fechaFormateada}.csv`;
+        const nombreArchivo = `ID_${participantID}_respuestas_glasgow_face_matching_${fechaFormateada}.csv`;
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
         link.setAttribute('download', nombreArchivo);
@@ -192,9 +193,11 @@ const handInputs = document.getElementsByName('hand');
 
 // Variable con la mano seleccionada
 let selectedHand = "";
+let participantID = 0;
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
+    document.getElementById("preEnd").style.display = 'block';
     selectHandContainer.style.display = "block";
 }
 
@@ -208,7 +211,20 @@ function confirmHandSelection() {
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 handInputs.forEach((input) => {
     input.addEventListener('change', (e) => {
-        handButton.style.display = "block";
+        validateInputs();
         selectedHand = e.target.value;
     });
 });
+
+document.getElementById('participantID').addEventListener('input', validateInputs);
+
+document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
+function validateInputs() {
+    participantID = document.getElementById('participantID').value;
+    selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+    if (participantID && selectedHand) {
+        handButton.style.display = 'block';
+    }
+}
