@@ -174,7 +174,7 @@ function generarCSV() {
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     if (link.download !== undefined) {
-        const nombreArchivo = `ID_${participantID}_respuestas_glasgow_face_matching_${fechaFormateada}.csv`;
+        const nombreArchivo = `${participantID}_respuestas_glasgow_face_matching_${fechaFormateada}.csv`;
         const url = URL.createObjectURL(blob);
         link.setAttribute('href', url);
         link.setAttribute('download', nombreArchivo);

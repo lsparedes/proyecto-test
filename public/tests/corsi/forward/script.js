@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
         + headers.join(";") + "\n"
         + rows.map(e => e.join(";")).join("\n");
         const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        const fileName = `ID_${participantID}_CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
+        const fileName = `${participantID}_CorsiForwardTest_${date.replace(/[:\/, ]/g, "_")}.csv`;
         saveAs(csvContent, fileName);
         // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
         // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });

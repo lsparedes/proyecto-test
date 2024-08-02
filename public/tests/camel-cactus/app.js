@@ -515,13 +515,13 @@ function generarArchivoRespuestasCSV() {
     const segundos = String(fechaActual.getSeconds()).padStart(2, '0');
 
     // Formatear la fecha y la hora
-    const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
+    const fechaHoraFormateada = `${dia}_${mes}_${año}`;
 
     // Crear un enlace de descarga para el archivo CSV
     const url = URL.createObjectURL(csvBlob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ID_${participantID}_respuestas_12_camel_${fechaHoraFormateada}.csv`;
+    a.download = `${participantID}_modifiedCamelAndCactus_${fechaHoraFormateada}.csv`;
     a.click();
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
 }

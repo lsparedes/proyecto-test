@@ -238,6 +238,7 @@ window.onload = function () {
 
         setTimeout(() => {
             const zip = new JSZip();
+            const date = new Date();
 
             // Añadir los videos grabados al ZIP
             zip.file("canvasPractice-recording.webm", new Blob(practiceRecordedChunks, { type: 'video/webm' }));
@@ -245,7 +246,7 @@ window.onload = function () {
 
             // Generar y añadir el archivo CSV al ZIP
             const csvContent = generateCSV(data);
-            zip.file("test_result_TMT_part_A.csv", csvContent);
+            zip.file(`${participantID}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}`, csvContent);
 
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
@@ -256,7 +257,7 @@ window.onload = function () {
 
                     // Generar el archivo ZIP y descargar
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `${participantID}_metricsDesignFluency.zip`);
+                        saveAs(content, `${participantID}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
                     });
                 });
             });

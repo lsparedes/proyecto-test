@@ -470,15 +470,16 @@ function generarArchivoCSV() {
 
     // Obtener la fecha y la hora actuales
     const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago' };
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric'  };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
 
     // Crear un enlace de descarga para el archivo CSV
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `ID_${participantID}_respuestas_story_based_${fechaFormateada}.csv`;
+    a.download = `${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.csv`;
     a.click();
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URLr un blob a partir del contenido del CSV
 

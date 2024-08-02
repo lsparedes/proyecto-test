@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `ID_${participantID}_resultados_metacognicion_${dateTime}.csv`);
+    link.setAttribute("download", `${participantID}_resultados_metacognicion_${dateTime}.csv`);
     document.body.appendChild(link);
     link.click();
   }

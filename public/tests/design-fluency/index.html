@@ -88,32 +88,30 @@
       <button id="endTestButton" class="finish-button"></button>
     </div>
 
-    <div class="container-fluid">
-      <div class="row justify-content-center">
-        <div class="col-md-4">
-          <div id="enterID" class="card opacity-75" style="display: none;">
-            <div class="card-body">
-              <h4>Indique el ID del participante</h4>
-              <input type="number" id="participantID" class="form-control">
-            </div>
+    <div class="container-fluid d-flex justify-content-center">
+      <div class="row justify-content-center" style="position: absolute; bottom: 15px;">
+        <div id="enterID" class="card opacity-75 col-md-4 me-3 p-3"
+          style="display: none; width: 35%; background-color: #f9f9f9;">
+          <div class="card-body">
+            <h4>Indique el ID del participante</h4>
+            <input type="number" id="participantID" class="form-control">
           </div>
         </div>
-        <div class="col-md-4">
-          <div id="selectHand" class="card opacity-75" style="display: none;">
-            <div class="card-body" style="padding: 0;">
-              <h4>Indique con qué mano el participante respondió el test</h4>
-              <div>
-                <input type="radio" id="right_hand" name="hand" value="derecha">
-                <label for="right_hand">Derecha</label>
-              </div>
-              <div>
-                <input type="radio" id="left_hand" name="hand" value="izquierda">
-                <label for="left_hand">Izquierda</label>
-              </div>
-              <div>
-                <input type="radio" id="both_hands" name="hand" value="ambas">
-                <label for="both_hands">Ambas</label>
-              </div>
+        <div id="selectHand" class="card opacity-75 col-md-4 ms-3 p-3"
+          style="display: none; width: 35%; background-color: #f9f9f9;">
+          <div class="card-body" style="padding: 0;">
+            <h4>Indique con qué mano el participante respondió el test</h4>
+            <div>
+              <input type="radio" id="right_hand" name="hand" value="derecha">
+              <label for="right_hand">Derecha</label>
+            </div>
+            <div>
+              <input type="radio" id="left_hand" name="hand" value="izquierda">
+              <label for="left_hand">Izquierda</label>
+            </div>
+            <div>
+              <input type="radio" id="both_hands" name="hand" value="ambas">
+              <label for="both_hands">Ambas</label>
             </div>
           </div>
         </div>

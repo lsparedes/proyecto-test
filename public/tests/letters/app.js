@@ -313,15 +313,15 @@ function validateClicks() {
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
             const zip = new JSZip();
-            zip.file(`ID_${participantID}_${baseFileName}.csv`, csvBlob);
-            zip.file(`ID_${participantID}_${baseFileName}.png`, canvasBlob);
-            zip.file(`ID_${participantID}_${baseFileName}.webm`, videoBlob);
+            zip.file(`${participantID}_${baseFileName}.csv`, csvBlob);
+            zip.file(`${participantID}_${baseFileName}.png`, canvasBlob);
+            zip.file(`${participantID}_${baseFileName}.webm`, videoBlob);
             zip.generateAsync({ type: 'blob' }).then(content => {
                 // Define la fecha actual y la formateas
                 const url = URL.createObjectURL(content);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `ID_${participantID}_${baseFileName}.zip`;
+                link.download = `${participantID}_${baseFileName}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

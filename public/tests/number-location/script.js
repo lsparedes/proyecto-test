@@ -131,10 +131,11 @@ function generateCSV(participantID) {
 
     csvContent += `\nTiempo dedicado (Segundos): ${totalTestTime/1000}\n`;
 
-    const options = { timeZone: 'America/Santiago' };
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric'  };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
-    const filename = `ID_${participantID}_respuestas_number_location_${fechaFormateada}.csv`;
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
+    const filename = `${participantID}_VisualObjectSpacePerception_${fechaFormateada}.csv`;
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
