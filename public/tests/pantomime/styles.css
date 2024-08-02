@@ -180,40 +180,6 @@ button:not(:disabled):active {
     display: none;
 }
 
-#selectHand {
-    display: none;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#selectHand.screen.active {
-    display: block;
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-#selectHand h4 {
-    margin-bottom: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-}
-
-#selectHand label {
-    font-weight: bold;
-    margin-bottom: 15px;
-}
-
-#selectHand input[type="radio"] {
-    margin-right: 10px;
-}
-
 #test-image {
     width: 35%;
     height: auto;
@@ -261,4 +227,18 @@ button:not(:disabled):active {
 
 #completion-screen {
     text-align: center;
+}
+
+#enterID,#selectHand {
+    display: inline-block;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    bottom: 15px;
+    height: 30%;
+    width: 25%;
+    margin: 0 !important;
 }
