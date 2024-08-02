@@ -7,11 +7,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const audioItems = document.querySelectorAll('.audio-item');
     const NXButton = document.getElementById('nxbutton');
     const enterID = document.getElementById('enterID');
-
+    const DownloadButton = document.getElementById('download');
     let answers = {};
     let currentAudioIndex = 0;
     let startTime = new Date();  // Guardar la hora de inicio automáticamente al cargar la página
     let finishTime;
+    let fecha = new Date();
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    let año = fecha.getFullYear();
+
     const correctAnswers = {
         1: 'si', 2: 'no', 3: 'si', 4: 'no', 5: 'no', 6: 'no', 7: 'si', 8: 'si', 9: 'si', 10: 'no', 11: 'no', 12: 'si',
         13: 'si', 14: 'no', 15: 'si', 16: 'no', 17: 'si', 18: 'no', 19: 'no', 20: 'si', 21: 'no', 22: 'si', 23: 'si', 24: 'no'
@@ -49,8 +54,14 @@ document.addEventListener('DOMContentLoaded', () => {
         audioContainer.style.display = 'none';
         enterID.style.display = 'inline-block';
         finishScreen.style.display = 'block';
+        DownloadButton.style.display = 'block'
         finishTime = new Date();
         console.log(`${finishTime}`);
+    });
+    
+    DownloadButton.addEventListener('click', () => {
+        validateInputs();
+        downloadZip();
     });
 
     document.querySelectorAll('.option-btn').forEach(button => {
@@ -106,19 +117,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
     
-
-    document.getElementById('participantID').addEventListener('keyup', (event) => {
-        if (event.key === 'Enter') {
-            validateInputs();
-            downloadZip();
-        }
-    });
-    
     let participantID = 0;
     
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
     }
+
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+    let añoStr = año.toString().padStart(4, '0');
     
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
@@ -137,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `HVLT-R Reconocimiento-${participantID}.zip`;
+            a.download = `ID-${participantID}_HVLT-R_Reconocimiento-${diaStr}-${mesStr}-${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

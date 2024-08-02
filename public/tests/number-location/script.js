@@ -131,7 +131,8 @@ function generateCSV(participantID) {
 
     csvContent += `\nTiempo dedicado (Segundos): ${totalTestTime/1000}\n`;
 
-    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric'  };
+    const options = { timeZone: 'America/Santiago' };
+    const fechaActual = new Date(); // Declarar e inicializar la variable fechaActual
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;

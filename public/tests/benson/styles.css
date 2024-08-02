@@ -283,7 +283,8 @@ canvas {
 #finish-drawing-with-figure,
 #finish-drawing-from-memory,
 #finish-identifying-figure,
-#handButton {
+#handButton,
+#download {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -337,17 +338,18 @@ canvas {
 /* SELECCION DE MANO CSS */
 
 #selectHand {
+    display: none;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    height: 30%;
-    width: 30%;
-    top: 43vh;
-    right: 16vw;
-    position: relative;
+    position: absolute;
+    bottom: 15px;
+    height: 20%;
+    width: 25%;
   }
+  
   
   #selectHand h4 {
     margin-bottom: 20px;
@@ -365,16 +367,16 @@ canvas {
     margin-right: 10px;
   }
 
-#enterID{
+  #enterID{
+    display: inline-block;
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    height: 30%;
-    width: 30%;
+    position: absolute;
+    bottom: 15px;
+    height: 20%;
+    width: 25%;
     margin: 0 !important;
-    top: 58vh;
-    left: 16vw;
-    position: relative;
   }
