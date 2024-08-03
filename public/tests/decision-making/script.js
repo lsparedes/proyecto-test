@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   let currentTrial = 0;
-  const cantidad_ensayos_prueba = 10;
-  const cantidad_ensayos_bloque_1 = 20;
-  const cantidad_ensayos_bloque_2 = 20;
-  const cantidad_ensayos_bloque_3 = 20;
+  const cantidad_ensayos_prueba = 2;
+  const cantidad_ensayos_bloque_1 = 2;
+  const cantidad_ensayos_bloque_2 = 2;
+  const cantidad_ensayos_bloque_3 = 2;
   let trials = [];
   let startTime;
   let results = [];
@@ -18,8 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const feedbackImage1 = document.getElementById('feedbackImage1');
   const feedbackImage2 = document.getElementById('feedbackImage2');
   const feedbackMessage = document.getElementById('feedbackMessage');
-  const blockFinishScreen = document.getElementById('blockFinishScreen');
-  const blockFinishMessage = document.getElementById('blockFinishMessage');
   const endScreen = document.getElementById('endScreen');
   const leftSlot = document.getElementById('leftSlot');
   const rightSlot = document.getElementById('rightSlot');
@@ -50,11 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
   });
 
-  document.getElementById('startNextBlockButton').addEventListener('click', () => {
-      currentBlock++;
-      startTestBlock();
-  });
-
   document.getElementById('downloadResultsButton').addEventListener('click', () => {
       downloadResults();
   });
@@ -74,7 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
       currentTrial = 0;
       trials = generateTestTrials(currentBlock);
       startTime = Date.now();
-      blockFinishScreen.style.display = 'none';
       practiceTrial.style.display = 'block';
       showNextTrial();
   }
@@ -84,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const trial = trials[currentTrial];
       trialIndicator.innerText = practiceMode ? `P${currentTrial + 1}` : `E${currentTrial + 1}`;
       feedbackScreen.style.display = 'none';
-      blockFinishScreen.style.display = 'none';
       endScreen.style.display = 'none';
       resetSlotMachines();
       practiceTrial.style.display = 'block';
@@ -94,24 +85,23 @@ document.addEventListener('DOMContentLoaded', () => {
       practiceTrial.style.display = 'none';
       feedbackScreen.style.display = 'none';
       if (practiceMode) {
-          blockFinishMessage.innerText = "Práctica completada";
-          blockFinishScreen.style.display = 'block';
-          document.getElementById('startNextBlockButton').style.display = 'block';
+          console.log("Práctica completada");
+          currentBlock = 1; // Ir al siguiente bloque
+          startTestBlock();
       } else {
           switch (currentBlock) {
-              case 0:
-                  blockFinishMessage.innerText = "Bloque de práctica completado";
-                  blockFinishScreen.style.display = 'block';
-                  break;
               case 1:
-                  blockFinishMessage.innerText = "Bloque 1 completado";
-                  blockFinishScreen.style.display = 'block';
+                  console.log("Bloque 1 completado");
+                  currentBlock = 2;
+                  startTestBlock();
                   break;
               case 2:
-                  blockFinishMessage.innerText = "Bloque 2 completado";
-                  blockFinishScreen.style.display = 'block';
+                  console.log("Bloque 2 completado");
+                  currentBlock = 3;
+                  startTestBlock();
                   break;
               case 3:
+                  console.log("Bloque 3 completado");
                   endScreen.style.display = 'block';
                   break;
           }
