@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   let currentTrial = 0;
-  const cantidad_ensayos_prueba = 10; // Ajusta este valor según sea necesario
-  const cantidad_ensayos_bloque_1 = 20;
-  const cantidad_ensayos_bloque_2 = 20;
-  const cantidad_ensayos_bloque_3 = 20;
+  const cantidad_ensayos_prueba = 2; // Ajusta este valor según sea necesario
+  const cantidad_ensayos_bloque_1 = 2;
+  const cantidad_ensayos_bloque_2 = 2;
+  const cantidad_ensayos_bloque_3 = 2;
   let trials = [];
   let startTime;
   let results = [];
@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let currentBlock = 0; // Track the current block
   let selectionTimeout;
   let caseOption; // Variable to track which case (A or B) is selected
+  let totalStartTime; // To track total time from start to thank you screen
 
   const trialIndicator = document.getElementById('trialIndicator');
   const practiceTrial = document.getElementById('practiceTrial');
@@ -29,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const scoreAmount = document.getElementById('scoreAmount');
 
   document.getElementById('startPracticeButton').addEventListener('click', () => {
+      totalStartTime = Date.now(); // Start the total time counter
       startPractice();
   });
 
@@ -42,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!selectionMade) {
           selectionMade = true;
           clearTimeout(selectionTimeout); // Clear the timeout if selection is made
-          selectMachine('left');
+          selectMachine('Izquierda');
       }
   });
 
@@ -50,20 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!selectionMade) {
           selectionMade = true;
           clearTimeout(selectionTimeout); // Clear the timeout if selection is made
-          selectMachine('right');
+          selectMachine('Derecha');
       }
   });
 
   document.getElementById('startBlock1Button').addEventListener('click', () => {
       intermediateScreen.style.display = 'none';
       currentBlock = 1;
-      caseOption = Math.random() < 0.5 ? 'A (Bloque 1: Izquierda 75%, Derecha 25% - Bloque 2: Izquierda 25%, Derecha 75% - Bloque 3: Izquierda 75%, Derecha 25%)' : 'B: Bloque 1: Izquierda 25%, Derecha 75% - Bloque 2: Izquierda 75%, Derecha 25% - Bloque 3: Izquierda 25%, Derecha 75%'; // Randomly assign case A or B
+      caseOption = Math.random() < 0.5 ? 'A' : 'B'; // Randomly assign case A or B
       console.log(`Caso seleccionado: ${caseOption}`); // Log the selected case
       startTestBlock();
-  });
-
-  document.getElementById('downloadResultsButton').addEventListener('click', () => {
-      downloadResults();
   });
 
   function startPractice() {
@@ -109,7 +107,16 @@ document.addEventListener('DOMContentLoaded', () => {
   function handleSkippedTrial() {
       practiceTrial.style.display = 'none';
       skippedScreen.style.display = 'block';
-      results.push([currentTrial + 1, 'omitido', 'omitido', Date.now() - startTime]);
+      results.push([
+          practiceMode ? 'Práctica' : currentBlock,
+          currentTrial + 1,
+          trials[currentTrial].rightReward ? 'Ganancia' : 'Pérdida',
+          trials[currentTrial].leftReward ? 'Ganancia' : 'Pérdida',
+          'omitido',
+          '',
+          '',
+          ''
+      ]);
       currentTrial++;
 
       setTimeout(() => {
@@ -143,6 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
               case 3:
                   console.log("Bloque 3 completado");
                   endScreen.style.display = 'block';
+                  setTimeout(() => {
+                      downloadResults(); // Automatically download results
+                  }, 1000); // Give a slight delay for user to see the message
                   break;
           }
       }
@@ -243,18 +253,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function selectMachine(side) {
-      if (side === 'left') {
+      const responseTime = Date.now() - startTime;
+      if (side === 'Izquierda') {
           leftSlot.src = 'img/slot-machine-left-down.png';
       } else {
           rightSlot.src = 'img/slot-machine-right-down.png';
       }
 
       setTimeout(() => {
-          showFeedback(side);
+          showFeedback(side, responseTime);
       }, 1000);
   }
 
-  function showFeedback(side) {
+  function showFeedback(side, responseTime) {
       const trial = trials[currentTrial];
       if (!trial) {
           console.error("No trial found for current index:", currentTrial);
@@ -267,7 +278,15 @@ document.addEventListener('DOMContentLoaded', () => {
       score += reward ? 5000 : -1000;
       scoreAmount.innerText = `$${score}`;
       scoreAmount.style.color = score < 0 ? 'red' : score === 0 ? 'black' : 'blue';
-      results.push([currentTrial + 1, side, reward ? 'correcto' : 'incorrecto', Date.now() - startTime]);
+      results.push([
+          practiceMode ? 'Práctica' : currentBlock,
+          currentTrial + 1,
+          trial.rightReward ? 'Ganancia' : 'Pérdida',
+          trial.leftReward ? 'Ganancia' : 'Pérdida',
+          side,
+          reward ? 'Ganancia' : 'Pérdida',
+          responseTime,
+      ]);
       practiceTrial.style.display = 'none';
       feedbackScreen.style.display = 'block';
       currentTrial++;
@@ -283,8 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function downloadResults() {
       let csvContent = "data:text/csv;charset=utf-8,";
-      csvContent += "item,respuesta seleccionada (rojo o azul),seguridad (valor seleccionado en la barra),evaluacion (correcta o incorrecta),tiempo\n";
+      const totalTaskTime = Date.now() - totalStartTime;
+      csvContent += "Bloque,Ensayo,Outcome Derecha,Outcome Izquierda,Respuesta Participante,Resultado,Tiempo de Respuesta\n";
       csvContent += results.map(e => e.join(",")).join("\n");
+      csvContent += `\n,Tiempo Dedicado a la Tarea,${totalTaskTime} ms\n`;
+      csvContent += ",Mano Utilizada,\n";
       const link = document.createElement("a");
       link.setAttribute("href", encodeURI(csvContent));
       link.setAttribute("download", "results.csv");
