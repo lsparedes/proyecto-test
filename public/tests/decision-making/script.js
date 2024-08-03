@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let selectionMade = false;
   let score = 0;
   let currentBlock = 0; // Track the current block
+  let selectionTimeout;
 
   const trialIndicator = document.getElementById('trialIndicator');
   const practiceTrial = document.getElementById('practiceTrial');
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const feedbackImage2 = document.getElementById('feedbackImage2');
   const feedbackMessage = document.getElementById('feedbackMessage');
   const intermediateScreen = document.getElementById('intermediateScreen');
+  const skippedScreen = document.getElementById('skippedScreen');
   const endScreen = document.getElementById('endScreen');
   const leftSlot = document.getElementById('leftSlot');
   const rightSlot = document.getElementById('rightSlot');
@@ -38,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
   leftSlot.addEventListener('click', () => {
       if (!selectionMade) {
           selectionMade = true;
+          clearTimeout(selectionTimeout); // Clear the timeout if selection is made
           selectMachine('left');
       }
   });
@@ -45,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
   rightSlot.addEventListener('click', () => {
       if (!selectionMade) {
           selectionMade = true;
+          clearTimeout(selectionTimeout); // Clear the timeout if selection is made
           selectMachine('right');
       }
   });
@@ -83,14 +87,38 @@ document.addEventListener('DOMContentLoaded', () => {
       const trial = trials[currentTrial];
       trialIndicator.innerText = practiceMode ? `P${currentTrial + 1}` : `E${currentTrial + 1}`;
       feedbackScreen.style.display = 'none';
+      skippedScreen.style.display = 'none';
       endScreen.style.display = 'none';
       resetSlotMachines();
       practiceTrial.style.display = 'block';
+
+      // Start the timeout for auto-skip if no selection is made
+      selectionTimeout = setTimeout(() => {
+          if (!selectionMade) {
+              handleSkippedTrial();
+          }
+      }, 5000); // 5 seconds
+  }
+
+  function handleSkippedTrial() {
+      practiceTrial.style.display = 'none';
+      skippedScreen.style.display = 'block';
+      results.push([currentTrial + 1, 'omitido', 'omitido', Date.now() - startTime]);
+      currentTrial++;
+
+      setTimeout(() => {
+          if (currentTrial < trials.length) {
+              showNextTrial();
+          } else {
+              finishBlock();
+          }
+      }, 3000); // Display "omitido" screen for 3 seconds
   }
 
   function finishBlock() {
       practiceTrial.style.display = 'none';
       feedbackScreen.style.display = 'none';
+      skippedScreen.style.display = 'none';
       if (practiceMode) {
           console.log("Práctica completada");
           intermediateScreen.style.display = 'block';
