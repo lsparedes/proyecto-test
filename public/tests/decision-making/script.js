@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   let currentTrial = 0;
-  const cantidad_ensayos_prueba = 2;
-  const cantidad_ensayos_bloque_1 = 2;
-  const cantidad_ensayos_bloque_2 = 2;
-  const cantidad_ensayos_bloque_3 = 2;
+  const cantidad_ensayos_prueba = 10; // Ajusta este valor según sea necesario
+  const cantidad_ensayos_bloque_1 = 20;
+  const cantidad_ensayos_bloque_2 = 20;
+  const cantidad_ensayos_bloque_3 = 20;
   let trials = [];
   let startTime;
   let results = [];
@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let score = 0;
   let currentBlock = 0; // Track the current block
   let selectionTimeout;
+  let caseOption; // Variable to track which case (A or B) is selected
 
   const trialIndicator = document.getElementById('trialIndicator');
   const practiceTrial = document.getElementById('practiceTrial');
@@ -56,6 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startBlock1Button').addEventListener('click', () => {
       intermediateScreen.style.display = 'none';
       currentBlock = 1;
+      caseOption = Math.random() < 0.5 ? 'A (Bloque 1: Izquierda 75%, Derecha 25% - Bloque 2: Izquierda 25%, Derecha 75% - Bloque 3: Izquierda 75%, Derecha 25%)' : 'B: Bloque 1: Izquierda 25%, Derecha 75% - Bloque 2: Izquierda 75%, Derecha 25% - Bloque 3: Izquierda 25%, Derecha 75%'; // Randomly assign case A or B
+      console.log(`Caso seleccionado: ${caseOption}`); // Log the selected case
       startTestBlock();
   });
 
@@ -91,6 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
       endScreen.style.display = 'none';
       resetSlotMachines();
       practiceTrial.style.display = 'block';
+
+      // Log the probabilities applied for each trial
+      console.log(`Trial ${currentTrial + 1}: Left - ${trial.leftReward ? 'Win' : 'Lose'}, Right - ${trial.rightReward ? 'Win' : 'Lose'}`);
 
       // Start the timeout for auto-skip if no selection is made
       selectionTimeout = setTimeout(() => {
@@ -144,12 +150,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function generatePracticeTrials() {
       const practiceTrials = [];
-      for (let i = 0; i < cantidad_ensayos_prueba; i++) {
+      const halfTrials = Math.floor(cantidad_ensayos_prueba / 2);
+
+      // Generate half trials with left machine winning
+      for (let i = 0; i < halfTrials; i++) {
           practiceTrials.push({
-              leftReward: Math.random() < 0.5,
-              rightReward: Math.random() < 0.5
+              leftReward: true,
+              rightReward: false
           });
       }
+
+      // Generate half trials with right machine winning
+      for (let i = 0; i < halfTrials; i++) {
+          practiceTrials.push({
+              leftReward: false,
+              rightReward: true
+          });
+      }
+
+      // Shuffle the trials to ensure randomness
+      for (let i = practiceTrials.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [practiceTrials[i], practiceTrials[j]] = [practiceTrials[j], practiceTrials[i]];
+      }
+
       return practiceTrials;
   }
 
@@ -158,30 +182,55 @@ document.addEventListener('DOMContentLoaded', () => {
       let blockTrialsCount;
       let leftRewardChance, rightRewardChance;
 
-      switch (block) {
-          case 1:
-              blockTrialsCount = cantidad_ensayos_bloque_1;
-              leftRewardChance = 0.25;
-              rightRewardChance = 0.75;
-              break;
-          case 2:
-              blockTrialsCount = cantidad_ensayos_bloque_2;
-              leftRewardChance = 0.75;
-              rightRewardChance = 0.25;
-              break;
-          case 3:
-              blockTrialsCount = cantidad_ensayos_bloque_3;
-              leftRewardChance = 0.25;
-              rightRewardChance = 0.75;
-              break;
-          default:
-              return [];
+      if (caseOption === 'A') {
+          // Case A: Set probabilities for each block
+          switch (block) {
+              case 1:
+                  blockTrialsCount = cantidad_ensayos_bloque_1;
+                  leftRewardChance = 0.75;
+                  rightRewardChance = 0.25;
+                  break;
+              case 2:
+                  blockTrialsCount = cantidad_ensayos_bloque_2;
+                  leftRewardChance = 0.25;
+                  rightRewardChance = 0.75;
+                  break;
+              case 3:
+                  blockTrialsCount = cantidad_ensayos_bloque_3;
+                  leftRewardChance = 0.75;
+                  rightRewardChance = 0.25;
+                  break;
+              default:
+                  return [];
+          }
+      } else {
+          // Case B: Set probabilities for each block
+          switch (block) {
+              case 1:
+                  blockTrialsCount = cantidad_ensayos_bloque_1;
+                  leftRewardChance = 0.25;
+                  rightRewardChance = 0.75;
+                  break;
+              case 2:
+                  blockTrialsCount = cantidad_ensayos_bloque_2;
+                  leftRewardChance = 0.75;
+                  rightRewardChance = 0.25;
+                  break;
+              case 3:
+                  blockTrialsCount = cantidad_ensayos_bloque_3;
+                  leftRewardChance = 0.25;
+                  rightRewardChance = 0.75;
+                  break;
+              default:
+                  return [];
+          }
       }
 
       for (let i = 0; i < blockTrialsCount; i++) {
+          const isLeftWin = Math.random() < leftRewardChance;
           testTrials.push({
-              leftReward: Math.random() < leftRewardChance,
-              rightReward: Math.random() < rightRewardChance
+              leftReward: isLeftWin,
+              rightReward: !isLeftWin
           });
       }
 
