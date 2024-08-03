@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const feedbackImage1 = document.getElementById('feedbackImage1');
   const feedbackImage2 = document.getElementById('feedbackImage2');
   const feedbackMessage = document.getElementById('feedbackMessage');
+  const intermediateScreen = document.getElementById('intermediateScreen');
   const endScreen = document.getElementById('endScreen');
   const leftSlot = document.getElementById('leftSlot');
   const rightSlot = document.getElementById('rightSlot');
@@ -46,6 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
           selectionMade = true;
           selectMachine('right');
       }
+  });
+
+  document.getElementById('startBlock1Button').addEventListener('click', () => {
+      intermediateScreen.style.display = 'none';
+      currentBlock = 1;
+      startTestBlock();
   });
 
   document.getElementById('downloadResultsButton').addEventListener('click', () => {
@@ -86,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
       feedbackScreen.style.display = 'none';
       if (practiceMode) {
           console.log("Práctica completada");
-          currentBlock = 1; // Ir al siguiente bloque
-          startTestBlock();
+          intermediateScreen.style.display = 'block';
       } else {
           switch (currentBlock) {
               case 1:
@@ -173,6 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function showFeedback(side) {
       const trial = trials[currentTrial];
+      if (!trial) {
+          console.error("No trial found for current index:", currentTrial);
+          return;
+      }
       const reward = trial[`${side}Reward`];
       feedbackImage1.src = reward ? 'img/win.jpg' : 'img/lose.jpg';
       feedbackImage2.src = reward ? 'img/5000.png' : 'img/1000.png';
