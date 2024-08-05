@@ -92,8 +92,8 @@ body {
   
   #restartPracticeButton {
     position: absolute;
-    bottom: 150px;
-    right: 15px;
+    bottom: 35px;
+    left: 15px;
   }
   
   .circulo {

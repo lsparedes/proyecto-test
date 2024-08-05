@@ -227,9 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago' };
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
     function createCsvFile() {
         const filename = `respuestas_pantomime_${fechaFormateada}.csv`;
         // Definir el contenido del archivo CSV
@@ -247,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createCsvFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
-            const zipname = `ID_${participantID}_pantomime_${fechaFormateada}.zip`;
+            const zipname = `${participantID}_Pantomime_${fechaFormateada}.zip`;
 
             link.href = URL.createObjectURL(content);
             link.download = zipname;

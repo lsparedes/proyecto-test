@@ -38,6 +38,7 @@ window.onload = function () {
     const startButton = document.getElementById('startButton');
 
     startButton.addEventListener('click', function () {
+        stopAllAudios();
         // instructions.style.display = 'none';
         practiceContainer.style.display = 'block';
         practiceImage.src = 'image.png';
@@ -55,6 +56,7 @@ window.onload = function () {
 
     const practiceNextButton = document.getElementById('practiceNextButton');
     practiceNextButton.addEventListener('click', function () {
+        stopAllAudios();
         instructions.style.display = 'none';
         practiceContainer.style.display = 'none';
         practiceFinishScreen.style.display = 'block';
@@ -64,6 +66,7 @@ window.onload = function () {
     });
 
     document.getElementById('toMainTestButton').addEventListener('click', function () {
+        stopAllAudios();
         document.getElementById('instructionsE1').style.display = 'flex';
         practiceFinishScreen.style.display = 'none';
         canvasContainer.style.display = 'block';
@@ -76,6 +79,7 @@ window.onload = function () {
     });
 
     document.getElementById('finishButton').addEventListener('click', function () {
+        stopAllAudios();
         document.getElementById('instructionsE1').style.display = 'none';
         canvasContainer.style.display = 'none';
         showHandSelection();
@@ -85,6 +89,7 @@ window.onload = function () {
     document.getElementById('finishButton').style.display = 'block';
 
     document.getElementById('endTestButton').addEventListener('click', function () {
+        stopAllAudios();
         finishScreen.style.display = 'none';
         endScreen.style.display = 'block';
     });
@@ -238,6 +243,7 @@ window.onload = function () {
 
         setTimeout(() => {
             const zip = new JSZip();
+            const date = new Date();
 
             // Añadir los videos grabados al ZIP
             zip.file("canvasPractice-recording.webm", new Blob(practiceRecordedChunks, { type: 'video/webm' }));
@@ -245,7 +251,7 @@ window.onload = function () {
 
             // Generar y añadir el archivo CSV al ZIP
             const csvContent = generateCSV(data);
-            zip.file("test_result_TMT_part_A.csv", csvContent);
+            zip.file(`${participantID}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}`, csvContent);
 
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
@@ -256,7 +262,7 @@ window.onload = function () {
 
                     // Generar el archivo ZIP y descargar
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `${participantID}_metricsDesignFluency.zip`);
+                        saveAs(content, `${participantID}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
                     });
                 });
             });
@@ -283,6 +289,7 @@ window.onload = function () {
     }
 
     document.getElementById('handButton').addEventListener('click', function () {
+        stopAllAudios();
         confirmHandSelection();
         document.getElementById('endTestButton').style.display = 'none';
         const now = new Date();
@@ -335,4 +342,9 @@ window.onload = function () {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
+
+    function stopAllAudios() {
+        const audios = document.querySelectorAll('audio');
+        audios.forEach(audio => audio.pause());
+    }
 };

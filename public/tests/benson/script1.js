@@ -7,11 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedHand = ""; 
     let participantID = 0; 
     let mediaRecorder = null;
+    let fecha = new Date();
+    let dia = fecha.getDate();
+    let mes = fecha.getMonth() + 1;
+    
 
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishdrawingwithfigure = document.getElementById('finish-drawing-with-figure');
     const finishRememberingFigureButton = document.getElementById("finalize-button");
-    const container2 = document.querySelector('.container2');
+    const container2 = document.getElementById('container2');
     const instruccionesDespues = document.getElementById('instruccionesdespues');
     const finishScreen = document.getElementById('finishScreen');
     const selectHandContainer = document.getElementById("selectHand");
@@ -32,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function enterContainer2() {
+        container2.style.display = 'flex';
         startTimeExecution = new Date();
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
@@ -279,6 +284,9 @@ document.addEventListener('DOMContentLoaded', () => {
         beep.play();
     }
 
+    let diaStr = dia.toString().padStart(2, '0');
+    let mesStr = mes.toString().padStart(2, '0');
+
     async function GenerateZIP() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
@@ -305,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `Benson_Draw_With_Figure-${participantID}.zip`;
+                    link.download = `${participantID}-Benson_Draw_With_Figure-${diaStr}-${mesStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);

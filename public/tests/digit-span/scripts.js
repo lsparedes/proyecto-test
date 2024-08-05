@@ -304,13 +304,13 @@ function crearZip(type,participantID) {
     const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
     const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_');
 
-    zip.file(`ID_${participantID}_respuestas_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${participantID}_respuestas_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
-            downloadLink.download = `ID_${participantID}_respuestas_digital_span_${type}_${fechaFormateada}.zip`;
+            downloadLink.download = `${participantID}_respuestas_digital_span_${type}_${fechaFormateada}.zip`;
             downloadLink.textContent = 'Descargar todas las grabaciones';
             document.body.appendChild(downloadLink);
 

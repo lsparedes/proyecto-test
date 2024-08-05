@@ -10,8 +10,8 @@
                     <div class="col-lg-6">
                         <div class="text-center my-5">
                             <h1 class="display-4 fw-bolder text-white mb-4">Tests protocolo neurocognitivo</h1>
-                            <p class="lead text-white-50 mb-3">Quickly design and customize responsive mobile-first sites
-                                with Bootstrap, the world’s most popular front-end open source toolkit!</p>
+                            <!-- <p class="lead text-white-50 mb-3">Quickly design and customize responsive mobile-first sites
+                                with Bootstrap, the world’s most popular front-end open source toolkit!</p> -->
                             <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
 
                             </div>
@@ -26,7 +26,7 @@
 
             <div class="bg-light my-4 py-3 text-center">
                 <div>
-                    <h2>Listado de Tests</h2>
+                    <!-- <h2>Listado de Tests</h2> -->
                     <!-- Busqueda test-->
                     <form id="searchForm">
                         <div class="input-group mb-3">
@@ -47,9 +47,8 @@
                             class="card h-100 text-decoration-none ">
 
                             <div class="card-header text-center">
-                                <i class="fas {{ $test->tipoTest->icono }}" data-toggle="tooltip"
-                                    title="{{ $test->tipoTest->icono === 'fa-solid fa-download' ? 'Necesita Descargar' : 'Vista Web' }}"></i>
-                                <p class="card-text"> {{ $test->tipoTest->implementacion}}</p>
+                                
+                                <p class="card-text"> </p>
                             </div>
 
                             <div class="card-body text-center">
@@ -61,7 +60,7 @@
                                     {{ $test->duracion_minutos }} minutos</p>
                                 <div class="card-footer ">
                                     <p class="card-text"><i class="fa-solid fa-globe"></i> Fuente:
-                                        {{ $test->tipoTest->fuente }}</p>
+                                        {{ $test->tipoTest->fuente }} ({{ $test->tipoTest->implementacion}})</p>
                                 </div>
                             </div>
                         </a>

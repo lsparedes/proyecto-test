@@ -535,6 +535,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function testFinalizado() {
+        const fechaActual = new Date();
+        const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
+        const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+        const [day, month, year] = fechaHoraChilena.split('-');
+        const fechaFormateada = `${day}_${month}_${year}`;
+
         // Detener las grabaciones
         mediaRecorderCanvas.stop();
         mediaRecorderCanvasPartA.stop();
@@ -569,7 +575,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     zip.file("canvasPartAScreenshot.png", blobPartA);
 
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `ID_${participantID}_test_results_TMT_part_A.zip`);
+                        saveAs(content, `${participantID}_TMTPartA_${fechaFormateada}.zip`);
                     });
                 });
             });
@@ -653,7 +659,7 @@ document.addEventListener('DOMContentLoaded', function () {
         handButton.style.display = "none";
         testFinalizado();
     }
-    
+
     // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
     handInputs.forEach((input) => {
         input.addEventListener('change', (e) => {
