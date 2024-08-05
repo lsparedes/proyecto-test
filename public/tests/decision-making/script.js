@@ -151,13 +151,21 @@ document.addEventListener('DOMContentLoaded', () => {
                   break;
               case 3:
                   console.log("Bloque 3 completado");
-                  endScreen.style.display = 'block';
-                  setTimeout(() => {
-                      downloadResults(); // Automatically download results
-                  }, 1000); // Give a slight delay for user to see the message
+                  //endScreen.style.display = 'block';
+                  showHandSelection();
+                  //setTimeout(() => {
+                  //    downloadResults(); // Automatically download results
+                  //}, 1000); // Give a slight delay for user to see the message
                   break;
           }
       }
+  }
+
+  function endGame() {
+        endScreen.style.display = 'block';
+        setTimeout(() => {
+            downloadResults(); // Automatically download results
+        }, 1000); // Give a slight delay for user to see the message
   }
 
   function generatePracticeTrials() {
@@ -303,30 +311,77 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function downloadResults() {
-      let csvContent = "data:text/csv;charset=utf-8,";
-      const totalTaskTime = Date.now() - totalStartTime;
-      csvContent += "Bloque,Ensayo,Outcome Derecha,Outcome Izquierda,Respuesta Participante,Resultado,Tiempo de Respuesta\n";
-      csvContent += results.map(e => e.join(",")).join("\n");
-      csvContent += `\n,Tiempo Dedicado a la Tarea,${totalTaskTime} ms\n`;
-      csvContent += ",Mano Utilizada,\n";
-      const link = document.createElement("a");
-      link.setAttribute("href", encodeURI(csvContent));
-      // Obtener la fecha y hora actuales
-      const now = new Date();
-      const day = String(now.getDate()).padStart(2, '0');
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const year = now.getFullYear();
+        let csvContent = "data:text/csv;charset=utf-8,";
+        const totalTaskTime = (Date.now() - totalStartTime)/1000;
+        csvContent += "Bloque;Ensayo;Outcome Derecha;Outcome Izquierda;Respuesta Participante;Resultado;Tiempo de Respuesta(ms)\n";
+        csvContent += results.map(e => e.join(";")).join("\n");
+        csvContent += `\nTiempo Dedicado a la Tarea;${totalTaskTime} s\n`;
+        csvContent += `Mano Utilizada;${selectedHand};\n`;
+        const link = document.createElement("a");
+        link.setAttribute("href", encodeURI(csvContent));
+        // Obtener la fecha y hora actuales
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
 
-      // Formatear la fecha para el nombre del archivo
-      const date = `${day}_${month}_${year}`;
-      const fileName = `ID_decision_making_${date}.csv`;
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-  }
+        // Formatear la fecha para el nombre del archivo
+        const date = `${day}_${month}_${year}`;
+        const fileName = `${participantID}_decision_making_${date}.csv`;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+    }
+
+    function stopAllAudios() {
+        const audios = document.querySelectorAll('audio');
+        audios.forEach(audio => audio.pause());
+    }
+
+    // SELECCION DE MANO JS
+
+    const selectHandContainer = document.getElementById("selectHand");
+    const handButton = document.getElementById("handButton");
+    const handInputs = document.getElementsByName('hand');
+
+    // Variable con la mano seleccionada
+    let selectedHand = "";
+    let participantID;
+
+    // Funcion para mostrar la pantalla de seleccion de mano
+    function showHandSelection() {
+        document.getElementById("preEnd").style.display = 'block';
+        selectHandContainer.style.display = "block";
+    }
+
+    // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+    // En este caso fue mostrarFinalizacion()
+    function confirmHandSelection() {
+        document.getElementById("preEnd").style.display = 'none';
+        selectHandContainer.style.display = "none";
+        endGame();
+    }
+
+    // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
+    handInputs.forEach((input) => {
+        input.addEventListener('change', (e) => {
+            validateInputs();
+            selectedHand = e.target.value;
+        });
+    });
+
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+
+    document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+        if (participantID && selectedHand) {
+            handButton.style.display = 'block';
+        }
+    }
+
+    window.confirmHandSelection = confirmHandSelection;
 });
-
-function stopAllAudios() {
-	const audios = document.querySelectorAll('audio');
-	audios.forEach(audio => audio.pause());
-}
