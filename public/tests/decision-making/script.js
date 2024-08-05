@@ -320,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Formatear la fecha para el nombre del archivo
       const date = `${day}_${month}_${year}`;
       const fileName = `ID_decision_making_${date}.csv`;
-      link.setAttribute("download", "results.csv");
+      link.setAttribute("download", fileName);
       document.body.appendChild(link);
       link.click();
   }
