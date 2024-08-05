@@ -54,15 +54,25 @@ document.addEventListener('DOMContentLoaded', () => {
         audioContainer.style.display = 'none';
         enterID.style.display = 'inline-block';
         finishScreen.style.display = 'block';
-        DownloadButton.style.display = 'block'
+        // DownloadButton.style.display = 'block'
         finishTime = new Date();
         console.log(`${finishTime}`);
     });
     
     DownloadButton.addEventListener('click', () => {
-        validateInputs();
         downloadZip();
     });
+
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+
+    let participantID;
+    
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        if (participantID) {
+            DownloadButton.style.display = 'block';
+        }
+    }
 
     document.querySelectorAll('.option-btn').forEach(button => {
         button.addEventListener('click', (e) => {
@@ -116,12 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         csvContent += `\nTiempo dedicado a la tarea:,${formattedTime}\n`;
         return csvContent;
     }
-    
-    let participantID = 0;
-    
-    function validateInputs() {
-        participantID = document.getElementById('participantID').value;
-    }
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
@@ -144,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `ID-${participantID}_HVLT-R_Reconocimiento-${diaStr}-${mesStr}-${añoStr}.zip`;
+            a.download = `${participantID}_HVLT-R_Reconocimiento_${diaStr}_${mesStr}_${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

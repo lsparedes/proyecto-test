@@ -117,14 +117,14 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('No se puede generar el CSV');
             return;
         }
-        zip.file(`Benson_Identifying_Figure.csv`, csvContent);
+        zip.file(`${participantID}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
 
         // Crear el archivo zip y forzar la descarga
         zip.generateAsync({ type: 'blob' })
             .then(function(content) {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
-                a.download = `ID-${participantID}-Benson_Identifying_Figure-${diaStr}-${mesStr}-${añoStr}.zip`;
+                a.download = `${participantID}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);

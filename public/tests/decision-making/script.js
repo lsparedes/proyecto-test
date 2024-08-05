@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startPracticeButton').addEventListener('click', () => {
       totalStartTime = Date.now(); // Start the total time counter
       startPractice();
+      stopAllAudios();
   });
 
   document.getElementById('fullscreenButton').addEventListener('click', () => {
@@ -62,6 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
       caseOption = Math.random() < 0.5 ? 'A' : 'B'; // Randomly assign case A or B
       console.log(`Caso seleccionado: ${caseOption}`); // Log the selected case
       startTestBlock();
+      stopAllAudios();
   });
 
   function startPractice() {
@@ -309,8 +311,22 @@ document.addEventListener('DOMContentLoaded', () => {
       csvContent += ",Mano Utilizada,\n";
       const link = document.createElement("a");
       link.setAttribute("href", encodeURI(csvContent));
+      // Obtener la fecha y hora actuales
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+
+      // Formatear la fecha para el nombre del archivo
+      const date = `${day}_${month}_${year}`;
+      const fileName = `ID_decision_making_${date}.csv`;
       link.setAttribute("download", "results.csv");
       document.body.appendChild(link);
       link.click();
   }
 });
+
+function stopAllAudios() {
+	const audios = document.querySelectorAll('audio');
+	audios.forEach(audio => audio.pause());
+}

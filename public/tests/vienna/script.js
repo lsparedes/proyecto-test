@@ -580,8 +580,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
-            const formattedDate = `${year}${month}${day}`;
-            const fileName = `${participantID}_TEST_13_VIENNA_${formattedDate}.csv`;
+            const formattedDate = `${day}_${month}_${year}`;
+            const fileName = `${participantID}_vienna_${formattedDate}.csv`;
             
             link.setAttribute('href', url);
             link.setAttribute('download', fileName);
