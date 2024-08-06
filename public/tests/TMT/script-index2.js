@@ -476,7 +476,7 @@ canvasPartB2.addEventListener('touchstart', function (event) {
     if (drawingCompletedB2) return;
     const touch = event.touches[0];
     const rect = canvasPartB2.getBoundingClientRect();
-    startDrawingPartA(touch.clientX - rect.left, touch.clientY - rect.top);
+    startDrawingPartB2(touch.clientX - rect.left, touch.clientY - rect.top);
     if (airStartTime) {
         const airEndTime = new Date();
         const airTime = (airEndTime - airStartTime) / 1000;
@@ -495,7 +495,7 @@ canvasPartB2.addEventListener('touchmove', function (event) {
 canvasPartB2.addEventListener('touchend', function (event) {
     if (drawingCompletedB2) return;
     const touch = event.changedTouches[0];
-    const rect = canvasPartA.getBoundingClientRect();
+    const rect = canvasPartB2.getBoundingClientRect();
     endDrawingPartB2(touch.clientX - rect.left, touch.clientY - rect.top);
     liftPenCount++;
     airStartTime = new Date();

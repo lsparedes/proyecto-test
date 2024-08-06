@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const incorrectPaths = [];
     const incorrectPathsPartA = [];
     let temporizador = null;
-    const circlesToCorrect = [];
-    const circlesToCorrectA = [];
+    let circlesToCorrect = [];
+    let circlesToCorrectA = [];
     const recordedChunksCanvas = [];
     const recordedChunksCanvasPartA = [];
     let mediaRecorderCanvas;
@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.appendChild(endSequenceButton);
 
     const redLinesCount = 0;
+    let circleRadius = 40; // Cambiado de const a let para permitir reasignación
 
     function drawCircle(ctx, x, y, number, circlesArray, name = "", circleRadius) {
         ctx.fillStyle = 'white';
@@ -112,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function () {
         lastCircle = null;
         correctPaths.length = 0;
         incorrectPaths.length = 0;
-        circleRadius = 40;
         circlesToCorrect.length = 0;
 
         const circleCoordinates = [
@@ -322,7 +322,7 @@ document.addEventListener('DOMContentLoaded', function () {
         lastCirclePartA = null;
         correctPathsPartA.length = 0;
         incorrectPathsPartA.length = 0;
-        circleRadius = 30;
+        circleRadius = 30; // Cambiado de const a let para permitir reasignación
 
         const circleCoordinatesPartA = [
             { x: 610, y: 800 },
