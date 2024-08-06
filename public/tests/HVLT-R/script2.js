@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mainScreen2.style.display = 'none';
         finishScreen.style.display = 'block';
         enterID.style.display = 'inline-block';
-        DownloadButton.style.display = 'block';
+        // DownloadButton.style.display = 'block';
         startFinishTimer();
     });
 
@@ -60,15 +60,25 @@ document.addEventListener('DOMContentLoaded', () => {
         finishScreen.style.display = 'block';
         enterID.style.display = 'inline-block';
         startRecordingButton4.style.display = 'none';
-        DownloadButton.style.display = 'block';
+        // DownloadButton.style.display = 'block';
         stopRecording();
         finishTime = new Date();
     });
 
     DownloadButton.addEventListener('click', () => {
-        validateInputs();
         generateZip();
     });
+
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+
+    let participantID;
+
+    function validateInputs() {
+        participantID = document.getElementById('participantID').value;
+        if (participantID) {
+            DownloadButton.style.display = 'block';
+        }
+    }
 
     function startRecording(fileName) {
         navigator.mediaDevices.getUserMedia({ audio: true })
@@ -133,13 +143,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
 
-
-    let participantID = 0;
-
-    function validateInputs() {
-        participantID = document.getElementById('participantID').value;
-    }
-
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
@@ -165,7 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `ID-${participantID}_HVLT-R_Diferido-${diaStr}-${mesStr}-${añoStr}.zip`;
+            a.download = `${participantID}_HVLT-R_Diferido_${diaStr}_${mesStr}_${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

@@ -34,6 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let timer;
     let milliseconds = 0;
 
+    let mediaRecorder;
+    let recordedChunks = [];
+
     // Posiciones fijas de los cuadrados
     const fixedPositions = [
         { "top": 590, "left": 400 },
@@ -226,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function endGame() {
+    async function endGame() {
         endTime = new Date(); // Registrar la hora de finalización
         const duration = (endTime - startTime) / 1000; // Duración en segundos
         console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
@@ -235,7 +238,18 @@ document.addEventListener('DOMContentLoaded', () => {
         count = 2;
         errorCount = 0;
         resetBlocks();
-        generateCSV(highestCount, totalCorrectBlocks, duration, sequenceCount); // Generar el CSV al final del juego
+
+        const csvBlob = generateCSVBlob(highestCount, totalCorrectBlocks, duration, sequenceCount);
+        const videoBlob = await stopScreenRecording();
+
+        // Crear archivo zip
+        const zip = new JSZip();
+        zip.file('resultado.csv', csvBlob);
+        zip.file('grabacion.webm', videoBlob);
+
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+            saveAs(content, 'resultado.zip');
+        });
     }
 
     function endPractice() {
@@ -254,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBlocks();
     }
 
-    function generateCSV(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
+    function generateCSVBlob(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
         const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta(ms)"];
         const rows = testData.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
@@ -281,32 +295,19 @@ document.addEventListener('DOMContentLoaded', () => {
         rows.push(['\nTiempo Total(s): ' + duration.toFixed(2)]);
         rows.push(['Mano Utilizada: ' + selectedHand]);
 
-        let csvContent = "data:text/csv;charset=utf-8,"
-            + headers.join(";") + "\n"
-            + rows.map(e => e.join(";")).join("\n");
-        // const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        // Obtener la fecha y hora actuales
-        const now = new Date();
-        const day = String(now.getDate()).padStart(2, '0');
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-    
-        // Formatear la fecha para el nombre del archivo
-        const date = `${day}_${month}_${year}`;
-        const fileName = `${participantID}_corsi_inverso_${date}.csv`;
-        saveAs(csvContent, fileName);
-        // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
-        // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        // saveAs(blob, fileName);
+        const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
+
+        return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     }
 
-    startTestButton.addEventListener('click', () => {
+    startTestButton.addEventListener('click', async () => {
         if (isPractice) {
             startTime = new Date(); // Registrar la hora de inicio
             console.log('Inicio');
         }
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.pause();
+        await startScreenRecording();
         startTest();
     });
 
@@ -338,16 +339,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function setCanvasBackground(canvas, color) {
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = color;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    async function startCanvasRecording(canvasId) {
-        const canvas = document.getElementById(canvasId);
-        const stream = canvas.captureStream(30); // 30 FPS
-
+    async function startScreenRecording() {
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
         mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'video/webm;codecs=vp9'
         });
@@ -361,20 +354,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mediaRecorder.start();
     }
 
-    function stopCanvasRecording() {
-        mediaRecorder.stop();
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunks, {
-                type: 'video/webm'
-            });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'canvas-recording.webm';
-            link.click();
-            URL.revokeObjectURL(url);
-            recordedChunks = []; // Clear recorded chunks
-        };
+    function stopScreenRecording() {
+        return new Promise((resolve) => {
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                resolve(blob);
+            };
+            mediaRecorder.stop();
+        });
     }
 
     function playBeep() {
@@ -407,8 +394,6 @@ document.addEventListener('DOMContentLoaded', () => {
         milliseconds += 10; // Incrementar en 10 ms
         let seconds = milliseconds / 1000; // Convertir a segundos
     }
-
-    // createBlocks();
 
     // SELECCION DE MANO JS
 

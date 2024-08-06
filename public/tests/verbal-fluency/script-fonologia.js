@@ -102,10 +102,13 @@ document.getElementById('nextButton2').addEventListener('click', () => nextSecti
 
 function nextSection(part) {
     if (part === 1) {
+        // document.getElementById('testSection1').style.display = 'none';
+        // document.getElementById('testSection2').style.display = 'block';
+        // document.getElementById('instructionAudio1').pause();
+        // loadAudio(2); // Cargar el segundo audio
         document.getElementById('testSection1').style.display = 'none';
-        document.getElementById('testSection2').style.display = 'block';
         document.getElementById('instructionAudio1').pause();
-        loadAudio(2); // Cargar el segundo audio
+        showHandSelection();
     } else if (part === 2) {
         document.getElementById('testSection2').style.display = 'none';
         document.getElementById('instructionAudio2').pause();
@@ -124,7 +127,7 @@ function loadAudio(part) {
     
     switch (part) {
         case 1:
-            audio.src = 'audios/P.mp3';
+            audio.src = 'audios/M.mp3';
             break;
         case 2:
             audio.src = 'audios/M.mp3';
@@ -142,6 +145,7 @@ function loadAudio(part) {
         letterDisplay.style.display = 'none';
         document.getElementById('startRecButton' + part).style.display = 'inline-block'; // Mostrar botón para comenzar grabación
         document.getElementById('nextButton' + part).style.display = 'inline-block'; // Mostrar la flecha
+        document.getElementById('startRecButton' + part).click(); // Iniciar grabación automáticamente
     });
 }
 
@@ -181,13 +185,13 @@ function downloadRecordingAndTime() {
     // link.click();
 
     const zip = new JSZip();
-    zip.file("tiempo_total.txt", timeBlob);
+    zip.file("tiempo_total_mano_utilizada.txt", timeBlob);
 
     const audio1Blob = new Blob(audioChunks[1], { type: 'audio/wav' });
-    zip.file("Fonológica - Parte 1.wav", audio1Blob);
+    zip.file("Fonológica - S.wav", audio1Blob);
 
     const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
-    zip.file("Fonológica - Parte 2.wav", audio2Blob);
+    // zip.file("Fonológica - Parte 2.wav", audio2Blob);
 
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
@@ -198,10 +202,10 @@ function downloadRecordingAndTime() {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${year}${month}${day}`;
+        const formattedDate = `${day}_${month}_${year}`;
         
         // Construir el nombre del archivo ZIP
-        const fileName = `${participantID}_TEST_4_VERBAL_FLUENCY_FONOLOGIA_${formattedDate}.zip`;
+        const fileName = `${participantID}_verbal_fluency_fonologia_${formattedDate}.zip`;
 
         zipLink.download = fileName;
         zipLink.click();

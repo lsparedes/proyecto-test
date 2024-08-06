@@ -10,7 +10,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class, 'index']);
-Route::get('/info-test/{test_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'infoTest'])->name('info-test');
+
 Route::get('/emails.welcome', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('emails.welcome');
 Route::get('/password/change', [App\Http\Controllers\Auth\PasswordController::class, 'showChangePasswordForm'])->name('password.change');
 Route::post('/password/update', [App\Http\Controllers\Auth\PasswordController::class, 'updatePassword'])->name('password.update');
@@ -18,7 +18,7 @@ Route::post('/password/update', [App\Http\Controllers\Auth\PasswordController::c
 
 
 Route::group(['middleware' => 'auth'], function () {
-
+    Route::get('/info-test/{test_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'infoTest'])->name('info-test');
 
     Route::get('/password/change', [App\Http\Controllers\Auth\PasswordController::class, 'showChangePasswordForm'])->name('password.change');
     Route::post('/password/update', [App\Http\Controllers\Auth\PasswordController::class, 'updatePassword'])->name('password.update');

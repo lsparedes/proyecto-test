@@ -10,7 +10,7 @@
                 <div class="sb-sidenav-menu-heading" style="font-size: 16px;">Inicio</div>
                 <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="{{ url('/') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-house fa-lg"></i></div>
-                    Inicio
+                    Catálogo Tests
                 </a>
                 @can('dashboard')
                     <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}"
@@ -20,14 +20,14 @@
                     </a>
                 @endcan
 
-                @can('administrador')
+                <!-- @can('administrador')
                     <div class="sb-sidenav-menu-heading" style="font-size: 16px;">Datos e info</div>
                     <a class="nav-link {{ Request::is('admin/administrador') ? 'active' : '' }}"
                         href="{{ route('admin.administrador') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-address-book fa-lg"></i></div>
                         Administrador
                     </a>
-                @endcan
+                @endcan -->
 
                 <div class="sb-sidenav-menu-heading" style="font-size: 16px;">Administración</div>
 
@@ -39,7 +39,7 @@
                 </a>
                 @endcan
 
-                @can('persons')
+                <!-- @can('persons')
                     <a class="nav-link {{ Request::is('admin/persons') || Request::is('admin/add-persons') || Request::is('admin/edit-person*') ? 'active' : '' }}"
                         href="{{ route('admin.persons') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-address-book fa-lg"></i></div>
@@ -53,7 +53,7 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-users fa-lg"></i></div>
                         Resultados Personas
                     </a>
-                @endcan
+                @endcan -->
 
                 @can('permissions')
                     <a class="nav-link {{ Request::is('admin/permissions') || Request::is('admin/permissions/show*') || Request::is('admin/permissions/edit*') || Request::is('admin/permissions/create') ? 'active' : '' }}"
@@ -89,7 +89,7 @@
                 </a>
             @endcan
 
-                @can('pregunta')
+                <!-- @can('pregunta')
                     <a class="nav-link {{ Request::is('admin/pregunta') || Request::is('admin/add-pregunta') || Request::is('admin/edit-pregunta*') ? 'active' : '' }}"
                         href="{{ route('admin.pregunta') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-circle-question fa-lg"></i></div>
@@ -119,11 +119,11 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-book-open fa-lg"></i></div>
                         Respuestas
                     </a>
-                @endcan
+                @endcan -->
 
-                <div class="sb-sidenav-menu-heading" style="font-size: 16px;">Criterios</div>
+                <div class="sb-sidenav-menu-heading" style="font-size: 16px; display:none">Criterios</div>
 
-                @can('criterio-evaluacion')
+                <!-- @can('criterio-evaluacion')
                     <a class="nav-link {{ Request::is('admin/criterio-evaluacion') || Request::is('admin/edit-criterio-evaluacion*') || Request::is('admin/add-criterio-evaluacion') ? 'active' : '' }}"
                         href="{{ route('admin.criterio-evaluacion') }}">
                         <div class="sb-nav-link-icon"><i class="fas fa-book-open fa-lg"></i></div>
@@ -153,7 +153,7 @@
                         <div class="sb-nav-link-icon"><i class="fas fa-book-open fa-lg"></i></div>
                         Criterio Evaluación Test
                     </a>
-                @endcan
+                @endcan -->
 
             </div>
         </div>

@@ -31,10 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const hideButton = document.getElementById('hideButton');
     const showRotationErrorButton = document.getElementById('showRotationErrorButton');
     const hideRotationErrorButton = document.getElementById('hideRotationErrorButton');
+    
     const showUpdateErrorButton = document.getElementById('showUpdateErrorButton');
     const hideUpdateErrorButton = document.getElementById('hideUpdateErrorButton');
     const downloadCSVButton = document.getElementById('downloadCSVButton');
     const fullScreenButton = document.getElementById('fullScreenButton');
+    const resetButtonI1 = document.getElementById('resetButtonI1');
+   
+    
 
     // Botones específicos para I1, P1, P2
     const validateButtonI1 = document.getElementById('validateButtonI1');
@@ -70,6 +74,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let showRotationErrors = false;
     let showUpdateErrors = false;
 
+    const resetVideoI1 = () => {
+        practiceVideo1.currentTime = 0; // Reiniciar el tiempo del video al inicio
+        practiceVideo1.play(); // Reproducir el video
+    };
+
+    // Añadir el event listener al botón de reinicio
+    resetButtonI1.addEventListener('click', resetVideoI1);
+
+    
     function stopAllAudios() {
         const audios = document.querySelectorAll('audio');
         audios.forEach(audio => audio.pause());
@@ -580,8 +593,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
-            const formattedDate = `${year}${month}${day}`;
-            const fileName = `${participantID}_TEST_13_VIENNA_${formattedDate}.csv`;
+            const formattedDate = `${day}_${month}_${year}`;
+            const fileName = `${participantID}_vienna_${formattedDate}.csv`;
             
             link.setAttribute('href', url);
             link.setAttribute('download', fileName);

@@ -114,15 +114,15 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         endScreen.style.display = 'none';
         enterID.style.display = 'inline-block';
-        DownloadButton.style.display = 'block';
         finishScreen.style.display = 'block';
         finishTime = new Date();
         console.log(`${finishTime}`);
         startFinishTimer();
     });
 
+    document.getElementById('participantID').addEventListener('input', validateInputs);
+
     DownloadButton.addEventListener('click', () => {
-        validateInputs();
         downloadZip();
     });
 
@@ -233,10 +233,13 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
     
-    let participantID = 0;
+    let participantID;
     
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
+        if (participantID) {
+            DownloadButton.style.display = 'block';
+        }
     }
 
     let diaStr = dia.toString().padStart(2, '0');
@@ -264,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `ID-${participantID}_HVLT-R_Inmediato-${diaStr}-${mesStr}-${añoStr}.zip`;
+            a.download = `${participantID}_HVLT-R_Inmediato_${diaStr}_${mesStr}_${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
