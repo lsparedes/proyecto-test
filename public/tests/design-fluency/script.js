@@ -225,7 +225,7 @@ window.onload = function () {
     }
 
     function generateCSV(data) {
-        let csvContent = "Tiempo dedicado a la tarea, mano utilizada\n";
+        let csvContent = "Tiempo dedicado a la tarea (s), mano utilizada\n";
 
         data.forEach(row => {
             let linea = `${row.taskTime},${selectedHand}\n`;
@@ -251,7 +251,7 @@ window.onload = function () {
 
             // Generar y añadir el archivo CSV al ZIP
             const csvContent = generateCSV(data);
-            zip.file(`${participantID}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}`, csvContent);
+            zip.file(`${participantID}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.csv`, csvContent);
 
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
