@@ -43,6 +43,7 @@ body {
     height: 100%;
     display: flex;
     box-sizing: border-box; /* Para incluir el padding dentro del tamaño total */
+    
 }
 
 #main-screen {
@@ -112,6 +113,12 @@ button:hover {
 
 button:active {
     transform: scale(0.98);
+}
+
+#showinstruction{
+    position: absolute;
+    top: 15px;
+    right: 15px;
 }
 
 #start-button {

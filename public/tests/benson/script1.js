@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const handInputs = document.getElementsByName('hand');
     const enterID = document.getElementById('enterID');
     const DownloadButton = document.getElementById('download');
+    const showinstruction = document.getElementById('showinstruction');
+    const instruccion = document.getElementById('instruccion');
+    const instruccion2 = document.getElementById('instruccion2');
 
     enterContainer2(); 
     initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
@@ -42,6 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimeExecution = new Date();
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
+
+    
+
+    showinstruction.addEventListener('click', () => {
+        instruccion.style.display= 'flex';
+        instruccion2.style.display= 'flex';
+    });
+
 
     finishdrawingwithfigure.addEventListener('click', () => {
         document.getElementById('audio1').pause();
@@ -79,6 +90,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     DownloadButton.addEventListener('click', () => {
+        enterID.style.display = 'none';
+        selectHandContainer.style.display = 'none';  
         validateInputs();
         GenerateZIP();
     });
