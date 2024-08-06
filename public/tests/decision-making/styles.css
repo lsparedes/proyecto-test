@@ -62,13 +62,14 @@ body {
   }
   
   .arrow-button {
-    background: url('arrow.png') no-repeat center;
+    background: url('img/arrow.png') no-repeat center;
     background-size: contain;
     width: 50px;
     height: 50px;
     background-color: transparent;
     border: none;
-  }
+    cursor: pointer;
+}
   
   .feedback-image {
     margin-bottom: 10px;
@@ -108,3 +109,53 @@ body {
     font-weight: 700;
     font-size: 72px;
   }
+
+  #startPracticeButton {
+    display: inline-block;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('img/flecha3.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+}
+
+#fullscreenButton {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    background-image: url('img/full-screen.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    padding: 0;
+    width: 80px;
+    height: 65px;
+    vertical-align: middle;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}
+
+#instructions {
+  font-size: 37px;
+  text-align: justify;
+  margin-bottom: 1rem;
+}
+
+#startNextBlockButton{
+  position: absolute;
+  bottom: 35px;
+  right: 35px;
+}
+#startBlock1Button{
+  position: absolute;
+  bottom: 35px;
+  right: 35px;
+}

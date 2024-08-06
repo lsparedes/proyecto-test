@@ -33,11 +33,11 @@
   <button id="fullscreenButton" class="fullscreen-button"></button>
 
   <div id="practiceFinishScreen" class="container" style="display: none;">
-    <div id="practica" style="text-align: center;">
-      <ol>
-        <li>Haga diseños dibujando 4 líneas rectas que conecten puntos.</li>
-        <li>No importa cómo se vea el diseño, cuáles puntos use o cuántos puntos use.</li>
-        <li>Está bien si las líneas se entrecruzan.</li>
+    <div id="practica" style="display: flex; flex-direction: column; align-items: center;">
+      <ol class="d-flex flex-column justify-content-center">
+        <li style="text-align: left;" >Haga diseños dibujando 4 líneas rectas que conecten puntos.</li>
+        <li style="text-align: left;" >No importa cómo se vea el diseño, cuáles puntos use o cuántos puntos use.</li>
+        <li style="text-align: left;" >Está bien si las líneas se entrecruzan.</li>
       </ol>
       <audio controls style="margin-bottom: 10px;">
         <source src="Design-fluency.mp3" type="audio/mpeg">
@@ -47,7 +47,7 @@
     <div id="practiceContainer" class="container" style="padding: 0px;">
       <h2 class="imageText">P1</h2>
       <canvas id="practiceCanvas" width="177" height="345" style=" transform: rotate(90deg); "></canvas>
-      <button id="practiceNextButton" class="finish-button"></button>
+      <button id="practiceNextButton" class="finish-button d-none"></button>
     </div>
     <button id="toMainTestButton" class="finish-button"></button>
   </div>
