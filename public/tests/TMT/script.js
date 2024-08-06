@@ -518,7 +518,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const fin = new Date();
             let executionTime = 0;
             if (inicio) {
-                executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea en segundos
+                executionTime = (fin - inicio); // Tiempo de ejecución de la tarea en milisegundos
             }
             const taskTime = (fin - begining) / 1000; // Tiempo total de la tarea en segundos
             console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
