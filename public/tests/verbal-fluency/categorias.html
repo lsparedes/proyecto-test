@@ -16,12 +16,13 @@
   <body>
     <div id="container">
         <div id="instructions">
-            <p><b>Categorías:</b> deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es
-                decir palabras que pertenezcan a la categoría solicitada. Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60
-                segundos para cada tarea. Cada grabación puede ser descargada.</p>
+            <p>Le voy a dar una categoría y quiero que me diga, lo más rápido que pueda, todas las cosas que pertenecen a esa categoría. 
+                Por ejemplo, si le digo ‘ropa’, usted podría decir ‘camisa’, ‘corbata’ o ‘sombrero’. 
+                ¿Qué otra ropa puede decirme?
+            </p>
 
             <audio id="mainInstructionAudio" style="margin-top: 20px;" controls>
-                <source src="verbal-fluency.mp3" type="audio/mpeg">
+                <source src="audios/prendas-de-vestir.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
@@ -37,7 +38,7 @@
             <div class="audio-controls">
                 <audio id="instructionAudio1" controls></audio>
                 <img id="startRecButton1" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
-                <img id="recButton1" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
+                <img id="recButton1" class="record-button" src="grabando.png" style="display: none; cursor: default;" alt="Grabando">
                 <button id="stopRecordingButton1" style="display: none;border: none;"></button>
             </div>
             <div id="timer1" class="timer"></div>
@@ -47,12 +48,12 @@
 
         <!-- Parte 2 -->
         <div id="categoryFluency2" style="display: none;">
-            <h2 class="imageText">E2</h2>
+            <h2 class="imageText">E1</h2>
             <div id="letterDisplay2" class="letter-display">Animales</div>
             <div class="audio-controls">
                 <audio id="instructionAudio2" controls></audio>
                 <img id="startRecButton2" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
-                <img id="recButton2" class="record-button" src="grabando.png" style="display: none; cursor: pointer;" alt="Grabando">
+                <img id="recButton2" class="record-button" src="grabando.png" style="display: none; cursor: default;" alt="Grabando">
                 <button id="stopRecordingButton2" style="display: none;"></button>
             </div>
             <div id="timer2" class="timer"></div>

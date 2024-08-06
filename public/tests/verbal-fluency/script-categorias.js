@@ -4,8 +4,14 @@ document.getElementById('startTestButton').addEventListener('click', () => {
     document.getElementById('mainInstructionAudio').pause();
     startTime = Date.now();
     document.getElementById('instructions').style.display = 'none';
-    document.getElementById('categoryFluency1').style.display = 'block';
-    loadAudio(1); // Cargar el primer audio
+    document.getElementById('categoryFluency2').style.display = 'block';
+    loadAudio(2); // Cargar el segundo audio
+
+    // document.getElementById('mainInstructionAudio').pause();
+    // startTime = Date.now();
+    // document.getElementById('instructions').style.display = 'none';
+    // document.getElementById('categoryFluency1').style.display = 'block';
+    // loadAudio(1); // Cargar el primer audio
 });
 
 document.getElementById('fullscreenButton').addEventListener('click', () => {
@@ -142,6 +148,7 @@ function loadAudio(part) {
         letterDisplay.style.display = 'none';
         document.getElementById('startRecButton' + part).style.display = 'inline-block'; // Mostrar botón para comenzar grabación
         document.getElementById('nextButton' + part).style.display = 'inline-block'; // Mostrar la flecha
+        document.getElementById('startRecButton' + part).click(); // Iniciar grabación automáticamente
     });
 }
 
@@ -184,10 +191,10 @@ function downloadRecordingAndTime() {
     zip.file("tiempo_total.txt", timeBlob);
 
     const audio1Blob = new Blob(audioChunks[1], { type: 'audio/wav' });
-    zip.file("Categoría - Parte 1.wav", audio1Blob);
+    // zip.file("Categoría - Parte 1.wav", audio1Blob);
 
     const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
-    zip.file("Categoría - Parte 2.wav", audio2Blob);
+    zip.file("Categoría - Animales.wav", audio2Blob);
 
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
@@ -198,10 +205,10 @@ function downloadRecordingAndTime() {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${year}${month}${day}`;
+        const formattedDate = `${day}_${month}_${year}`;
         
         // Construir el nombre del archivo ZIP
-        const fileName = `${participantID}_TEST_4_VERBAL_FLUENCY_CATEGORIA_${formattedDate}.zip`;
+        const fileName = `${participantID}_verbal_fluency_categoria_${formattedDate}.zip`;
 
         zipLink.download = fileName;
         zipLink.click();

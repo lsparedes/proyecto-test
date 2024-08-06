@@ -247,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Generar el contenido del CSV
         const csvContent = generateCSV();
-        zip.file(`Benson_Draw_From_Memory_figure.csv`, csvContent);
+        zip.file(`${participantID}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
     
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('memory-canvas');
@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `ID-${participantID}-Benson_Draw_From_Memory_Figure-${diaStr}-${mesStr}-${añoStr}.zip`;
+                    link.download = `${participantID}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);

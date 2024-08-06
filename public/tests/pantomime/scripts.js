@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     function createCsvFile() {
-        const filename = `respuestas_pantomime_${fechaFormateada}.csv`;
+        const filename = `${participantID}_respuestas_pantomime_${fechaFormateada}.csv`;
         // Definir el contenido del archivo CSV
         const csvContent = `Tiempo dedicado (Milisegundos);Mano utilizada\n${totalTestTime};${selectedHand}\n`;
         const blob = new Blob([csvContent], { type: 'text/csv' });
