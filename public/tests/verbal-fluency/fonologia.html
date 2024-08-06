@@ -16,10 +16,14 @@
   <body>
     <div id="container">
         <div id="instructions">
-            <p><b>Fonología:</b> deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es
-                decir palabras que comiencen con la letra solicitada. Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60
-                segundos para cada tarea. Cada grabación puede ser descargada.</p>
-
+            <p>
+                Voy a decir una letra del alfabeto. Cuando le indique que empiece, dígame todas las palabras 
+                que pueda que comiencen con esa letra. Va a tener un minuto antes que yo le diga que pare. Ninguna de 
+                las palabras pueden ser números, nombres de personas, o lugares. <br>
+                Por ejemplo, si yo le digo la letra B, usted puede decir 'bonito', 'bola' o 'bailar', pero no puede decir 'Beatriz', 
+                'Bogotá', o 'billón'. Así mismo, trate de no darme la misma palabra con diferentes terminaciones. Así que, si usted dijo 'bailar', 
+                no diga 'bailó' o 'bailan'. Y si usted dijo 'bonito', no diga 'bonita' o 'bonitos'
+            </p>
             <audio id="mainInstructionAudio" style="margin-top: 20px;" controls>
                 <source src="verbal-fluency.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
@@ -33,7 +37,7 @@
         <!-- Parte 1 -->
         <div id="testSection1" style="display: none;">
             <h2 class="imageText">E1</h2>
-            <div id="letterDisplay1" class="letter-display">P</div>
+            <div id="letterDisplay1" class="letter-display">S</div>
             <div class="audio-controls">
                 <audio id="instructionAudio1" controls></audio>
                 <img id="startRecButton1" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
