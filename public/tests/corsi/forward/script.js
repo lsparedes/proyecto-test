@@ -34,18 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let timer;
     let milliseconds = 0;
 
-    // Posiciones fijas de los cuadrados
-    // const fixedPositions = [
-    //     { "top": "9%", "left": "51%" },
-    //     { "top": "13%", "left": "28%" },
-    //     { "top": "24.5%", "left": "62.7%" },
-    //     { "top": "29%", "left": "37.5%" },
-    //     { "top": "38%", "left": "53.5%" },
-    //     { "top": "51.5%", "left": "66%" },
-    //     { "top": "56%", "left": "24.7%" },
-    //     { "top": "69.5%", "left": "38.5%" },
-    //     { "top": "65%", "left": "52%" }
-    // ];
+    let mediaRecorder;
+    let recordedChunks = [];
+
     const fixedPositions = [
         { "top": 590, "left": 400 },
         { "top": 548, "left": 825 },
@@ -61,9 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const practiceSequences = [
         [0, 7, 6],
         [1, 8, 7]
-    ]
+    ];
 
-    // Secuencias fijas de bloques
     const fixedSequences = [
         [3, 6, 1],
         [7, 0, 4],
@@ -96,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         "S8-2",
         "S9-1",
         "S9-2"
-    ]
+    ];
 
     function createBlocks() {
         blocksContainer.innerHTML = '';
@@ -110,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
             block.addEventListener('click', handleBlockClick);
         }
 
-        // Rotar el container de los bloques
         blocksContainer.style.transform = 'rotate(180deg)';
     }
 
@@ -119,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const index = parseInt(event.target.dataset.index);
         if (playerSequence.length < sequence.length) {
-            resetBlocks(); // Desmarcar todos los bloques antes de marcar el actual
+            resetBlocks();
             playerSequence.push(index);
             event.target.classList.add('selected');
         }
@@ -131,11 +120,11 @@ document.addEventListener('DOMContentLoaded', () => {
         game.style.display = 'block';
         startSequenceButton.style.visibility = 'visible';
         startSequenceButton.style.display = 'inline-block';
-        endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" al iniciar el test
+        endSequenceButton.style.display = 'none';
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
-        repeatCount = 0; // Reiniciar el contador de repeticiones
+        repeatCount = 0;
         errorCount = 0;
         if (isPractice) {
             createBlocks();
@@ -149,7 +138,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playerSequence = [];
         if (isPractice) {
             createSequence(practiceSequences)
-        } else{
+        } else {
             createSequence(fixedSequences);
         }
         sequenceDisplaying = true;
@@ -172,8 +161,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         } else {
             sequenceDisplaying = false;
-            endSequenceButton.style.display = 'inline-block'; // Mostrar el botón "Terminar" después de mostrar la secuencia
-            playBeep(); // Llamar a playBeep aquí para reproducir el sonido después de la secuencia
+            endSequenceButton.style.display = 'inline-block';
+            playBeep();
             startTimer();
         }
     }
@@ -195,16 +184,16 @@ document.addEventListener('DOMContentLoaded', () => {
             errorCount++;
         }
 
-        sequenceCount++; // Incrementar la cuenta de secuencias
+        sequenceCount++;
 
         if (isPractice) {
             indicator.textContent = `P${sequenceCount+1}`;
             if (sequenceCount < practiceSequences.length) {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
-                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                    startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
-                }, 500); // Retraso de 2 segundos antes de comenzar la siguiente secuencia
+                    endSequenceButton.style.display = 'none';
+                    startSequenceButton.style.visibility = 'visible';
+                }, 500);
             } else {
                 endPractice();
             }
@@ -213,17 +202,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 game.style.display = 'none';
                 showHandSelection();
             } else {
-                repeatCount++; // Incrementar el contador de repeticiones
+                repeatCount++;
                 if (repeatCount === 2) {
-                    count++; // Incrementar la longitud de la secuencia después de 2 repeticiones
-                    repeatCount = 0; // Reiniciar el contador de repeticiones
-                    errorCount = 0; // Reiniciar el contador de errores
+                    count++;
+                    repeatCount = 0;
+                    errorCount = 0;
                 }
                 indicator.textContent = `S${count}-${repeatCount+1}`;
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
-                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
-                    startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
+                    endSequenceButton.style.display = 'none';
+                    startSequenceButton.style.visibility = 'visible';
                 }, 500);
             }
         }
@@ -233,20 +222,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const blocks = document.querySelectorAll('.block');
         blocks.forEach(block => {
             block.classList.remove('selected');
-            block.style.backgroundColor = 'rgb(29, 63, 255);';
+            block.style.backgroundColor = 'rgb(29, 63, 255)';
         });
     }
 
-    function endGame() {
-        endTime = new Date(); // Registrar la hora de finalización
-        const duration = (endTime - startTime) / 1000; // Duración en segundos
+    async function endGame() {
+        endTime = new Date();
+        const duration = (endTime - startTime) / 1000;
         console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
         game.style.display = 'none';
         resultScreen.style.display = 'block';
         count = 2;
         errorCount = 0;
         resetBlocks();
-        generateCSV(highestCount, totalCorrectBlocks, duration, sequenceCount); // Generar el CSV al final del juego
+
+        const csvBlob = generateCSVBlob(highestCount, totalCorrectBlocks, duration, sequenceCount);
+        const videoBlob = await stopScreenRecording();
+
+        const zip = new JSZip();
+        zip.file('resultado.csv', csvBlob);
+        zip.file('grabacion.webm', videoBlob);
+
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+            saveAs(content, 'resultado.zip');
+        });
     }
 
     function endPractice() {
@@ -265,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBlocks();
     }
 
-    function generateCSV(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
+    function generateCSVBlob(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
         const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta(ms)"];
         const rows = testData.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
@@ -291,32 +290,19 @@ document.addEventListener('DOMContentLoaded', () => {
         rows.push(['\nTiempo Total(s): ' + duration.toFixed(2)]);
         rows.push(['Mano Utilizada: ' + selectedHand]);
 
-        let csvContent = "data:text/csv;charset=utf-8," 
-        + headers.join(";") + "\n"
-        + rows.map(e => e.join(";")).join("\n");
-        // const date = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" });
-        // Obtener la fecha y hora actuales
-        const now = new Date();
-        const day = String(now.getDate()).padStart(2, '0');
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-    
-        // Formatear la fecha para el nombre del archivo
-        const date = `${day}_${month}_${year}`;
-        const fileName = `${participantID}_corsi_directo_${date}.csv`;
-        saveAs(csvContent, fileName);
-        // const csvContent = `Corsi Span,Total Bloques Correctos,Tiempo (segundos)\n${corsiSpan},${totalCorrectBlocks},${duration.toFixed(2)}`;
-        // const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        // saveAs(blob, fileName);
+        const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
+
+        return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     }
 
-    startTestButton.addEventListener('click', () => {
+    startTestButton.addEventListener('click', async () => {
         if (isPractice) {
-            startTime = new Date(); // Registrar la hora de inicio
+            startTime = new Date();
             console.log('Inicio');
         }
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.pause();
+        await startScreenRecording();
         startTest();
     });
 
@@ -336,8 +322,8 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             testData.push(exerciseData);
         }
-        checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
-        endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
+        checkSequence();
+        endSequenceButton.style.display = 'none';
     });
 
     fullscreenButton.addEventListener('click', () => {
@@ -348,43 +334,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function setCanvasBackground(canvas, color) {
-        const ctx = canvas.getContext('2d');
-        ctx.fillStyle = color;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }
-
-    async function startCanvasRecording(canvasId) {
-        const canvas = document.getElementById(canvasId);
-        const stream = canvas.captureStream(30); // 30 FPS
-    
+    async function startScreenRecording() {
+        const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
         mediaRecorder = new MediaRecorder(stream, {
             mimeType: 'video/webm;codecs=vp9'
         });
-    
+
         mediaRecorder.ondataavailable = (event) => {
             if (event.data.size > 0) {
                 recordedChunks.push(event.data);
             }
         };
-    
+
         mediaRecorder.start();
     }
-    
-    function stopCanvasRecording() {
-        mediaRecorder.stop();
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunks, {
-                type: 'video/webm'
-            });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = 'canvas-recording.webm';
-            link.click();
-            URL.revokeObjectURL(url);
-            recordedChunks = []; // Clear recorded chunks
-        };
+
+    function stopScreenRecording() {
+        return new Promise((resolve) => {
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                resolve(blob);
+            };
+            mediaRecorder.stop();
+        });
     }
 
     function playBeep() {
@@ -404,9 +376,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startTimer() {
-        stopTimer(); // Reiniciar el timer si ya está corriendo
-        milliseconds = 0; // Reiniciar los milisegundos
-        timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
+        stopTimer();
+        milliseconds = 0;
+        timer = setInterval(updateTimer, 10);
     }
     
     function stopTimer() {
@@ -414,37 +386,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTimer() {
-        milliseconds += 10; // Incrementar en 10 ms
-        let seconds = milliseconds / 1000; // Convertir a segundos
+        milliseconds += 10;
+        let seconds = milliseconds / 1000;
     }
-
-    // createBlocks();
-    
-    // SELECCION DE MANO JS
 
     const selectHandContainer = document.getElementById("selectHand");
     const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
 
-    // Variable con la mano seleccionada
     let selectedHand = "";
     let participantID = 0;
 
-    // Funcion para mostrar la pantalla de seleccion de mano
     function showHandSelection() {
         document.getElementById("preEnd").style.display = 'block';
         selectHandContainer.style.display = "block";
     }
     
-    // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
-    // En este caso fue mostrarFinalizacion()
     function confirmHandSelection() {
         document.getElementById("preEnd").style.display = 'none';
         selectHandContainer.style.display = "none";
         endGame();
     }
 
-    // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
     handInputs.forEach((input) => {
         input.addEventListener('change', (e) => {
             validateInputs();
