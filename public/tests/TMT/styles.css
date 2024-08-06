@@ -222,3 +222,9 @@ audio {
 #selectHand input[type="radio"] {
   margin-right: 10px;
 }
+
+#instructionText, #instructionTextB1 {
+  font-size: 32px;
+  text-align: justify;
+  margin-bottom: 1rem;
+}

@@ -1,19 +1,9 @@
-// Event listeners for the continue buttons
-// document.getElementById('continueButtonB').addEventListener('click', () => {
-//     startPartB();
-// });
-let begining = null;
 window.onload = function () {
     startPartB();
     begining = new Date();
-    // Iniciar grabación para el primer canvas
     mediaRecorderCanvas = startRecording(canvasPartB, recordedChunksCanvasB);
-
 };
 
-
-
-// PART 2.1 NUMBERS AND LETTERS
 const canvasPartB = document.getElementById('tmtCanvasPartB');
 const ctxPartB = canvasPartB.getContext('2d');
 const circlesPartB = [];
@@ -26,17 +16,17 @@ const incorrectPathsPartB2 = [];
 let drawingCompletedB = false;
 
 let circleRadius = 50;
-const circlesToCorrectB = []; // Para almacenar los círculos que se deben corregir
+const circlesToCorrectB = [];
 const recordedChunksCanvasB = [];
 
 let mediaRecorderCanvas;
 
-const data = []; // Para almacenar los datos de la tarea
-let erroresComision = 0; // Contador para errores de comisión
-let correctLines = 0; // Contador para líneas correctas
-let liftPenCount = 0; // Contador para veces que el participante levantó el lápiz de la pantalla
-let penAirTime = 0; // Tiempo total de lápiz en el aire desde la primera respuesta en el canvas
-let airStartTime = null; // Tiempo de lápiz en el aire
+const data = [];
+let erroresComision = 0;
+let correctLines = 0;
+let liftPenCount = 0;
+let penAirTime = 0;
+let airStartTime = null;
 
 const circleCoordinatesPartB = [
     { x: 498, y: 497 },
@@ -91,10 +81,10 @@ function startRecording(canvas, recordedChunks) {
 }
 
 function startPartB() {
-    // document.getElementById('partB').style.display = 'none';
-    // document.getElementById('instructions').style.marginTop = '0';
     canvasPartB.style.display = 'block';
     ctxPartB.clearRect(0, 0, canvasPartB.width, canvasPartB.height);
+    ctxPartB.fillStyle = 'white'; // Fondo blanco
+    ctxPartB.fillRect(0, 0, canvasPartB.width, canvasPartB.height);
     circlesPartB.length = 0;
     currentCirclePartB = 1;
     lastCirclePartB = null;
@@ -112,10 +102,10 @@ function startPartB() {
 
 fullscreenButton.addEventListener('click', () => {
     if (document.fullscreenEnabled && !document.fullscreenElement) {
-        fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')";
         document.documentElement.requestFullscreen();
     } else if (document.fullscreenElement) {
-        fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')";
         document.exitFullscreen();
     } else {
         console.log('El modo de pantalla completa no es soportado por tu navegador.');
@@ -132,14 +122,14 @@ function getNextLabel(currentLabel) {
 }
 
 function highlightCircle(ctx, circle, color, lastX, lastY) {
-    ctx.lineWidth = 3; // Aumentar el grosor del borde
-    ctx.strokeStyle = color; // Color para el borde resaltado
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = color;
     ctx.beginPath();
     ctx.arc(circle.x, circle.y, circleRadius, 0, Math.PI * 2, true);
     ctx.stroke();
-    ctx.strokeStyle = 'black'; // Restablecer el color para futuras líneas correctas
-    ctx.lineWidth = 1; // Restablecer el grosor del borde
-    ctx.moveTo(lastX, lastY); // mueve el cursor desde el ultimo punto que se dibujo el arco hasta donde se encuentra el mouse
+    ctx.strokeStyle = 'black';
+    ctx.lineWidth = 1;
+    ctx.moveTo(lastX, lastY);
 }
 
 function drawLineToCircleEdge(ctx, startX, startY, endX, endY) {
@@ -150,7 +140,7 @@ function drawLineToCircleEdge(ctx, startX, startY, endX, endY) {
     ctx.stroke();
 }
 
-let drawingCompleted = false; // Bandera para indicar si se completó el dibujo
+let drawingCompleted = false;
 
 function startDrawing(x, y) {
     circlesPartB.forEach(circle => {
@@ -171,7 +161,6 @@ function drawMove(x, y) {
 
     let validDrop = false;
 
-
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
         if (distance < 50 && circle.label != getNextLabel(currentCirclePartB) && circle.label != lastCirclePartB.label) {
@@ -180,8 +169,7 @@ function drawMove(x, y) {
             circlesToCorrectB.push({ x: circle.x, y: circle.y, number: circle.number });
             isDrawingPartB = false;
         } else if (distance < 50 && circle.label === getNextLabel(currentCirclePartB)) {
-            highlightCircle(ctxPartB, circle, 'black', x, y); // Restablecer el borde correcto
-            // drawLineToCircleEdge(ctxPartB, lastCirclePartB.x, lastCirclePartB.y, circle.x, circle.y);
+            highlightCircle(ctxPartB, circle, 'black', x, y);
             correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB = getNextLabel(currentCirclePartB);
             lastCirclePartB = circle;
@@ -193,7 +181,6 @@ function drawMove(x, y) {
                 });
                 circlesToCorrectB.length = 0;
             }
-
         }
     });
 
@@ -208,8 +195,7 @@ function endDrawing(x, y) {
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
         if (distance < 50 && circle.label === getNextLabel(currentCirclePartB)) {
-            highlightCircle(ctxPartB, circle, 'black', x, y); // Restablecer el borde correcto
-            // drawLineToCircleEdge(ctxPartB, lastCirclePartB.x, lastCirclePartB.y, circle.x, circle.y);
+            highlightCircle(ctxPartB, circle, 'black', x, y);
             correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB = getNextLabel(currentCirclePartB);
             lastCirclePartB = circle;
@@ -231,41 +217,40 @@ function endDrawing(x, y) {
 }
 
 canvasPartB.addEventListener('mousedown', function (event) {
-    if (drawingCompletedB) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB) return;
     startDrawing(event.offsetX, event.offsetY);
 });
 
 canvasPartB.addEventListener('mousemove', function (event) {
-    if (drawingCompletedB) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB) return;
     drawMove(event.offsetX, event.offsetY);
 });
 
 canvasPartB.addEventListener('mouseup', function (event) {
-    if (drawingCompletedB) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB) return;
     endDrawing(event.offsetX, event.offsetY);
 });
 
 canvasPartB.addEventListener('touchstart', function (event) {
-    if (drawingCompletedB) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB) return;
     const touch = event.touches[0];
     const rect = canvas.getBoundingClientRect();
     startDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
 });
 
 canvasPartB.addEventListener('touchmove', function (event) {
-    if (drawingCompletedB) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB) return;
     const touch = event.touches[0];
     const rect = canvas.getBoundingClientRect();
     drawMove(touch.clientX - rect.left, touch.clientY - rect.top);
 });
 
 canvasPartB.addEventListener('touchend', function (event) {
-    if (drawingCompletedB) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB) return;
     const touch = event.changedTouches[0];
     const rect = canvas.getBoundingClientRect();
     endDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
 });
-
 
 function drawInvalidLine(ctx, startX, startY, endX, endY) {
     ctx.beginPath();
@@ -287,7 +272,6 @@ function drawNextButtonB() {
         canvasPartB.style.display = 'none';
         document.getElementById('partB').style.display = 'none';
         document.getElementById('partB2').style.display = 'flex';
-        // document.getElementById('continueButtonB2').style.display = 'block'; // REVISAR (comienza un temporizador por aqui)
         startPartB2();
         nextButtonB.remove();
     });
@@ -295,7 +279,6 @@ function drawNextButtonB() {
     document.body.appendChild(nextButtonB);
 }
 
-// PART 2.2 NUMBERS AND LETTERS
 const canvasPartB2 = document.getElementById('tmtCanvasPartB2');
 const ctxPartB2 = canvasPartB2.getContext('2d');
 const circlesPartB2 = [];
@@ -306,7 +289,7 @@ const correctPathsPartB2 = [];
 let drawingCompletedB2 = false;
 let temporizador = null;
 
-const circlesToCorrectB2 = []; // Para almacenar los círculos que se deben corregir
+const circlesToCorrectB2 = [];
 
 const recordedChunksCanvasPartB2 = [];
 let mediaRecorderCanvasPartB2;
@@ -344,8 +327,7 @@ const lastCircleLabelB2 = "Terminar";
 
 function reiniciarTemporizador() {
     clearTimeout(temporizador);
-    temporizador = setTimeout(arrowToRed, 300000); // Cambia después de 300 segundos
-    // temporizador = setTimeout(completeTest, 3000); // Cambia después de 3 segundos
+    temporizador = setTimeout(arrowToRed, 300000);
 }
 
 function arrowToRed() {
@@ -359,23 +341,22 @@ const instructionAudio = document.getElementById('instructionAudio');
 
 instructionAudio.addEventListener('ended', function () {
     playBeep();
-
 });
 
 let inicio = null;
 function playBeep() {
-    const beep = new Audio('sonidos/beep.wav'); // Asegúrate de tener un archivo beep.mp3
+    const beep = new Audio('sonidos/beep.wav');
     beep.play();
     inicio = new Date();
-    // startRecording(canvasPartB2);
     reiniciarTemporizador();
 }
 
 function startPartB2() {
-    // document.getElementById('partB2').style.display = 'none';
     circleRadius = 30;
     canvasPartB2.style.display = 'block';
     ctxPartB2.clearRect(0, 0, canvasPartB2.width, canvasPartB2.height);
+    ctxPartB2.fillStyle = 'white'; // Fondo blanco
+    ctxPartB2.fillRect(0, 0, canvasPartB2.width, canvasPartB2.height);
     circlesPartB2.length = 0;
     currentCirclePartB2 = 1;
     lastCirclePartB2 = null;
@@ -391,7 +372,6 @@ function startPartB2() {
     mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
     drawNextButtonB2();
 }
-
 
 function startDrawingPartB2(x, y) {
     circlesPartB2.forEach(circle => {
@@ -415,14 +395,12 @@ function drawMovePartB2(x, y) {
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
         if (distance < circleRadius && circle.label != getNextLabel(currentCirclePartB2) && circle.label != lastCirclePartB2.label) {
-            // drawInvalidLine(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, x, y);
             highlightCircle(ctxPartB2, circle, 'red', x, y);
             erroresComision++;
             circlesToCorrectB2.push({ x: circle.x, y: circle.y, number: circle.number });
             incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
             isDrawingPartB2 = false;
         } else if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB2)) {
-            console.log('HOLA HOLA: ', circleRadius);
             highlightCircle(ctxPartB2, circle, 'black', x, y);
             correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB2 = getNextLabel(currentCirclePartB2);
@@ -450,8 +428,7 @@ function endDrawingPartB2(x, y) {
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
         if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB2)) {
-            // drawLineToCircleEdge(ctxPartB2, lastCirclePartB2.x, lastCirclePartB2.y, circle.x, circle.y);
-            highlightCircle(ctxPartB2, circle, 'black', x, y); // Restablecer el borde correcto
+            highlightCircle(ctxPartB2, circle, 'black', x, y);
             correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB2 = getNextLabel(currentCirclePartB2);
             lastCirclePartB2 = circle;
@@ -473,50 +450,50 @@ function endDrawingPartB2(x, y) {
 }
 
 canvasPartB2.addEventListener('mousedown', function (event) {
-    if (isDrawingPartB2) return; // Si el dibujo está completo, no hacer nada
+    if (isDrawingPartB2) return;
     startDrawingPartB2(event.offsetX, event.offsetY);
     if (airStartTime) {
         const airEndTime = new Date();
-        const airTime = (airEndTime - airStartTime) / 1000; // Tiempo de lápiz en el aire en segundos
+        const airTime = (airEndTime - airStartTime) / 1000;
         penAirTime += airTime;
         airStartTime = null;
     }
 });
 
 canvasPartB2.addEventListener('mousemove', function (event) {
-    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB2) return;
     drawMovePartB2(event.offsetX, event.offsetY);
 });
 
 canvasPartB2.addEventListener('mouseup', function (event) {
-    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB2) return;
     endDrawingPartB2(event.offsetX, event.offsetY);
     liftPenCount++;
     airStartTime = new Date();
 });
 
 canvasPartB2.addEventListener('touchstart', function (event) {
-    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB2) return;
     const touch = event.touches[0];
     const rect = canvasPartB2.getBoundingClientRect();
     startDrawingPartA(touch.clientX - rect.left, touch.clientY - rect.top);
     if (airStartTime) {
         const airEndTime = new Date();
-        const airTime = (airEndTime - airStartTime) / 1000; // Tiempo de lápiz en el aire en segundos
+        const airTime = (airEndTime - airStartTime) / 1000;
         penAirTime += airTime;
         airStartTime = null;
     }
 });
 
 canvasPartB2.addEventListener('touchmove', function (event) {
-    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB2) return;
     const touch = event.touches[0];
     const rect = canvasPartB2.getBoundingClientRect();
     drawMovePartB2(touch.clientX - rect.left, touch.clientY - rect.top);
 });
 
 canvasPartB2.addEventListener('touchend', function (event) {
-    if (drawingCompletedB2) return; // Si el dibujo está completo, no hacer nada
+    if (drawingCompletedB2) return;
     const touch = event.changedTouches[0];
     const rect = canvasPartA.getBoundingClientRect();
     endDrawingPartB2(touch.clientX - rect.left, touch.clientY - rect.top);
@@ -533,13 +510,11 @@ function drawNextButtonB2() {
         document.getElementById('instructionAudio').pause();
         document.getElementById('partB2').style.display = 'none';
         canvasPartB2.style.display = 'none';
-        // Aquí puedes agregar la lógica para mostrar la siguiente sección o concluir la prueba
         nextButtonB2.remove();
         const fin = new Date();
-        const executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea
-        const taskTime = (fin - begining) / 1000; // Tiempo total dedicado a la tarea
+        const executionTime = (fin - inicio) / 1000;
+        const taskTime = (fin - begining) / 1000;
         console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
-        // data.push([{ executionTime: executionTime}]);
         data.push({
             executionTime: executionTime,
             commissionErrors: erroresComision,
@@ -548,7 +523,7 @@ function drawNextButtonB2() {
             penAirTime: penAirTime,
             taskTime: taskTime
         });
-        showHandSelection(); // Llamar a completeTest aquí para mostrar el botón de descarga
+        showHandSelection();
     });
 
     document.body.appendChild(nextButtonB2);
@@ -563,12 +538,10 @@ function downloadCanvasImage(canvas, fileName) {
 }
 
 function downloadAllCanvasImages() {
-    //downloadCanvasImage(canvasPartA, 'canvasPartA.png');
     downloadCanvasImage(canvasPartB, 'canvasPartB.png');
     downloadCanvasImage(canvasPartB2, 'canvasPartB2.png');
 }
 
-// Función para mostrar el botón de descarga al final
 function showDownloadButton() {
     const downloadButton = document.createElement('button');
 
@@ -581,10 +554,7 @@ function showDownloadButton() {
     downloadButton.click();
 }
 
-// Llamar a esta función cuando se complete la prueba
 function testFinalizado() {
-    // showDownloadButton(); // REVISAR (para ver como se implemento la descarga de las imagenes)
-    // Detener las grabaciones
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
@@ -599,8 +569,6 @@ function testFinalizado() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        // link.download = 'canvasRecording.webm';
-        // link.click();
     };
 
     mediaRecorderCanvasPartB2.onstop = () => {
@@ -608,8 +576,6 @@ function testFinalizado() {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        // link.download = 'canvasPartB2Recording.webm';
-        // link.click();
     };
 
     setTimeout(() => {
@@ -619,8 +585,6 @@ function testFinalizado() {
         const csvContent = generateCSV(data);
         zip.file("test_result_TMT_part_B.csv", csvContent);
 
-
-        // Capturas de pantalla
         canvasPartB.toBlob(function (blob) {
             zip.file("canvasBScreenshot.png", blob);
 
@@ -633,18 +597,17 @@ function testFinalizado() {
             });
         });
 
-        // Mostrar mensaje de finalización
         const instructions = document.getElementById('instructions');
         instructions.style.display = 'flex';
         instructions.style.rotate = '-90deg';
-        instructions.style.justifyContent = 'center'; // Centrar contenido horizontalmente
-        instructions.style.alignItems = 'center'; // Centrar contenido verticalmente
-        instructions.style.height = '100vh'; // Altura del viewport para permitir el centrado vertical
+        instructions.style.justifyContent = 'center';
+        instructions.style.alignItems = 'center';
+        instructions.style.height = '100vh';
         instructions.innerHTML = '¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!';
         instructions.style.textAlign = 'center';
         instructions.style.fontSize = '40px';
-        instructions.style.marginTop = '0'; // Asegúrate de resetear el marginTop si ya no es necesario
-    }, 1000); // Ajustar tiempo si es necesario
+        instructions.style.marginTop = '0';
+    }, 1000);
 }
 
 function generateCSV(data) {
@@ -658,17 +621,13 @@ function generateCSV(data) {
     return new Blob([csvContent], { type: 'text/csv' });
 }
 
-// SELECCION DE MANO JS
-
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
 const enterIDContainer = document.getElementById("enterID");
 
-// Variable con la mano seleccionada
 let selectedHand = "";
 
-// Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
     document.getElementById('preEnd').style.display = 'block';
     document.getElementById('fin').style.display = 'block';
@@ -677,9 +636,6 @@ function showHandSelection() {
 }
 
 handButton.addEventListener('click', confirmHandSelection);
-
-// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
-// En este caso fue testFinalizado()
 
 document.getElementById('participantID').addEventListener('input', validateInputs);
 let participantID = 0;
@@ -702,7 +658,6 @@ function confirmHandSelection() {
     testFinalizado();
 }
 
-// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 handInputs.forEach((input) => {
     input.addEventListener('change', (e) => {
         validateInputs();
