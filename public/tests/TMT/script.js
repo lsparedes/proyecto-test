@@ -516,7 +516,10 @@ document.addEventListener('DOMContentLoaded', function () {
             canvasPartA.style.display = 'none'; // Ocultar el canvas actual
             nextButtonA.remove(); // Eliminar el botón "Siguiente" después de hacer clic
             const fin = new Date();
-            const executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea
+            let executionTime = 0;
+            if (inicio) {
+                executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea en segundos
+            }
             const taskTime = (fin - begining) / 1000; // Tiempo total de la tarea en segundos
             console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
             // data.push([{ executionTime: executionTime}]);
@@ -526,7 +529,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 correctLines: correctLines,
                 liftPenCount: liftPenCount,
                 penAirTime: penAirTime,
-                taskTime: 150
+                taskTime: taskTime
             });
             showHandSelection();
         });
@@ -606,10 +609,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     function generateCSV(data) {
-        let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha),Numero de errores de comision,Numero de lineas correctas,Numero de veces en que el participante levanto el lápiz de la pantalla,Tiempo de ejecucion de la tarea,Tiempo total de lápiz en el aire desde la primera respuesta en el canvas,Tiempo dedicado a la tarea, mano utilizada\n";
+        let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha);Numero de errores de comision;Numero de lineas correctas;Numero de veces en que el participante levanto el lápiz de la pantalla;Tiempo de ejecucion de la tarea;Tiempo total de lápiz en el aire desde la primera respuesta en el canvas;Tiempo dedicado a la tarea(s); mano utilizada\n";
 
         data.forEach(row => {
-            let linea = `${row.executionTime},${row.commissionErrors},${row.correctLines},${row.liftPenCount},${row.executionTime},${row.penAirTime},${row.taskTime},${selectedHand}\n`;
+            let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.executionTime};${row.penAirTime};${row.taskTime};${selectedHand}\n`;
             csvContent += linea;
         });
 

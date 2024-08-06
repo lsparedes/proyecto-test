@@ -4,6 +4,8 @@ const downloadLinks = [];
 let audioStream = null;
 let recordingStartTime;
 let timerInterval;
+let taskTimeStart;
+let taskTime;
 
 document.addEventListener('DOMContentLoaded', () => {
     requestMicrophonePermission();
@@ -27,6 +29,7 @@ function requestMicrophonePermission() {
 }
 
 function startTest(type) {
+    taskTimeStart = new Date();
     const testItemsContainer = type === 'forward' ? document.getElementById('test-items-forward') : document.getElementById('test-items-backward');
     testItemsContainer.innerHTML = '';
 
@@ -227,6 +230,7 @@ const finalButton = document.getElementById('final-button');
 let participantID = 0;
 
 function mostrarFinalizacion(type) {
+    taskTime = (new Date() - taskTimeStart) / 1000;
     console.log("Mostrando mensaje de finalización...");
     const completionMessage = document.getElementById('completion-message');
     completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
@@ -263,6 +267,8 @@ function generarCSV() {
             csvContent += row + "\n";
         }
     });
+
+    csvContent += "Tiempo dedicado a la tarea(s);"+taskTime+"\n";
 
     return csvContent;
 }

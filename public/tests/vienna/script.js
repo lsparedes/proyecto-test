@@ -410,8 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
             errorRotacion: '',
             respuestaParticipante: `(${click.x.toFixed(2)}, ${click.y.toFixed(2)})`,
             precision: 0,
-            tiempoRespuesta: responseTime / 1000, // Convertir a segundos
-            tiempoDedicado: (Date.now() - trialStartTime) / 1000, // Convertir a segundos
+            tiempoRespuesta: responseTime, // En milisegundos
+            tiempoDedicado: (Date.now() - trialStartTime), // En milisegundos
             manoUtilizada: '' // Actualmente vacío
         };
 
@@ -568,7 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     
         let csv = Papa.unparse(csvData, { delimiter: ';' });
-        csv += `\n\nmano_utilizada;${selectedHand}`;
+        csv += `\ntiempo_total_segundos;${(Date.now() - trialStartTime) / 1000}\nmano_utilizada;${selectedHand}`;
     
         const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
         const link = document.createElement('a');
@@ -602,6 +602,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (completionScreen) {
             completionScreen.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
             downloadCSV(); // Descargar automáticamente el CSV al mostrar la pantalla de finalización
         } else {
             console.error('completionScreen element not found');

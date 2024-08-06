@@ -536,7 +536,10 @@ function drawNextButtonB2() {
         // Aquí puedes agregar la lógica para mostrar la siguiente sección o concluir la prueba
         nextButtonB2.remove();
         const fin = new Date();
-        const executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea
+        let executionTime = 0;
+        if (inicio) {
+            executionTime = (fin - inicio); // Tiempo de ejecución de la tarea
+        }
         const taskTime = (fin - begining) / 1000; // Tiempo total dedicado a la tarea
         console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
         // data.push([{ executionTime: executionTime}]);
@@ -648,10 +651,10 @@ function testFinalizado() {
 }
 
 function generateCSV(data) {
-    let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha),Numero de errores de comision,Numero de lineas correctas,Numero de veces en que el participante levanto el lápiz de la pantalla,Tiempo de ejecucion de la tarea,Tiempo total de lápiz en el aire desde la primera respuesta en el canvas,Tiempo dedicado a la tarea, mano utilizada\n";
+    let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha);Numero de errores de comision;Numero de lineas correctas;Numero de veces en que el participante levanto el lápiz de la pantalla;Tiempo de ejecucion de la tarea;Tiempo total de lápiz en el aire desde la primera respuesta en el canvas;Tiempo dedicado a la tarea(s); mano utilizada\n";
 
     data.forEach(row => {
-        let linea = `${row.executionTime},${row.commissionErrors},${row.correctLines},${row.liftPenCount},${row.executionTime},${row.penAirTime},${row.taskTime},${selectedHand}\n`;
+        let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.executionTime};${row.penAirTime};${row.taskTime};${selectedHand}\n`;
         csvContent += linea;
     });
 
