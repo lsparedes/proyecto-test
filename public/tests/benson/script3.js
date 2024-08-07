@@ -22,7 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectableImages = document.querySelectorAll('.selectable');
     const handInputs = document.querySelectorAll('input[name="hand"]');
     const DownloadButton = document.getElementById('download');
-
+    const showinstruction = document.getElementById('showinstruction');
+    const instruccion = document.getElementById('instruccion');
+    
     enterContainer2();
 
     fullscreenButton.addEventListener('click', () => {
@@ -32,6 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (document.exitFullscreen) {
                 document.exitFullscreen();
             }
+        }
+    });
+
+    showinstruction.addEventListener('click', () => {
+        if (instruccion.classList.contains('show')) {
+            instruccion.classList.remove('show');
+            showinstruction.style.backgroundImage = "url('noeye.png')";
+        } else {
+            instruccion.classList.add('show');
+            showinstruction.style.backgroundImage = "url('eye.png')";
         }
     });
 
@@ -93,8 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateCSV() {
 
-        let csvContent = "Actividad,Tiempo de inicio,Tiempo de Termino,Mano Seleccionada, FiguraCorrecta, FiguraSeleccionada, Precision\n";
-        csvContent += `IdentifyFigure,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${selectedHand},${correctAnswer},${participantAnswer},${accuracy}\n`;
+        let csvContent = "Actividad;Tiempo Total(s);Tiempo Total(ms);Mano Seleccionada; FiguraCorrecta; FiguraSeleccionada; Precision\n";
+        let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
+        csvContent += `IdentifyFigure;${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy}\n`;
 
         return csvContent;
     }

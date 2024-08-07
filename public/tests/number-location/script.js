@@ -136,7 +136,14 @@ function generateCSV(participantID) {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
-    const filename = `${participantID}_VisualObjectSpacePerception_${fechaFormateada}.csv`;
+
+    // Obtener la fecha y la hora actuales
+    const año = fechaActual.getFullYear();
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+    // Formatear la fecha y la hora
+    const fechaHoraFormateada = `${dia}_${mes}_${año}`;
+    const filename = `${participantID}_VisualObjectSpacePerception_${fechaHoraFormateada}.csv`;
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");

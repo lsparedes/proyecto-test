@@ -16,10 +16,15 @@
     <div id="container">
         <div id="container2" style="display: block;">
             <div id="main-screen">
-                <audio id="audio2" controls>
-                    <source src="audio2.mp3" type="audio/mpeg">
-                    Tu navegador no soporta el elemento de audio.
-                </audio>
+
+                <div id="instruction">
+                    <button id="showinstruction"></button>
+                    <p id="instruccion">Consta de recuerdo diferido pasado un tiempo debera dibujar la misma figura de memoria, sin ayuda.</p>
+                    <audio id="audio2" controls>
+                        <source src="audio2.mp3" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+                </div>
 
                 <div id="draw-from-memory-screen">
                     <div class="controls controls-left">
@@ -82,9 +87,7 @@
             <h1>¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias! </h1>
         </div>
     </div>
-    <div class="button-container2">
-        <button id="end-button"></button>
-    </div>
+
     <script src="script2.js"></script>
 </body>
 

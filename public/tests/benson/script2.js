@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectHandContainer = document.getElementById('selectHand');
     const handInputs = document.getElementsByName('hand');
     const DownloadButton = document.getElementById('download');
+    const showinstruction = document.getElementById('showinstruction');
+    const instruccion = document.getElementById('instruccion');
+    
 
     enterContainer2();
     initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
@@ -40,6 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimeExecution = new Date();
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
+
+    showinstruction.addEventListener('click', () => {
+        if (instruccion.classList.contains('show')) {
+            instruccion.classList.remove('show');
+            showinstruction.style.backgroundImage = "url('noeye.png')";
+        } else {
+            instruccion.classList.add('show');
+            showinstruction.style.backgroundImage = "url('eye.png')";
+        }
+    });
 
     finishDrawingFromMemoryButton.addEventListener('click', () => {
         document.getElementById('audio2').pause();
@@ -226,10 +239,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV() {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Actividad,Tiempo de inicio,Tiempo de Termino,Comenzó a dibujar,Terminó de dibujar,Mano Seleccionada\n";
-        csvContent += `DrawFromMemory,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${formatDate(startDrawingTime)},${formatDate(endDrawingTime)},${selectedHand}\n`;
-
+        // let csvContent = "data:text/csv;charset=utf-8,";
+        let csvContent = "Actividad;Tiempo Total(s);Tiempo Dibujo(ms);Mano Seleccionada\n";
+        let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
+        let drawingTime = 0;
+        if (startDrawingTime) {
+            drawingTime = (endDrawingTime - startDrawingTime); //tiempo de dibujo en milisegundos
+        }
+        csvContent += `DrawWithFigure;${timeTotal};${drawingTime};${selectedHand}\n`;
+    
         return csvContent;
     }
     
@@ -271,7 +289,16 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(blob);
         } catch (error) {
-            console.error(`Error stopping canvas recording: ${error}`);
+            console.warn(`No video available: ${error}`);
+            // Generar el archivo ZIP sin el video
+            zip.generateAsync({ type: 'blob' }).then((content) => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = `${participantID}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
         }
     }
 

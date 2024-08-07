@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const handInputs = document.getElementsByName('hand');
     const enterID = document.getElementById('enterID');
     const DownloadButton = document.getElementById('download');
+    const showinstruction = document.getElementById('showinstruction');
+    const instruccion = document.getElementById('instruccion');
+    
 
     enterContainer2(); 
     initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
@@ -43,6 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
 
+    
+
+    showinstruction.addEventListener('click', () => {
+        if (instruccion.classList.contains('show')) {
+            instruccion.classList.remove('show');
+            showinstruction.style.backgroundImage = "url('noeye.png')";
+        } else {
+            instruccion.classList.add('show');
+            showinstruction.style.backgroundImage = "url('eye.png')";
+        }
+    });
+    
+
     finishdrawingwithfigure.addEventListener('click', () => {
         document.getElementById('audio1').pause();
         document.getElementById('audio1_2').pause();
@@ -60,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
             setTimeout(() => {
                 finishdrawingwithfigure.classList.add('red-arrow');
-            }, 4 * 60 * 1000); // 
+            }, 4 * 60 * 1000); //
         });
     }
 
@@ -79,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     DownloadButton.addEventListener('click', () => {
+        enterID.style.display = 'none';
+        selectHandContainer.style.display = 'none';  
         validateInputs();
         GenerateZIP();
     });
@@ -248,11 +266,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     function generateCSV() {
-
-        let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Actividad,Tiempo de inicio,Tiempo de Termino,Comenzó a dibujar,Terminó de dibujar,Mano Seleccionada\n";
-        csvContent += `DrawWithFigure,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${formatDate(startDrawingTime)},${formatDate(endDrawingTime)},${selectedHand}\n`;
-
+        // let csvContent = "data:text/csv;charset=utf-8,";
+        let csvContent = "Actividad;Tiempo Total(s);Tiempo Dibujo(ms);Mano Seleccionada\n";
+        let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
+        let drawingTime = 0;
+        if (startDrawingTime) {
+            drawingTime = (endDrawingTime - startDrawingTime); //tiempo de dibujo en milisegundos
+        }
+        csvContent += `DrawWithFigure;${timeTotal};${drawingTime};${selectedHand}\n`;
+    
         return csvContent;
     }
 
@@ -296,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Generar el contenido del CSV
         const csvContent = generateCSV();
-        zip.file(`${participantID}_benson_draw_with_figure-${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${participantID}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
     
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('drawing-canvas');
@@ -312,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `${participantID}_benson_draw_with_figure-${diaStr}_${mesStr}_${añoStr}.zip`;
+                    link.download = `${participantID}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -320,7 +342,16 @@ document.addEventListener('DOMContentLoaded', () => {
             };
             reader.readAsDataURL(blob);
         } catch (error) {
-            console.error(`Error stopping canvas recording: ${error}`);
+            console.warn(`No video available: ${error}`);
+            // Generar el archivo ZIP sin el video
+            zip.generateAsync({ type: 'blob' }).then((content) => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = `${participantID}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
         }
     }
     
