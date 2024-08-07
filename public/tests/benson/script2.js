@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectHandContainer = document.getElementById('selectHand');
     const handInputs = document.getElementsByName('hand');
     const DownloadButton = document.getElementById('download');
+    const showinstruction = document.getElementById('showinstruction');
+    const instruccion = document.getElementById('instruccion');
+    
 
     enterContainer2();
     initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
@@ -40,6 +43,16 @@ document.addEventListener('DOMContentLoaded', () => {
         startTimeExecution = new Date();
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
+
+    showinstruction.addEventListener('click', () => {
+        if (instruccion.classList.contains('show')) {
+            instruccion.classList.remove('show');
+            showinstruction.style.backgroundImage = "url('noeye.png')";
+        } else {
+            instruccion.classList.add('show');
+            showinstruction.style.backgroundImage = "url('eye.png')";
+        }
+    });
 
     finishDrawingFromMemoryButton.addEventListener('click', () => {
         document.getElementById('audio2').pause();

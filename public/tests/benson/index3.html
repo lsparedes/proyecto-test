@@ -14,10 +14,15 @@
     <div id="container">
         <div id="container2" style="display: block;">
             <div id="main-screen">
-                <audio id="audio3" controls>
-                    <source src="audio3.mp3" type="audio/mpeg">
-                    Tu navegador no soporta el elemento de audio.
-                </audio>
+                <div id="instruction">
+                    <button id="showinstruction"></button>
+                    <p id="instruccion">Consta de identificar la figura, se presentara una seccion para identificar la figura dibujada.</p>
+                    <audio id="audio3" controls>
+                        <source src="audio3.mp3" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+                </div>
+
                 <div id="identify-figure-screen">
                     <div id="identify-figure-grid">
                         <img src="figura2-1.png" alt="Figura 2-1" class="identify-figure-image selectable" data-figure="figura2-1">
@@ -75,11 +80,6 @@
                 <button id="download"></button>
             </div>
         </div>
-
-        <div class="button-container2">
-            <button id="end-button"></button>
-        </div>
-
         <div id="thanksScreen" class="container1" style="display: none;">
             <h1>¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias! </h1>
         </div>
