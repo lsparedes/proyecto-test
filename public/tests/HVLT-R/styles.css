@@ -10,7 +10,7 @@ body {
     overflow: hidden;
 }
 
-#container {
+/* #container {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -18,9 +18,10 @@ body {
     align-items: center;
     text-align: center;
     background: white;
-}
+} */
 
-.container1, .screen {
+.container1,
+.screen {
     width: 100%;
     height: 100%;
     display: flex;
@@ -40,7 +41,7 @@ body {
 
 #main-screen,
 #main-screen2,
-#ensayo2{
+#ensayo2 {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -99,7 +100,7 @@ button:active {
 #nxbutton5,
 #nxbutton6,
 #startButton2,
-#download{
+#download {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -220,8 +221,10 @@ audio-container {
 #stopRecordingButton4 {
     background-size: cover;
     background-position: center;
-    width: 100px; /* Ajusta el tamaño según sea necesario */
-    height: 100px; /* Ajusta el tamaño según sea necesario */
+    width: 100px;
+    /* Ajusta el tamaño según sea necesario */
+    height: 100px;
+    /* Ajusta el tamaño según sea necesario */
     border: none;
     cursor: pointer;
 }
@@ -247,7 +250,7 @@ audio-container {
     background-image: url('detenerr1.png');
 }
 
-#enterID {
+/* #enterID {
     background-color: #f9f9f9;
     border: 1px solid #ddd;
     padding: 20px;
@@ -261,4 +264,10 @@ audio-container {
     width: 25%;
     margin: 0 !important;
   }
-  
+   */
+.card-body h4 {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}
