@@ -43,6 +43,7 @@ body {
     height: 100%;
     display: flex;
     box-sizing: border-box; /* Para incluir el padding dentro del tamaño total */
+    
 }
 
 #main-screen {
@@ -114,6 +115,40 @@ button:active {
     transform: scale(0.98);
 }
 
+#showinstruction {
+    position: absolute;
+    right: 15px;
+    width: 32px;
+    height: 32px;
+    background-image: url('noeye.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: none;
+    padding: 0;
+    padding-bottom: 20px;
+}
+
+#instruction {
+    position: relative;
+
+}
+
+#instruccion {
+    visibility: hidden;
+    opacity: 0;
+    position: relative;
+    top: 70px; /* Ajusta la posición según sea necesario */
+    text-align: center;
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-bottom: 100px;
+}
+
+#instruccion.show {
+    visibility: visible;
+    opacity: 1;
+}
+
 #start-button {
     padding: 15px 30px;
     font-size: 22px;
@@ -182,6 +217,12 @@ button:active {
 #memory-timer {
     font-size: 24px;
     margin-right: 20px;
+}
+
+#draw-with-figure-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #draw-from-memory-screen{

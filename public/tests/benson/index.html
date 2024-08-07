@@ -16,10 +16,15 @@
     <div id="container">
         <div id="container2" style="display: flex;">
             <div id="main-screen">
-                <audio id="audio1" controls>
-                    <source src="audio1.mp3" type="audio/mpeg">
-                    Tu navegador no soporta el elemento de audio.
-                </audio>
+                <div id="instruction">
+                    <button id="showinstruction"></button>
+                    <p id="instruccion">Consta de copiar una figura la cual debe copiar lo más exacta posible.</p>
+                    <audio id="audio1" controls>
+                        <source src="audio1.mp3" type="audio/mpeg">
+                        Tu navegador no soporta el elemento de audio.
+                    </audio>
+                </div>
+                
                 <div id="draw-with-figure-screen">
                     <div class="drawing-container">
                         <img src="figura1.png" alt="Figura de Benson" id="figure-image">
@@ -36,6 +41,7 @@
                         <button id="finish-drawing-with-figure"></button>
                     </div>
                 </div>
+                
             </div>
         </div>
 
@@ -93,9 +99,7 @@
         </div>
     </div>
 
-    <!-- <div class="button-container2">
-        <button id="end-button"></button>
-    </div> -->
+
 
 
     <script src="script1.js"></script>

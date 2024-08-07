@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const handInputs = document.getElementsByName('hand');
     const enterID = document.getElementById('enterID');
     const DownloadButton = document.getElementById('download');
+    const showinstruction = document.getElementById('showinstruction');
+    const instruccion = document.getElementById('instruccion');
+    
 
     enterContainer2(); 
     initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
@@ -43,6 +46,19 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
 
+    
+
+    showinstruction.addEventListener('click', () => {
+        if (instruccion.classList.contains('show')) {
+            instruccion.classList.remove('show');
+            showinstruction.style.backgroundImage = "url('noeye.png')";
+        } else {
+            instruccion.classList.add('show');
+            showinstruction.style.backgroundImage = "url('eye.png')";
+        }
+    });
+    
+
     finishdrawingwithfigure.addEventListener('click', () => {
         document.getElementById('audio1').pause();
         document.getElementById('audio1_2').pause();
@@ -60,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
             setTimeout(() => {
                 finishdrawingwithfigure.classList.add('red-arrow');
-            }, 4 * 60 * 1000); // 
+            }, 4 * 60 * 1000); //
         });
     }
 
@@ -79,6 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     DownloadButton.addEventListener('click', () => {
+        enterID.style.display = 'none';
+        selectHandContainer.style.display = 'none';  
         validateInputs();
         GenerateZIP();
     });
