@@ -647,6 +647,7 @@ function validateClicks() {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     const baseFileName = `CancellationTasks_${fechaFormateada}`;
+    let searchSpeed = (correctClicks / testDuration) * 1000;
 
     let csvContent = 'Descripcion;Valor\n';
     csvContent += `Tiempo dedicado Tarea (Segundos);${totalDurationFormatted}\n`;
@@ -658,7 +659,7 @@ function validateClicks() {
     csvContent += `Clics Izquierda;${leftClicks}\n`;
     csvContent += `Clics Derecha;${rightClicks}\n`;
     csvContent += `Total Clics;${clicks.length}\n`;
-
+    csvContent += `Search Speed (segundos);${searchSpeed}\n`;
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
