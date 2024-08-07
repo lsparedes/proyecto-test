@@ -102,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createCSV() {
         const total = Object.keys(correctAnswers).length;
-        let csvContent = 'nro,palabra,respuesta_correcta,respuesta_participante,precisión\n';
+        let csvContent = 'nro;palabra;respuesta_correcta;respuesta_participante;precision\n';
     
         for (let i = 1; i <= total; i++) {
             const word = words[i];
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const participantAnswer = answers[i] || ''; // Dejar en blanco si no hay respuesta
             const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
     
-            csvContent += `${i},${word},${correctAnswer},${participantAnswer},${isCorrect}\n`;
+            csvContent += `${i};${word};${correctAnswer};${participantAnswer};${isCorrect}\n`;
         }
     
         const endTime = new Date(); // Obtener la hora de finalización
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Formatear el tiempo en mm:ss
         const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         
-        csvContent += `\nTiempo dedicado a la tarea:,${formattedTime}\n`;
+        csvContent += `\nTiempo dedicado a la tarea:;${formattedTime}\n`;
         return csvContent;
     }
 

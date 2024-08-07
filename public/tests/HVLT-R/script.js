@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeSpent = (finishTime - startTime) / 1000;
         const timeSpentFormatted = formatTime(timeSpent);
 
-        const csvContent = `Start Time,Finish Time,Time Spent (HH:MM:SS)\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
+        const csvContent = `Start Time;Finish Time;Time Spent (HH:MM:SS)\n${startTimeFormatted};${finishTimeFormatted};${timeSpentFormatted}`;
         return csvContent;
     }
     
