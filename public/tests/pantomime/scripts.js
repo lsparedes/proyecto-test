@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function createCsvFile() {
         const filename = `${participantID}_respuestas_pantomime_${fechaFormateada}.csv`;
         // Definir el contenido del archivo CSV
-        const csvContent = `Tiempo dedicado (Milisegundos);Mano utilizada\n${totalTestTime};${selectedHand}\n`;
+        const csvContent = `Tiempo dedicado (Segundos);Mano utilizada\n${totalTestTime / 1000};${selectedHand}\n`;
         const blob = new Blob([csvContent], { type: 'text/csv' });
 
         // Agregar el archivo CSV al ZIP con el nombre dinámico

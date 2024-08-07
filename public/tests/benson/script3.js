@@ -105,8 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateCSV() {
 
-        let csvContent = "Actividad,Tiempo de inicio,Tiempo de Termino,Mano Seleccionada, FiguraCorrecta, FiguraSeleccionada, Precision\n";
-        csvContent += `IdentifyFigure,${formatDate(startTimeExecution)},${formatDate(endTimeExecution)},${selectedHand},${correctAnswer},${participantAnswer},${accuracy}\n`;
+        let csvContent = "Actividad;Tiempo Total(s);Tiempo Total(ms);Mano Seleccionada; FiguraCorrecta; FiguraSeleccionada; Precision\n";
+        let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
+        csvContent += `IdentifyFigure;${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy}\n`;
 
         return csvContent;
     }
