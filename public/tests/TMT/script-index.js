@@ -29,13 +29,28 @@ document.addEventListener('DOMContentLoaded', function () {
     let liftPenCount = 0;
     let penAirTime = 0;
     let airStartTime = null;
-
+    const show = document.getElementById('show');
+    const show1 = document.getElementById('show1');
     const endSequenceButton = document.createElement('button');
     endSequenceButton.id = 'endSequenceButton';
     document.body.appendChild(endSequenceButton);
 
+
+
+
     const redLinesCount = 0;
     let circleRadius = 40; // Cambiado de const a let para permitir reasignación
+
+
+    fullscreenButton.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    });
 
     function drawCircle(ctx, x, y, number, circlesArray, name = "", circleRadius) {
         ctx.fillStyle = 'white';
@@ -103,7 +118,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function startTest() {
-        document.getElementById('instructions').style.display = 'flex';
         canvas.style.display = 'block';
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.fillStyle = 'white'; // Fondo blanco
@@ -131,6 +145,8 @@ document.addEventListener('DOMContentLoaded', function () {
             drawCircle(ctx, coord.x, coord.y, index + 1, circles, name, circleRadius);
         });
         drawNextButton();
+        show.style.display = 'block';
+        show1.style.display = 'none';
     }
     let begining = null;
     window.onload = function () {
@@ -276,13 +292,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         nextButton.addEventListener('click', () => {
             document.getElementById('instructionAudio1').pause();
-            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('show').style.display = 'none';
+            document.getElementById('instructionAudio1').style.display = 'none';
             canvas.style.display = 'none';
             document.getElementById('partA').style.display = 'flex';
+            document.getElementById('show1').style.display = 'flex';
             nextButton.remove();
-            startPartA();
+            startPartA();   
+            show1.style.display = 'block';
         });
-
+        
         document.body.appendChild(nextButton);
     }
 
@@ -516,6 +535,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 taskTime: taskTime
             });
             showHandSelection();
+            show1.style.display = 'none';
         });
 
         document.body.appendChild(nextButtonA);
@@ -564,16 +584,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             });
 
-            const instructions = document.getElementById('instructions');
-            instructions.style.display = 'flex';
-            instructions.style.rotate = '0deg';
-            instructions.style.justifyContent = 'center';
-            instructions.style.alignItems = 'center';
-            instructions.style.height = '100vh';
-            instructions.innerHTML = '¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!';
-            instructions.style.textAlign = 'center';
-            instructions.style.fontSize = '40px';
-            instructions.style.marginTop = '0';
+
         }, 1000);
     }
 

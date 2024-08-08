@@ -190,8 +190,8 @@ audio {
   margin-right: 10px;
 }
 
-#instructionText, #instructionTextB1 {
-  font-size: 32px;
+#instructionText, #instructionTextB1, #instructionText1 {
+  font-size: 22px;
   text-align: justify;
   margin-bottom: 1rem;
 }

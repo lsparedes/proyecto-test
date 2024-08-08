@@ -12,31 +12,82 @@
 
 <body>
 
-
-  <div id="instructions" style="transform: rotate(-90deg);">
-    <p id="instructionText" style="text-align: justify; padding: 10%;">En este test hay 2 partes. La primera es la Parte
-      A, en esta parte habrán números dentro de
-      unos círculos. Haga una línea de un número a otro, en orden. Empiece en el 1, luego vaya al 2, luego vaya al 3, y
-      así sucesivamente. Por favor, trate de hacer una sola línea de un número a otro. En la parte B, tendrá números y
-      letras, los cuales deberá unir en orden.
-      Trabaje lo más rápido que pueda. Partiremos por la muestra A.</p>
-    <audio controls id="instructionAudio1">
-      <source src="TMT.mp3" type="audio/mpeg">
-      Tu navegador no soporta el elemento de audio.
-    </audio>
+  <button id="fullscreenButton" class="fullscreen-button"></button>
+  <!-- Primer Modal -->
+  <div class="modal fade" id="instructionModal" tabindex="-1" aria-labelledby="instructionModalLabel" aria-hidden="true"
+    style="transform: rotate(-90deg);">
+    <div class="modal-dialog">
+      <div class="modal-content" style="width: 600px;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="instructionModalLabel">Instrucciones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body"  style="padding: 60px;">
+          <p id="instructionText">La primera es la Parte A, en esta parte habrán números
+            dentro de unos círculos. Haga una línea de un número a otro, en orden.
+            <br><br>
+            Empiece en el 1, luego vaya al 2,
+            luego vaya al 3, y así sucesivamente. Por favor, trate de hacer una sola línea de un número a otro. En la
+            parte B, tendrá números y letras, los cuales deberá unir en orden. Trabaje lo más rápido que pueda.
+            Partiremos por la muestra A.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Botón para abrir el primer modal -->
+  <button id="show" type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#instructionModal"
+    style="transform: rotate(-90deg); width: 50px; height: 50px; background-image: url('imagenes/eye.png'); background-size: cover; background-repeat: no-repeat; background-position: center; border: none; background-color: transparent; position: absolute; top: 15px; left: 15px;">
+  </button>
+
+  <audio controls id="instructionAudio1" style="transform: rotate(-90deg);">
+    <source src="TMT.mp3" type="audio/mpeg">
+    Tu navegador no soporta el elemento de audio.
+  </audio>
+
 
   <canvas id="tmtCanvas" width="1000" height="800" style="display:flex; transform: rotate(-90deg);"></canvas>
 
-  <button id="fullscreenButton" class="fullscreen-button"></button>
+
 
   <div id="partA" style="display:none; transform: rotate(-90deg);">
+
+
     <audio controls id="instructionAudio">
       <source id="audioPartA" src="TMT-ParteA.mp3" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
     <canvas id="tmtCanvasPartA" width="850" height="1300"></canvas>
   </div>
+
+  <div class="modal fade" id="instructionModal1" tabindex="-1" aria-labelledby="instructionModal1Label"
+    aria-hidden="true" style="transform: rotate(-90deg);">
+    <div class="modal-dialog">
+      <div class="modal-content" style="width: 600px;">
+        <div class="modal-header">
+          <h5 class="modal-title" id="instructionModal1Label">Instrucciones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body"  style="padding: 60px;">
+          <p id="instructionText1">Continuamos con la parte A, en esta parte hay más números dentro de unos círculos.
+            Por favor, haga una línea de un círculo a otro en orden, empiece en el 1 y termine en el 25. Trabaje lo más
+            rápido que pueda. Buena suerte.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Botón para abrir el segundo modal -->
+  <button id="show1" type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#instructionModal1"
+    style="transform: rotate(-90deg); width: 50px; height: 50px; background-image: url('imagenes/eye.png'); background-size: cover; background-repeat: no-repeat; background-position: center; border: none; background-color: transparent; position: absolute; top: 15px; left: 15px;">
+
+  </button>
 
   <!-- SELECCION DE MANO HTML -->
   <div class="container" id="preEnd" style="display: none; margin: 0px; padding: 0px; transform: rotate(-90deg);">
@@ -49,33 +100,35 @@
     <div class="container-fluid" style="position: absolute;
       height: 25vh; top: 45vw;">
       <div class="row justify-content-center">
-        
-          <div id="enterID" class="card opacity-75 col-3 mx-2" style="display: none; width: 15%; background-color: #f9f9f9;">
-            <div class="card-body">
-              <h4>ID participante</h4>
-              <input type="number" id="participantID" class="form-control">
+
+        <div id="enterID" class="card opacity-75 col-3 mx-2"
+          style="display: none; width: 15%; background-color: #f9f9f9;">
+          <div class="card-body">
+            <h4>ID participante</h4>
+            <input type="number" id="participantID" class="form-control">
+          </div>
+        </div>
+
+
+        <div id="selectHand" class="card opacity-75 col-3 mx-2 p-3"
+          style="display: none; width: 15%; background-color: #f9f9f9;">
+          <div class="card-body" style="padding: 0;">
+            <h4>Mano usada</h4>
+            <div class="d-flex align-items-start">
+              <input type="radio" id="right_hand" name="hand" value="derecha">
+              <label for="right_hand">Derecha</label>
+            </div>
+            <div class="d-flex align-items-start">
+              <input type="radio" id="left_hand" name="hand" value="izquierda">
+              <label for="left_hand">Izquierda</label>
+            </div>
+            <div class="d-flex align-items-start">
+              <input type="radio" id="both_hands" name="hand" value="ambas">
+              <label for="both_hands">Ambas</label>
             </div>
           </div>
-        
-        
-          <div id="selectHand" class="card opacity-75 col-3 mx-2 p-3" style="display: none; width: 15%; background-color: #f9f9f9;">
-            <div class="card-body" style="padding: 0;">
-              <h4>Mano usada</h4>
-              <div class="d-flex align-items-start">
-                <input type="radio" id="right_hand" name="hand" value="derecha">
-                <label for="right_hand">Derecha</label>
-              </div>
-              <div class="d-flex align-items-start">
-                <input type="radio" id="left_hand" name="hand" value="izquierda">
-                <label for="left_hand">Izquierda</label>
-              </div>
-              <div class="d-flex align-items-start">
-                <input type="radio" id="both_hands" name="hand" value="ambas">
-                <label for="both_hands">Ambas</label>
-              </div>
-            </div>
-          </div>
-        
+        </div>
+
       </div>
     </div>
   </div>
