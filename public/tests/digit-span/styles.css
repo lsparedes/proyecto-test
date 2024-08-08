@@ -272,3 +272,10 @@ audio {
     width: 25%;
     margin: 0 !important;
 }
+
+.card-body h4 {
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+}

@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         wordsScreen.style.display = 'none';
         recordingControls1.style.display = 'none';
-        Ensayo2Screen.style.display = 'block';
+        Ensayo2Screen.style.display = 'flex';
     });
 
     NXButton2.addEventListener('click', () => {
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         wordsScreen2.style.display = 'none';
         recordingControls2.style.display = 'none';
-        Ensayo3Screen.style.display = 'block';
+        Ensayo3Screen.style.display = 'flex';
     });
 
     NXButton4.addEventListener('click', () => {
@@ -107,14 +107,14 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         wordsScreen3.style.display = 'none';
         recordingControls3.style.display = 'none';
-        endScreen.style.display = 'block';
+        endScreen.style.display = 'flex';
     });
 
     NXButton6.addEventListener('click', () => {
         pauseAudios();
         endScreen.style.display = 'none';
         enterID.style.display = 'inline-block';
-        finishScreen.style.display = 'block';
+        finishScreen.style.display = 'flex';
         finishTime = new Date();
         console.log(`${finishTime}`);
         startFinishTimer();
@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeSpent = (finishTime - startTime) / 1000;
         const timeSpentFormatted = formatTime(timeSpent);
 
-        const csvContent = `Start Time,Finish Time,Time Spent (HH:MM:SS)\n${startTimeFormatted},${finishTimeFormatted},${timeSpentFormatted}`;
+        const csvContent = `Start Time;Finish Time;Time Spent (HH:MM:SS)\n${startTimeFormatted};${finishTimeFormatted};${timeSpentFormatted}`;
         return csvContent;
     }
     
