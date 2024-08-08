@@ -28,6 +28,12 @@ let liftPenCount = 0;
 let penAirTime = 0;
 let airStartTime = null;
 
+const show = document.getElementById('show');
+const show1 = document.getElementById('show1');
+
+
+show1.style.display = 'none';
+
 const circleCoordinatesPartB = [
     { x: 498, y: 497 },
     { x: 653, y: 237 },
@@ -270,7 +276,8 @@ function drawNextButtonB() {
     nextButtonB.addEventListener('click', () => {
         document.getElementById('instructionAudio1').pause();
         canvasPartB.style.display = 'none';
-        document.getElementById('partB').style.display = 'none';
+        show.style.display = 'none';
+        show1.style.display = 'block';
         document.getElementById('partB2').style.display = 'flex';
         startPartB2();
         nextButtonB.remove();
@@ -527,6 +534,7 @@ function drawNextButtonB2() {
             taskTime: taskTime
         });
         showHandSelection();
+        show1.style.display = 'none';
     });
 
     document.body.appendChild(nextButtonB2);
