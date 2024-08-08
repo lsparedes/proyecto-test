@@ -255,15 +255,8 @@ function mostrarFinalizacion() {
     document.getElementById('enterID').style.display = 'none';
     document.getElementById('next-button').style.display = 'none';
     clearTimeout(temporizador);
-    const imageContainer = document.getElementById('imageContainer');
-    imageContainer.style.display = 'block';
-    imageContainer.innerHTML = '¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!';
-    imageContainer.style.textAlign = 'center';
-    imageContainer.style.fontSize = '40px';
-    imageContainer.style.marginTop = '20px';
-    imageContainer.style.display = 'flex';
-    // imagenNumero.style.display = 'none';
-    imageContainer.style.backgroundColor = 'transparent';
+    document.getElementById('fin').style.display = 'block'; // Ocultar el botón "next-button"
+
     // document.getElementById('fullscreenButton').style.display = 'none';
 
     tiempoFin = new Date(); // Guardar el tiempo de fin al finalizar la tarea

@@ -152,11 +152,10 @@ button {
     background-image: url('imagenes/full-screen.png');
     background-size: contain;
     background-repeat: no-repeat;
-    padding: 5px;
-    width: 80px;
-    height: 65px;
+    padding: 0;
+    width: 90px;
+    height: 80px;
     vertical-align: middle;
-
     position: absolute;
     bottom: 15px;
     left: 15px;
@@ -350,6 +349,14 @@ audio {
         /* position: absolute;
         bottom: 3vh; */
     }
+    #instructionText {
+        font-size: 35px;
+        text-align: justify;
+        margin-bottom: 100px;
+        margin-top: 50px;
+        padding-inline: 40px;
+    }
+    
 
 }
 
