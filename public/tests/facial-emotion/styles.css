@@ -312,3 +312,48 @@ audio {
     text-align: center;
 
 }
+
+/* tablets */
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    #emotionImage {
+        width: auto;
+        /* Ancho automático para mantener la proporción */
+        height: 80vh;
+        /* Altura relativa al 70% de la altura de la ventana */
+        max-width: 90%;
+        /* Máximo ancho igual al 90% del contenedor */
+        max-height: 80vh;
+        /* Máxima altura relativa al 70% de la altura de la ventana */
+        object-fit: contain;
+        display: block;
+        margin: 0px auto 5px auto;
+    }
+
+    #emotionsList li {
+        display: inline-block;
+        margin: 5px;
+        margin-top: 10px;
+        padding: 12px 16px;
+        background-color: #c9c9c9;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        font-size: 24px;
+    }
+
+    #emotionsList {
+        list-style-type: none;
+        padding: 5px;
+        margin: 0 auto;
+        text-align: center;
+        margin-top: 35px;
+        /* position: absolute;
+        bottom: 3vh; */
+    }
+
+}
+
+/* celulares */
+@media only screen and (max-width: 767px) {
+ 
+}
