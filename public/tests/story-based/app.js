@@ -217,7 +217,7 @@ let itemStartTime;
 let startTime;
 let practice = true;
 const fullscreenButton = document.getElementById('fullscreenButton');
-
+let selectedHand = "";
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
 
 
@@ -439,6 +439,7 @@ function cambiarImagen(selectedOptionIndex) {
 function generarArchivoCSV() {
     selectHandContainer.style.display = "none";
     enterID.style.display = 'none';
+    handButton.style.display = 'none';
     if (respuestasSeleccionadas.length === 0) {
         console.log('No hay respuestas seleccionadas.');
         return;
@@ -484,17 +485,7 @@ function generarArchivoCSV() {
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URLr un blob a partir del contenido del CSV
 
 }
-function verificarCamposCompletos() {
-    const participantID = document.getElementById('participantID').value;
-    const selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
-    // Solo mostrar el botón si ambos campos están completos
-    if (participantID && selectedHand) {
-        handButton.style.display = 'block';
-    } else {
-        handButton.style.display = 'none';
-    }
-}
 
 function mostrarInstrucciones() {
     const imageContainer = document.getElementById('imageContainer');
@@ -524,7 +515,6 @@ const fin = document.getElementById('fin');
 const enterID = document.getElementById('enterID');
 
 // Variable con la mano seleccionada
-let selectedHand = "";
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
@@ -544,18 +534,6 @@ function confirmHandSelection() {
 
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 handInputs.forEach(input => {
-    input.addEventListener('change', verificarCamposCompletos);
+    input.addEventListener('change', validateInputs);
 });
-
-function verificarCamposCompletos() {
-    const participantID = document.getElementById('participantID').value;
-    const selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
-
-    // Solo mostrar el botón si ambos campos están completos
-    if (participantID && selectedHand) {
-        handButton.style.display = 'block';
-    } else {
-        handButton.style.display = 'none';
-    }
-}
 
