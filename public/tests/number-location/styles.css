@@ -195,3 +195,20 @@ input {
     font-weight: bold;
     text-align: center;
 }
+
+#enterID{
+    width: 10%; 
+    background-color: #f9f9f9;
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) {
+    #enterID {
+        width: 15%; /* Ancho para tablets */
+    }
+}
+
+@media only screen and (max-width: 767px) {
+    #enterID {
+        width: 35%; /* Ancho para móviles */
+    }
+}
