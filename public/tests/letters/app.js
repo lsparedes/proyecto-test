@@ -598,6 +598,8 @@ function validateClicks() {
     ctx.drawImage(image, 0, 0, imageCanvas.width, imageCanvas.height);
 
     let lastCorrectClick = null;  // Variable para almacenar el último clic correcto
+    let sumX = 0;
+    let sumY = 0;
 
     clicks.forEach((click, index) => {
         let isCorrect = false;
@@ -609,6 +611,8 @@ function validateClicks() {
                 isCorrect = true;
                 correctClicks++;
                 promedio.push({ x: click.x, y: click.y });
+                sumX += click.x;
+                sumY += click.y;
 
                 // Si hay un clic correcto anterior, calcular la distancia y sumarla
                 if (lastCorrectClick) {
@@ -653,6 +657,13 @@ function validateClicks() {
         }
     });
 
+    // Calcular el Center of Cancellation (centro geométrico)
+    const centerX = sumX / correctClicks;
+    const centerY = sumY / correctClicks;
+
+    const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
+    const normalizedCenterY = (centerY - (1489 / 2)) / (1489 / 2);
+
     endTime = new Date();
     const testDuration = (endTime - startItemTime);
     const totalDuration = (endTime - totalStartTime) / 1000;
@@ -677,7 +688,11 @@ function validateClicks() {
     csvContent += `Clics Derecha;${rightClicks}\n`;
     csvContent += `Total Clics;${clicks.length}\n`;
     csvContent += `Search Speed (segundos);${searchSpeed}\n`;
-    csvContent += `Search Distance;${searchDistanceFormatted}\n`; 
+    csvContent += `Search Distance;${searchDistanceFormatted}\n`;
+    csvContent += `Centro de Cancelacion en Pixeles (X, Y);(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
+    csvContent += `Centro de Cancelacion Normalizado (X, Y);(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
+    csvContent += `CoC; ${Math.abs(normalizedCenterX.toFixed(2))}\n`;
+    csvContent += `Sesgo CoC; ${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
