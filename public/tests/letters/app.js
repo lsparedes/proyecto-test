@@ -401,6 +401,7 @@ let otrasLetras = [
 { x:  1635 , y:  1377  },
 ];
 
+let promedio = [];
 let image = new Image();
 image.src = 'A2letter.png';
 
@@ -471,7 +472,6 @@ imageCanvas.addEventListener('click', (e) => {
     const { x, y } = adjustClickCoordinates(e, imageCanvas, originalCanvasSize);
     clicks.push({ x, y });
     drawCircle(ctx, e.clientX - imageCanvas.getBoundingClientRect().left, e.clientY - imageCanvas.getBoundingClientRect().top, 'blue');
-    console.log(`imageCanvas click - X: ${x}, Y: ${y}`); // Imprimir en consola
 
 });
 
@@ -584,26 +584,43 @@ function validateClicks() {
     selectHandContainer.style.display = "none";
     mainScreen.style.display = 'none';
     handButton.style.display = 'none';
+
     let correctClicks = 0;
     let totalErrors = 0;
     let leftClicks = 0;
     let rightClicks = 0;
     let erroresComision = 0;
+    let searchDistance = 0;  // Variable para almacenar la distancia total
 
     const imageWidth = 2105; // Ancho de la imagen original
     const halfWidth = imageWidth / 2; // Punto de referencia para dividir la imagen
     const results = [];
     ctx.drawImage(image, 0, 0, imageCanvas.width, imageCanvas.height);
+
+    let lastCorrectClick = null;  // Variable para almacenar el último clic correcto
+
     clicks.forEach((click, index) => {
         let isCorrect = false;
+
         letrasA.forEach(letra => {
             const dx = click.x - letra.x;
             const dy = click.y - letra.y;
             if (Math.sqrt(dx * dx + dy * dy) < 20) {
                 isCorrect = true;
                 correctClicks++;
+                promedio.push({ x: click.x, y: click.y });
+
+                // Si hay un clic correcto anterior, calcular la distancia y sumarla
+                if (lastCorrectClick) {
+                    const distance = Math.sqrt(Math.pow(click.x - lastCorrectClick.x, 2) + Math.pow(click.y - lastCorrectClick.y, 2));
+                    searchDistance += distance;
+                }
+
+                // Actualizar el último clic correcto
+                lastCorrectClick = { x: click.x, y: click.y };
             }
         });
+
         otrasLetras.forEach(letra => {
             const dx = click.x - letra.x;
             const dy = click.y - letra.y;
@@ -611,6 +628,7 @@ function validateClicks() {
                 erroresComision++;
             }
         });
+
         drawCircle(
             click.x * (imageCanvas.width / 2105),
             click.y * (imageCanvas.height / 1489),
@@ -635,12 +653,12 @@ function validateClicks() {
         }
     });
 
-
     endTime = new Date();
     const testDuration = (endTime - startItemTime);
     const totalDuration = (endTime - totalStartTime) / 1000;
     const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
     const testDurationFormatted = testDuration.toLocaleString('es-CL');
+    const searchDistanceFormatted = (searchDistance / promedio.length).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric'};
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
@@ -648,18 +666,18 @@ function validateClicks() {
     const fechaFormateada = `${day}_${month}_${year}`;
     const baseFileName = `CancellationTasks_${fechaFormateada}`;
     let searchSpeed = (correctClicks / testDuration) * 1000;
-
     let csvContent = 'Descripcion;Valor\n';
     csvContent += `Tiempo dedicado Tarea (Segundos);${totalDurationFormatted}\n`;
     csvContent += `Tiempo respuesta (Milisegundos);${testDurationFormatted}\n`;
     csvContent += `Mano Utilizada;${selectedHand}\n`;
     csvContent += `Aciertos;${correctClicks}\n`;
-    csvContent += `Errores de omision;${totalErrors}\n`;
+    csvContent += `Errores de omision;${totalErrors-erroresComision}\n`;
     csvContent += `Errores de comision;${erroresComision}\n`;
     csvContent += `Clics Izquierda;${leftClicks}\n`;
     csvContent += `Clics Derecha;${rightClicks}\n`;
     csvContent += `Total Clics;${clicks.length}\n`;
     csvContent += `Search Speed (segundos);${searchSpeed}\n`;
+    csvContent += `Search Distance;${searchDistanceFormatted}\n`; 
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
@@ -685,6 +703,7 @@ function validateClicks() {
     clicks = [];
     chunks = [];
 }
+
 
 
 function startRecording() {
@@ -769,3 +788,4 @@ window.confirmHandSelection = confirmHandSelection;
 nextButton.addEventListener('click', () => {
     showHandSelection();
 });
+
