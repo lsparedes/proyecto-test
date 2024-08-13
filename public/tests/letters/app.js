@@ -400,7 +400,7 @@ let otrasLetras = [
 { x:  1539 , y:  1348  },
 { x:  1635 , y:  1377  },
 ];
-
+let promedio = [];
 let image = new Image();
 image.src = 'A2letter.png';
 
@@ -467,15 +467,6 @@ function adjustClickCoordinates(e, canvas, originalSize) {
     return { x, y };
 }
 
-
-let distanciasX = [];
-let distanciasY = [];
-let dTotalX = 0;
-let dTotalY = 0;
-let zone;
-let strategy;
-
-
 imageCanvas.addEventListener('click', function(event) {
     const rect = imageCanvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -497,6 +488,7 @@ imageCanvas.addEventListener('click', function(event) {
     // Dividir el canvas en cuatro cuadrantes
     const midX = originalCanvasSize.width / 2;
     const midY = originalCanvasSize.height / 2;
+    let zone;
 
     if (adjustedX < midX && adjustedY < midY) {
         zone = "Cuadrante 1";
@@ -509,23 +501,7 @@ imageCanvas.addEventListener('click', function(event) {
     }
 
     // Enviar el mensaje solo la primera vez que se hace clic
-    console.log(`Esta en el cuadrante ${zone}`);
-
-    if(clicks.length > 1) {
-        const distanciaX = Math.abs(clicks[clicks.length - 1].x - clicks[clicks.length - 2].x);
-        distanciasX.push(distanciaX);
-        const distanciaY = Math.abs(clicks[clicks.length - 1].y - clicks[clicks.length - 2].y);
-        distanciasY.push(distanciaY);
-
-        dTotalX += distanciasX[distanciasX.length - 1];   // Sumar la distancia en X a la distancia total
-        dTotalY += distanciasY[distanciasY.length - 1];   // Sumar la distancia en Y a la distancia total
-
-        
-        // Imprimir las distancias en X acumuladas
-        // console.log('Distancias en X:', distanciasX);
-        console.log(dTotalX, dTotalY);  // Imprimir la distancia total en X y Y
-        console.log(dTotalX / distanciasX.length , dTotalY/ distanciasY.length);  // Imprimir la distancia total en X y Y
-    }
+        console.log(`Esta en el cuadrante ${zone}`);
 });
 
 
@@ -644,21 +620,41 @@ function validateClicks() {
     let leftClicks = 0;
     let rightClicks = 0;
     let erroresComision = 0;
+    let searchDistance = 0;  // Variable para almacenar la distancia total
 
     const imageWidth = 2105; // Ancho de la imagen original
     const halfWidth = imageWidth / 2; // Punto de referencia para dividir la imagen
     const results = [];
     ctx.drawImage(image, 0, 0, imageCanvas.width, imageCanvas.height);
+
+    let lastCorrectClick = null;  // Variable para almacenar el último clic correcto
+    let sumX = 0;
+    let sumY = 0;
+
     clicks.forEach((click, index) => {
         let isCorrect = false;
+
         letrasA.forEach(letra => {
             const dx = click.x - letra.x;
             const dy = click.y - letra.y;
             if (Math.sqrt(dx * dx + dy * dy) < 20) {
                 isCorrect = true;
                 correctClicks++;
+                promedio.push({ x: click.x, y: click.y });
+                sumX += click.x;
+                sumY += click.y;
+
+                // Si hay un clic correcto anterior, calcular la distancia y sumarla
+                if (lastCorrectClick) {
+                    const distance = Math.sqrt(Math.pow(click.x - lastCorrectClick.x, 2) + Math.pow(click.y - lastCorrectClick.y, 2));
+                    searchDistance += distance;
+                }
+
+                // Actualizar el último clic correcto
+                lastCorrectClick = { x: click.x, y: click.y };
             }
         });
+
         otrasLetras.forEach(letra => {
             const dx = click.x - letra.x;
             const dy = click.y - letra.y;
@@ -666,6 +662,7 @@ function validateClicks() {
                 erroresComision++;
             }
         });
+
         drawCircle(
             click.x * (imageCanvas.width / 2105),
             click.y * (imageCanvas.height / 1489),
@@ -689,16 +686,12 @@ function validateClicks() {
             );
         }
     });
+    const centerX = sumX / correctClicks;
+    const centerY = sumY / correctClicks;
 
-    if(dTotalX > dTotalY){
-        strategy = "filas";
-        console.log("Estrategia en filas");
-        console.log(strategy);
-    }else{
-        strategy = "columnas";
-        console.log("Estrategia en columnas");
-        console.log(strategy);
-    }
+    const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
+    const normalizedCenterY = (centerY - (1489 / 2)) / (1489 / 2);
+
 
     endTime = new Date();
     const testDuration = (endTime - startItemTime);
@@ -711,6 +704,8 @@ function validateClicks() {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     const baseFileName = `CancellationTasks_${fechaFormateada}`;
+    const searchDistanceFormatted = (searchDistance / promedio.length).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
     let searchSpeed = (correctClicks / testDuration) * 1000;
 
     let csvContent = 'Descripcion;Valor\n';
@@ -724,13 +719,13 @@ function validateClicks() {
     csvContent += `Clics Derecha;${rightClicks}\n`;
     csvContent += `Total Clics;${clicks.length}\n`;
     csvContent += `Search Speed (segundos);${searchSpeed}\n`;
+
     csvContent += `Search Distance;${searchDistanceFormatted} px\n`;
     csvContent += `Centro de Cancelacion en Pixeles (X, Y);(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
     csvContent += `Centro de Cancelacion Normalizado (X, Y);(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
-    csvContent += `CoC; ${Math.abs(normalizedCenterX.toFixed(2))}\n`;
-    csvContent += `Sesgo CoC; ${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
-    csvContent += `Search strategy (cuadrante);${zone}\n`;
-    csvContent += `Search strategy (tipo);${strategy}\n`;
+    csvContent += `CoC;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
+    csvContent += `Sesgo CoC;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
+
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
