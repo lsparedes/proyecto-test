@@ -467,13 +467,44 @@ function adjustClickCoordinates(e, canvas, originalSize) {
     return { x, y };
 }
 
-imageCanvas.addEventListener('click', (e) => {
-    const { x, y } = adjustClickCoordinates(e, imageCanvas, originalCanvasSize);
-    clicks.push({ x, y });
-    drawCircle(ctx, e.clientX - imageCanvas.getBoundingClientRect().left, e.clientY - imageCanvas.getBoundingClientRect().top, 'blue');
-    console.log(`imageCanvas click - X: ${x}, Y: ${y}`); // Imprimir en consola
+imageCanvas.addEventListener('click', function(event) {
+    const rect = imageCanvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
 
+    // Ajustar las coordenadas del clic
+    const adjustedCoordinates = adjustClickCoordinates(event, imageCanvas, originalCanvasSize);
+    const adjustedX = adjustedCoordinates.x;
+    const adjustedY = adjustedCoordinates.y;
+
+    // Registrar el clic
+    clicks.push({ x: adjustedX, y: adjustedY });
+
+    console.log(`imageCanvas click - X: ${adjustedX}, Y: ${adjustedY}`);
+
+    // Dibujar un círculo en el punto clicado
+    drawCircle(ctx, x, y, 'blue');
+
+    // Dividir el canvas en cuatro cuadrantes
+    const midX = originalCanvasSize.width / 2;
+    const midY = originalCanvasSize.height / 2;
+    let zone;
+
+    if (adjustedX < midX && adjustedY < midY) {
+        zone = "Cuadrante 1";
+    } else if (adjustedX >= midX && adjustedY < midY) {
+        zone = "Cuadrante 2";
+    } else if (adjustedX < midX && adjustedY >= midY) {
+        zone = "Cuadrante 3";
+    } else if (adjustedX >= midX && adjustedY >= midY) {
+        zone = "Cuadrante 4";
+    }
+
+    // Enviar el mensaje solo la primera vez que se hace clic
+        console.log(`Esta en el cuadrante ${zone}`);
 });
+
+
 
 practiceCanvas.addEventListener('click', (e) => {
     const { x, y } = adjustClickCoordinates(e, practiceCanvas, originalCanvasSize);
