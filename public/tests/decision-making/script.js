@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
           } else {
               finishBlock();
           }
-      }, 3000); // Display "omitido" screen for 3 seconds
+      }, 1000); // Display "omitido" screen for 3 seconds
   }
 
   function finishBlock() {
