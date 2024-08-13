@@ -467,6 +467,15 @@ function adjustClickCoordinates(e, canvas, originalSize) {
     return { x, y };
 }
 
+
+let distanciasX = [];
+let distanciasY = [];
+let dTotalX = 0;
+let dTotalY = 0;
+let zone;
+let strategy;
+
+
 imageCanvas.addEventListener('click', function(event) {
     const rect = imageCanvas.getBoundingClientRect();
     const x = event.clientX - rect.left;
@@ -488,7 +497,6 @@ imageCanvas.addEventListener('click', function(event) {
     // Dividir el canvas en cuatro cuadrantes
     const midX = originalCanvasSize.width / 2;
     const midY = originalCanvasSize.height / 2;
-    let zone;
 
     if (adjustedX < midX && adjustedY < midY) {
         zone = "Cuadrante 1";
@@ -501,7 +509,23 @@ imageCanvas.addEventListener('click', function(event) {
     }
 
     // Enviar el mensaje solo la primera vez que se hace clic
-        console.log(`Esta en el cuadrante ${zone}`);
+    console.log(`Esta en el cuadrante ${zone}`);
+
+    if(clicks.length > 1) {
+        const distanciaX = Math.abs(clicks[clicks.length - 1].x - clicks[clicks.length - 2].x);
+        distanciasX.push(distanciaX);
+        const distanciaY = Math.abs(clicks[clicks.length - 1].y - clicks[clicks.length - 2].y);
+        distanciasY.push(distanciaY);
+
+        dTotalX += distanciasX[distanciasX.length - 1];   // Sumar la distancia en X a la distancia total
+        dTotalY += distanciasY[distanciasY.length - 1];   // Sumar la distancia en Y a la distancia total
+
+        
+        // Imprimir las distancias en X acumuladas
+        // console.log('Distancias en X:', distanciasX);
+        console.log(dTotalX, dTotalY);  // Imprimir la distancia total en X y Y
+        console.log(dTotalX / distanciasX.length , dTotalY/ distanciasY.length);  // Imprimir la distancia total en X y Y
+    }
 });
 
 
@@ -666,6 +690,15 @@ function validateClicks() {
         }
     });
 
+    if(dTotalX > dTotalY){
+        strategy = "filas";
+        console.log("Estrategia en filas");
+        console.log(strategy);
+    }else{
+        strategy = "columnas";
+        console.log("Estrategia en columnas");
+        console.log(strategy);
+    }
 
     endTime = new Date();
     const testDuration = (endTime - startItemTime);
@@ -691,6 +724,8 @@ function validateClicks() {
     csvContent += `Clics Derecha;${rightClicks}\n`;
     csvContent += `Total Clics;${clicks.length}\n`;
     csvContent += `Search Speed (segundos);${searchSpeed}\n`;
+    csvContent += `Search strategy (cuadrante);${zone}\n`;
+    csvContent += `Search strategy (tipo);${strategy}\n`;
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
