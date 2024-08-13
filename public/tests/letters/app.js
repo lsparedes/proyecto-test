@@ -688,7 +688,7 @@ function validateClicks() {
     csvContent += `Clics Derecha;${rightClicks}\n`;
     csvContent += `Total Clics;${clicks.length}\n`;
     csvContent += `Search Speed (segundos);${searchSpeed}\n`;
-    csvContent += `Search Distance;${searchDistanceFormatted}\n`;
+    csvContent += `Search Distance;${searchDistanceFormatted} px\n`;
     csvContent += `Centro de Cancelacion en Pixeles (X, Y);(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
     csvContent += `Centro de Cancelacion Normalizado (X, Y);(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
     csvContent += `CoC; ${Math.abs(normalizedCenterX.toFixed(2))}\n`;
