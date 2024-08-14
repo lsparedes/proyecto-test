@@ -17,7 +17,7 @@
     <div id="container">
         <div id="instructions">
             <p>Le voy a dar una categoría y quiero que me diga, lo más rápido que pueda, todas las cosas que pertenecen a esa categoría. 
-                Por ejemplo, si le digo ‘ropa’, usted podría decir ‘camisa’, ‘corbata’ o ‘sombrero’. 
+                Por ejemplo, si le digo "ropa", usted podría decir "camisa", "corbata" o "sombrero". 
                 ¿Qué otra ropa puede decirme?
             </p>
 
@@ -34,7 +34,7 @@
         <!-- Parte 1 -->
         <div id="categoryFluency1" style="display: none;">
             <h2 class="imageText">E1</h2>
-            <div id="letterDisplay1" class="letter-display">Prendas de vestir</div>
+            <div id="letterDisplay1" class="letter-display" style="font-size: 64px;">Prendas de vestir</div>
             <div class="audio-controls">
                 <audio id="instructionAudio1" controls></audio>
                 <img id="startRecButton1" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
@@ -49,7 +49,7 @@
         <!-- Parte 2 -->
         <div id="categoryFluency2" style="display: none;">
             <h2 class="imageText">E1</h2>
-            <div id="letterDisplay2" class="letter-display">Animales</div>
+            <div id="letterDisplay2" class="letter-display" style="font-size: 64px;">Animales</div>
             <div class="audio-controls">
                 <audio id="instructionAudio2" controls></audio>
                 <img id="startRecButton2" class="record-button" src="grabar.png" style="display: none; cursor: pointer;" alt="Grabar">
@@ -75,24 +75,6 @@
                         <div class="card-body" style="padding: 0;">
                             <h4>ID participante</h4>
                             <input type="number" id="participantID" class="form-control" style="margin-bottom: 26%;">
-                        </div>
-                    </div>
-                    <div id="selectHand" class="card opacity-75 col-3 col-md-4 col-xl-6  ms-3 p-3"
-                        style="height: 20%; width: 40%; background-color: #f9f9f9;">
-                        <div class="card-body" style="padding: 0;">
-                            <h4>Mano usada</h4>
-                            <div class="d-flex align-items-start">
-                                <input type="radio" id="right_hand" name="hand" value="derecha">
-                                <label for="right_hand">Derecha</label>
-                            </div>
-                            <div class="d-flex align-items-start">
-                                <input type="radio" id="left_hand" name="hand" value="izquierda">
-                                <label for="left_hand">Izquierda</label>
-                            </div>
-                            <div class="d-flex align-items-start">
-                                <input type="radio" id="both_hands" name="hand" value="ambas">
-                                <label for="both_hands">Ambas</label>
-                            </div>
                         </div>
                     </div>
                 </div>
