@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let testData = [];
     let timer;
     let milliseconds = 0;
+    let continueTest = false;
 
     let mediaRecorder;
     let recordedChunks = [];
@@ -111,6 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const index = parseInt(event.target.dataset.index);
         if (playerSequence.length < sequence.length) {
+            if (playerSequence.length == 0 && !isPractice) {
+                stopTimer();
+                console.log(milliseconds);
+            }
             resetBlocks(); // Desmarcar todos los bloques antes de marcar el actual
             playerSequence.push(index);
             event.target.classList.add('selected');
@@ -123,12 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
         game.style.display = 'block';
         startSequenceButton.style.visibility = 'visible';
         startSequenceButton.style.display = 'inline-block';
-        endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" al iniciar el test
+        endSequenceButton.style.display = 'inline-block'; // Ocultar el botón "Terminar" al iniciar el test
+        endSequenceButton.style.cursor = 'not-allowed';
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
         repeatCount = 0; // Reiniciar el contador de repeticiones
         errorCount = 0;
+        indicator.style.display = 'block';
         if (isPractice) {
             createBlocks();
             indicator.textContent = `P${sequenceCount + 1}`;
@@ -147,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sequenceDisplaying = true;
         displaySequence(0);
         startSequenceButton.style.visibility = 'hidden';
-        indicator.style.display = 'block';
     }
 
     function createSequence(currentSequences) {
@@ -164,7 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         } else {
             sequenceDisplaying = false;
-            endSequenceButton.style.display = 'inline-block'; // Mostrar el botón "Terminar" después de mostrar la secuencia
+            continueTest = true;
+            endSequenceButton.style.cursor = 'pointer';
             playBeep(); // Llamar a playBeep aquí para reproducir el sonido después de la secuencia
             startTimer();
         }
@@ -194,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sequenceCount < practiceSequences.length) {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
-                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
                     startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
                 }, 500);
             } else {
@@ -214,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 indicator.textContent = `S${count}-${repeatCount + 1}`;
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
-                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
                     startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
                 }, 500);
             }
@@ -242,13 +247,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const csvBlob = generateCSVBlob(highestCount, totalCorrectBlocks, duration, sequenceCount);
         const videoBlob = await stopScreenRecording();
 
+        // Obtener la fecha y hora actuales
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+
+        // Formatear la fecha para el nombre del archivo
+        const date = `${day}_${month}_${year}`;
+        const fileName = `${participantID}_corsi_inverso_${date}`;
+
         // Crear archivo zip
         const zip = new JSZip();
-        zip.file('resultado.csv', csvBlob);
-        zip.file('grabacion.webm', videoBlob);
+        zip.file(fileName + `.csv`, csvBlob);
+        zip.file(fileName + `.webm`, videoBlob);
 
         zip.generateAsync({ type: 'blob' }).then((content) => {
-            saveAs(content, 'resultado.zip');
+            saveAs(content, fileName + `.zip`);
         });
     }
 
@@ -307,7 +322,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.pause();
-        await startScreenRecording();
+        if (isPractice) {
+            await startScreenRecording();
+        }
         startTest();
     });
 
@@ -316,19 +333,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     endSequenceButton.addEventListener('click', () => {
-        if (!isPractice) {
-            stopTimer();
-
-            const exerciseData = {
-                exerciseTitle: fixedTitles[sequenceCount],
-                correctAnswer: sequence,
-                userResponse: playerSequence,
-                responseTime: milliseconds,
-            };
-            testData.push(exerciseData);
+        if (continueTest) {
+            continueTest = false;
+            endSequenceButton.style.cursor = 'not-allowed';
+            if (!isPractice) {
+                const exerciseData = {
+                    exerciseTitle: fixedTitles[sequenceCount],
+                    correctAnswer: sequence,
+                    userResponse: playerSequence,
+                    responseTime: milliseconds,
+                };
+                testData.push(exerciseData);
+            }
+            checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
         }
-        checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
-        endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
     });
 
     fullscreenButton.addEventListener('click', () => {

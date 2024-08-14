@@ -198,3 +198,14 @@ body {
   font-weight: bold;
   text-align: center;
 }
+
+/* Asegúrate de que el contenedor se ajuste al contenido */
+.selectable {
+  display: inline-block; /* Hace que el contenedor se ajuste al tamaño de su contenido */
+  cursor: pointer; /* Cambia el cursor a pointer para indicar que es clicable */
+}
+
+/* Opcional: ajusta el margen inferior del botón si quieres reducir el espacio */
+.selectable button {
+  margin-top: 10px; /* Ajusta el margen superior para controlar la separación entre el círculo y el botón */
+}

@@ -353,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('redButton').addEventListener('click', () => {
+  document.getElementById('redContainer').addEventListener('click', () => {
     questionScreen.style.display = 'none';
     confidenceScreen.style.display = 'block';
     if (blockType === 'practica' || blockType === 'test') {
@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetConfidenceSlider();
   });
 
-  document.getElementById('blueButton').addEventListener('click', () => {
+  document.getElementById('blueContainer').addEventListener('click', () => {
     questionScreen.style.display = 'none';
     confidenceScreen.style.display = 'block';
     if (blockType === 'practica' || blockType === 'test') {
@@ -482,6 +482,16 @@ document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.requestFullscreen();
     }
   });
+
+  // document.getElementById('redContainer').addEventListener('click', function() {
+  //   // Aquí va el código que se ejecuta al presionar el contenedor rojo
+  //   console.log('Seleccionaste ROJO');
+  // });
+  
+  // document.getElementById('blueContainer').addEventListener('click', function() {
+  //   // Aquí va el código que se ejecuta al presionar el contenedor azul
+  //   console.log('Seleccionaste AZUL');
+  // });
 
   // SELECCION DE MANO JS
 
