@@ -15,11 +15,11 @@
 <body>
     <div id="container">
         <div id="start-screen" class="container">
-            <p id="instructionText">A continuación, usted verá algunas imágenes de objetos en la pantalla, una por una. 
+            <p id="instructionText">A continuación, usted verá algunas imágenes de objetos en la pantalla, una por una.
                 Por favor, imagine que sostiene cada objeto en su mano porque su tarea consistirá en mostra como se usa.
                 Es importante que recuerde no usar su mano o dedos como si fuese el objeto.</p>
 
-            <audio controls id="instrucciones">
+            <audio controls id="instrucciones" >
                 <source src="pantomima.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
@@ -31,9 +31,13 @@
         </div>
 
         <div id="testcamara" style="display: none;">
-            <p id="instructionText">Aqui se ajustara la camara para que se pueda grabar bien, presione el boton para
-                activar la camara</p>
-                <video id="videoElement" width="640" height="480" autoplay></video>
+            <p id="instructionText">Ajuste la cámara para que la grabación sea adecuada. Presione el botón para
+                activarla.</p>
+            <audio controls id="instrucciones" style="position: absolute; left: 41%; margin-bottom: 20px;">
+                <source src="testcamara.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+            <video id="videoElement" width="640" height="480" autoplay></video>
             <div class="button-container">
                 <button id="camarabutton"></button>
                 <button id="start-test"></button>

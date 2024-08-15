@@ -86,6 +86,7 @@ button:not(:disabled):active {
     pointer-events: auto !important;
 }
 
+
 #start-test{
     background-image: url('flecha3.png');
     right: 15px;
@@ -99,7 +100,8 @@ button:not(:disabled):active {
 
 #videoElement{
     position: relative;
-    left: 29%;
+    margin-top: 100px;
+    left: 26%;
 }
 
 #handButton {
