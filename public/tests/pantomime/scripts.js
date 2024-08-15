@@ -18,6 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentItem = document.getElementById('current-item');
     const timerDisplay = document.createElement('div');
     const recordingMessage = document.createElement('div');
+    const testCamara = document.getElementById('testcamara');
+    const startTest = document.getElementById('start-test');
+    const camaraButton = document.getElementById('camarabutton');
+    const videoElement = document.getElementById('videoElement');
     let currentImageIndex = 0;
     const images = [
         'img-jpg/1.jpg',
@@ -79,12 +83,35 @@ document.addEventListener('DOMContentLoaded', () => {
     startBtn.addEventListener('click', () => {
         stopAllAudios();
         testStartTime = Date.now();
-        startScreen.classList.remove('active');
-        startScreen.classList.add('hidden');
+        testCamara.style.display = 'block';
+        startScreen.style.display = 'none';
+    });
+
+    camaraButton.addEventListener('click', () => {
+        // Solicitar acceso a la webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => {
+                // Asignar el stream de la webcam al elemento de video
+                videoElement.srcObject = stream;
+                videoElement.play();
+            })
+            .catch(error => {
+                console.error("Error al acceder a la webcam: ", error);
+            });
+    });
+
+
+    startTest.addEventListener('click', () => {
+        testCamara.style.display = 'none';
+        videoElement.pause();
+        camaraButton.style.display = 'none';
+        videoElement.style.display = 'none';
+        startTest.style.display = 'none';
         testScreen.classList.remove('hidden');
         testScreen.classList.add('active');
         loadNextImage();
     });
+
 
     fullscreenBtn.addEventListener('click', () => {
         if (document.fullscreenElement) {
@@ -131,7 +158,9 @@ document.addEventListener('DOMContentLoaded', () => {
     nextBtn.addEventListener('click', () => {
         stopAllAudios();
         stopRecording(true);
-    });
+        proceedToNextImage();
+        audioBtn.style.display = 'inline-block';
+    });    
 
     document.getElementById('participantID').addEventListener('input', validateInputs);
     let participantID = 0;
@@ -152,9 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 const blob = new Blob(chunks, { type: 'video/mp4' });
                 chunks = [];
                 const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
-
+    
                 zip.file(`grabaciones/pantomima_video_${dateTime}_${currentImageIndex + 1}.mp4`, blob);
-
+    
                 const stream = videoPreview.srcObject;
                 const tracks = stream.getTracks();
                 tracks.forEach(track => track.stop());
@@ -163,16 +192,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 RecordingBtn.style.display = 'none';
                 stopBtn.disabled = true;
                 stopBtn.style.display = 'none';
-                audioBtn.style.display = 'inline';
-                nextBtn.style.display = 'none';
                 timerDisplay.classList.add('hidden');
                 stopTimer();
-
-                // Always proceed to the next image after stopping the recording
-                proceedToNextImage();
+    
+                // Mantén el botón "Next" visible y funcional, pero no llames a proceedToNextImage aquí.
+                nextBtn.disabled = false;
+                nextBtn.style.display = 'inline-block';
             };
         }
     }
+    
+    
 
     function proceedToNextImage() {
         currentImageIndex++;
@@ -187,13 +217,13 @@ document.addEventListener('DOMContentLoaded', () => {
         testImage.src = images[currentImageIndex];
         audioSource.src = audios[currentImageIndex];
         testAudio.load();
-        currentItem.textContent = `I${currentImageIndex + 1}`;
+        currentItem.textContent = `E${currentImageIndex + 1}`;
         testImage.classList.remove('hidden');
         testAudio.classList.remove('hidden');
         videoPreview.classList.add('hidden');
     }
 
-    function showHandSelection() { 
+    function showHandSelection() {
         testScreen.style.display = 'none';
         audioBtn.style.display = 'none';
         currentItem.style.display = 'none';
