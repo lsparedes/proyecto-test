@@ -101,7 +101,9 @@ function playBeepAndShowButtons(itemDiv, titleElement, index) {
     beep.play();
     beep.addEventListener('ended', () => {
         if (!itemDiv.querySelector('.new-button')) {
-            startRecording(itemDiv, titleElement, index);
+            setTimeout(() => {
+                startRecording(itemDiv, titleElement, index);
+            }, -1500); 
         }
     });
 }
