@@ -27,14 +27,19 @@
       Tu navegador no soporta el elemento de audio.
     </audio>
     <div id="sliderPractice" style="display:none;">
-      <div class="mt-5">
-        <input type="range" id="confidenceSliderPractice" min="-100" max="100" value="0">
+      <div class="mt-5 slider-container" style="position: relative;">
+        <input type="range" id="confidenceSliderPractice" min="-100" max="100" value="0" style="width: 100%;">
+        <div class="marker-container left-marker">
+          <div class="line left-line"></div>
+          <span class="marker-label"><b>TOTALMENTE INSEGURO</b></span>
+        </div>
+        <div class="marker-container right-marker">
+          <div class="line right-line"></div>
+          <span class="marker-label"><b>TOTALMENTE SEGURO</b></span>
+        </div>
       </div>
-      <div class="range-labels">
-        <span><b>TOTALMENTE INSEGURO</b></span>
-        <span><b>TOTALMENTE SEGURO</b></span>
-      </div>
-      <br>
+      <div class="range-labels"></div>
+      <br><br><br>
       <button class="btn btn-light btn-lg shadow" id="submitConfidenceButtonPractice" disabled><b>LISTO</b></button>
     </div>
     <div class="button-container">
@@ -69,7 +74,8 @@
   </div>
 
   <div id="practiceFinishScreen" class="container" style="display: none;">
-    <h1>¡Bloque Completado!</h1>
+    <h1 id="textoPausaP">¡Bloque Completado!</h1>
+    <button class="btn btn-light btn-lg shadow" id="iniciarPausaP" ><b>INICIAR PAUSA</b></button>
     <div class="button-container">
       <button id="nextPracticeButton"></button>
     </div>
@@ -96,23 +102,26 @@
       </div>
     </div>
   </div>
-  
-  
 
-  <div id="confidenceScreen" class="container" style="display: none;">
+  <div id="confidenceScreen" style="display: none;">
     <center>
       <div class="mb-5">
         <h1>¿Qué tan seguro está de su decisión?</h1>
       </div>
       <br><br><br>
-      <div class="mt-5">
-        <input type="range" id="confidenceSlider" min="-100" max="100" value="0">
+      <div class="mt-5 slider-container" style="position: relative;">
+        <input type="range" id="confidenceSlider" min="-100" max="100" value="0" style="width: 100%;">
+        <div class="marker-container left-marker">
+          <div class="line left-line"></div>
+          <span class="marker-label"><b>TOTALMENTE INSEGURO</b></span>
+        </div>
+        <div class="marker-container right-marker">
+          <div class="line right-line"></div>
+          <span class="marker-label"><b>TOTALMENTE SEGURO</b></span>
+        </div>
       </div>
-      <div class="range-labels">
-        <span><b>TOTALMENTE INSEGURO</b></span>
-        <span><b>TOTALMENTE SEGURO</b></span>
-      </div>
-      <br><br><br><br>
+      <div class="range-labels"></div>
+      <br><br><br>
       <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>LISTO</b></button>
     </center>
   </div>
@@ -127,7 +136,8 @@
   </div>
 
   <div id="blockFinishScreen" class="container" style="display: none;">
-    <h1>¡Bloque Completado!</h1>
+    <h1 id="textoPausa">¡Bloque Completado!</h1>
+    <button class="btn btn-light btn-lg shadow" id="iniciarPausa"><b>INICIAR PAUSA</b></button>
     <button id="continueToNextBlockButton"></button>
   </div>
 

@@ -26,12 +26,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const testTrialIndicator = document.getElementById('testTrialIndicator');
   const feedbackMessage = document.getElementById('feedbackMessage');
   const cronometro = document.getElementById('pauseTime');
+  const pauseButtonP = document.getElementById('iniciarPausaP');
+  const pauseButton = document.getElementById('iniciarPausa');
   const confidenceSlider = document.getElementById('confidenceSlider');
   const submitConfidenceButton = document.getElementById('submitConfidenceButton');
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 20;
+  let maxTrials = 1;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
@@ -101,23 +103,20 @@ document.addEventListener('DOMContentLoaded', () => {
       results.push({ block: blockCount, trial: i, correctColor: "N/A", answer: "", confidence: "N/A", isCorrect: false, diferencia: "N/A", timeCol: "N/A", timeConf: "N/A" , timeP: "N/A"});
     }
     if (type === 'practica') {
-      reiniciarCronometro();
-      iniciarCronometro();
-      pauseStartTime = Date.now();
       practiceContainer.style.display = 'none';
       questionScreen.style.display = 'none';
       confidenceScreen.style.display = 'none';
       practiceFinishScreen.style.display = 'block';
+      pauseButtonP.style.display = 'inline-block';
       blockType = 'test';
     } else {
+      document.getElementById('textoPausa').innerHTML = `¡Bloque Completado!`;
       testContainer.style.display = 'none';
       questionScreen.style.display = 'none';
       confidenceScreen.style.display = 'none';
       if (blockCount < maxBlocks) {
-        reiniciarCronometro();
-        iniciarCronometro();
         blockFinishScreen.style.display = 'block';
-        pauseStartTime = Date.now();
+        pauseButton.style.display = 'inline-block';
       } else {
         showHandSelection();
       }
@@ -258,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${participantID}_metacognicion_${date}.zip`);
+    link.setAttribute("download", `${participantID}_metacognicion_${date}.csv`);
     document.body.appendChild(link);
     link.click();
   }
@@ -439,6 +438,8 @@ document.addEventListener('DOMContentLoaded', () => {
       cronometro.textContent = tiempoFormateado;
       // Mostrar el tiempo en la consola
       console.log(tiempoFormateado);
+      document.getElementById('textoPausaP').innerHTML = tiempoFormateado;
+      document.getElementById('textoPausa').innerHTML = tiempoFormateado;
   }
 
   function iniciarCronometro() {
@@ -483,15 +484,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // document.getElementById('redContainer').addEventListener('click', function() {
-  //   // Aquí va el código que se ejecuta al presionar el contenedor rojo
-  //   console.log('Seleccionaste ROJO');
-  // });
-  
-  // document.getElementById('blueContainer').addEventListener('click', function() {
-  //   // Aquí va el código que se ejecuta al presionar el contenedor azul
-  //   console.log('Seleccionaste AZUL');
-  // });
+  pauseButtonP.addEventListener('click', () => {
+    reiniciarCronometro();
+    iniciarCronometro();
+    pauseStartTime = Date.now();
+    pauseButtonP.style.display = 'none';
+  });
+
+  pauseButton.addEventListener('click', () => {
+    reiniciarCronometro();
+    iniciarCronometro();
+    pauseStartTime = Date.now();
+    pauseButton.style.display = 'none';
+  });
 
   // SELECCION DE MANO JS
 
