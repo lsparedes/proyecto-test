@@ -153,11 +153,13 @@ function startRecording(itemDiv, titleElement, index) {
         return;
     }
 
+    // Detener la grabación actual si está en curso
     if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
+        mediaRecorder.stop(); // Detenemos la grabación actual
+        chunks = []; // Limpiamos los chunks actuales
     }
-    chunks = [];
 
+    // Crear una nueva instancia de MediaRecorder
     mediaRecorder = new MediaRecorder(audioStream);
     mediaRecorder.ondataavailable = e => {
         if (e.data.size > 0) {
@@ -185,12 +187,14 @@ function startRecording(itemDiv, titleElement, index) {
         console.error('Error en la grabación:', event.error);
     };
 
+    // Iniciar la grabación
     mediaRecorder.start();
     recordingStartTime = new Date();
 
     const stopImg = itemDiv.querySelector('.stop-img');
     stopImg.classList.remove('hidden');
 
+    // Crear y agregar el botón "new-button"
     const newButton = document.createElement('div');
     newButton.classList.add('img-button', 'new-button');
     newButton.style.backgroundImage = "url('img/boton-rec.png')";
@@ -202,11 +206,14 @@ function startRecording(itemDiv, titleElement, index) {
 
     stopImg.parentNode.insertBefore(newButton, stopImg);
 
+    // Mostrar el botón "next-button"
     const nextButton = itemDiv.querySelector('.next-button');
     nextButton.classList.remove('hidden');
 
+    // Iniciar el temporizador
     startTimer(itemDiv.querySelector('.timer'));
 }
+
 
 function stopRecording(timerSpan, index, itemDiv, type) {
 
