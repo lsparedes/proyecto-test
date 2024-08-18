@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 1;
+  let maxTrials = 20;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
@@ -235,31 +235,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const confidence = confidenceSlider.value;
     results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: diferenciaInicial, timeCol: timeColor, timeConf: timeConfidence, timeP: 'N/A' });
     ajustarDificultad(isCorrect);
-  }
-
-  function downloadResults() {
-    const csvContent = "data:text/csv;charset=utf-8,"
-      + "Bloque;Item;Respuesta correcta;Respuesta seleccionada;Seguridad;Precision;Dificultad;Tiempo Color(ms);Tiempo Seguridad(ms);Tiempo Pausa\n"
-      + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP}`).join("\n")
-      + "\n"
-      + "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
-      + "Mano Utilizada: " + selectedHand + "\n";
-  
-    // Obtener la fecha y hora actuales
-    const now = new Date();
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-  
-    // Formatear la fecha para el nombre del archivo
-    const date = `${day}_${month}_${year}`;
-  
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `${participantID}_metacognicion_${date}.csv`);
-    document.body.appendChild(link);
-    link.click();
   }
 
   function showFeedback(answer) {
@@ -475,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('downloadResultsButton').addEventListener('click', () => {
-    downloadResults();
+    downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID);
   });
 
   document.getElementById('fullscreenButton').addEventListener('click', () => {
@@ -544,4 +519,49 @@ function validateInputs() {
 }
 
   window.confirmHandSelection = confirmHandSelection;
+
+  function getCurrentDate() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    return `${day}_${month}_${year}`;
+  }
+
+  function generateCSV(results, participantID) {
+    const csvContent = "Bloque;Item;Respuesta correcta;Respuesta seleccionada;Seguridad;Precision;Dificultad;Tiempo Color(ms);Tiempo Seguridad(ms);Tiempo Pausa\n"
+      + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP}`).join("\n")
+    return {
+      content: csvContent,
+      filename: `${participantID}_metacognicion_${getCurrentDate()}.csv`
+    };
+  }
+
+  function generateTxt(startTimeTotal, selectedHand, participantID) {
+    const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
+      + "Mano Utilizada: " + selectedHand;
+    return {
+      content: txtContent,
+      filename: `${participantID}_metacognicion_${getCurrentDate()}.txt`
+    };
+  }
+
+  async function downloadZip(csvFile, txtFile, participantID) {
+    const zip = new JSZip();
+    zip.file(csvFile.filename, csvFile.content);
+    zip.file(txtFile.filename, txtFile.content);
+  
+    const zipContent = await zip.generateAsync({ type: "blob" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(zipContent);
+    link.setAttribute("download", `${participantID}_metacognicion_${getCurrentDate()}.zip`);
+    document.body.appendChild(link);
+    link.click();
+  }
+  
+  async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
+    const csvFile = generateCSV(results, participantID);
+    const txtFile = generateTxt(startTimeTotal, selectedHand, participantID);
+    await downloadZip(csvFile, txtFile, participantID);
+  }
 });

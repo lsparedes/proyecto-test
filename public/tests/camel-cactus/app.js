@@ -448,81 +448,8 @@ function mostrarFinalizacion() {
         previousImageText.remove();
     }
 
-    //generarArchivoRespuestas(); // Generar el archivo con las respuestas
-    generarArchivoRespuestasCSV();
+    downloadResultsAsZip(respuestasSeleccionadas, startTime, selectedHand, participantID)
 }
-
-function generarArchivoRespuestas() {
-    const respuestasJson = JSON.stringify(respuestasSeleccionadas, null, 2);
-    const blob = new Blob([respuestasJson], { type: 'application/json' });
-
-    // Obtener la fecha y la hora actuales
-    const fechaActual = new Date();
-    const año = fechaActual.getFullYear();
-    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-    const dia = String(fechaActual.getDate()).padStart(2, '0');
-    const horas = String(fechaActual.getHours()).padStart(2, '0');
-    const minutos = String(fechaActual.getMinutes()).padStart(2, '0');
-    const segundos = String(fechaActual.getSeconds()).padStart(2, '0');
-
-    // Formatear la fecha y la hora
-    const fechaHoraFormateada = `${año}-${mes}-${dia}_${horas}-${minutos}-${segundos}`;
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `respuestas_seleccionadas_${fechaHoraFormateada}.json`;
-    a.click();
-    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
-}
-
-function generarArchivoRespuestasCSV() {
-    endTime = new Date(); // Registrar la hora de finalización
-    const duration = (endTime - startTime) / 1000; // Calcular la duración de la tarea en segundos
-
-    // Verificar si hay respuestas seleccionadas
-    if (respuestasSeleccionadas.length === 0) {
-        console.log('No hay respuestas seleccionadas.');
-        return;
-    }
-
-    // Crear el encabezado del CSV
-    let csvContent = "numero;item;respuestaCorrecta;respuestaParticipante;precision;tiempoDedicadoEnsayo(ms)\n";
-
-    // Recorrer las respuestas seleccionadas
-    respuestasSeleccionadas.forEach(respuesta => {
-        if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
-            // Construir una línea del CSV con los datos de la respuesta
-            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado}\n`;
-            // Agregar la línea al contenido del CSV
-            csvContent += lineaCSV;
-        }
-    });
-
-    csvContent += `\nTiempo total(s): ${duration}\n`;
-    csvContent += 'Mano utilizada: ' + selectedHand + '\n';
-
-    // Crear un blob a partir del contenido del CSV
-    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
-
-    // Obtener la fecha y la hora actuales
-    const fechaActual = new Date();
-    const año = fechaActual.getFullYear();
-    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-    const dia = String(fechaActual.getDate()).padStart(2, '0');
-
-    // Formatear la fecha y la hora
-    const fechaHoraFormateada = `${dia}_${mes}_${año}`;
-
-    // Crear un enlace de descarga para el archivo CSV
-    const url = URL.createObjectURL(csvBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${participantID}_modified_camel_and_cactus_${fechaHoraFormateada}.csv`;
-    a.click();
-    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
-}
-
 
 function iniciarPresentacion() {
     startTime = new Date(); // Registrar la hora de inicio
@@ -738,3 +665,58 @@ function validateInputs() {
         handButton.style.display = 'block';
     }
 }
+
+  function getCurrentDate() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    return `${day}_${month}_${year}`;
+  }
+
+  function generateCSV(results, participantID) {
+    // Crear el encabezado del CSV
+    let csvContent = "numero;item;respuestaCorrecta;respuestaParticipante;precision;tiempoDedicadoEnsayo(ms)\n";
+
+    // Recorrer las respuestas seleccionadas
+    results.forEach(respuesta => {
+        if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
+            // Construir una línea del CSV con los datos de la respuesta
+            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado}\n`;
+            // Agregar la línea al contenido del CSV
+            csvContent += lineaCSV;
+        }
+    });
+    return {
+      content: csvContent,
+      filename: `${participantID}_modified_camel_and_cactus_${getCurrentDate()}.csv`
+    };
+  }
+
+  function generateTxt(startTimeTotal, selectedHand, participantID) {
+    const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
+      + "Mano Utilizada: " + selectedHand;
+    return {
+      content: txtContent,
+      filename: `${participantID}_modified_camel_and_cactus_${getCurrentDate()}.txt`
+    };
+  }
+
+  async function downloadZip(csvFile, txtFile, participantID) {
+    const zip = new JSZip();
+    zip.file(csvFile.filename, csvFile.content);
+    zip.file(txtFile.filename, txtFile.content);
+  
+    const zipContent = await zip.generateAsync({ type: "blob" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(zipContent);
+    link.setAttribute("download", `${participantID}_modified_camel_and_cactus_${getCurrentDate()}.zip`);
+    document.body.appendChild(link);
+    link.click();
+  }
+  
+  async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
+    const csvFile = generateCSV(results, participantID);
+    const txtFile = generateTxt(startTimeTotal, selectedHand, participantID);
+    await downloadZip(csvFile, txtFile, participantID);
+  }

@@ -173,6 +173,13 @@ function showRecordingCreatedMessage(part) {
 }
 
 function downloadRecordingAndTime() {
+    // Obtener la fecha actual en formato YYYYMMDD
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${day}_${month}_${year}`;
+
     const totalTime = Date.now() - startTime;
     const totalTimeMs = totalTime;
     const totalTimeSecs = (totalTime / 1000).toFixed(2);
@@ -184,28 +191,21 @@ function downloadRecordingAndTime() {
 
     const link = document.createElement('a');
     link.href = timeUrl;
-    link.download = 'tiempo_total.txt';
+    link.download = `${participantID}_verbal_fluency_categoria_${formattedDate}.txt`;
     // link.click();
 
     const zip = new JSZip();
-    zip.file("tiempo_total.txt", timeBlob);
+    zip.file(`${participantID}_verbal_fluency_categoria_${formattedDate}.txt`, timeBlob);
 
     const audio1Blob = new Blob(audioChunks[1], { type: 'audio/wav' });
     // zip.file("Categoría - Parte 1.wav", audio1Blob);
 
     const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
-    zip.file("Categoría - Animales.wav", audio2Blob);
+    zip.file(`${participantID}_verbal_fluency_categoria_${formattedDate}.wav`, audio2Blob);
 
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
         zipLink.href = URL.createObjectURL(content);
-
-        // Obtener la fecha actual en formato YYYYMMDD
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${day}_${month}_${year}`;
         
         // Construir el nombre del archivo ZIP
         const fileName = `${participantID}_verbal_fluency_categoria_${formattedDate}.zip`;
