@@ -66,6 +66,12 @@ function startTest(type) {
             playBeepAndShowButtons(itemDiv, titleElement, index + 1);
         });
 
+        // Mostrar el botón "next-button" cuando el audio se cargue completamente
+        audio.addEventListener('loadeddata', () => {
+            const nextButton = itemDiv.querySelector('.next-button');
+            nextButton.classList.remove('hidden');
+        });
+
         const timerDiv = document.createElement('div');
         timerDiv.classList.add('timer-container');
 
@@ -83,13 +89,11 @@ function startTest(type) {
             stopAllAudios();
         });
 
-
         const nextButton = document.createElement('button');
         nextButton.textContent = '';
         nextButton.classList.add('hidden', 'next-button');
         nextButton.addEventListener('click', () => {
-            stopRecording(timerSpan, index + 1, itemDiv, type);
-            stopAllAudios();
+            avanzarSinGrabar(itemDiv, type);
         });
 
         itemDiv.appendChild(titleElement);
@@ -106,6 +110,21 @@ function startTest(type) {
 
         testItemsContainer.appendChild(itemDiv);
     });
+}
+
+function avanzarSinGrabar(itemDiv, type) {
+    stopAllAudios();
+
+    itemDiv.classList.add('hidden');
+
+    let nextItem = itemDiv.nextElementSibling;
+    if (nextItem) {
+        nextItem.classList.remove('hidden');
+    } else {
+        document.getElementById('test-items-' + type).classList.add('hidden');
+        mostrarFinalizacion(type);
+    }
+
 }
 
 function playBeepAndShowButtons(itemDiv, titleElement, index) {
@@ -138,17 +157,12 @@ function startRecording(itemDiv, titleElement, index) {
         }
     };
     mediaRecorder.onstop = () => {
-        console.log('Grabación detenida. Chunks:', chunks);
         if (chunks.length > 0) {
             const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
             const audioURL = window.URL.createObjectURL(blob);
             const recordingTime = new Date();
             const duration = recordingTime - recordingStartTime;
             downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob, duration: duration });
-
-            console.log(`Grabación ${index} finalizada. Duración: ${duration} ms`);
-            console.log(downloadLinks);
-
             const stopImg = itemDiv.querySelector('.stop-img');
             stopImg.classList.add('hidden');
             const nextButton = itemDiv.querySelector('.next-button');
@@ -207,14 +221,9 @@ function stopRecording(timerSpan, index, itemDiv, type) {
                 nextItem.classList.remove('hidden');
             }
 
-            console.log(`Ítem ${index} grabado y oculto.`);
-            console.log(`Mostrando siguiente ítem.`);
+       
         }
 
-        console.log("Contenido de downloadLinks:", downloadLinks);
-    } else {
-        console.log("No se está grabando en este momento.");
-    }
 }
 
 
@@ -245,7 +254,6 @@ let participantID = 0;
 
 function mostrarFinalizacion(type) {
     taskTime = (new Date() - taskTimeStart) / 1000;
-    console.log("Mostrando mensaje de finalización...");
     const completionMessage = document.getElementById('completion-message');
     completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
     const fin = document.getElementById('fin');
@@ -303,22 +311,16 @@ function crearZip(type, participantID) {
         return;
     }
 
-    console.log("Contenido de downloadLinks:", downloadLinks);
-
     downloadLinks.forEach(linkData => {
         if (linkData.title && linkData.blob) {
             const fileName = `${type}_${linkData.title}.ogg`;
             audioFolder.file(fileName, linkData.blob);
-            console.log(`Archivo añadido al ZIP: ${fileName}`);
-        } else {
-            console.warn("Datos incompletos en linkData:", linkData);
-        }
+        } 
     });
 
     const csvContent = generarCSV();
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
 
-    console.log("Contenido del CSV:", csvContent);
 
     const fechaActual = new Date();
     const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };

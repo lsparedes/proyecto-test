@@ -38,6 +38,19 @@
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
+                <button id="final-instruction-button"></button>
+                <button id="fullscreen-button"></button>
+            </div>
+        </div>
+
+
+        <div id="instruction-final-screen" class="hidden">
+            <p id="instruction">Recuerde, después de que le diga la secuencia numérica, repítala al revés. ¿Listo?</p>
+            <audio controls>
+                <source src="audio/backward/backward-instruction-final.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+            <div class="button-container">
                 <button id="start-button"></button>
                 <button id="fullscreen-button"></button>
             </div>
@@ -80,11 +93,22 @@
             document.getElementById('instruction-screen').classList.remove('hidden');
         });
 
-        document.getElementById('start-button').addEventListener('click', () => {
+        document.getElementById('final-instruction-button').addEventListener('click', () => {
             stopAllAudios();
             document.getElementById('instruction-screen').classList.add('hidden');
+            document.getElementById('instruction-final-screen').classList.remove('hidden');
+        });
+        document.getElementById('start-button').addEventListener('click', () => {
+            stopAllAudios();
+            document.getElementById('instruction-final-screen').classList.add('hidden');
             document.getElementById('test-items-backward').classList.remove('hidden');
             startTest('backward');
+        });
+
+        document.getElementById('fullscreen-button').addEventListener('click', () => {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
+            }
         });
 
         function stopAllAudios() {
