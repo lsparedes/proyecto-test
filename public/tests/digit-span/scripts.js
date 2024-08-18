@@ -125,7 +125,9 @@ function avanzarSinGrabar(itemDiv, type) {
         mostrarFinalizacion(type);
     }
 
+    console.log(`Avanzando al siguiente ítem sin grabar.`);
 }
+
 
 function playBeepAndShowButtons(itemDiv, titleElement, index) {
     const beep = new Audio('audio/beep.wav');
@@ -157,6 +159,7 @@ function startRecording(itemDiv, titleElement, index) {
         }
     };
     mediaRecorder.onstop = () => {
+        console.log('Grabación detenida. Chunks:', chunks);
         if (chunks.length > 0) {
             const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
             const audioURL = window.URL.createObjectURL(blob);
@@ -221,9 +224,14 @@ function stopRecording(timerSpan, index, itemDiv, type) {
                 nextItem.classList.remove('hidden');
             }
 
-       
+            console.log(`Ítem ${index} grabado y oculto.`);
+            console.log(`Mostrando siguiente ítem.`);
         }
 
+        console.log("Contenido de downloadLinks:", downloadLinks);
+    } else {
+        console.log("No se está grabando en este momento.");
+    }
 }
 
 
@@ -254,6 +262,7 @@ let participantID = 0;
 
 function mostrarFinalizacion(type) {
     taskTime = (new Date() - taskTimeStart) / 1000;
+    console.log("Mostrando mensaje de finalización...");
     const completionMessage = document.getElementById('completion-message');
     completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
     const fin = document.getElementById('fin');
@@ -311,16 +320,22 @@ function crearZip(type, participantID) {
         return;
     }
 
+    console.log("Contenido de downloadLinks:", downloadLinks);
+
     downloadLinks.forEach(linkData => {
         if (linkData.title && linkData.blob) {
             const fileName = `${type}_${linkData.title}.ogg`;
             audioFolder.file(fileName, linkData.blob);
-        } 
+            console.log(`Archivo añadido al ZIP: ${fileName}`);
+        } else {
+            console.warn("Datos incompletos en linkData:", linkData);
+        }
     });
 
     const csvContent = generarCSV();
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
 
+    console.log("Contenido del CSV:", csvContent);
 
     const fechaActual = new Date();
     const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
