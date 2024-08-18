@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    let startDrawingTime = null; 
-    let endDrawingTime = null; 
-    let startTimeExecution = null; 
-    let endTimeExecution = null; 
-    let recordedChunks = []; 
-    let selectedHand = ""; 
-    let participantID = 0; 
+    let startDrawingTime = null;
+    let endDrawingTime = null;
+    let startTimeExecution = null;
+    let endTimeExecution = null;
+    let recordedChunks = [];
+    let selectedHand = "";
+    let participantID = 0;
     let mediaRecorder = null;
     let fecha = new Date();
     let dia = fecha.getDate();
@@ -23,18 +23,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const DownloadButton = document.getElementById('download');
     const showinstruction = document.getElementById('showinstruction');
     const instruccion = document.getElementById('instruccion');
-    
+
 
     enterContainer2();
     initCanvas('memory-canvas', 'clear-memory-canvas-button', 'download-memory-canvas-button');
 
     fullscreenButton.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
             document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            document.exitFullscreen();
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
 
@@ -61,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         DownloadButton.style.display = 'block';
         endDrawingTime = new Date();
         console.log("Terminó de Dibujar: ", endDrawingTime);
-        endTimeExecution = new Date(); 
+        endTimeExecution = new Date();
         console.log("Tiempo de Termino: ", endTimeExecution);
         selectHandContainer.style.display = 'block';
         enterID.style.display = 'inline-block';
@@ -71,16 +73,16 @@ document.addEventListener('DOMContentLoaded', () => {
         validateInputs();
         GenerateZIP();
     });
-    
+
 
     handInputs.forEach(input => {
         input.addEventListener('change', () => {
             selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
             console.log("Mano seleccionada: ", selectedHand);
-            validateInputs(); 
+            validateInputs();
         });
     });
-    
+
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
@@ -247,10 +249,10 @@ document.addEventListener('DOMContentLoaded', () => {
             drawingTime = (endDrawingTime - startDrawingTime); //tiempo de dibujo en milisegundos
         }
         csvContent += `DrawWithFigure;${timeTotal};${drawingTime};${selectedHand}\n`;
-    
+
         return csvContent;
     }
-    
+
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
@@ -260,18 +262,18 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('JSZip is not loaded.');
             return;
         }
-    
+
         const zip = new JSZip();
-    
+
         // Generar el contenido del CSV
         const csvContent = generateCSV();
         zip.file(`${participantID}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
-    
+
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('memory-canvas');
         const canvasImage = canvas.toDataURL('image/png').split(',')[1];
         zip.file('Draw_From_Memory_figure.png', canvasImage, { base64: true });
-    
+
         // Añadir video del canvas al ZIP
         try {
             const blob = await stopCanvasRecording();
@@ -304,15 +306,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function formatDate(date) {
         if (!date) return '';
-        const options = { 
-            weekday: 'short', 
-            year: 'numeric', 
-            month: 'short', 
-            day: 'numeric', 
-            hour: '2-digit', 
-            minute: '2-digit', 
-            second: '2-digit', 
-            hour12: false 
+        const options = {
+            weekday: 'short',
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
         };
         return date.toLocaleString('en-US', options).replace(',', '');
     }
@@ -322,7 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
             playBeepSound();
         }, 20 * 60 * 1000); // 20 minutos en milisegundos
     }
-    
+
     function playBeepSound() {
         const beep = new Audio('beep.wav');
         beep.play();

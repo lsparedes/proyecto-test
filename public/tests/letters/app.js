@@ -537,14 +537,14 @@ testButton.addEventListener('click', () => {
 });
 
 fullscreenButton.addEventListener('click', () => {
-    if (document.documentElement.requestFullscreen) {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
         document.documentElement.requestFullscreen();
-    } else if (document.documentElement.mozRequestFullScreen) { // Firefox
-        document.documentElement.mozRequestFullScreen();
-    } else if (document.documentElement.webkitRequestFullscreen) { // Chrome, Safari, and Opera
-        document.documentElement.webkitRequestFullscreen();
-    } else if (document.documentElement.msRequestFullscreen) { // IE/Edge
-        document.documentElement.msRequestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
 });
 

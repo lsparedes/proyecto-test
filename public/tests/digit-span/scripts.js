@@ -27,6 +27,18 @@ function requestMicrophonePermission() {
             document.getElementById('permission-message').classList.remove('hidden');
         });
 }
+const fullscreenButton = document.getElementById('fullscreen-button');
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
+    }
+});
 
 function startTest(type) {
     taskTimeStart = new Date();
@@ -70,7 +82,7 @@ function startTest(type) {
             stopRecording(timerSpan, index + 1, itemDiv, type);
             stopAllAudios();
         });
-    
+
 
         const nextButton = document.createElement('button');
         nextButton.textContent = '';
@@ -103,7 +115,7 @@ function playBeepAndShowButtons(itemDiv, titleElement, index) {
         if (!itemDiv.querySelector('.new-button')) {
             setTimeout(() => {
                 startRecording(itemDiv, titleElement, index);
-            }, -1500); 
+            }, -1500);
         }
     });
 }
@@ -242,7 +254,7 @@ function mostrarFinalizacion(type) {
     enterID.style.display = 'block';
     document.getElementById('final-button').addEventListener('click', () => {
         const participantID = document.getElementById('participantID').value.trim();
-        crearZip(type,participantID);
+        crearZip(type, participantID);
     });
 }
 
@@ -270,12 +282,12 @@ function generarCSV() {
         }
     });
 
-    csvContent += "Tiempo dedicado a la tarea(s);"+taskTime+"\n";
+    csvContent += "Tiempo dedicado a la tarea(s);" + taskTime + "\n";
 
     return csvContent;
 }
 
-function crearZip(type,participantID) {
+function crearZip(type, participantID) {
     document.getElementById('enterID').style.display = 'none';
     document.getElementById('final-button').style.display = 'none';
     if (!downloadLinks.length) {
@@ -343,4 +355,4 @@ function crearZip(type,participantID) {
 function stopAllAudios() {
     const audios = document.querySelectorAll('audio');
     audios.forEach(audio => audio.pause());
-  }
+}

@@ -5,7 +5,6 @@ document.getElementById('startButton').addEventListener('click', () => {
     showNextImage();
 });
 
-document.getElementById('fullscreen-btn').addEventListener('click', toggleFullScreen);
 document.getElementById('submit-btn').addEventListener('click', submitAnswer);
 document.getElementById('next-button').addEventListener('click', () => {
     submitAnswer();
@@ -108,13 +107,19 @@ function submitAnswer() {
     }
 }
 
-function toggleFullScreen() {
-    if (!document.fullscreenElement) {
+const fullscreenButton = document.getElementById('fullscreen-btn');
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
         document.documentElement.requestFullscreen();
-    } else if (document.exitFullscreen) {
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
         document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
-}
+});
+
 
 function generateCSV(participantID) {
     document.getElementById('enterID').style.display = 'none';

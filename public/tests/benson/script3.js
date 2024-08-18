@@ -28,12 +28,14 @@ document.addEventListener('DOMContentLoaded', () => {
     enterContainer2();
 
     fullscreenButton.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
             document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            document.exitFullscreen();
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
 

@@ -220,17 +220,15 @@ const fullscreenButton = document.getElementById('fullscreenButton');
 let selectedHand = "";
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
 
-
-document.getElementById('fullscreenButton').addEventListener('click', function () {
-    const element = document.documentElement;
-    if (element.requestFullscreen) {
-        element.requestFullscreen();
-    } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-    } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-    } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
 });
 

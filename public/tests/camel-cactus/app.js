@@ -411,20 +411,17 @@ let endTimeE;
 let timer;
 let milliseconds = 0;
 
-function requestFullscreen() {
-    const element = document.documentElement;
-    if (element.requestFullscreen) {
-        element.requestFullscreen();
-    } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-    } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-    } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
-}
-
-fullscreenButton.addEventListener('click', requestFullscreen);
+});
 
 function mostrarFinalizacion() {
     const imageContainer = document.getElementById('imageContainer');

@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     clearTimeout(trialTimeout);
     // Completa los resultados faltantes con "no respondida"
     for (let i = trialCount + 1; i <= maxTrials; i++) {
-      results.push({ block: blockCount, trial: i, correctColor: "N/A", answer: "", confidence: "N/A", isCorrect: false, diferencia: "N/A", timeCol: "N/A", timeConf: "N/A" , timeP: "N/A"});
+      results.push({ block: blockCount, trial: i, correctColor: "N/A", answer: "", confidence: "N/A", isCorrect: false, diferencia: "N/A", timeCol: "N/A", timeConf: "N/A", timeP: "N/A" });
     }
     if (type === 'practica') {
       practiceContainer.style.display = 'none';
@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalDots = numPuntosMayor + numPuntosMenor;
     const colors = [];
     let colorMayor = Math.random() < 0.5 ? 'red' : 'blue';
-  
+
     if (colorMayor === 'red') {
       for (let i = 0; i < numPuntosMayor; i++) {
         colors.push('red');
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let numRedDots = 0;
     let numBlueDots = 0;
-  
+
     if (colorMayor === 'red') {
       numRedDots = numPuntosMayor;
       numBlueDots = numPuntosMenor;
@@ -200,11 +200,11 @@ document.addEventListener('DOMContentLoaded', () => {
       numRedDots = numPuntosMenor;
       numBlueDots = numPuntosMayor;
     }
-  
+
     const dots = [];
     const dotRadius = 5;
     const minDistance = dotRadius * 8;
-  
+
     for (let i = 0; i < totalDots; i++) {
       let x, y, validPosition;
       do {
@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fillStyle = colors[i];
       ctx.fill();
     }
-  
+
     correctColor = numRedDots > numBlueDots ? 'red' : 'blue';
     console.log(`Correct color is ${correctColor}. Red: ${numRedDots}, Blue: ${numBlueDots}`);
   }
@@ -244,16 +244,16 @@ document.addEventListener('DOMContentLoaded', () => {
       + "\n"
       + "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
       + "Mano Utilizada: " + selectedHand + "\n";
-  
+
     // Obtener la fecha y hora actuales
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
-  
+
     // Formatear la fecha para el nombre del archivo
     const date = `${day}_${month}_${year}`;
-  
+
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (blockType === 'demo') {
       practiceCtx.clearRect(0, 0, practiceCtx.canvas.width, practiceCtx.canvas.height);
       generateDots(practiceCtx);
-    } else if(blockType === 'practica') {
+    } else if (blockType === 'practica') {
       practiceContainer.style.display = 'none';
       practiceFinishScreen.style.display = 'none';
       questionScreen.style.display = 'none';
@@ -427,45 +427,45 @@ document.addEventListener('DOMContentLoaded', () => {
   let pausado = true;
 
   function actualizarCronometro() {
-      const horas = Math.floor(tiempo / 3600);
-      const minutos = Math.floor((tiempo % 3600) / 60);
-      const segundos = tiempo % 60;
+    const horas = Math.floor(tiempo / 3600);
+    const minutos = Math.floor((tiempo % 3600) / 60);
+    const segundos = tiempo % 60;
 
-      const tiempoFormateado = 
+    const tiempoFormateado =
       `${horas.toString().padStart(2, '0')}:${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
 
-      // Mostrar el tiempo en el cronometro en pantalla
-      cronometro.textContent = tiempoFormateado;
-      // Mostrar el tiempo en la consola
-      console.log(tiempoFormateado);
-      document.getElementById('textoPausaP').innerHTML = tiempoFormateado;
-      document.getElementById('textoPausa').innerHTML = tiempoFormateado;
+    // Mostrar el tiempo en el cronometro en pantalla
+    cronometro.textContent = tiempoFormateado;
+    // Mostrar el tiempo en la consola
+    console.log(tiempoFormateado);
+    document.getElementById('textoPausaP').innerHTML = tiempoFormateado;
+    document.getElementById('textoPausa').innerHTML = tiempoFormateado;
   }
 
   function iniciarCronometro() {
-      // cronometro.style.display = 'block';
-      if (pausado) {
-          pausado = false;
-          intervalo = setInterval(() => {
-              tiempo++;
-              actualizarCronometro();
-          }, 1000);
-      }
+    // cronometro.style.display = 'block';
+    if (pausado) {
+      pausado = false;
+      intervalo = setInterval(() => {
+        tiempo++;
+        actualizarCronometro();
+      }, 1000);
+    }
   }
 
   function pausarCronometro() {
-      // cronometro.style.display = 'none';
-      if (!pausado) {
-          pausado = true;
-          clearInterval(intervalo);
-      }
+    // cronometro.style.display = 'none';
+    if (!pausado) {
+      pausado = true;
+      clearInterval(intervalo);
+    }
   }
 
   function reiniciarCronometro() {
-      pausado = true;
-      clearInterval(intervalo);
-      tiempo = 0;
-      actualizarCronometro();
+    pausado = true;
+    clearInterval(intervalo);
+    tiempo = 0;
+    actualizarCronometro();
   }
 
   document.getElementById('demoButton').addEventListener('click', () => {
@@ -478,12 +478,17 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadResults();
   });
 
-  document.getElementById('fullscreenButton').addEventListener('click', () => {
-    if (document.documentElement.requestFullscreen) {
+  fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+      fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
       document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+      fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+      document.exitFullscreen();
+    } else {
+      console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
   });
-
   pauseButtonP.addEventListener('click', () => {
     reiniciarCronometro();
     iniciarCronometro();
@@ -512,36 +517,36 @@ document.addEventListener('DOMContentLoaded', () => {
   function showHandSelection() {
     document.getElementById("preEnd").style.display = 'block';
     selectHandContainer.style.display = "block";
-}
+  }
 
-// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
-// En este caso fue mostrarFinalizacion()
-function confirmHandSelection() {
+  // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
+  // En este caso fue mostrarFinalizacion()
+  function confirmHandSelection() {
     document.getElementById("preEnd").style.display = 'none';
     selectHandContainer.style.display = "none";
-      endGame();
+    endGame();
   }
 
   // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
   handInputs.forEach((input) => {
-      input.addEventListener('change', (e) => {
-          validateInputs();
-          selectedHand = e.target.value;
-      });
+    input.addEventListener('change', (e) => {
+      validateInputs();
+      selectedHand = e.target.value;
+    });
   });
- 
-document.getElementById('participantID').addEventListener('input', validateInputs);
 
-document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+  document.getElementById('participantID').addEventListener('input', validateInputs);
 
-function validateInputs() {
+  document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+
+  function validateInputs() {
     participantID = document.getElementById('participantID').value;
     selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
     if (participantID && selectedHand) {
-        handButton.style.display = 'block';
+      handButton.style.display = 'block';
     }
-}
+  }
 
   window.confirmHandSelection = confirmHandSelection;
 });

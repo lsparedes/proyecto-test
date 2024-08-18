@@ -636,12 +636,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (imageCanvas && testVideo) {
         fullScreenButton.addEventListener('click', () => {
-            if (document.fullscreenElement) {
+            if (document.fullscreenEnabled && !document.fullscreenElement) {
+                fullScreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+                document.documentElement.requestFullscreen();
+            } else if (document.fullscreenElement) {
+                fullScreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
                 document.exitFullscreen();
             } else {
-                document.documentElement.requestFullscreen();
+                console.log('El modo de pantalla completa no es soportado por tu navegador.');
             }
         });
+        
 
         window.addEventListener('resize', () => {
             resizeCanvas(imageCanvas);

@@ -34,12 +34,18 @@ document.addEventListener('DOMContentLoaded', () => {
       startPractice();
       stopAllAudios();
   });
-
-  document.getElementById('fullscreenButton').addEventListener('click', () => {
-      if (document.documentElement.requestFullscreen) {
-          document.documentElement.requestFullscreen();
-      }
-  });
+  const fullscreenButton = document.getElementById('fullscreenButton');
+  fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
+    }
+});
 
   leftSlot.addEventListener('click', () => {
       if (!selectionMade) {

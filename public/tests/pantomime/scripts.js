@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
     const startBtn = document.getElementById('startButton');
-    const fullscreenBtn = document.getElementById('fullscreenButton');
+    const fullscreenButton = document.getElementById('fullscreenButton');
     const stopBtn = document.getElementById('stop-btn');
     const RecordingBtn = document.getElementById('recording-btn');
     const nextBtn = document.getElementById('next-btn');
@@ -86,11 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
         loadNextImage();
     });
 
-    fullscreenBtn.addEventListener('click', () => {
-        if (document.fullscreenElement) {
+    fullscreenButton.addEventListener('click', () => {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+            document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
             document.exitFullscreen();
         } else {
-            document.documentElement.requestFullscreen();
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
 

@@ -14,11 +14,20 @@ document.getElementById('startTestButton').addEventListener('click', () => {
     // loadAudio(1); // Cargar el primer audio
 });
 
-document.getElementById('fullscreenButton').addEventListener('click', () => {
-    if (document.documentElement.requestFullscreen) {
+const fullscreenButton = document.getElementById('fullscreenButton');
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
         document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
 });
+
+
 
 let mediaRecorder1, mediaRecorder2;
 let audioChunks1 = [], audioChunks2 = [];

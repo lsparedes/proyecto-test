@@ -43,14 +43,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     fullscreenButton.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')";
             document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')";
+            document.exitFullscreen();
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
+
 
     function drawCircle(ctx, x, y, number, circlesArray, name = "", circleRadius) {
         ctx.fillStyle = 'white';
@@ -298,10 +301,10 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('partA').style.display = 'flex';
             document.getElementById('show1').style.display = 'flex';
             nextButton.remove();
-            startPartA();   
+            startPartA();
             show1.style.display = 'block';
         });
-        
+
         document.body.appendChild(nextButton);
     }
 
