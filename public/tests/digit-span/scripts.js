@@ -93,7 +93,7 @@ function startTest(type) {
         nextButton.textContent = '';
         nextButton.classList.add('hidden', 'next-button');
         nextButton.addEventListener('click', () => {
-            avanzarSinGrabar(itemDiv, type);
+            avanzarSinGrabar(itemDiv, type, index + 1); // Pasamos el índice del ítem actual
         });
 
         itemDiv.appendChild(titleElement);
@@ -112,20 +112,26 @@ function startTest(type) {
     });
 }
 
-function avanzarSinGrabar(itemDiv, type) {
-    stopAllAudios();
-
-    itemDiv.classList.add('hidden');
-
-    let nextItem = itemDiv.nextElementSibling;
-    if (nextItem) {
-        nextItem.classList.remove('hidden');
+function avanzarSinGrabar(itemDiv, type, index) {
+    // Verificar si está grabando algo
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        // Detener la grabación y guardar el contenido
+        const timerSpan = itemDiv.querySelector('.timer');
+        stopRecording(timerSpan, index, itemDiv, type);
     } else {
-        document.getElementById('test-items-' + type).classList.add('hidden');
-        mostrarFinalizacion(type);
-    }
+        // Si no está grabando, avanzar al siguiente ítem
+        itemDiv.classList.add('hidden');
 
-    console.log(`Avanzando al siguiente ítem sin grabar.`);
+        let nextItem = itemDiv.nextElementSibling;
+        if (nextItem) {
+            nextItem.classList.remove('hidden');
+        } else {
+            document.getElementById('test-items-' + type).classList.add('hidden');
+            mostrarFinalizacion(type);
+        }
+
+        console.log(`Avanzando al siguiente ítem sin grabar.`);
+    }
 }
 
 
