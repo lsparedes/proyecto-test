@@ -127,7 +127,7 @@ function generateCSV(participantID) {
     const endTime = new Date();
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
 
-    let csvContent = "ensayo;rp_c;rp;prec;tr\n";
+    let csvContent = "en;rp_c;rp;pc;tr\n";
 
     answers.forEach(answer => {
         csvContent += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')}\n`;
