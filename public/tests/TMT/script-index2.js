@@ -1,7 +1,6 @@
 window.onload = function () {
     startPartB();
     begining = new Date();
-    mediaRecorderCanvas = startRecording(canvasPartB, recordedChunksCanvasB);
 };
 
 const canvasPartB = document.getElementById('tmtCanvasPartB');
@@ -275,6 +274,7 @@ function drawNextButtonB() {
 
     nextButtonB.addEventListener('click', () => {
         document.getElementById('instructionAudio1').pause();
+        document.getElementById('instructionAudio1').style.display = 'none';
         canvasPartB.style.display = 'none';
         show.style.display = 'none';
         show1.style.display = 'block';
@@ -346,8 +346,14 @@ function arrowToRed() {
 
 const instructionAudio = document.getElementById('instructionAudio');
 
+let isRecordingStarted = false;
+
 instructionAudio.addEventListener('ended', function () {
     playBeep();
+    if (!isRecordingStarted) {
+        mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
+        isRecordingStarted = true; 
+    }  
 });
 
 let inicio = null;
@@ -376,7 +382,6 @@ function startPartB2() {
         const name = index === 0 ? firstCircleLabelB2 : (index === circleCoordinatesPartB2.length - 1 ? lastCircleLabelB2 : "");
         drawCircleWithLabel(ctxPartB2, coord.x, coord.y, label, circlesPartB2, name, 30);
     });
-    mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
     drawNextButtonB2();
 }
 
@@ -460,10 +465,17 @@ canvasPartB2.addEventListener('mousedown', function (event) {
     if (isDrawingPartB2) return;
     startDrawingPartB2(event.offsetX, event.offsetY);
     if (airStartTime) {
-        const airEndTime = new Date();
-        const airTime = (airEndTime - airStartTime) / 1000;
+        let airEndTime = new Date();
+        let airTime = (airEndTime - airStartTime) / 1000;
         penAirTime += airTime;
         airStartTime = null;
+    }
+
+    if (!isRecordingStarted) {
+        mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
+        isRecordingStarted = true; // Actualiza la variable de control
+        inicio = new Date();
+        reiniciarTemporizador();
     }
 });
 
@@ -485,10 +497,17 @@ canvasPartB2.addEventListener('touchstart', function (event) {
     const rect = canvasPartB2.getBoundingClientRect();
     startDrawingPartB2(touch.clientX - rect.left, touch.clientY - rect.top);
     if (airStartTime) {
-        const airEndTime = new Date();
-        const airTime = (airEndTime - airStartTime) / 1000;
+        let airEndTime = new Date();
+        let airTime = (airEndTime - airStartTime) / 1000;
         penAirTime += airTime;
         airStartTime = null;
+    }
+
+    if (!isRecordingStarted) {
+        mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
+        isRecordingStarted = true; // Actualiza la variable de control
+        inicio = new Date();
+        reiniciarTemporizador();
     }
 });
 
@@ -521,7 +540,7 @@ function drawNextButtonB2() {
         const fin = new Date();
         let executionTime = 0;
         if (inicio) {
-            executionTime = (fin - inicio); // Tiempo de ejecución de la tarea
+            executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea
         }
         const taskTime = (fin - begining) / 1000; // Tiempo total dedicado a la tarea
         console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
@@ -572,15 +591,9 @@ function testFinalizado() {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    mediaRecorderCanvas.stop();
+
     mediaRecorderCanvasPartB2.stop();
 
-    mediaRecorderCanvas.onstop = () => {
-        const blob = new Blob(recordedChunksCanvasB, { type: 'video/webm' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-    };
 
     mediaRecorderCanvasPartB2.onstop = () => {
         const blob = new Blob(recordedChunksCanvasPartB2, { type: 'video/webm' });
@@ -591,7 +604,6 @@ function testFinalizado() {
 
     setTimeout(() => {
         const zip = new JSZip();
-        zip.file("canvasBRecording.webm", new Blob(recordedChunksCanvasB, { type: 'video/webm' }));
         zip.file("canvasPartB2Recording.webm", new Blob(recordedChunksCanvasPartB2, { type: 'video/webm' }));
         const csvContent = generateCSV(data);
         zip.file("test_result_TMT_part_B.csv", csvContent);
@@ -622,10 +634,10 @@ function testFinalizado() {
 }
 
 function generateCSV(data) {
-    let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha);Numero de errores de comision;Numero de lineas correctas;Numero de veces en que el participante levanto el lápiz de la pantalla;Tiempo de ejecucion de la tarea;Tiempo total de lápiz en el aire desde la primera respuesta en el canvas;Tiempo dedicado a la tarea(s); mano utilizada\n";
+    let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha),Numero de errores de comision,Numero de lineas correctas,Numero de veces en que el participante levanto el lapiz de la pantalla,Tiempo total de lapiz en el aire desde la primera respuesta en el canvas,Tiempo dedicado a la tarea(s),Mano utilizada\n";
 
     data.forEach(row => {
-        let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.executionTime};${row.penAirTime};${row.taskTime};${selectedHand}\n`;
+        let linea = `${row.executionTime},${row.commissionErrors},${row.correctLines},${row.liftPenCount},${row.penAirTime},${row.taskTime},${selectedHand}\n`;
         csvContent += linea;
     });
 
