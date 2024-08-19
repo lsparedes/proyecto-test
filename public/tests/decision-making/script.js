@@ -318,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         const zip = new JSZip();
     
-        let csvContent = "bloque;ensayo;rp_derecha;rp_izquierda;rp;resultado;tr\n";
+        let csvContent = "bq;en;rp_derecha;rp_izquierda;rp;resultado;tr\n";
         csvContent += results.map(e => e.join(";")).join("\n");
 
         const totalTaskTime = (Date.now() - totalStartTime) / 1000;

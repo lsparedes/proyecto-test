@@ -331,7 +331,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    const csvData = [['ensayo', 'rp_c', 'rp', 'prec', 'tr']];
+    const csvData = [['en', 'rp_c', 'rp', 'pc', 'tr']];
 
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;

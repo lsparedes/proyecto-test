@@ -448,7 +448,7 @@ function generarArchivoCSV() {
     const endTime = new Date();
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
 
-    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta en milisegundos\n";
+    csvContent += "en;rp_c;rp;pc;tr\n";
 
     let respuestasCorrectas = respuestasSeleccionadas.filter(respuesta =>
         respuesta.opcionSeleccionada === respuesta.respuestaCorrecta
