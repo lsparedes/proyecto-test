@@ -13,8 +13,10 @@
 
 <body>
     <div id="container">
+
         <!-- Pantalla Principal -->
         <div id="main-screen" class="screen">
+            
             <p class="instructionText">A continuación, le voy a dar una lista de palabras. Por favor, escuche
                 atentamente e intente memorizar estas palabras.</p>
             <audio id="audio1" controls>
@@ -28,13 +30,11 @@
         </div>
 
         <!-- Palabras -->
+
         <div id="words" style="display: none;">
-            <audio id="audio2" controls>
-                <source src="audio2.mp3" type="audio/mpeg">
-                Tu navegador no soporta el elemento de audio.
-            </audio>
-            <audio id="audio3" controls>
-                <source src="audio3.mp3" type="audio/mpeg">
+            <div class="item-indicator"><span id="current-item">E1</span></div>
+            <audio id="audio_E1" controls>
+                <source src="audio_E1.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
@@ -67,12 +67,9 @@
 
         <!-- Palabras Ensayo 2 -->
         <div id="words2" style="display: none;">
-            <audio id="audio2_ensayo2" controls>
-                <source src="audio2.mp3" type="audio/mpeg">
-                Tu navegador no soporta el elemento de audio.
-            </audio>
-            <audio id="audio3_ensayo2" controls>
-                <source src="audio3.mp3" type="audio/mpeg">
+            <div class="item-indicator"><span id="current-item">E2</span></div>
+            <audio id="audio_E2" controls>
+                <source src="audio_E2.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
@@ -105,12 +102,9 @@
 
         <!-- Palabras Ensayo 3 -->
         <div id="words3" style="display: none;">
-            <audio id="audio2_ensayo3" controls>
-                <source src="audio2.mp3" type="audio/mpeg">
-                Tu navegador no soporta el elemento de audio.
-            </audio>
-            <audio id="audio3_ensayo3" controls>
-                <source src="audio3.mp3" type="audio/mpeg">
+            <div class="item-indicator"><span id="current-item">E3</span></div>
+            <audio id="audio_E3" controls>
+                <source src="audio_E3.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">

@@ -76,11 +76,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (audioElement1) {
         audioElement1.addEventListener('ended', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
+    
+            let elapsedTime = 0; // Tiempo transcurrido en segundos
+            let intervalId = setInterval(() => {
+                console.log(`Tiempo transcurrido: ${elapsedTime} segundos`);
+                elapsedTime++;
+            }, 1000); // Actualiza cada segundo
+    
             setTimeout(() => {
+                clearInterval(intervalId);
+                console.log("Cronómetro detenido después de 4 minutos.");
                 finishdrawingwithfigure.classList.add('red-arrow');
-            }, 4 * 60 * 1000); //
+            }, 4 * 60 * 1000); // Detener cronómetro después de 4 minutos
         });
     }
+    
 
     finishRememberingFigureButton.addEventListener('click', () => {
         document.getElementById('audio1').pause();
