@@ -435,7 +435,6 @@ function cambiarImagen(selectedOptionIndex) {
     }
 }
 
-// Función para generar el archivo CSV al finalizar el test
 function generarArchivoCSV() {
     selectHandContainer.style.display = "none";
     enterID.style.display = 'none';
@@ -462,30 +461,41 @@ function generarArchivoCSV() {
         csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa}\n`;
     });
 
-    
+    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
 
-    csvContent += `\n\nTiempo dedicado (segundos): ${totalTestTime/1000}\n`;
-    csvContent += `Mano utilizada: ${selectedHand}\n`;
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const txtContent = `Tiempo dedicado (segundos): ${totalTestTime / 1000}\nMano utilizada: ${selectedHand}\n`;
+    const txtBlob = new Blob([txtContent], { type: 'text/plain' });
 
     // Obtener la fecha y la hora actuales
     const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric'  };
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    // Crear un enlace de descarga para el archivo CSV
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.csv`;
-    a.click();
-    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URLr un blob a partir del contenido del CSV
+    // Crear el archivo ZIP
+    const zip = new JSZip();
+    zip.file(`${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.txt`, txtBlob);
 
+    zip.generateAsync({ type: "blob" })
+        .then(content => {
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const zipFilename = `${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.zip`;
+                const url = URL.createObjectURL(content);
+                link.setAttribute('href', url);
+                link.setAttribute('download', zipFilename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        })
+        .catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
+        });
 }
-
 
 function mostrarInstrucciones() {
     const imageContainer = document.getElementById('imageContainer');
