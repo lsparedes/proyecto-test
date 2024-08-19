@@ -22,46 +22,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const images = [
         'img-jpg/1.jpg',
         'img-jpg/2.jpg',
-        'img-jpg/3.jpg',
-        'img-jpg/4.jpg',
-        'img-jpg/5.jpg',
-        'img-jpg/6.jpg',
-        'img-jpg/7.jpg',
-        'img-jpg/8.jpg',
-        'img-jpg/9.jpg',
-        'img-jpg/10.jpg',
-        'img-jpg/11.jpg',
-        'img-jpg/12.jpg',
-        'img-jpg/13.jpg',
-        'img-jpg/14.jpg',
-        'img-jpg/15.jpg',
-        'img-jpg/16.jpg',
-        'img-jpg/17.jpg',
-        'img-jpg/18.jpg',
-        'img-jpg/19.jpg',
-        'img-jpg/20.jpg'
+        // 'img-jpg/3.jpg',
+        // 'img-jpg/4.jpg',
+        // 'img-jpg/5.jpg',
+        // 'img-jpg/6.jpg',
+        // 'img-jpg/7.jpg',
+        // 'img-jpg/8.jpg',
+        // 'img-jpg/9.jpg',
+        // 'img-jpg/10.jpg',
+        // 'img-jpg/11.jpg',
+        // 'img-jpg/12.jpg',
+        // 'img-jpg/13.jpg',
+        // 'img-jpg/14.jpg',
+        // 'img-jpg/15.jpg',
+        // 'img-jpg/16.jpg',
+        // 'img-jpg/17.jpg',
+        // 'img-jpg/18.jpg',
+        // 'img-jpg/19.jpg',
+        // 'img-jpg/20.jpg'
     ];
     const audios = [
         'audio/1.mp3',
         'audio/2.mp3',
-        'audio/3.mp3',
-        'audio/4.mp3',
-        'audio/5.mp3',
-        'audio/6.mp3',
-        'audio/7.mp3',
-        'audio/8.mp3',
-        'audio/9.mp3',
-        'audio/10.mp3',
-        'audio/11.mp3',
-        'audio/12.mp3',
-        'audio/13.mp3',
-        'audio/14.mp3',
-        'audio/15.mp3',
-        'audio/16.mp3',
-        'audio/17.mp3',
-        'audio/18.mp3',
-        'audio/19.mp3',
-        'audio/20.mp3'
+        // 'audio/3.mp3',
+        // 'audio/4.mp3',
+        // 'audio/5.mp3',
+        // 'audio/6.mp3',
+        // 'audio/7.mp3',
+        // 'audio/8.mp3',
+        // 'audio/9.mp3',
+        // 'audio/10.mp3',
+        // 'audio/11.mp3',
+        // 'audio/12.mp3',
+        // 'audio/13.mp3',
+        // 'audio/14.mp3',
+        // 'audio/15.mp3',
+        // 'audio/16.mp3',
+        // 'audio/17.mp3',
+        // 'audio/18.mp3',
+        // 'audio/19.mp3',
+        // 'audio/20.mp3'
     ];
     recordingMessage.className = 'recording-message';
     recordingMessage.textContent = 'Grabación creada';
@@ -235,25 +235,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
-    function createCsvFile() {
-        const filename = `${participantID}_respuestas_pantomime_${fechaFormateada}.csv`;
-        // Definir el contenido del archivo CSV
-        const csvContent = `Tiempo dedicado (Segundos);Mano utilizada\n${totalTestTime / 1000};${selectedHand}\n`;
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-
-        // Agregar el archivo CSV al ZIP con el nombre dinámico
+    function createTxtFile() {
+        const filename = `${participantID}_Pantomime_${fechaFormateada}.txt`;
+        // Definir el contenido del archivo TXT
+        const txtContent = `Tiempo dedicado (Segundos): ${totalTestTime / 1000}\nMano utilizada: ${selectedHand}\n`;
+        const blob = new Blob([txtContent], { type: 'text/plain' });
+    
+        // Agregar el archivo TXT al ZIP con el nombre dinámico
         zip.file(filename, blob);
     }
-
+    
     function createZipAndDownload() {
         handButton.style.display = "none";
         selectHandContainer.style.display = "none";
         enterID.style.display = 'none';
-        createCsvFile();
+        createTxtFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
             const zipname = `${participantID}_Pantomime_${fechaFormateada}.zip`;
-
+    
             link.href = URL.createObjectURL(content);
             link.download = zipname;
             link.click();

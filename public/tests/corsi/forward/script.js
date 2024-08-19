@@ -232,35 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function endGame() {
-        endTime = new Date();
-        const duration = (endTime - startTime) / 1000;
-        console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
-        game.style.display = 'none';
-        resultScreen.style.display = 'block';
-        count = 2;
-        errorCount = 0;
-        resetBlocks();
-
-        const csvBlob = generateCSVBlob(highestCount, totalCorrectBlocks, duration, sequenceCount);
-        const videoBlob = await stopScreenRecording();
-
-        // Obtener la fecha y hora actuales
-        const now = new Date();
-        const day = String(now.getDate()).padStart(2, '0');
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-
-        // Formatear la fecha para el nombre del archivo
-        const date = `${day}_${month}_${year}`;
-        const fileName = `${participantID}_corsi_directo_${date}`;
-
-        const zip = new JSZip();
-        zip.file(fileName + `.csv`, csvBlob);
-        zip.file(fileName + `.webm`, videoBlob);
-
-        zip.generateAsync({ type: 'blob' }).then((content) => {
-            saveAs(content, fileName + `.zip`);
-        });
+        downloadResultsAsZip(testData, startTime, selectedHand, participantID)
     }
 
     function endPractice() {
@@ -277,37 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startTestButton.style.display = 'inline-block';
         sequenceDisplaying = true;
         resetBlocks();
-    }
-
-    function generateCSVBlob(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
-        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta(ms)"];
-        const rows = testData.map(data => {
-            const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
-            const userResponseIncremented = data.userResponse.map(num => num + 1);
-            const precision = data.correctAnswer.join("") === data.userResponse.join("") ? 1 : 0;
-            return [
-                data.exerciseTitle,
-                correctAnswerIncremented.join(""),
-                userResponseIncremented.join(""),
-                precision,
-                data.responseTime,
-            ];
-        });
-
-        const desiredRowCount = fixedSequences.length;
-        const currentRowCount = rows.length;
-        const rowsToFill = desiredRowCount - currentRowCount;
-    
-        for (let i = 0; i < rowsToFill; i++) {
-            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
-        }
-
-        rows.push(['\nTiempo Total(s): ' + duration.toFixed(2)]);
-        rows.push(['Mano Utilizada: ' + selectedHand]);
-
-        const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
-
-        return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     }
 
     startTestButton.addEventListener('click', async () => {
@@ -451,4 +392,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.confirmHandSelection = confirmHandSelection;
+
+    function getCurrentDate() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        return `${day}_${month}_${year}`;
+    }
+
+    function generateCSV(results, participantID) {
+        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta(ms)"];
+        const rows = results.map(data => {
+            const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
+            const userResponseIncremented = data.userResponse.map(num => num + 1);
+            const precision = data.correctAnswer.join("") === data.userResponse.join("") ? 1 : 0;
+            return [
+                data.exerciseTitle,
+                correctAnswerIncremented.join(""),
+                userResponseIncremented.join(""),
+                precision,
+                data.responseTime,
+            ];
+        });
+        const desiredRowCount = fixedSequences.length;
+        const currentRowCount = rows.length;
+        const rowsToFill = desiredRowCount - currentRowCount;
+        for (let i = 0; i < rowsToFill; i++) {
+            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
+        }
+        const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
+        return {
+            content: csvContent,
+            filename: `${participantID}_corsi_directo_${getCurrentDate()}.csv`
+        };
+    }
+
+    function generateTxt(startTimeTotal, selectedHand, participantID) {
+        const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
+            + "Mano Utilizada: " + selectedHand;
+        return {
+            content: txtContent,
+            filename: `${participantID}_corsi_directo_${getCurrentDate()}.txt`
+        };
+    }
+
+    async function downloadZip(csvFile, txtFile, participantID) {
+        const zip = new JSZip();
+        zip.file(csvFile.filename, csvFile.content);
+        zip.file(txtFile.filename, txtFile.content);
+        const videoBlob = await stopScreenRecording();
+        zip.file(`${participantID}_corsi_directo_${getCurrentDate()}.webm`, videoBlob);
+        
+        const zipContent = await zip.generateAsync({ type: "blob" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(zipContent);
+        link.setAttribute("download", `${participantID}_corsi_directo_${getCurrentDate()}.zip`);
+        document.body.appendChild(link);
+        link.click();
+    }
+    
+    async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
+        const csvFile = generateCSV(results, participantID);
+        const txtFile = generateTxt(startTimeTotal, selectedHand, participantID);
+        await downloadZip(csvFile, txtFile, participantID);
+    }
 });

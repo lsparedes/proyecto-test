@@ -316,27 +316,41 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 3000);
   }
 
-  function downloadResults() {
-        let csvContent = "data:text/csv;charset=utf-8,";
-        const totalTaskTime = (Date.now() - totalStartTime)/1000;
-        csvContent += "Bloque;Ensayo;Outcome Derecha;Outcome Izquierda;Respuesta Participante;Resultado;Tiempo de Respuesta(ms)\n";
+    async function downloadResults() {
+        if (typeof JSZip === 'undefined') {
+            console.error('JSZip is not loaded.');
+            return;
+        }
+    
+        const zip = new JSZip();
+    
+        let csvContent = "bloque;ensayo;rp_derecha;rp_izquierda;rp;resultado;tr\n";
         csvContent += results.map(e => e.join(";")).join("\n");
-        csvContent += `\nTiempo Dedicado a la Tarea;${totalTaskTime} s\n`;
-        csvContent += `Mano Utilizada;${selectedHand};\n`;
-        const link = document.createElement("a");
-        link.setAttribute("href", encodeURI(csvContent));
-        // Obtener la fecha y hora actuales
+
+        const totalTaskTime = (Date.now() - totalStartTime) / 1000;
+        let txtContent = `Tiempo Dedicado a la Tarea: ${totalTaskTime} s\n`;
+        txtContent += `Mano Utilizada: ${selectedHand}\n`;
+    
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
         const year = now.getFullYear();
-
-        // Formatear la fecha para el nombre del archivo
         const date = `${day}_${month}_${year}`;
-        const fileName = `${participantID}_decision_making_${date}.csv`;
-        link.setAttribute("download", fileName);
-        document.body.appendChild(link);
-        link.click();
+
+        // Añadir archivos al ZIP
+        zip.file(`${participantID}_decision_making_${date}.csv`, csvContent);
+        zip.file(`${participantID}_decision_making_${date}.txt`, txtContent);
+        const fileName = `${participantID}_decision_making_${date}.zip`;
+    
+        // Generar y descargar el archivo ZIP
+        zip.generateAsync({ type: 'blob' }).then((content) => {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(content);
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
     }
 
     function stopAllAudios() {
