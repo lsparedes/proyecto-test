@@ -74,8 +74,12 @@ window.onload = function () {
         image.onload = function () {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         };
-        startRecording('designCanvas');
+    });
+    
+    const instructionAudio = document.getElementById('instructionAudio');
+    instructionAudio.addEventListener('ended', function () {
         reiniciarTemporizador();
+        startRecording('designCanvas');
     });
 
     document.getElementById('finishButton').addEventListener('click', function () {
@@ -246,7 +250,7 @@ window.onload = function () {
             const date = new Date();
     
             // Añadir los videos grabados al ZIP
-            zip.file("canvasPractice-recording.webm", new Blob(practiceRecordedChunks, { type: 'video/webm' }));
+            // zip.file("canvasPractice-recording.webm", new Blob(practiceRecordedChunks, { type: 'video/webm' }));
             zip.file("canvas-recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
     
             // Generar y añadir el archivo TXT al ZIP
@@ -258,8 +262,8 @@ window.onload = function () {
                 zip.file("canvasScreenshot.png", blob);
     
                 practiceCanvas.toBlob(function (blobPractice) {
-                    zip.file("canvasPracticeScreenshot.png", blobPractice);
-    
+                    // zip.file("canvasPracticeScreenshot.png", blobPractice);
+
                     // Generar el archivo ZIP y descargar
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
                         saveAs(content, `${participantID}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);

@@ -12,10 +12,10 @@
 
 <body>
   <div id="instructions" class="container1">
-    <p id="instructionText" style="margin-top: 0px;">En este test, debes unir todos los puntos en cada uno de los
-      cuadros de la imagen. Usa el mouse para dibujar líneas entre los puntos. Debes dibujar tantos diseños diferentes
-      como puedas hasta que le diga que pare. Recuerde usar solo cuatro líneas rectas para conectar los puntos.
-      Trabaje lo más rápido que puedas y trate que cada diseño sea diferente.</p>
+    <p id="instructionText" style="margin-top: 0px;">Aquí hay dos cuadrados, cada uno con cinco puntos dentro. Usted va
+      a hacer diseños en cada cuadrado conectando los puntos con líneas rectas. Hay una única regla: tienen que haber 4
+      líneas rectas que conectan puntos. No importa cómo se vea el diseño, cuáles puntos use o cuántos puntos use, y
+      está bien si las líneas se entrecruzan. Se le dará un ejemplo.</p>
     <audio controls style="margin-bottom: 10px;">
       <source src="Design-fluency.mp3" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
@@ -35,9 +35,9 @@
   <div id="practiceFinishScreen" class="container" style="display: none;">
     <div id="practica" style="display: flex; flex-direction: column; align-items: center;">
       <ol class="d-flex flex-column justify-content-center">
-        <li style="text-align: left;" >Haga diseños dibujando 4 líneas rectas que conecten puntos.</li>
-        <li style="text-align: left;" >No importa cómo se vea el diseño, cuáles puntos use o cuántos puntos use.</li>
-        <li style="text-align: left;" >Está bien si las líneas se entrecruzan.</li>
+        <li style="text-align: left;">Haga diseños dibujando 4 líneas rectas que conecten puntos.</li>
+        <li style="text-align: left;">No importa cómo se vea el diseño, cuáles puntos use o cuántos puntos use.</li>
+        <li style="text-align: left;">Está bien si las líneas se entrecruzan.</li>
       </ol>
       <audio controls style="margin-bottom: 10px;">
         <source src="Design-fluency.mp3" type="audio/mpeg">
@@ -52,23 +52,26 @@
     <button id="toMainTestButton" class="finish-button"></button>
   </div>
 
-  <div class="cont"
-    style="display: flex; justify-content: space-around; max-width: 100vw; width: 100vw; max-height: 100vh;">
-    <div id="instructionsE1" class="container1" style="display: none; margin-top: 50px; max-width: 20vw;">
+  <div class="cont d-flex justify-content-center p-0 mt-3">
+    <!-- style=" max-width: 100vw; width: 100vw; max-height: 120vh;" -->
+    <div id="instructionsE1" class="container flex-column justify-content-center align-items-center" style="display: none;">
+      <!-- margin-top: 50px; max-width: 150vw; -->
 
-      <audio controls style="margin-bottom: 10px;">
+      <div id="canvasContainer" class="container" style="display: none; margin-top: 25%;">
+        <!-- margin: 0px; padding: 0px; max-width: 65vw; -->
+        <h2 class="imageText">E1</h2>
+        <canvas id="designCanvas" width="1200" height="900"></canvas>
+        <button id="finishButton" class="finish-button" style="display: none;"></button>
+      </div>
+
+      
+      <audio controls id="instructionAudio" style="margin-bottom: 5%;">
         <source src="desing-fluency-instructions2.mp3" type="audio/mpeg">
         Tu navegador no soporta el elemento de audio.
       </audio>
-
     </div>
 
 
-    <div id="canvasContainer" class="container" style="display: none; margin: 0px; padding: 0px; max-width: 65vw;">
-      <h2 class="imageText">E1</h2>
-      <canvas id="designCanvas" width="1200" height="900"></canvas>
-      <button id="finishButton" class="finish-button" style="display: none;"></button>
-    </div>
 
   </div>
 
@@ -94,7 +97,7 @@
           style="display: none; height: 20%; width: 40%; background-color: #f9f9f9;">
           <div class="card-body">
             <h4>ID participante</h4>
-            <input type="number" id="participantID" class="form-control"  style="margin-bottom: 29%;">
+            <input type="number" id="participantID" class="form-control" style="margin-bottom: 29%;">
           </div>
         </div>
         <div id="selectHand" class="card opacity-75 col-md-4 ms-3 p-3"
