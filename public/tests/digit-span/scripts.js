@@ -312,9 +312,12 @@ function generarCSV() {
         }
     });
 
-    csvContent += "Tiempo dedicado a la tarea(s);" + taskTime + "\n";
-
     return csvContent;
+}
+
+function generarTxt(taskTime) {
+    const txtContent = `Tiempo dedicado a la tarea(s): ${taskTime}`;
+    return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
 }
 
 function crearZip(type, participantID) {
@@ -348,6 +351,9 @@ function crearZip(type, participantID) {
 
     console.log("Contenido del CSV:", csvContent);
 
+    const txtBlob = generarTxt(taskTime);
+
+    const fechaActual = new Date();
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -355,6 +361,7 @@ function crearZip(type, participantID) {
     const fechaFormateada = `${day}_${month}_${year}`;
 
     zip.file(`${participantID}_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${participantID}_tiempo_dedicado_${fechaFormateada}.txt`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {

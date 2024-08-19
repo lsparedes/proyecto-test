@@ -568,6 +568,11 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
 
+    const generarTxt = (tiempoTotalSegundos, manoUtilizada) => {
+        const txtContent = `tiempo_total_segundos: ${tiempoTotalSegundos}\nmano_utilizada: ${manoUtilizada}`;
+        return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+    };
+    
     const downloadCSV = () => {
         const csvData = responses.map(response => ({
             ensayo: response.ensayo,
@@ -581,29 +586,43 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     
         let csv = Papa.unparse(csvData, { delimiter: ';' });
-        csv += `\ntiempo_total_segundos;${(Date.now() - trialStartTime) / 1000}\nmano_utilizada;${selectedHand}`;
+        const tiempoTotalSegundos = (Date.now() - trialStartTime) / 1000;
     
-        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        if (link.download !== undefined) {
-            const url = URL.createObjectURL(blob);
-
-            // Obtener la fecha actual en formato YYYYMMDD
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            const formattedDate = `${day}_${month}_${year}`;
-            const fileName = `${participantID}_vienna_${formattedDate}.csv`;
-            
-            link.setAttribute('href', url);
-            link.setAttribute('download', fileName);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            window.close(); 
-        }
+        const csvBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const txtBlob = generarTxt(tiempoTotalSegundos, selectedHand);
+    
+        const zip = new JSZip();
+    
+        // Obtener la fecha actual en formato YYYYMMDD
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${day}_${month}_${year}`;
+        const csvFileName = `${participantID}_vienna_${formattedDate}.csv`;
+        const txtFileName = `${participantID}_vienna_${formattedDate}.txt`;
+    
+        zip.file(csvFileName, csvBlob);
+        zip.file(txtFileName, txtBlob);
+    
+        zip.generateAsync({ type: "blob" })
+            .then(content => {
+                const link = document.createElement('a');
+                if (link.download !== undefined) {
+                    const url = URL.createObjectURL(content);
+                    const zipFileName = `${participantID}_vienna_${formattedDate}.zip`;
+    
+                    link.setAttribute('href', url);
+                    link.setAttribute('download', zipFileName);
+                    link.style.visibility = 'hidden';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            })
+            .catch(err => {
+                console.error("Error generando el archivo ZIP:", err);
+            });
     };
 
     const showCompletionScreen = () => {

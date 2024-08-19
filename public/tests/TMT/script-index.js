@@ -155,7 +155,6 @@ document.addEventListener('DOMContentLoaded', function () {
     window.onload = function () {
         startTest();
         begining = new Date();
-        mediaRecorderCanvas = startRecording(canvas, recordedChunksCanvas);
     }
 
     let drawingCompleted = false;
@@ -186,10 +185,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
                 circlesToCorrect.push({ x: circle.x, y: circle.y, number: circle.number });
                 isDrawing = false;
-                erroresComision++;
+                // erroresComision++;
             } else if (distance < circleRadius && circle.number === currentCircle + 1) {
                 highlightCircle(ctx, circle, 'black', x, y);
-                drawLineToCircleEdge(ctx, lastCircle.x, lastCircle.y, circle.x, circle.y);
+                // drawLineToCircleEdge(ctx, lastCircle.x, lastCircle.y, circle.x, circle.y);
                 correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
                 currentCircle++;
                 lastCircle = circle;
@@ -216,7 +215,7 @@ document.addEventListener('DOMContentLoaded', function () {
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCircle + 1) {
-                drawLineToCircleEdge(ctx, lastCircle.x, lastCircle.y, circle.x, circle.y);
+                // drawLineToCircleEdge(ctx, lastCircle.x, lastCircle.y, circle.x, circle.y);
                 highlightCircle(ctx, circle, 'black', x, y);
                 correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
                 currentCircle++;
@@ -229,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const distance = Math.sqrt((x - lastCircle.x) ** 2 + (y - lastCircle.y) ** 2);
             if (distance > circleRadius) {
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
-                erroresComision++;
+                // erroresComision++;
             }
         }
 
@@ -239,12 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
     canvas.addEventListener('mousedown', function (event) {
         if (drawingCompleted) return;
         startDrawing(event.offsetX, event.offsetY);
-        if (airStartTime) {
-            const airEndTime = new Date();
-            const airTime = (airEndTime - airStartTime) / 1000;
-            penAirTime += airTime;
-            airStartTime = null;
-        }
     });
 
     canvas.addEventListener('mousemove', function (event) {
@@ -264,12 +257,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const touch = event.touches[0];
         const rect = canvas.getBoundingClientRect();
         startDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
-        if (airStartTime) {
-            const airEndTime = new Date();
-            const airTime = (airEndTime - airStartTime) / 1000;
-            penAirTime += airTime;
-            airStartTime = null;
-        }
     });
 
     canvas.addEventListener('touchmove', function (event) {
@@ -320,10 +307,15 @@ document.addEventListener('DOMContentLoaded', function () {
         arrow.style.backgroundImage = "url('imagenes/flecha4.png')";
     }
 
-    const instructionAudio = document.getElementById('instructionAudio');
+    const instructionAudio = document.getElementById('instructionAudio');    
+    let isRecordingStarted = false;
 
     instructionAudio.addEventListener('ended', function () {
         playBeep();
+        if (!isRecordingStarted) {
+            mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
+            isRecordingStarted = true; 
+        }   
     });
 
     let inicio = null;
@@ -379,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
             drawCircle(ctxPartA, coord.x, coord.y, index + 1, circlesPartA, name, circleRadius);
         });
         drawNextButtonA();
-        mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
+        
     }
 
     let drawingCompletedA = false;
@@ -413,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 erroresComision++;
             } else if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
                 highlightCircle(ctxPartA, circle, 'black', x, y);
-                drawLineToCircleEdge(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, circle.x, circle.y);
+                // drawLineToCircleEdge(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, circle.x, circle.y);
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
                 currentCirclePartA++;
                 lastCirclePartA = circle;
@@ -440,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
-                drawLineToCircleEdge(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, circle.x, circle.y);
+                // drawLineToCircleEdge(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, circle.x, circle.y);
                 highlightCircle(ctxPartA, circle, 'black', x, y);
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
                 currentCirclePartA++;
@@ -453,7 +445,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const distance = Math.sqrt((x - lastCirclePartA.x) ** 2 + (y - lastCirclePartA.y) ** 2);
             if (distance > circleRadius) {
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
-                erroresComision++;
+                // erroresComision++;
             }
         }
 
@@ -464,10 +456,20 @@ document.addEventListener('DOMContentLoaded', function () {
         if (drawingCompletedA) return;
         startDrawingPartA(event.offsetX, event.offsetY);
         if (airStartTime) {
-            const airEndTime = new Date();
-            const airTime = (airEndTime - airStartTime) / 1000;
+            console.log('empezo'+ airStartTime);
+            let airEndTime = new Date();
+            console.log('termino'+ airEndTime);
+            let airTime = (airEndTime - airStartTime) / 1000;
+            console.log('tiempo en el aire'+ airTime);
             penAirTime += airTime;
             airStartTime = null;
+        }
+
+        if (!isRecordingStarted) {
+            mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
+            isRecordingStarted = true; // Actualiza la variable de control
+            inicio = new Date();
+            reiniciarTemporizador();
         }
     });
 
@@ -489,10 +491,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const rect = canvasPartA.getBoundingClientRect();
         startDrawingPartA(touch.clientX - rect.left, touch.clientY - rect.top);
         if (airStartTime) {
-            const airEndTime = new Date();
-            const airTime = (airEndTime - airStartTime) / 1000;
+            let airEndTime = new Date();
+            let airTime = (airEndTime - airStartTime) / 1000;
             penAirTime += airTime;
             airStartTime = null;
+        }
+
+        if (!isRecordingStarted) {
+            mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
+            isRecordingStarted = true; // Actualiza la variable de control
+            inicio = new Date();
+            reiniciarTemporizador();
         }
     });
 
@@ -525,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const fin = new Date();
             let executionTime = 0;
             if (inicio) {
-                executionTime = (fin - inicio); // Tiempo de ejecución de la tarea en milisegundos
+                executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea en milisegundos
             }
             const taskTime = (fin - begining) / 1000; // Tiempo total de la tarea en segundos
             console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
@@ -551,15 +560,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const [day, month, year] = fechaHoraChilena.split('-');
         const fechaFormateada = `${day}_${month}_${year}`;
 
-        mediaRecorderCanvas.stop();
+        // mediaRecorderCanvas.stop();
         mediaRecorderCanvasPartA.stop();
 
-        mediaRecorderCanvas.onstop = () => {
-            const blob = new Blob(recordedChunksCanvas, { type: 'video/webm' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-        };
+        
 
         mediaRecorderCanvasPartA.onstop = () => {
             const blob = new Blob(recordedChunksCanvasPartA, { type: 'video/webm' });
@@ -570,7 +574,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         setTimeout(() => {
             const zip = new JSZip();
-            zip.file("canvasRecording.webm", new Blob(recordedChunksCanvas, { type: 'video/webm' }));
+            // zip.file("canvasRecording.webm", new Blob(recordedChunksCanvas, { type: 'video/webm' }));
             zip.file("canvasPartARecording.webm", new Blob(recordedChunksCanvasPartA, { type: 'video/webm' }));
             const csvContent = generateCSV(data);
             zip.file("test_result_TMT_part_A.csv", csvContent);
@@ -593,10 +597,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function generateCSV(data) {
-        let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha);Numero de errores de comision;Numero de lineas correctas;Numero de veces en que el participante levanto el lápiz de la pantalla;Tiempo de ejecucion de la tarea;Tiempo total de lápiz en el aire desde la primera respuesta en el canvas;Tiempo dedicado a la tarea(s); mano utilizada\n";
+        let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha),Numero de errores de comision,Numero de lineas correctas,Numero de veces en que el participante levanto el lapiz de la pantalla,Tiempo total de lapiz en el aire desde la primera respuesta en el canvas,Tiempo dedicado a la tarea(s), Mano utilizada\n";
 
         data.forEach(row => {
-            let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.executionTime};${row.penAirTime};${row.taskTime};${selectedHand}\n`;
+            let linea = `${row.executionTime},${row.commissionErrors},${row.correctLines},${row.liftPenCount},${row.penAirTime},${row.taskTime},${selectedHand}\n`;
             csvContent += linea;
         });
 
@@ -631,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    document.getElementById('handButton').addEventListener('click', confirmHandSelection);
+    // document.getElementById('handButton').addEventListener('click', confirmHandSelection);
 
     function confirmHandSelection() {
         document.getElementById('preEnd').style.display = 'none';
