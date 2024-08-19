@@ -174,7 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+
         });
+        window.close(); 
+
     }
 
     function pauseAudios() {

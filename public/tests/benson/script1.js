@@ -350,9 +350,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
+                    
                 });
             };
             reader.readAsDataURL(blob);
+            window.close(); 
+
         } catch (error) {
             console.warn(`No video available: ${error}`);
             // Generar el archivo ZIP sin el video

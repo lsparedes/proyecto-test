@@ -337,6 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
         link.setAttribute("download", fileName);
         document.body.appendChild(link);
         link.click();
+        window.close(); 
+
     }
 
     function stopAllAudios() {

@@ -274,7 +274,7 @@ const finalButton = document.getElementById('final-button');
 let participantID = 0;
 
 function mostrarFinalizacion(type) {
-    taskTime = (new Date() - taskTimeStart) / 1000;
+    taskTime = (new Date() - taskTimeStart);
     console.log("Mostrando mensaje de finalización...");
     const completionMessage = document.getElementById('completion-message');
     completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
@@ -320,10 +320,6 @@ function generarCSV() {
 function crearZip(type, participantID) {
     document.getElementById('enterID').style.display = 'none';
     document.getElementById('final-button').style.display = 'none';
-    if (!downloadLinks.length) {
-        console.error("No hay datos en downloadLinks.");
-        return;
-    }
 
     const zip = new JSZip();
     const audioFolder = zip.folder('audios');
@@ -333,26 +329,25 @@ function crearZip(type, participantID) {
         return;
     }
 
-    console.log("Contenido de downloadLinks:", downloadLinks);
-
-    downloadLinks.forEach(linkData => {
-        if (linkData.title && linkData.blob) {
-            const fileName = `${type}_${linkData.title}.ogg`;
-            audioFolder.file(fileName, linkData.blob);
-            console.log(`Archivo añadido al ZIP: ${fileName}`);
-        } else {
-            console.warn("Datos incompletos en linkData:", linkData);
-        }
-    });
+    if (downloadLinks.length > 0) {
+        downloadLinks.forEach(linkData => {
+            if (linkData.title && linkData.blob) {
+                const fileName = `${type}_${linkData.title}.ogg`;
+                audioFolder.file(fileName, linkData.blob);
+                console.log(`Archivo añadido al ZIP: ${fileName}`);
+            } else {
+                console.warn("Datos incompletos en linkData:", linkData);
+            }
+        });
+    } else {
+        console.log("No hay audios para añadir al ZIP.");
+    }
 
     const csvContent = generarCSV();
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
 
     console.log("Contenido del CSV:", csvContent);
 
-    const fechaActual = new Date();
-    const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
-    // const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_');
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -371,6 +366,7 @@ function crearZip(type, participantID) {
 
             downloadLink.click();
             document.body.removeChild(downloadLink);
+            window.close(); 
 
             const completionMessage = document.getElementById('completion-message');
             if (completionMessage) {

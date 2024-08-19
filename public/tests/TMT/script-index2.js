@@ -605,6 +605,7 @@ function testFinalizado() {
                 zip.generateAsync({ type: 'blob' }).then(function (content) {
                     saveAs(content, `${participantID}_TMTPartB_${fechaFormateada}.zip`);
                 });
+                window.close(); 
             });
         });
 

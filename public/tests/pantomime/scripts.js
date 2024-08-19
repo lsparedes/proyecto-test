@@ -263,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showFinalMessage() {
         completionScreen.classList.remove('hidden');
         completionScreen.classList.add('active');
+        window.close();
     }
 
     // Manages the hand selection

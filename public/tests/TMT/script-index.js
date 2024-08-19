@@ -583,6 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
                         saveAs(content, `${participantID}_TMTPartA_${fechaFormateada}.zip`);
+                        
                     });
                 });
             });

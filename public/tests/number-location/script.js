@@ -156,6 +156,8 @@ function generateCSV(participantID) {
     link.setAttribute("download", filename);
     document.body.appendChild(link);
     link.click();
+    window.close(); 
+
 }
 
 function validateInput(input) {

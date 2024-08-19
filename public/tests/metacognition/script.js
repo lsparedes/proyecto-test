@@ -260,6 +260,8 @@ document.addEventListener('DOMContentLoaded', () => {
     link.setAttribute("download", `${participantID}_metacognicion_${date}.csv`);
     document.body.appendChild(link);
     link.click();
+    window.close(); 
+
   }
 
   function showFeedback(answer) {

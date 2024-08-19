@@ -193,6 +193,8 @@ function generarCSV() {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        window.close(); 
+
     }
 }
 

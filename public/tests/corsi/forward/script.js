@@ -261,6 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             saveAs(content, fileName + `.zip`);
         });
+        window.close(); 
+
     }
 
     function endPractice() {

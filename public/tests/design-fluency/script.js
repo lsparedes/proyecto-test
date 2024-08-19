@@ -265,6 +265,9 @@ window.onload = function () {
                         saveAs(content, `${participantID}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
                     });
                 });
+
+                window.close(); 
+
             });
         }, 1000);
     }

@@ -518,6 +518,8 @@ function generarArchivoRespuestasCSV() {
     a.download = `${participantID}_modified_camel_and_cactus_${fechaHoraFormateada}.csv`;
     a.click();
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URL
+    window.close(); 
+
 }
 
 

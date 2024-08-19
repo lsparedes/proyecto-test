@@ -415,7 +415,7 @@ practiceImage.onload = function () {
 };
 
 window.addEventListener('resize', () => {
-    resizeCanvas(imageCanvas, ctx, image,100,100);
+    resizeCanvas(imageCanvas, ctx, image, 100, 100);
     resizeCanvas(practiceCanvas, ctxPractice, practiceImage, 17, 17); // Ajusta el canvas de práctica al 70%
 });
 
@@ -448,7 +448,7 @@ function resizeCanvas(canvas, ctx, image, desktopPercentage = 90, tabletPercenta
 
     // Limpiar el canvas antes de redibujar
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     // Redibujar la imagen
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
 }
@@ -701,7 +701,10 @@ function validateClicks() {
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
 
-            });
+
+
+            }); 
+            window.close();
         });
     });
 

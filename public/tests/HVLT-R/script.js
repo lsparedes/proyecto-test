@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Ensayo3Screen.style.display = 'none';
         wordsScreen3.style.display = 'block';
     });
-    
+
     NXButton5.addEventListener('click', () => {
         pauseAudios();
         stopRecording(initRecordingButton3, stopRecordingButton3); // Detener y guardar la grabación
@@ -245,9 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const csvContent = `Start Time;Finish Time;Time Spent (HH:MM:SS)\n${startTimeFormatted};${finishTimeFormatted};${timeSpentFormatted}`;
         return csvContent;
     }
-    
+
     let participantID;
-    
+
     function validateInputs() {
         participantID = document.getElementById('participantID').value;
         if (participantID) {
@@ -258,24 +258,24 @@ document.addEventListener('DOMContentLoaded', () => {
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
-    
+
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
             return;
         }
-    
+
         const zip = new JSZip();
-        
+
         // Agregar archivos de audio al zip
         audioFiles.forEach((file) => {
             zip.file(file.fileName, file.blob);
         });
-    
+
         // Agregar el archivo CSV al zip
         const csvContent = saveToCSV();
         zip.file('HVLT-R_Recuerdo_Libre_Inmediato_.csv', csvContent);
-    
+
         // Generar y descargar el zip
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
@@ -284,15 +284,18 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+
+
         });
+        window.close();
     }
-    
+
     function startFinishTimer() {
         setTimeout(() => {
             playBeepSound();
         }, 20 * 60 * 1000); // 20 minutos en milisegundos
     }
-    
+
     function playBeepSound() {
         const beep = new Audio('beep.wav');
         beep.play();
