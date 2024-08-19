@@ -673,7 +673,7 @@ function validateInputs() {
 
   function generateCSV(results, participantID) {
     // Crear el encabezado del CSV
-    let csvContent = "numero;item;respuestaCorrecta;respuestaParticipante;precision;tiempoDedicadoEnsayo(ms)\n";
+    let csvContent = "en;item;rp_c;rp;pc;tr\n";
 
     // Recorrer las respuestas seleccionadas
     results.forEach(respuesta => {

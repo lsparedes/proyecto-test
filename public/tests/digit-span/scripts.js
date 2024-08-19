@@ -303,7 +303,7 @@ document.getElementById('participantID').addEventListener('input', () => {
 
 
 function generarCSV() {
-    let csvContent = "Prueba;Tiempo Dedicado en milisegundos\n";
+    let csvContent = "en;tr\n";
 
     downloadLinks.forEach(linkData => {
         if (linkData.title && linkData.duration) {
