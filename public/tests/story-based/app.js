@@ -481,6 +481,7 @@ function generarArchivoCSV() {
     a.download = `${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.csv`;
     a.click();
     URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URLr un blob a partir del contenido del CSV
+    window.close(); // Solo funcionará si la ventana fue abierta a través de window.open()
 
 }
 
