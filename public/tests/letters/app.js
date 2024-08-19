@@ -665,23 +665,23 @@ function validateClicks() {
 
     let searchSpeed = (correctClicks / testDuration) * 1000;
 
-    let csvContent = 'Descripcion;Valor\n';
-    csvContent += `Tiempo dedicado Tarea (Segundos);${totalDurationFormatted}\n`;
-    csvContent += `Tiempo respuesta (Milisegundos);${testDurationFormatted}\n`;
-    csvContent += `Mano Utilizada;${selectedHand}\n`;
-    csvContent += `Aciertos;${correctClicks}\n`;
-    csvContent += `Errores de omision;${totalErrors}\n`;
-    csvContent += `Errores de comision;${erroresComision}\n`;
-    csvContent += `Clics Izquierda;${leftClicks}\n`;
-    csvContent += `Clics Derecha;${rightClicks}\n`;
-    csvContent += `Total Clics;${clicks.length}\n`;
-    csvContent += `Search Speed (segundos);${searchSpeed}\n`;
+    let csvContent = 'variable;valor\n';
+    csvContent += `t_tarea;${totalDurationFormatted}\n`;
+    csvContent += `tr;${testDurationFormatted}\n`;
+    csvContent += `mano;${selectedHand}\n`;
+    csvContent += `aciertos;${correctClicks}\n`;
+    csvContent += `errores_omision;${totalErrors}\n`;
+    csvContent += `errores_comision;${erroresComision}\n`;
+    csvContent += `clics_izquierda;${leftClicks}\n`;
+    csvContent += `clics_derecha;${rightClicks}\n`;
+    csvContent += `clics_totales;${clicks.length}\n`;
+    csvContent += `search_speed;${searchSpeed}\n`;
 
-    csvContent += `Search Distance;${searchDistanceFormatted} px\n`;
-    csvContent += `Centro de Cancelacion en Pixeles (X, Y);(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
-    csvContent += `Centro de Cancelacion Normalizado (X, Y);(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
-    csvContent += `CoC;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
-    csvContent += `Sesgo CoC;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
+    csvContent += `search_distance;${searchDistanceFormatted} px\n`;
+    csvContent += `center_of_cancelation_px;(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
+    csvContent += `center_of_cancelation_norm;(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
+    csvContent += `center_of_cancelation_value;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
+    csvContent += `center_of_cancelation_side;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
 
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
