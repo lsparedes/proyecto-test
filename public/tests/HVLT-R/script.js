@@ -7,8 +7,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // ENSAYO 1
     const wordsScreen = document.getElementById('words');
     const NXButton = document.getElementById('nxbutton');
-    const audio2 = document.getElementById('audio2');
-    const audio3 = document.getElementById('audio3');
+
+    const audioE1 = document.getElementById('audio_E1')
     const recordingControls1 = document.getElementById('recordingControls1');
     const initRecordingButton1 = document.getElementById('initRecordingButton1');
     const stopRecordingButton1 = document.getElementById('stopRecordingButton1');
@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const Ensayo2Screen = document.getElementById('ensayo2');
     const NXButton2 = document.getElementById('nxbutton2');
     const NXButton3 = document.getElementById('nxbutton3');
-    const audio2_e = document.getElementById('audio2_ensayo2');
-    const audio3_e = document.getElementById('audio3_ensayo2');
+
+    const audioE2 = document.getElementById('audio_E2')
     const recordingControls2 = document.getElementById('recordingControls2');
     const initRecordingButton2 = document.getElementById('initRecordingButton2');
     const stopRecordingButton2 = document.getElementById('stopRecordingButton2');
@@ -29,8 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const wordsScreen3 = document.getElementById('words3');
     const NXButton4 = document.getElementById('nxbutton4');
     const NXButton5 = document.getElementById('nxbutton5');
-    const audio2_e3 = document.getElementById('audio2_ensayo3');
-    const audio3_e3 = document.getElementById('audio3_ensayo3');
+
+    const audioE3 = document.getElementById('audio_E3')
     const recordingControls3 = document.getElementById('recordingControls3');
     const initRecordingButton3 = document.getElementById('initRecordingButton3');
     const stopRecordingButton3 = document.getElementById('stopRecordingButton3');
@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     NXButton.addEventListener('click', () => {
         pauseAudios();
+        stopRecording(initRecordingButton1, stopRecordingButton1); // Detener y guardar la grabación
         wordsScreen.style.display = 'none';
         recordingControls1.style.display = 'none';
         Ensayo2Screen.style.display = 'flex';
@@ -92,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     NXButton3.addEventListener('click', () => {
         pauseAudios();
+        stopRecording(initRecordingButton2, stopRecordingButton2); // Detener y guardar la grabación
         wordsScreen2.style.display = 'none';
         recordingControls2.style.display = 'none';
         Ensayo3Screen.style.display = 'flex';
@@ -102,9 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
         Ensayo3Screen.style.display = 'none';
         wordsScreen3.style.display = 'block';
     });
-
+    
     NXButton5.addEventListener('click', () => {
         pauseAudios();
+        stopRecording(initRecordingButton3, stopRecordingButton3); // Detener y guardar la grabación
         wordsScreen3.style.display = 'none';
         recordingControls3.style.display = 'none';
         endScreen.style.display = 'flex';
@@ -126,34 +129,42 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadZip();
     });
 
-    audio2.addEventListener('ended', () => {
-        audio2.style.display = 'none';
+    audioE1.addEventListener('timeupdate', () => {
+        if (audioE1.currentTime >= audioE1.duration - 1) {
+            // Iniciar la grabación un segundo antes de que termine el audio
+            startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.mp3');
+        }
     });
 
-    audio2_e.addEventListener('ended', () => {
-        audio2_e.style.display = 'none';
-    });
-
-    audio2_e3.addEventListener('ended', () => {
-        audio2_e3.style.display = 'none';
-    });
-
-    audio3.addEventListener('ended', () => {
-        audio3.style.display = 'none';
+    audioE1.addEventListener('ended', () => {
+        audioE1.style.display = 'none';
         recordingControls1.style.display = 'block';
-        startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.mp3');
     });
 
-    audio3_e.addEventListener('ended', () => {
-        audio3_e.style.display = 'none';
+    audioE2.addEventListener('timeupdate', () => {
+        if (audioE1.currentTime >= audioE1.duration - 1) {
+            // Iniciar la grabación un segundo antes de que termine el audio
+            startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.mp3');
+        }
+    });
+
+    audioE2.addEventListener('ended', () => {
+        audioE2.style.display = 'none';
         recordingControls2.style.display = 'block';
-        startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.mp3');
+
     });
 
-    audio3_e3.addEventListener('ended', () => {
-        audio3_e3.style.display = 'none';
+    audioE3.addEventListener('timeupdate', () => {
+        if (audioE1.currentTime >= audioE1.duration - 1) {
+            // Iniciar la grabación un segundo antes de que termine el audio
+            startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.mp3');
+        }
+    });
+
+    audioE3.addEventListener('ended', () => {
+        audioE3.style.display = 'none';
         recordingControls3.style.display = 'block';
-        startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.mp3');
+
     });
 
     initRecordingButton1.addEventListener('click', () => {
@@ -287,14 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function pauseAudios() {
         document.getElementById('audio1').pause();
-        document.getElementById('audio2').pause();
-        document.getElementById('audio3').pause();
         document.getElementById('audio4').pause();
         document.getElementById('audio5').pause();
         document.getElementById('audio7').pause();
-        document.getElementById('audio2_ensayo2').pause();
-        document.getElementById('audio3_ensayo2').pause();
-        document.getElementById('audio2_ensayo3').pause();
-        document.getElementById('audio3_ensayo3').pause();
     }
 });

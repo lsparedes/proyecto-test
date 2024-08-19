@@ -288,3 +288,16 @@ audio-container {
     font-weight: bold;
     text-align: center;
 }
+
+.item-indicator {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
+    color: rgba(var(--bs-dark-rgb), var(--bs-text-opacity)) !important;
+    box-shadow: var(--bs-box-shadow) !important;
+}
