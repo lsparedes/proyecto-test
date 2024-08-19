@@ -518,15 +518,15 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             resultsDiv.innerHTML = `
-                <p>Total de clics: ${clicksByImage[videoIndex].length}</p>
-                <p>Puntaje total: ${results.reduce((sum, r) => sum + r.score, 0)}</p>
-                <p>Clics correctos: ${correctClicks}</p>
-                <p>Errores de rotación: ${rotationErrors}</p>
-                <p>Errores de actualización: ${updateErrors}</p>
-                <p>Puertas correctas encontradas: ${correctClicks} de ${videos[videoIndex].items.correcto.length}</p>
-                <p>Coordenadas de los puntos clickeados:</p>
+                <p>clics_total: ${clicksByImage[videoIndex].length}</p>
+                <p>puntaje_total: ${results.reduce((sum, r) => sum + r.score, 0)}</p>
+                <p>clics_correctos: ${correctClicks}</p>
+                <p>errores_rotacion: ${rotationErrors}</p>
+                <p>errores_actualizacion: ${updateErrors}</p>
+                <p>puertas_correctas: ${correctClicks} de ${videos[videoIndex].items.correcto.length}</p>
+                <p>clics_coordenadas:</p>
                 <ul>
-                    ${results.map(r => `<li>Orden: ${r.orden}, Coordenadas: (${r.coords.x.toFixed(2)}, ${r.coords.y.toFixed(2)})</li>`).join('')}
+                    ${results.map(r => `<li>orden: ${r.orden}, coordenadas: (${r.coords.x.toFixed(2)}, ${r.coords.y.toFixed(2)})</li>`).join('')}
                 </ul>
             `;
 

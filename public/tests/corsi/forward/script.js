@@ -398,7 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV(results, participantID) {
-        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta(ms)"];
+        const headers = ["ensayo", "rp_c", "rp", "prec", "tr"];
         const rows = results.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
             const userResponseIncremented = data.userResponse.map(num => num + 1);

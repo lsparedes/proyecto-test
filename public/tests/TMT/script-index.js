@@ -589,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function generateCSV(data) {
-        let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha);Numero de errores de comision;Numero de lineas correctas;Numero de veces en que el participante levanto el lápiz de la pantalla;Tiempo de ejecucion de la tarea;Tiempo total de lápiz en el aire desde la primera respuesta en el canvas;Tiempo dedicado a la tarea(s); mano utilizada\n";
+        let csvContent = "tr;errores_comision;lineas_correctas;lapiz_levantado;tr;t_lapiz_levantado;t_tarea;mano\n";
 
         data.forEach(row => {
             let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.executionTime};${row.penAirTime};${row.taskTime};${selectedHand}\n`;

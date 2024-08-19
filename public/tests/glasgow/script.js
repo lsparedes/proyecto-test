@@ -200,7 +200,7 @@ function getCurrentDate() {
 }
 
 function generateCSV(results, participantID) {
-    const csvData = [['Ensayo', 'Respuesta Correcta', 'Respuesta Participante', 'Precision', 'Tiempo de Respuesta(ms)']];
+    const csvData = [['ensayo', 'rp_c', 'rp', 'prec', 'tr']];
     results.forEach((response) => {
         const numeroImagen = response.imageIndex + 1; 
         const rutaImagen = response.imageSrc;
