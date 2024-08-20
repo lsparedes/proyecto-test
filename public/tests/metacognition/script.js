@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let diferenciaInicial = 15;
   let ajusteDificultad = 1;
+  let correctStreak = 0; // Variable global para contar respuestas correctas consecutivas
   let startTimeTotal = new Date();
   let startTime;
   let timeColor;
@@ -157,15 +158,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function ajustarDificultad(respuesta) {
+function ajustarDificultad(respuesta) {
     if (respuesta === true) { // Respuesta correcta
-      if (diferenciaInicial > 1) {
-        diferenciaInicial -= ajusteDificultad;
-      }
+        correctStreak++;
+        if (correctStreak >= 2) {
+            if (diferenciaInicial > 1) {
+                diferenciaInicial -= ajusteDificultad;
+            }
+            correctStreak = 0; // Reinicia el contador después de aumentar la dificultad
+        }
     } else { // Respuesta incorrecta
-      diferenciaInicial += ajusteDificultad;
+        correctStreak = 0; // Reinicia el contador
+        diferenciaInicial += ajusteDificultad;
     }
-  }
+}
 
   function generateDots(ctx) {
     const numPuntosMayor = Math.floor(50 + diferenciaInicial / 2);
