@@ -8,7 +8,7 @@ const imagenes = [
         textoDistintivo: "P1",
         item: "",
         options: [
-            { src: "imagenes/mcct_comp1_pr1.png", correct: true , item: ""},
+            { src: "imagenes/mcct_comp1_pr1.png", correct: true, item: "" },
             { src: "imagenes/mcct_comp2_pr1.png", correct: false, item: "" },
             { src: "imagenes/mcct_comp3_pr1.png", correct: false, item: "" },
             { src: "imagenes/mcct_comp4_pr1.png", correct: false, item: "" }
@@ -556,7 +556,7 @@ function verificarRespuesta(event) {
         textoDistintivo: imagenes[indiceActual].textoDistintivo,
         imagen: imagenes[indiceActual].item,
         respuestaCorrecta: imagenes[indiceActual].options.find(option => option.correct).item,
-        respuestaSeleccion: imagenes[indiceActual].options.find(option => option.src === "imagenes"+optionImg.src.split('imagenes')[1]).item,
+        respuestaSeleccion: imagenes[indiceActual].options.find(option => option.src === "imagenes" + optionImg.src.split('imagenes')[1]).item,
         esCorrecta: esCorrecta,
     };
 
@@ -565,7 +565,7 @@ function verificarRespuesta(event) {
 
 // Al hacer clic en "Next", avanzar a la siguiente imagen
 nextButton.addEventListener('click', function () {
-    if(respuestaSeleccionada){
+    if (respuestaSeleccionada) {
         endTimeE = new Date(); // Registrar la hora de finalización
         respuesta['tiempoDedicado'] = endTimeE - startTimeE;
         respuestasSeleccionadas.push(respuesta);
@@ -663,15 +663,15 @@ function validateInputs() {
     }
 }
 
-  function getCurrentDate() {
+function getCurrentDate() {
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
     const year = now.getFullYear();
     return `${day}_${month}_${year}`;
-  }
+}
 
-  function generateCSV(results, participantID) {
+function generateCSV(results, participantID) {
     // Crear el encabezado del CSV
     let csvContent = "en;item;rp_c;rp;pc;tr\n";
 
@@ -685,35 +685,37 @@ function validateInputs() {
         }
     });
     return {
-      content: csvContent,
-      filename: `${participantID}_modified_camel_and_cactus_${getCurrentDate()}.csv`
+        content: csvContent,
+        filename: `${participantID}_modified_camel_and_cactus_${getCurrentDate()}.csv`
     };
-  }
+}
 
-  function generateTxt(startTimeTotal, selectedHand, participantID) {
+function generateTxt(startTimeTotal, selectedHand, participantID) {
     const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
-      + "Mano Utilizada: " + selectedHand;
+        + "Mano Utilizada: " + selectedHand;
     return {
-      content: txtContent,
-      filename: `${participantID}_modified_camel_and_cactus_${getCurrentDate()}.txt`
+        content: txtContent,
+        filename: `${participantID}_modified_camel_and_cactus_${getCurrentDate()}.txt`
     };
-  }
+}
 
-  async function downloadZip(csvFile, txtFile, participantID) {
+async function downloadZip(csvFile, txtFile, participantID) {
     const zip = new JSZip();
     zip.file(csvFile.filename, csvFile.content);
     zip.file(txtFile.filename, txtFile.content);
-  
+
     const zipContent = await zip.generateAsync({ type: "blob" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipContent);
     link.setAttribute("download", `${participantID}_modified_camel_and_cactus_${getCurrentDate()}.zip`);
     document.body.appendChild(link);
     link.click();
-  }
-  
-  async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
+    window.close();
+}
+
+async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
     const csvFile = generateCSV(results, participantID);
     const txtFile = generateTxt(startTimeTotal, selectedHand, participantID);
     await downloadZip(csvFile, txtFile, participantID);
-  }
+
+}

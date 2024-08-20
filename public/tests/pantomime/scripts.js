@@ -257,14 +257,10 @@ document.addEventListener('DOMContentLoaded', () => {
             link.href = URL.createObjectURL(content);
             link.download = zipname;
             link.click();
-            showFinalMessage();
+            window.close();
         });
     }
-    function showFinalMessage() {
-        completionScreen.classList.remove('hidden');
-        completionScreen.classList.add('active');
-        window.close();
-    }
+
 
     // Manages the hand selection
     handInputs.forEach((input) => {

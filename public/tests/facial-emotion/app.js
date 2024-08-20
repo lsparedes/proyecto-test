@@ -365,6 +365,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+                window.close();
             }
         })
         .catch(err => {

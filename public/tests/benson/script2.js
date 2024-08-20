@@ -287,10 +287,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
+                    window.close();
                 });
             };
             reader.readAsDataURL(blob);
-            window.close(); 
 
         } catch (error) {
             console.warn(`No video available: ${error}`);
@@ -302,6 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+                window.close();
             });
         }
     }

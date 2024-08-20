@@ -221,6 +221,7 @@ function downloadRecordingAndTime() {
 
         zipLink.download = fileName;
         zipLink.click();
+        window.close();
     });
 }
 

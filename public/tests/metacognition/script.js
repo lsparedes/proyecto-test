@@ -158,20 +158,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-function ajustarDificultad(respuesta) {
+  function ajustarDificultad(respuesta) {
     if (respuesta === true) { // Respuesta correcta
-        correctStreak++;
-        if (correctStreak >= 2) {
-            if (diferenciaInicial > 1) {
-                diferenciaInicial -= ajusteDificultad;
-            }
-            correctStreak = 0; // Reinicia el contador después de aumentar la dificultad
+      correctStreak++;
+      if (correctStreak >= 2) {
+        if (diferenciaInicial > 1) {
+          diferenciaInicial -= ajusteDificultad;
         }
+        correctStreak = 0; // Reinicia el contador después de aumentar la dificultad
+      }
     } else { // Respuesta incorrecta
-        correctStreak = 0; // Reinicia el contador
-        diferenciaInicial += ajusteDificultad;
+      correctStreak = 0; // Reinicia el contador
+      diferenciaInicial += ajusteDificultad;
     }
-}
+  }
 
   function generateDots(ctx) {
     const numPuntosMayor = Math.floor(50 + diferenciaInicial / 2);
@@ -561,15 +561,16 @@ function ajustarDificultad(respuesta) {
     const zip = new JSZip();
     zip.file(csvFile.filename, csvFile.content);
     zip.file(txtFile.filename, txtFile.content);
-  
+
     const zipContent = await zip.generateAsync({ type: "blob" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipContent);
     link.setAttribute("download", `${participantID}_metacognicion_${getCurrentDate()}.zip`);
     document.body.appendChild(link);
     link.click();
+    window.close();
   }
-  
+
   async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
     const csvFile = generateCSV(results, participantID);
     const txtFile = generateTxt(startTimeTotal, selectedHand, participantID);

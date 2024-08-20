@@ -700,11 +700,9 @@ function validateClicks() {
                 link.click();
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
+                window.close();
+            });
 
-
-
-            }); 
-            window.close();
         });
     });
 

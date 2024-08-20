@@ -148,7 +148,7 @@ function nextImage() {
 function endTest() {
     document.getElementById("preEnd").style.display = 'none';
     document.getElementById('end-screen').style.display = 'block';
-    downloadResultsAsZip(responses, startTimeTotal, selectedHand, participantID)
+    downloadResultsAsZip(responses, startTimeTotal, selectedHand, participantID);
 }
 
 // SELECCION DE MANO JS
@@ -242,6 +242,7 @@ async function downloadZip(csvFile, txtFile, participantID) {
     link.setAttribute("download", `${participantID}_glasgow_face_matching_${getCurrentDate()}.zip`);
     document.body.appendChild(link);
     link.click();
+    window.close();
 }
 
 async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
