@@ -162,7 +162,8 @@ body {
 
 /* SELECCION DE MANO CSS */
 
-#handButton {
+#handButton,
+#finalButton {
   display: inline-block;
   background-color: transparent;
   border: none;

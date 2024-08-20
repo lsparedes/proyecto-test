@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   let currentTrial = 0;
-  const cantidad_ensayos_prueba = 10; // Ajusta este valor según sea necesario
-  const cantidad_ensayos_bloque_1 = 20;
-  const cantidad_ensayos_bloque_2 = 20;
-  const cantidad_ensayos_bloque_3 = 20;
+  const cantidad_ensayos_prueba = 2; // Ajusta este valor según sea necesario
+  const cantidad_ensayos_bloque_1 = 2;
+  const cantidad_ensayos_bloque_2 = 2;
+  const cantidad_ensayos_bloque_3 = 2;
   let trials = [];
   let startTime;
   let results = [];
