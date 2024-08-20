@@ -331,7 +331,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    const csvData = [['Numero de ensayo', 'Respuesta correcta', 'Respuesta participante', 'Precision', 'Tiempo de respuesta', 'Tiempo dedicado a la tarea', 'Mano utilizada']];
+    const csvData = [['en', 'rp_c', 'rp', 'pc', 'tr']];
 
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;
@@ -340,24 +340,37 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
         const response = tiemposRespuesta[index];
         const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
 
-
-        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, response, tiempoTranscurrido, selectedHand]);
+        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, response]);
     });
 
-
     const csvContent = csvData.map(row => row.join(';')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    if (link.download !== undefined) {
-        const nombreArchivo = `${participantID}_FacialEmotion_${fechaFormateada}.csv`;
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', nombreArchivo);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
+    const txtContent = `Tiempo dedicado a la tarea: ${tiempoTranscurrido}\nMano utilizada: ${selectedHand}`;
+    const txtBlob = new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
+
+    const zip = new JSZip();
+    zip.file(`${participantID}_FacialEmotion_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${participantID}_FacialEmotion_${fechaFormateada}.txt`, txtBlob);
+
+    zip.generateAsync({ type: "blob" })
+        .then(content => {
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const zipFilename = `${participantID}_FacialEmotion_${fechaFormateada}.zip`;
+                const url = URL.createObjectURL(content);
+                link.setAttribute('href', url);
+                link.setAttribute('download', zipFilename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.close();
+            }
+        })
+        .catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
+        });
 }
 
 function reiniciarTemporizador() {

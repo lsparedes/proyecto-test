@@ -20,9 +20,6 @@
         </div>
         <div class="right">
             <img id="instrucciones_image" src="img/instruccion.png" style="width: 48%;" alt="Imagen de Practica">
-            <div id="input-container" style="margin-top: 4px;">
-                <input type="tel" id="practice-input" pattern="[1-9]" oninput="validateInput(this);">
-            </div>
         </div>
         <div class="button-container">
             <button id="startButton"></button>
@@ -56,12 +53,7 @@
         </div>        
         <button id="final-button" style="display: none;"></button>
     </div>
-    <script>
-        window.onload = function () {
-            const practiceInput = document.getElementById('practice-input');
-            practiceInput.focus();
-        };
-    </script>
     <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 </body>
 </html>

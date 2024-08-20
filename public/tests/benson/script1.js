@@ -31,12 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
     initCanvas('drawing-canvas', 'clear-canvas-button', 'download-canvas-button');
 
     fullscreenButton.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
             document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            document.exitFullscreen();
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
 
@@ -74,11 +76,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (audioElement1) {
         audioElement1.addEventListener('ended', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
+    
+            let elapsedTime = 0; // Tiempo transcurrido en segundos
+            let intervalId = setInterval(() => {
+                console.log(`Tiempo transcurrido: ${elapsedTime} segundos`);
+                elapsedTime++;
+            }, 1000); // Actualiza cada segundo
+    
             setTimeout(() => {
+                clearInterval(intervalId);
+                console.log("Cronómetro detenido después de 4 minutos.");
                 finishdrawingwithfigure.classList.add('red-arrow');
-            }, 4 * 60 * 1000); //
+            }, 4 * 60 * 1000); // Detener cronómetro después de 4 minutos
         });
     }
+    
 
     finishRememberingFigureButton.addEventListener('click', () => {
         document.getElementById('audio1').pause();
@@ -338,9 +350,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
+                    window.close();
+                    
                 });
             };
             reader.readAsDataURL(blob);
+           
+
         } catch (error) {
             console.warn(`No video available: ${error}`);
             // Generar el archivo ZIP sin el video
@@ -351,6 +367,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+                window.close();
             });
         }
     }

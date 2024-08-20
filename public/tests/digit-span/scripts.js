@@ -27,6 +27,18 @@ function requestMicrophonePermission() {
             document.getElementById('permission-message').classList.remove('hidden');
         });
 }
+const fullscreenButton = document.getElementById('fullscreen-button');
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
+    }
+});
 
 function startTest(type) {
     taskTimeStart = new Date();
@@ -54,6 +66,12 @@ function startTest(type) {
             playBeepAndShowButtons(itemDiv, titleElement, index + 1);
         });
 
+        // Mostrar el botón "next-button" cuando el audio se cargue completamente
+        audio.addEventListener('loadeddata', () => {
+            const nextButton = itemDiv.querySelector('.next-button');
+            nextButton.classList.remove('hidden');
+        });
+
         const timerDiv = document.createElement('div');
         timerDiv.classList.add('timer-container');
 
@@ -70,14 +88,12 @@ function startTest(type) {
             stopRecording(timerSpan, index + 1, itemDiv, type);
             stopAllAudios();
         });
-    
 
         const nextButton = document.createElement('button');
         nextButton.textContent = '';
         nextButton.classList.add('hidden', 'next-button');
         nextButton.addEventListener('click', () => {
-            stopRecording(timerSpan, index + 1, itemDiv, type);
-            stopAllAudios();
+            avanzarSinGrabar(itemDiv, type, index + 1); // Pasamos el índice del ítem actual
         });
 
         itemDiv.appendChild(titleElement);
@@ -96,12 +112,37 @@ function startTest(type) {
     });
 }
 
+function avanzarSinGrabar(itemDiv, type, index) {
+    // Verificar si está grabando algo
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        // Detener la grabación y guardar el contenido
+        const timerSpan = itemDiv.querySelector('.timer');
+        stopRecording(timerSpan, index, itemDiv, type);
+    } else {
+        // Si no está grabando, avanzar al siguiente ítem
+        itemDiv.classList.add('hidden');
+
+        let nextItem = itemDiv.nextElementSibling;
+        if (nextItem) {
+            nextItem.classList.remove('hidden');
+        } else {
+            document.getElementById('test-items-' + type).classList.add('hidden');
+            mostrarFinalizacion(type);
+        }
+
+        console.log(`Avanzando al siguiente ítem sin grabar.`);
+    }
+}
+
+
 function playBeepAndShowButtons(itemDiv, titleElement, index) {
     const beep = new Audio('audio/beep.wav');
     beep.play();
     beep.addEventListener('ended', () => {
         if (!itemDiv.querySelector('.new-button')) {
-            startRecording(itemDiv, titleElement, index);
+            setTimeout(() => {
+                startRecording(itemDiv, titleElement, index);
+            }, -1500);
         }
     });
 }
@@ -112,11 +153,13 @@ function startRecording(itemDiv, titleElement, index) {
         return;
     }
 
+    // Detener la grabación actual si está en curso
     if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
+        mediaRecorder.stop(); // Detenemos la grabación actual
+        chunks = []; // Limpiamos los chunks actuales
     }
-    chunks = [];
 
+    // Crear una nueva instancia de MediaRecorder
     mediaRecorder = new MediaRecorder(audioStream);
     mediaRecorder.ondataavailable = e => {
         if (e.data.size > 0) {
@@ -131,10 +174,6 @@ function startRecording(itemDiv, titleElement, index) {
             const recordingTime = new Date();
             const duration = recordingTime - recordingStartTime;
             downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob, duration: duration });
-
-            console.log(`Grabación ${index} finalizada. Duración: ${duration} ms`);
-            console.log(downloadLinks);
-
             const stopImg = itemDiv.querySelector('.stop-img');
             stopImg.classList.add('hidden');
             const nextButton = itemDiv.querySelector('.next-button');
@@ -148,12 +187,14 @@ function startRecording(itemDiv, titleElement, index) {
         console.error('Error en la grabación:', event.error);
     };
 
+    // Iniciar la grabación
     mediaRecorder.start();
     recordingStartTime = new Date();
 
     const stopImg = itemDiv.querySelector('.stop-img');
     stopImg.classList.remove('hidden');
 
+    // Crear y agregar el botón "new-button"
     const newButton = document.createElement('div');
     newButton.classList.add('img-button', 'new-button');
     newButton.style.backgroundImage = "url('img/boton-rec.png')";
@@ -165,11 +206,14 @@ function startRecording(itemDiv, titleElement, index) {
 
     stopImg.parentNode.insertBefore(newButton, stopImg);
 
+    // Mostrar el botón "next-button"
     const nextButton = itemDiv.querySelector('.next-button');
     nextButton.classList.remove('hidden');
 
+    // Iniciar el temporizador
     startTimer(itemDiv.querySelector('.timer'));
 }
+
 
 function stopRecording(timerSpan, index, itemDiv, type) {
 
@@ -230,7 +274,7 @@ const finalButton = document.getElementById('final-button');
 let participantID = 0;
 
 function mostrarFinalizacion(type) {
-    taskTime = (new Date() - taskTimeStart) / 1000;
+    taskTime = (new Date() - taskTimeStart);
     console.log("Mostrando mensaje de finalización...");
     const completionMessage = document.getElementById('completion-message');
     completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
@@ -240,7 +284,7 @@ function mostrarFinalizacion(type) {
     enterID.style.display = 'block';
     document.getElementById('final-button').addEventListener('click', () => {
         const participantID = document.getElementById('participantID').value.trim();
-        crearZip(type,participantID);
+        crearZip(type, participantID);
     });
 }
 
@@ -259,7 +303,7 @@ document.getElementById('participantID').addEventListener('input', () => {
 
 
 function generarCSV() {
-    let csvContent = "Prueba;Tiempo Dedicado en milisegundos\n";
+    let csvContent = "en;tr\n";
 
     downloadLinks.forEach(linkData => {
         if (linkData.title && linkData.duration) {
@@ -268,18 +312,17 @@ function generarCSV() {
         }
     });
 
-    csvContent += "Tiempo dedicado a la tarea(s);"+taskTime+"\n";
-
     return csvContent;
 }
 
-function crearZip(type,participantID) {
+function generarTxt(taskTime) {
+    const txtContent = `Tiempo dedicado a la tarea(s): ${taskTime}`;
+    return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+}
+
+function crearZip(type, participantID) {
     document.getElementById('enterID').style.display = 'none';
     document.getElementById('final-button').style.display = 'none';
-    if (!downloadLinks.length) {
-        console.error("No hay datos en downloadLinks.");
-        return;
-    }
 
     const zip = new JSZip();
     const audioFolder = zip.folder('audios');
@@ -289,26 +332,28 @@ function crearZip(type,participantID) {
         return;
     }
 
-    console.log("Contenido de downloadLinks:", downloadLinks);
-
-    downloadLinks.forEach(linkData => {
-        if (linkData.title && linkData.blob) {
-            const fileName = `${type}_${linkData.title}.ogg`;
-            audioFolder.file(fileName, linkData.blob);
-            console.log(`Archivo añadido al ZIP: ${fileName}`);
-        } else {
-            console.warn("Datos incompletos en linkData:", linkData);
-        }
-    });
+    if (downloadLinks.length > 0) {
+        downloadLinks.forEach(linkData => {
+            if (linkData.title && linkData.blob) {
+                const fileName = `${type}_${linkData.title}.ogg`;
+                audioFolder.file(fileName, linkData.blob);
+                console.log(`Archivo añadido al ZIP: ${fileName}`);
+            } else {
+                console.warn("Datos incompletos en linkData:", linkData);
+            }
+        });
+    } else {
+        console.log("No hay audios para añadir al ZIP.");
+    }
 
     const csvContent = generarCSV();
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
 
     console.log("Contenido del CSV:", csvContent);
 
+    const txtBlob = generarTxt(taskTime);
+
     const fechaActual = new Date();
-    const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', timeZone: 'America/Santiago' };
-    // const fechaFormateada = fechaActual.toLocaleDateString('es-CL', opciones).replace(/[/\s:]/g, '_');
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -316,6 +361,7 @@ function crearZip(type,participantID) {
     const fechaFormateada = `${day}_${month}_${year}`;
 
     zip.file(`${participantID}_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${participantID}_tiempo_dedicado_${fechaFormateada}.txt`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
@@ -327,6 +373,7 @@ function crearZip(type,participantID) {
 
             downloadLink.click();
             document.body.removeChild(downloadLink);
+            window.close(); 
 
             const completionMessage = document.getElementById('completion-message');
             if (completionMessage) {
@@ -341,4 +388,4 @@ function crearZip(type,participantID) {
 function stopAllAudios() {
     const audios = document.querySelectorAll('audio');
     audios.forEach(audio => audio.pause());
-  }
+}

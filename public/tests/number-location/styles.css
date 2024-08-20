@@ -98,7 +98,8 @@ audio {
 }
 
 #submit-btn {
-    padding: 12px 22px;
+    padding: 4px;
+    padding-right: 5px;
     font-size: 25px;
     color: #fff;
     background-color: #ffffff;
@@ -122,7 +123,7 @@ input {
     /* Espacio entre el input y la imagen */
 }
 
-#number-input, #practice-input {
+#number-input {
     padding: 8px;
     /* Reducir el padding */
     flex: 0;

@@ -220,17 +220,15 @@ const fullscreenButton = document.getElementById('fullscreenButton');
 let selectedHand = "";
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
 
-
-document.getElementById('fullscreenButton').addEventListener('click', function () {
-    const element = document.documentElement;
-    if (element.requestFullscreen) {
-        element.requestFullscreen();
-    } else if (element.mozRequestFullScreen) {
-        element.mozRequestFullScreen();
-    } else if (element.webkitRequestFullscreen) {
-        element.webkitRequestFullscreen();
-    } else if (element.msRequestFullscreen) {
-        element.msRequestFullscreen();
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+        document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
 });
 
@@ -435,7 +433,6 @@ function cambiarImagen(selectedOptionIndex) {
     }
 }
 
-// Función para generar el archivo CSV al finalizar el test
 function generarArchivoCSV() {
     selectHandContainer.style.display = "none";
     enterID.style.display = 'none';
@@ -449,7 +446,7 @@ function generarArchivoCSV() {
     const endTime = new Date();
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
 
-    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precision;Tiempo respuesta en milisegundos\n";
+    csvContent += "en;rp_c;rp;pc;tr\n";
 
     let respuestasCorrectas = respuestasSeleccionadas.filter(respuesta =>
         respuesta.opcionSeleccionada === respuesta.respuestaCorrecta
@@ -462,30 +459,42 @@ function generarArchivoCSV() {
         csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa}\n`;
     });
 
-    
+    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
 
-    csvContent += `\n\nTiempo dedicado (segundos): ${totalTestTime/1000}\n`;
-    csvContent += `Mano utilizada: ${selectedHand}\n`;
-
-    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const txtContent = `Tiempo dedicado (segundos): ${totalTestTime / 1000}\nMano utilizada: ${selectedHand}\n`;
+    const txtBlob = new Blob([txtContent], { type: 'text/plain' });
 
     // Obtener la fecha y la hora actuales
     const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric'  };
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    // Crear un enlace de descarga para el archivo CSV
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.csv`;
-    a.click();
-    URL.revokeObjectURL(url); // Liberar la memoria asociada al objeto URLr un blob a partir del contenido del CSV
+    // Crear el archivo ZIP
+    const zip = new JSZip();
+    zip.file(`${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.txt`, txtBlob);
 
+    zip.generateAsync({ type: "blob" })
+        .then(content => {
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const zipFilename = `${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.zip`;
+                const url = URL.createObjectURL(content);
+                link.setAttribute('href', url);
+                link.setAttribute('download', zipFilename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.close();
+            }
+        })
+        .catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
+        });
 }
-
 
 function mostrarInstrucciones() {
     const imageContainer = document.getElementById('imageContainer');

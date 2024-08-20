@@ -15,11 +15,11 @@
 <body>
     <div id="container">
         <div id="start-screen" class="container">
-            <p id="instructionText">En esta prueba, quiero que imagine que sostiene el objeto que le voy a mostrar a
-                continuación en su mano. Es importante que recuerde no usar su mano o dedos como si fuese el
-                objeto. Use los botones para grabar y detener la grabación.</p>
+            <p id="instructionText">A continuación, usted verá algunas imágenes de objetos en la pantalla, una por una.
+                Por favor, imagine que sostiene cada objeto en su mano porque su tarea consistirá en mostra como se usa.
+                Es importante que recuerde no usar su mano o dedos como si fuese el objeto.</p>
 
-            <audio controls id="instrucciones">
+            <audio controls id="instrucciones" >
                 <source src="pantomima.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
@@ -27,6 +27,20 @@
             <div class="button-container">
                 <button id="startButton"></button>
                 <button id="fullscreenButton"></button>
+            </div>
+        </div>
+
+        <div id="testcamara" style="display: none;">
+            <p id="instructionText">Ajuste la cámara para que la grabación sea adecuada. Presione el botón para
+                activarla.</p>
+            <audio controls id="instrucciones" style="position: absolute; left: 41%; margin-bottom: 20px;">
+                <source src="testcamara.mp3" type="audio/mpeg">
+                Tu navegador no soporta el elemento de audio.
+            </audio>
+            <video id="videoElement" width="640" height="480" autoplay></video>
+            <div class="button-container">
+                <button id="camarabutton"></button>
+                <button id="start-test"></button>
             </div>
         </div>
 
@@ -44,7 +58,7 @@
                 <button id="recording-btn" disabled></button>
                 <button id="stop-btn" disabled></button>
             </div>
-            <button id="next-btn" style="display: none;"></button>
+            <button id="next-btn"></button>
         </div>
 
         <div class="container" style="margin: 0px; padding: 0px;">
@@ -55,13 +69,15 @@
             </div>
             <div class="container-fluid d-flex justify-content-center">
                 <div class="row justify-content-center align-items-end" style="position: absolute; bottom: 15px;">
-                    <div id="enterID" class="card opacity-75 col-3 col-md-4 col-xl-6 me-3" style="display: none; height: 20%; width: 40%; background-color: #f9f9f9;">
+                    <div id="enterID" class="card opacity-75 col-3 col-md-4 col-xl-6 me-3"
+                        style="display: none; height: 20%; width: 40%; background-color: #f9f9f9;">
                         <div class="card-body">
                             <h4>ID participante</h4>
                             <input type="number" id="participantID" class="form-control" style="margin-bottom: 29%;">
                         </div>
                     </div>
-                    <div id="selectHand" class="col-3 col-md-4 col-xl-6 card opacity-75 ms-3 p-3" style="display: none; height: 20%; width: 40%; background-color: #f9f9f9;">
+                    <div id="selectHand" class="col-3 col-md-4 col-xl-6 card opacity-75 ms-3 p-3"
+                        style="display: none; height: 20%; width: 40%; background-color: #f9f9f9;">
                         <div class="card-body" style="padding: 0;">
                             <h4>Mano usada</h4>
                             <div class="d-flex align-items-start">

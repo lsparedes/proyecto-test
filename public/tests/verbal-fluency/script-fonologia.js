@@ -8,11 +8,19 @@ document.getElementById('startTestButton').addEventListener('click', () => {
     loadAudio(1); // Cargar el primer audio
 });
 
-document.getElementById('fullscreenButton').addEventListener('click', () => {
-    if (document.documentElement.requestFullscreen) {
+const fullscreenButton = document.getElementById('fullscreenButton');
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
         document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
 });
+
 
 let mediaRecorder1, mediaRecorder2;
 let audioChunks1 = [], audioChunks2 = [];
@@ -135,7 +143,7 @@ function loadAudio(part) {
     }
 
     audio.addEventListener('loadedmetadata', () => {
-        const displayTime = audio.duration - 5;
+        const displayTime = audio.duration - 3;
         setTimeout(() => {
             letterDisplay.style.display = 'block';
         }, displayTime * 1000);
@@ -170,25 +178,32 @@ function showRecordingCreatedMessage(part) {
 }
 
 function downloadRecordingAndTime() {
+    // Obtener la fecha actual en formato YYYYMMDD
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const formattedDate = `${day}_${month}_${year}`;
+
     const totalTime = Date.now() - startTime;
     const totalTimeMs = totalTime;
     const totalTimeSecs = (totalTime / 1000).toFixed(2);
 
     // Crear el contenido del archivo .txt con la mano utilizada
-    const txtContent = `Tiempo total: ${totalTimeMs} ms (${totalTimeSecs} s)\nMano utilizada: ${selectedHand}`;
+    const txtContent = `Tiempo total: ${totalTimeMs} ms (${totalTimeSecs} s)`;
     const timeBlob = new Blob([txtContent], { type: 'text/plain' });
     const timeUrl = URL.createObjectURL(timeBlob);
 
     const link = document.createElement('a');
     link.href = timeUrl;
-    link.download = 'tiempo_total.txt';
+    link.download = `${participantID}_verbal_fluency_fonologia_${formattedDate}.txt`;
     // link.click();
 
     const zip = new JSZip();
-    zip.file("tiempo_total_mano_utilizada.txt", timeBlob);
+    zip.file(`${participantID}_verbal_fluency_fonologia_${formattedDate}.txt`, timeBlob);
 
     const audio1Blob = new Blob(audioChunks[1], { type: 'audio/wav' });
-    zip.file("Fonológica - S.wav", audio1Blob);
+    zip.file(`${participantID}_verbal_fluency_fonologia_${formattedDate}.wav`, audio1Blob);
 
     const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
     // zip.file("Fonológica - Parte 2.wav", audio2Blob);
@@ -196,62 +211,43 @@ function downloadRecordingAndTime() {
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
         zipLink.href = URL.createObjectURL(content);
-
-        // Obtener la fecha actual en formato YYYYMMDD
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${day}_${month}_${year}`;
         
         // Construir el nombre del archivo ZIP
         const fileName = `${participantID}_verbal_fluency_fonologia_${formattedDate}.zip`;
 
         zipLink.download = fileName;
         zipLink.click();
+        window.close()
     });
 }
 
 // SELECCION DE MANO JS
-
-const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
 
 // Variable con la mano seleccionada
-let selectedHand = "";
 let participantID = 0;
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
     document.getElementById("preEnd").style.display = 'block';
-    selectHandContainer.style.display = "block";
 }
 
 // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
 // En este caso fue mostrarFinalizacion()
 function confirmHandSelection() {
     document.getElementById("preEnd").style.display = 'none';
-    selectHandContainer.style.display = "none";
+
     endGame();
 }
-
-// Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
-handInputs.forEach((input) => {
-    input.addEventListener('change', (e) => {
-        validateInputs();
-        selectedHand = e.target.value;
-    });
-});
 
 document.getElementById('participantID').addEventListener('input', validateInputs);
 document.getElementById('handButton').addEventListener('click', confirmHandSelection);
 
 function validateInputs() {
     participantID = document.getElementById('participantID').value;
-    selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
-    if (participantID && selectedHand) {
+    if (participantID) {
         handButton.style.display = 'block';
     }
 }

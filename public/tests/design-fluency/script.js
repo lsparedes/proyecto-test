@@ -230,15 +230,15 @@ window.onload = function () {
 
     }
 
-    function generateCSV(data) {
-        let csvContent = "Tiempo dedicado a la tarea (s), mano utilizada\n";
-
+    function generateTXT(data) {
+        let txtContent = "";
+    
         data.forEach(row => {
-            let linea = `${row.taskTime},${selectedHand}\n`;
-            csvContent += linea;
+            let linea = `Tiempo dedicado a la tarea (s): ${row.taskTime}\nMano utilizada: ${selectedHand}\n`;
+            txtContent += linea;
         });
-
-        return new Blob([csvContent], { type: 'text/csv' });
+    
+        return new Blob([txtContent], { type: 'text/plain' });
     }
 
     function testFinalizado() {
@@ -246,23 +246,23 @@ window.onload = function () {
         document.getElementById('enterID').style.display = 'none';
         stopPracticeRecording();
         stopRecording();
-
+    
         setTimeout(() => {
             const zip = new JSZip();
             const date = new Date();
-
+    
             // Añadir los videos grabados al ZIP
             // zip.file("canvasPractice-recording.webm", new Blob(practiceRecordedChunks, { type: 'video/webm' }));
             zip.file("canvas-recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
-
-            // Generar y añadir el archivo CSV al ZIP
-            const csvContent = generateCSV(data);
-            zip.file(`${participantID}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.csv`, csvContent);
-
+    
+            // Generar y añadir el archivo TXT al ZIP
+            const txtContent = generateTXT(data);
+            zip.file(`${participantID}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.txt`, txtContent);
+    
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
                 zip.file("canvasScreenshot.png", blob);
-
+    
                 practiceCanvas.toBlob(function (blobPractice) {
                     // zip.file("canvasPracticeScreenshot.png", blobPractice);
 
@@ -271,6 +271,9 @@ window.onload = function () {
                         saveAs(content, `${participantID}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
                     });
                 });
+
+                window.close(); 
+
             });
         }, 1000);
     }

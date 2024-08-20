@@ -198,3 +198,59 @@ body {
   font-weight: bold;
   text-align: center;
 }
+
+.selectable {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.selectable button {
+  margin-top: 10px;
+}
+
+#iniciarPausaP,
+#iniciarPausa {
+  margin-top: 20px;
+}
+
+.marker-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: 0;
+}
+
+.line {
+  width: 3px;
+  height: 50px;
+  background-color: black;
+}
+
+.line::after {
+  content: '';
+  width: 12px; /* Aumenta el tamaño si es necesario */
+  height: 12px; /* Aumenta el tamaño si es necesario */
+  background-color: black;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%; /* Posiciona el punto justo debajo del final de la línea */
+  left: 50%; /* Centra el punto horizontalmente con respecto a la línea */
+  transform: translateX(-50%); /* Ajusta el punto a la mitad de la línea */
+}
+
+.marker-label {
+  font-size: 18px;
+  text-align: center;
+  margin-top: 5px; /* Ajusta el espacio entre el punto y el texto */
+}
+
+.left-marker {
+  left: 0;
+  transform: translateX(-49.5%);
+}
+
+.right-marker {
+  right: 0;
+  transform: translateX(49.5%);
+}

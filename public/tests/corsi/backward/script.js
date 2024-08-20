@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let testData = [];
     let timer;
     let milliseconds = 0;
+    let continueTest = false;
 
     let mediaRecorder;
     let recordedChunks = [];
@@ -111,6 +112,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const index = parseInt(event.target.dataset.index);
         if (playerSequence.length < sequence.length) {
+            if (playerSequence.length == 0 && !isPractice) {
+                stopTimer();
+                console.log(milliseconds);
+            }
             resetBlocks(); // Desmarcar todos los bloques antes de marcar el actual
             playerSequence.push(index);
             event.target.classList.add('selected');
@@ -123,12 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
         game.style.display = 'block';
         startSequenceButton.style.visibility = 'visible';
         startSequenceButton.style.display = 'inline-block';
-        endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" al iniciar el test
+        endSequenceButton.style.display = 'inline-block'; // Ocultar el botón "Terminar" al iniciar el test
+        endSequenceButton.style.cursor = 'not-allowed';
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
         repeatCount = 0; // Reiniciar el contador de repeticiones
         errorCount = 0;
+        indicator.style.display = 'block';
         if (isPractice) {
             createBlocks();
             indicator.textContent = `P${sequenceCount + 1}`;
@@ -147,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sequenceDisplaying = true;
         displaySequence(0);
         startSequenceButton.style.visibility = 'hidden';
-        indicator.style.display = 'block';
     }
 
     function createSequence(currentSequences) {
@@ -164,7 +170,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 500);
         } else {
             sequenceDisplaying = false;
-            endSequenceButton.style.display = 'inline-block'; // Mostrar el botón "Terminar" después de mostrar la secuencia
+            continueTest = true;
+            endSequenceButton.style.cursor = 'pointer';
             playBeep(); // Llamar a playBeep aquí para reproducir el sonido después de la secuencia
             startTimer();
         }
@@ -194,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sequenceCount < practiceSequences.length) {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
-                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
                     startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
                 }, 500);
             } else {
@@ -214,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 indicator.textContent = `S${count}-${repeatCount + 1}`;
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
-                    endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
                     startSequenceButton.style.visibility = 'visible'; // Mostrar el botón "Play" después de que se presione "Terminar"
                 }, 500);
             }
@@ -230,26 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function endGame() {
-        endTime = new Date(); // Registrar la hora de finalización
-        const duration = (endTime - startTime) / 1000; // Duración en segundos
-        console.log(`Tu mayor Corsi span es ${highestCount} ítems. Total de bloques correctos seleccionados: ${totalCorrectBlocks}. Tiempo total: ${duration.toFixed(2)} segundos.`);
-        game.style.display = 'none';
-        resultScreen.style.display = 'block';
-        count = 2;
-        errorCount = 0;
-        resetBlocks();
-
-        const csvBlob = generateCSVBlob(highestCount, totalCorrectBlocks, duration, sequenceCount);
-        const videoBlob = await stopScreenRecording();
-
-        // Crear archivo zip
-        const zip = new JSZip();
-        zip.file('resultado.csv', csvBlob);
-        zip.file('grabacion.webm', videoBlob);
-
-        zip.generateAsync({ type: 'blob' }).then((content) => {
-            saveAs(content, 'resultado.zip');
-        });
+        downloadResultsAsZip(testData, startTime, selectedHand, participantID)
     }
 
     function endPractice() {
@@ -268,38 +254,6 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBlocks();
     }
 
-    function generateCSVBlob(corsiSpan, totalCorrectBlocks, duration, sequenceCount) {
-        const headers = ["Ejercicio", "Respuesta Correcta", "Respuesta Participante", "Precision", "Tiempo de Respuesta(ms)"];
-        const rows = testData.map(data => {
-            const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
-            const userResponseIncremented = data.userResponse.map(num => num + 1);
-            const precision = data.correctAnswer.reverse().join("") === data.userResponse.join("") ? 1 : 0;
-            return [
-                data.exerciseTitle,
-                correctAnswerIncremented.reverse().join(""),
-                userResponseIncremented.join(""),
-                precision,
-                data.responseTime,
-            ];
-        });
-
-        const desiredRowCount = fixedSequences.length;
-        const currentRowCount = rows.length;
-        const rowsToFill = desiredRowCount - currentRowCount;
-
-        for (let i = 0; i < rowsToFill; i++) {
-            // Puedes reemplazar los valores vacíos con cualquier valor predeterminado que desees
-            rows.push([fixedTitles[currentRowCount + i], fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
-        }
-
-        rows.push(['\nTiempo Total(s): ' + duration.toFixed(2)]);
-        rows.push(['Mano Utilizada: ' + selectedHand]);
-
-        const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
-
-        return new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    }
-
     startTestButton.addEventListener('click', async () => {
         if (isPractice) {
             startTime = new Date(); // Registrar la hora de inicio
@@ -307,7 +261,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.pause();
-        await startScreenRecording();
+        if (isPractice) {
+            await startScreenRecording();
+        }
         startTest();
     });
 
@@ -316,24 +272,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     endSequenceButton.addEventListener('click', () => {
-        if (!isPractice) {
-            stopTimer();
-
-            const exerciseData = {
-                exerciseTitle: fixedTitles[sequenceCount],
-                correctAnswer: sequence,
-                userResponse: playerSequence,
-                responseTime: milliseconds,
-            };
-            testData.push(exerciseData);
+        if (continueTest) {
+            continueTest = false;
+            endSequenceButton.style.cursor = 'not-allowed';
+            if (!isPractice) {
+                const exerciseData = {
+                    exerciseTitle: fixedTitles[sequenceCount],
+                    correctAnswer: sequence,
+                    userResponse: playerSequence,
+                    responseTime: milliseconds,
+                };
+                testData.push(exerciseData);
+            }
+            checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
         }
-        checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
-        endSequenceButton.style.display = 'none'; // Ocultar el botón "Terminar" después de que se presione
     });
 
     fullscreenButton.addEventListener('click', () => {
-        if (document.fullscreenEnabled) {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
             document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            document.exitFullscreen();
         } else {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
@@ -442,4 +403,69 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     window.confirmHandSelection = confirmHandSelection;
+
+    function getCurrentDate() {
+        const now = new Date();
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        return `${day}_${month}_${year}`;
+    }
+
+    function generateCSV(results, participantID) {
+        const headers = ["en", "rp_c", "rp", "pc", "tr"];
+        const rows = results.map(data => {
+            const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
+            const userResponseIncremented = data.userResponse.map(num => num + 1);
+            const precision = data.correctAnswer.reverse().join("") === data.userResponse.join("") ? 1 : 0;
+            return [
+                data.exerciseTitle,
+                correctAnswerIncremented.reverse().join(""),
+                userResponseIncremented.join(""),
+                precision,
+                data.responseTime,
+            ];
+        });
+        const desiredRowCount = fixedSequences.length;
+        const currentRowCount = rows.length;
+        const rowsToFill = desiredRowCount - currentRowCount;
+        for (let i = 0; i < rowsToFill; i++) {
+            rows.push([fixedTitles[currentRowCount + i], fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
+        }
+        const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
+        return {
+            content: csvContent,
+            filename: `${participantID}_corsi_inverso_${getCurrentDate()}.csv`
+        };
+    }
+
+    function generateTxt(startTimeTotal, selectedHand, participantID) {
+        const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
+            + "Mano Utilizada: " + selectedHand;
+        return {
+            content: txtContent,
+            filename: `${participantID}_corsi_inverso_${getCurrentDate()}.txt`
+        };
+    }
+
+    async function downloadZip(csvFile, txtFile, participantID) {
+        const zip = new JSZip();
+        zip.file(csvFile.filename, csvFile.content);
+        zip.file(txtFile.filename, txtFile.content);
+        const videoBlob = await stopScreenRecording();
+        zip.file(`${participantID}_corsi_inverso_${getCurrentDate()}.webm`, videoBlob);
+        
+        const zipContent = await zip.generateAsync({ type: "blob" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(zipContent);
+        link.setAttribute("download", `${participantID}_corsi_inverso_${getCurrentDate()}.zip`);
+        document.body.appendChild(link);
+        link.click();
+    }
+    
+    async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
+        const csvFile = generateCSV(results, participantID);
+        const txtFile = generateTxt(startTimeTotal, selectedHand, participantID);
+        await downloadZip(csvFile, txtFile, participantID);
+    }
 });

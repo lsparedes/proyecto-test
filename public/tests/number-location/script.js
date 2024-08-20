@@ -5,7 +5,6 @@ document.getElementById('startButton').addEventListener('click', () => {
     showNextImage();
 });
 
-document.getElementById('fullscreen-btn').addEventListener('click', toggleFullScreen);
 document.getElementById('submit-btn').addEventListener('click', submitAnswer);
 document.getElementById('next-button').addEventListener('click', () => {
     submitAnswer();
@@ -108,13 +107,19 @@ function submitAnswer() {
     }
 }
 
-function toggleFullScreen() {
-    if (!document.fullscreenElement) {
+const fullscreenButton = document.getElementById('fullscreen-btn');
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
         document.documentElement.requestFullscreen();
-    } else if (document.exitFullscreen) {
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('img/full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
         document.exitFullscreen();
+    } else {
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
-}
+});
+
 
 function generateCSV(participantID) {
     document.getElementById('enterID').style.display = 'none';
@@ -122,14 +127,15 @@ function generateCSV(participantID) {
     const endTime = new Date();
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
 
-    let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += "Ensayo;Respuesta correcta;Respuesta participante;Precisión;Tiempo respuesta(Milisegundos)\n";
+    let csvContent = "en;rp_c;rp;pc;tr\n";
 
     answers.forEach(answer => {
         csvContent += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')}\n`;
     });
 
-    csvContent += `\nTiempo dedicado (Segundos): ${totalTestTime/1000}\n`;
+    const tiempoDedicadoSegundos = (totalTestTime / 1000).toFixed(3).replace('.', ',');
+
+    const txtContent = `Tiempo dedicado (Segundos): ${tiempoDedicadoSegundos}`;
 
     const options = { timeZone: 'America/Santiago' };
     const fechaActual = new Date(); // Declarar e inicializar la variable fechaActual
@@ -143,14 +149,35 @@ function generateCSV(participantID) {
     const dia = String(fechaActual.getDate()).padStart(2, '0');
     // Formatear la fecha y la hora
     const fechaHoraFormateada = `${dia}_${mes}_${año}`;
-    const filename = `${participantID}_VisualObjectSpacePerception_${fechaHoraFormateada}.csv`;
+    const csvFilename = `${participantID}_VisualObjectSpacePerception_${fechaHoraFormateada}.csv`;
+    const txtFilename = `${participantID}_VisualObjectSpacePerception_${fechaHoraFormateada}.txt`;
 
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", filename);
-    document.body.appendChild(link);
-    link.click();
+    const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const txtBlob = new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
+
+    const zip = new JSZip();
+    zip.file(csvFilename, csvBlob);
+    zip.file(txtFilename, txtBlob);
+
+    zip.generateAsync({ type: "blob" })
+        .then(content => {
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(content);
+                const zipFilename = `${participantID}_VisualObjectSpacePerception_${fechaHoraFormateada}.zip`;
+
+                link.setAttribute('href', url);
+                link.setAttribute('download', zipFilename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.close();
+            }
+        })
+        .catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
+        });
 }
 
 function validateInput(input) {

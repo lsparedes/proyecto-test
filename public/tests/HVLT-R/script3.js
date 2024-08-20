@@ -29,12 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     fullscreenButton.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
             document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            document.exitFullscreen();
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
 
@@ -51,13 +53,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     NXButton.addEventListener('click', () => {
         pauseAudios();
-        audioContainer.style.display = 'none';
-        enterID.style.display = 'inline-block';
-        finishScreen.style.display = 'block';
-        // DownloadButton.style.display = 'block'
-        finishTime = new Date();
-        console.log(`${finishTime}`);
+        
+        // Ocultar el audio actual
+        audioItems[currentAudioIndex].style.display = 'none';
+        
+        // Avanzar al siguiente audio
+        currentAudioIndex++;
+        
+        // Si hay un siguiente audio, mostrarlo
+        if (currentAudioIndex < audioItems.length) {
+            audioItems[currentAudioIndex].style.display = 'block';
+        } else {
+            // Si no hay más audios, mostrar la pantalla final
+            audioContainer.style.display = 'none';
+            enterID.style.display = 'inline-block';
+            finishScreen.style.display = 'block';
+            finishTime = new Date();
+            console.log(`${finishTime}`);
+        }
     });
+    
     
     DownloadButton.addEventListener('click', () => {
         downloadZip();
@@ -81,19 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const audioIndex = parseInt(e.target.getAttribute('data-audio'));
             const answer = e.target.getAttribute('data-answer');
             answers[audioIndex] = answer; // Usar audioIndex en lugar de audioItems
-            // Ocultar el audio y las opciones actuales
-            audioItems[audioIndex - 1].style.display = 'none';
+
             
-            // Mostrar el siguiente audio si existe
-            if (audioIndex < audioItems.length) {
-                audioItems[audioIndex].style.display = 'block';
-            } else{
-                finishScreen.style.display = 'block';
-                enterID.style.display = 'inline-block';
-                finishTime = new Date();
-                console.log(`${finishTime}`);
-            }
-            console.log(answer);
+            console.log("Audio", audioIndex, "respuesta", answer);
         });
     });
     
@@ -153,6 +158,8 @@ document.addEventListener('DOMContentLoaded', () => {
             a.click();
             document.body.removeChild(a);
         });
+        window.close(); 
+
     }
 
     function pauseAudios() {

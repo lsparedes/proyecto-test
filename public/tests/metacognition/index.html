@@ -27,14 +27,19 @@
       Tu navegador no soporta el elemento de audio.
     </audio>
     <div id="sliderPractice" style="display:none;">
-      <div class="mt-5">
-        <input type="range" id="confidenceSliderPractice" min="-100" max="100" value="0">
+      <div class="mt-5 slider-container" style="position: relative;">
+        <input type="range" id="confidenceSliderPractice" min="-100" max="100" value="0" style="width: 100%;">
+        <div class="marker-container left-marker">
+          <div class="line left-line"></div>
+          <span class="marker-label"><b>TOTALMENTE INSEGURO</b></span>
+        </div>
+        <div class="marker-container right-marker">
+          <div class="line right-line"></div>
+          <span class="marker-label"><b>TOTALMENTE SEGURO</b></span>
+        </div>
       </div>
-      <div class="range-labels">
-        <span><b>TOTALMENTE INSEGURO</b></span>
-        <span><b>TOTALMENTE SEGURO</b></span>
-      </div>
-      <br>
+      <div class="range-labels"></div>
+      <br><br><br>
       <button class="btn btn-light btn-lg shadow" id="submitConfidenceButtonPractice" disabled><b>LISTO</b></button>
     </div>
     <div class="button-container">
@@ -69,7 +74,8 @@
   </div>
 
   <div id="practiceFinishScreen" class="container" style="display: none;">
-    <h1>¡Bloque Completado!</h1>
+    <h1 id="textoPausaP">¡Bloque Completado!</h1>
+    <button class="btn btn-light btn-lg shadow" id="iniciarPausaP" ><b>INICIAR PAUSA</b></button>
     <div class="button-container">
       <button id="nextPracticeButton"></button>
     </div>
@@ -81,38 +87,41 @@
     <div class="container"></div>
     <h1>¿De qué color había más puntos?</h1>
     <br>
-    <div class="row">
-      <div class="col-6 p-4">
-        <center>
+    <div class="row justify-content-center">
+      <div class="col-6 p-4 text-center" style="width: 40%;">
+        <div class="selectable" id="redContainer">
           <div class="circulo rojo"></div>
-          <br>
-          <button type="button" class="btn btn-light btn-lg shadow" id="redButton"><b>ROJO</b></button>
-        </center>
+          <button type="button" class="btn btn-light btn-lg shadow"><b>ROJO</b></button>
+        </div>
       </div>
-      <div class="col-6 p-4">
-        <center>
+      <div class="col-6 p-4 text-center" style="width: 40%;">
+        <div class="selectable" id="blueContainer">
           <div class="circulo azul"></div>
-          <br>
-          <button type="button" class="btn btn-light btn-lg shadow" id="blueButton"><b>AZUL</b></button>
-        </center>
+          <button type="button" class="btn btn-light btn-lg shadow"><b>AZUL</b></button>
+        </div>
       </div>
     </div>
   </div>
 
-  <div id="confidenceScreen" class="container" style="display: none;">
+  <div id="confidenceScreen" style="display: none;">
     <center>
       <div class="mb-5">
         <h1>¿Qué tan seguro está de su decisión?</h1>
       </div>
       <br><br><br>
-      <div class="mt-5">
-        <input type="range" id="confidenceSlider" min="-100" max="100" value="0">
+      <div class="mt-5 slider-container" style="position: relative;">
+        <input type="range" id="confidenceSlider" min="-100" max="100" value="0" style="width: 100%;">
+        <div class="marker-container left-marker">
+          <div class="line left-line"></div>
+          <span class="marker-label"><b>TOTALMENTE INSEGURO</b></span>
+        </div>
+        <div class="marker-container right-marker">
+          <div class="line right-line"></div>
+          <span class="marker-label"><b>TOTALMENTE SEGURO</b></span>
+        </div>
       </div>
-      <div class="range-labels">
-        <span><b>TOTALMENTE INSEGURO</b></span>
-        <span><b>TOTALMENTE SEGURO</b></span>
-      </div>
-      <br><br><br><br>
+      <div class="range-labels"></div>
+      <br><br><br>
       <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>LISTO</b></button>
     </center>
   </div>
@@ -127,7 +136,8 @@
   </div>
 
   <div id="blockFinishScreen" class="container" style="display: none;">
-    <h1>¡Bloque Completado!</h1>
+    <h1 id="textoPausa">¡Bloque Completado!</h1>
+    <button class="btn btn-light btn-lg shadow" id="iniciarPausa"><b>INICIAR PAUSA</b></button>
     <button id="continueToNextBlockButton"></button>
   </div>
 
@@ -182,6 +192,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
 </body>
 
 </html>

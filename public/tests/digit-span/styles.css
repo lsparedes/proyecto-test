@@ -216,7 +216,7 @@ audio {
     text-align: center;
 }
 
-#start-button, #next-button,#final-button {
+#start-button, #next-button,#following-button ,#final-button,#final-instruction-button {
     background-color: transparent;
     border: none;
     cursor: pointer;

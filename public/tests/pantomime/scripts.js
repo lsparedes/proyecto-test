@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
     const startBtn = document.getElementById('startButton');
-    const fullscreenBtn = document.getElementById('fullscreenButton');
+    const fullscreenButton = document.getElementById('fullscreenButton');
     const stopBtn = document.getElementById('stop-btn');
     const RecordingBtn = document.getElementById('recording-btn');
     const nextBtn = document.getElementById('next-btn');
@@ -86,11 +86,15 @@ document.addEventListener('DOMContentLoaded', () => {
         loadNextImage();
     });
 
-    fullscreenBtn.addEventListener('click', () => {
-        if (document.fullscreenElement) {
+    fullscreenButton.addEventListener('click', () => {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+            document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
             document.exitFullscreen();
         } else {
-            document.documentElement.requestFullscreen();
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
 
@@ -231,35 +235,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
-    function createCsvFile() {
-        const filename = `${participantID}_respuestas_pantomime_${fechaFormateada}.csv`;
-        // Definir el contenido del archivo CSV
-        const csvContent = `Tiempo dedicado (Segundos);Mano utilizada\n${totalTestTime / 1000};${selectedHand}\n`;
-        const blob = new Blob([csvContent], { type: 'text/csv' });
-
-        // Agregar el archivo CSV al ZIP con el nombre dinámico
+    function createTxtFile() {
+        const filename = `${participantID}_Pantomime_${fechaFormateada}.txt`;
+        // Definir el contenido del archivo TXT
+        const txtContent = `Tiempo dedicado (Segundos): ${totalTestTime / 1000}\nMano utilizada: ${selectedHand}\n`;
+        const blob = new Blob([txtContent], { type: 'text/plain' });
+    
+        // Agregar el archivo TXT al ZIP con el nombre dinámico
         zip.file(filename, blob);
     }
-
+    
     function createZipAndDownload() {
         handButton.style.display = "none";
         selectHandContainer.style.display = "none";
         enterID.style.display = 'none';
-        createCsvFile();
+        createTxtFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
             const zipname = `${participantID}_Pantomime_${fechaFormateada}.zip`;
-
+    
             link.href = URL.createObjectURL(content);
             link.download = zipname;
             link.click();
-            showFinalMessage();
+            window.close();
         });
     }
-    function showFinalMessage() {
-        completionScreen.classList.remove('hidden');
-        completionScreen.classList.add('active');
-    }
+
 
     // Manages the hand selection
     handInputs.forEach((input) => {

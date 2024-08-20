@@ -43,14 +43,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     fullscreenButton.addEventListener('click', () => {
-        if (!document.fullscreenElement) {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')";
             document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')";
+            document.exitFullscreen();
         } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
-            }
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
+
 
     function drawCircle(ctx, x, y, number, circlesArray, name = "", circleRadius) {
         ctx.fillStyle = 'white';
@@ -285,10 +288,10 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('partA').style.display = 'flex';
             document.getElementById('show1').style.display = 'flex';
             nextButton.remove();
-            startPartA();   
+            startPartA();
             show1.style.display = 'block';
         });
-        
+
         document.body.appendChild(nextButton);
     }
 
@@ -587,6 +590,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
                         saveAs(content, `${participantID}_TMTPartA_${fechaFormateada}.zip`);
+                        
                     });
                 });
             });
@@ -596,7 +600,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function generateCSV(data) {
-        let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha);Numero de errores de comision;Numero de lineas correctas;Numero de veces en que el participante levanto el lapiz de la pantalla;Tiempo total de lapiz en el aire desde la primera respuesta en el canvas;Tiempo dedicado a la tarea(s); Mano utilizada\n";
+        let csvContent = "tr;errores_comision;lineas_correctas;lapiz_levantado;tr;t_lapiz_levantado;t_tarea;mano\n";
 
         data.forEach(row => {
             let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime};${row.taskTime};${selectedHand}\n`;

@@ -1,5 +1,5 @@
 document.getElementById('start-button').addEventListener('click', startTest);
-document.getElementById('fullscreen-button').addEventListener('click', toggleFullscreen);
+
 document.getElementById('next-button').addEventListener('click', nextImage);
 
 const images = [
@@ -63,15 +63,19 @@ function startTest() {
     showImage();
 }
 
-function toggleFullscreen() {
-    if (!document.fullscreenElement) {
+const fullscreenButton = document.getElementById('fullscreen-button');
+fullscreenButton.addEventListener('click', () => {
+    if (document.fullscreenEnabled && !document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
         document.documentElement.requestFullscreen();
+    } else if (document.fullscreenElement) {
+        fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+        document.exitFullscreen();
     } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        }
+        console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
-}
+});
+
 
 function showImage() {
     if (currentImageIndex < images.length) {
@@ -144,52 +148,7 @@ function nextImage() {
 function endTest() {
     document.getElementById("preEnd").style.display = 'none';
     document.getElementById('end-screen').style.display = 'block';
-    generarCSV();
-}
-
-function generarCSV() {
-    const duracionTest = (endTimeTotal - startTimeTotal) / 1000;
-
-    const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago' };
-    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    // const fechaFormateada = fechaHoraChilena.replace(/[\/\s,:]/g, '-');
-
-    const csvData = [['Ensayo', 'Respuesta Correcta', 'Respuesta Participante', 'Precision', 'Tiempo de Respuesta(ms)']];
-    responses.forEach((response) => {
-        const numeroImagen = response.imageIndex + 1; 
-        const rutaImagen = response.imageSrc;
-        const esIgual = response.isSame ? 'Misma' : 'Diferentes';
-        const respuestaUsuario = response.response === '' ? '' : (response.response === 'same' ? 'Misma' : 'Diferentes');
-        const precision = response.isSame === (response.response === 'same') ? 1 : 0;
-        const tiempoRespuesta = response.responseTime;
-
-        csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta]);
-    });
-
-    csvData.push(['\nDuracion Total del Test(s): ' + duracionTest]);
-    csvData.push(['Mano Utilizada: ' + selectedHand]);
-
-    const csvContent = csvData.map(row => row.join(';')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    if (link.download !== undefined) {
-        const now = new Date();
-        const day = String(now.getDate()).padStart(2, '0');
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-        // Formatear la fecha para el nombre del archivo
-        const date = `${day}_${month}_${year}`;
-
-        const nombreArchivo = `${participantID}_glasgow_face_matching_${date}.csv`;
-        const url = URL.createObjectURL(blob);
-        link.setAttribute('href', url);
-        link.setAttribute('download', nombreArchivo);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
+    downloadResultsAsZip(responses, startTimeTotal, selectedHand, participantID);
 }
 
 // SELECCION DE MANO JS
@@ -234,4 +193,60 @@ function validateInputs() {
     if (participantID && selectedHand) {
         handButton.style.display = 'block';
     }
+}
+
+function getCurrentDate() {
+    const now = new Date();
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    return `${day}_${month}_${year}`;
+}
+
+function generateCSV(results, participantID) {
+    const csvData = [['en', 'rp_c', 'rp', 'pc', 'tr']];
+    results.forEach((response) => {
+        const numeroImagen = response.imageIndex + 1; 
+        const rutaImagen = response.imageSrc;
+        const esIgual = response.isSame ? 'Misma' : 'Diferentes';
+        const respuestaUsuario = response.response === '' ? '' : (response.response === 'same' ? 'Misma' : 'Diferentes');
+        const precision = response.isSame === (response.response === 'same') ? 1 : 0;
+        const tiempoRespuesta = response.responseTime;
+
+        csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta]);
+    });
+    const csvContent = csvData.map(row => row.join(';')).join('\n');
+    return {
+        content: csvContent,
+        filename: `${participantID}_glasgow_face_matching_${getCurrentDate()}.csv`
+    };
+}
+
+function generateTxt(startTimeTotal, selectedHand, participantID) {
+    const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
+        + "Mano Utilizada: " + selectedHand;
+    return {
+        content: txtContent,
+        filename: `${participantID}_glasgow_face_matching_${getCurrentDate()}.txt`
+    };
+}
+
+async function downloadZip(csvFile, txtFile, participantID) {
+    const zip = new JSZip();
+    zip.file(csvFile.filename, csvFile.content);
+    zip.file(txtFile.filename, txtFile.content);
+    
+    const zipContent = await zip.generateAsync({ type: "blob" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(zipContent);
+    link.setAttribute("download", `${participantID}_glasgow_face_matching_${getCurrentDate()}.zip`);
+    document.body.appendChild(link);
+    link.click();
+    window.close();
+}
+
+async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
+    const csvFile = generateCSV(results, participantID);
+    const txtFile = generateTxt(startTimeTotal, selectedHand, participantID);
+    await downloadZip(csvFile, txtFile, participantID);
 }
