@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-12 text-center">
                 <p id="instructionText">A continuación, usted verá videos de una persona caminando en unos pasillos. Mientras hace esto, la persona se detiene en las puertas y en las intersecciones de los pasillos para mirar a su alrededor. La persona puede girar en un cruce o darse la vuelta y caminar de regreso.</p>
-                <audio controls>
+                <audio id="instructionAudio1" controls>
                     <source src="" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
@@ -31,7 +31,7 @@
         <div class="row">
             <div class="col-12 text-center">
                 <p id="instructionText">Su tarea consistirá en intentar seguir mentalmente la ubicación actual de la persona e indicar, al final, qué puerta ha elegido usando el mapa que se muestra al lado del vídeo. El mapa no cambia su orientación; ni siquiera si la persona se da vuelta. Tan pronto como la persona haya elegido una puerta extendiendo su brazo hacia la manilla, por favor, toque la puerta correspondiente en el mapa.</p>
-                <audio controls>
+                <audio id="instructionAudio2" controls>
                     <source src="" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
@@ -46,9 +46,13 @@
   <div id="instructionScreen3" class="screen">
     <div class="container">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 text-center">
                 <p id="instructionText" style="margin-top: 20px;">Aquí usted puede ver un ejemplo de un mapa. Los iconos azules representan puertas en partes específicas del pasillo. La posición inicial de la persona está marcada en el mapa con la palabra 'Inicio'.</p>
                 <br>
+                <audio id="instructionAudio3" controls>
+                    <source src="" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
                 <div class="d-flex">
                  
                 <img src="img/ejemplo.png" alt="" class="m-auto">
@@ -65,9 +69,12 @@
   <div id="instructionScreen4" class="screen">
     <div class="container">
         <div class="row">
-            <div class="col-12">
+            <div class="col-12 text-center">
                 <p id="instructionText">Ahora usted completará una ronda de práctica. Los videos NO SE PUEDEN pausar y NO SE PUEDEN repetir, así que, por favor, preste mucha atención mientras se reproducen los videos. El mapa estará en el lado derecho de la pantalla. Después de unos segundos, el video comenzará a reproducirse automáticamente. Aproveche este tiempo para ubicar la posición inicial de la persona en el mapa.</p>
-      
+                <audio id="instructionAudio4" controls>
+                    <source src="" type="audio/mpeg">
+                    Tu navegador no soporta el elemento de audio.
+                </audio>
             </div>
         </div>
     </div>
@@ -241,15 +248,21 @@
 
   <div id="preTestInstructionScreen" class="screen">
     <div class="container">
-        <div class="row p-5">
-            <div class="col-12">
-                <p id="instructionText">Ahora comenzará la tarea de verdad. Recuerde intentar seguir mentalmente la ubicación actual de la persona en el mapa. Los videos no se pueden pausar ni repetir. Si no está seguro de qué puerta ha sido elegida, señale la opción que crea más probable. Por favor, responda tan rápido como pueda. ¿Está listo(a)?</p>
-            </div>
+      <div class="row p-5">
+        <div class="col-12 text-center">
+          <p id="instructionText">
+            Ahora comenzará la tarea de verdad. Recuerde intentar seguir mentalmente la ubicación actual de la persona en el mapa. Los videos no se pueden pausar ni repetir. Si no está seguro de qué puerta ha sido elegida, señale la opción que crea más probable. Por favor, responda tan rápido como pueda. ¿Está listo(a)?
+          </p>
+          <audio id="instructionAudio5" controls>
+            <source src="" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+          </audio>
         </div>
-    </div>
-      <div class="button-container">
-          <button id="nextButtonPreTestInstruction" class="arrow-button"></button>
       </div>
+    </div>
+    <div class="button-container">
+      <button id="nextButtonPreTestInstruction" class="arrow-button"></button>
+    </div>
   </div>
 
   <div id="testScreen" class="screen">
