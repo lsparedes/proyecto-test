@@ -30,7 +30,10 @@ class LoginController extends Controller
         $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
-            'id_participante' => ['required'],
+            'id_participante' => [
+                'required',
+                'regex:/^[A-Z]{2}[0-9]{4}$/'
+            ],
         ]);
 
         // Si la autenticación es exitosa, guarda el id_participante en la sesión
@@ -53,7 +56,7 @@ class LoginController extends Controller
     {
         // Borra el id_participante de la sesión
         $request->session()->forget('id_participante');
-        
+
         // Continúa con el proceso normal de cierre de sesión
         $this->guard()->logout();
 
