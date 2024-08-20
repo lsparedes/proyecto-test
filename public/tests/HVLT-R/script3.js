@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const audioContainer = document.getElementById('audio-container');
     const audioItems = document.querySelectorAll('.audio-item');
     const NXButton = document.getElementById('nxbutton');
-    const enterID = document.getElementById('enterID');
     const DownloadButton = document.getElementById('download');
     const selectHand = document.getElementById('selectHand')
     let answers = {};
@@ -67,9 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Si no hay más audios, mostrar la pantalla final
             audioContainer.style.display = 'none';
-            enterID.style.display = 'inline-block';
             selectHand.style.display = 'inline-block';
             finishScreen.style.display = 'block';
+            DownloadButton.style.display = 'block';
+
             finishTime = new Date();
             console.log(`${finishTime}`);
         }
@@ -80,16 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadZip();
     });
 
-    document.getElementById('participantID').addEventListener('input', validateInputs);
-
-    let participantID;
-    
-    function validateInputs() {
-        participantID = document.getElementById('participantID').value;
-        if (participantID) {
-            DownloadButton.style.display = 'block';
-        }
-    }
+  
 
     document.querySelectorAll('.option-btn').forEach(button => {
         button.addEventListener('click', (e) => {
@@ -103,6 +94,15 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Audio", audioIndex, "respuesta", answer);
         });
     });
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
+    
 
     function createCSV() {
         const total = Object.keys(correctAnswers).length;
@@ -161,12 +161,12 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${participantID}_HVLT-R_Reconocimiento_${diaStr}_${mesStr}_${añoStr}.zip`;
+            a.download = `${idParticipante}_HVLT-R_Reconocimiento_${diaStr}_${mesStr}_${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+            window.close();
         });
-        window.close(); 
 
     }
 

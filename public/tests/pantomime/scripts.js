@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoPreview = document.getElementById('video-preview');
     const currentItem = document.getElementById('current-item');
     const timerDisplay = document.createElement('div');
-    const recordingMessage = document.createElement('div');
     let currentImageIndex = 0;
     const images = [
         'img-jpg/1.jpg',
@@ -63,9 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         'audio/19.mp3',
         'audio/20.mp3'
     ];
-    recordingMessage.className = 'recording-message';
-    recordingMessage.textContent = 'Grabación creada';
-    testScreen.appendChild(recordingMessage);
+
 
     let mediaRecorder;
     let chunks = [];
@@ -137,14 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
         stopRecording(true);
     });
 
-    document.getElementById('participantID').addEventListener('input', validateInputs);
-    let participantID = 0;
 
     function validateInputs() {
-        participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
-        if (participantID && selectedHand) {
+        if (selectedHand) {
             handButton.style.display = 'block';
         }
     }
@@ -203,7 +197,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentItem.style.display = 'none';
         fin.style.display = 'block';
         selectHandContainer.style.display = "block";
-        enterID.style.display = 'block';
 
         handButton.addEventListener('click', function () {
             createZipAndDownload();
@@ -230,13 +223,21 @@ document.addEventListener('DOMContentLoaded', () => {
         timerDisplay.textContent = '00:00';
     }
 
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
+
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     function createTxtFile() {
-        const filename = `${participantID}_Pantomime_${fechaFormateada}.txt`;
+        const filename = `${idParticipante}_Pantomime_${fechaFormateada}.txt`;
         // Definir el contenido del archivo TXT
         const txtContent = `Tiempo dedicado (Segundos): ${totalTestTime / 1000}\nMano utilizada: ${selectedHand}\n`;
         const blob = new Blob([txtContent], { type: 'text/plain' });
@@ -252,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createTxtFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
-            const zipname = `${participantID}_Pantomime_${fechaFormateada}.zip`;
+            const zipname = `${idParticipante}_Pantomime_${fechaFormateada}.zip`;
     
             link.href = URL.createObjectURL(content);
             link.download = zipname;

@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const recordingControls4 = document.getElementById('recordingControls4');
     const startRecordingButton4 = document.getElementById('startRecordingButton4');
     const stopRecordingButton4 = document.getElementById('stopRecordingButton4');
-    const enterID = document.getElementById('enterID');
     const DownloadButton = document.getElementById('download');
 
     let mediaRecorder;
@@ -40,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         mainScreen2.style.display = 'none';
         finishScreen.style.display = 'block';
-        enterID.style.display = 'inline-block';
         // DownloadButton.style.display = 'block';
         startFinishTimer();
     });
@@ -60,9 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     stopRecordingButton4.addEventListener('click', () => {
         recordingControls4.style.display = 'none';
         finishScreen.style.display = 'block';
-        enterID.style.display = 'inline-block';
         startRecordingButton4.style.display = 'none';
-        // DownloadButton.style.display = 'block';
         stopRecording();
         finishTime = new Date();
     });
@@ -71,16 +67,6 @@ document.addEventListener('DOMContentLoaded', () => {
         generateZip();
     });
 
-    document.getElementById('participantID').addEventListener('input', validateInputs);
-
-    let participantID;
-
-    function validateInputs() {
-        participantID = document.getElementById('participantID').value;
-        if (participantID) {
-            DownloadButton.style.display = 'block';
-        }
-    }
 
     function startRecording(fileName) {
         navigator.mediaDevices.getUserMedia({ audio: true })
@@ -113,6 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mediaRecorder.stop();
         startRecordingButton4.disabled = false;
         stopRecordingButton4.disabled = true;
+        DownloadButton.style.display = 'block';
+
     }
 
     function startFinishTimer() {
@@ -133,6 +121,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
+    
 
     function saveToCSV() {
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
@@ -170,13 +167,14 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${participantID}_HVLT-R_Diferido_${diaStr}_${mesStr}_${añoStr}.zip`;
+            a.download = `${idParticipante}_HVLT-R_Diferido_${diaStr}_${mesStr}_${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-
+            window.close();
         });
-        window.close(); 
+        
+
 
     }
 

@@ -271,7 +271,6 @@ function updateTimerDisplay(displayElement, time) {
     displayElement.textContent = formatTime(time);
 }
 const finalButton = document.getElementById('final-button');
-let participantID = 0;
 
 function mostrarFinalizacion(type) {
     taskTime = (new Date() - taskTimeStart);
@@ -279,27 +278,13 @@ function mostrarFinalizacion(type) {
     const completionMessage = document.getElementById('completion-message');
     completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
     const fin = document.getElementById('fin');
-    const enterID = document.getElementById('enterID');
     fin.style.display = 'block';
-    enterID.style.display = 'block';
+    finalButton.style.display = 'block';
     document.getElementById('final-button').addEventListener('click', () => {
-        const participantID = document.getElementById('participantID').value.trim();
-        crearZip(type, participantID);
+        
+        crearZip(type);
     });
 }
-
-
-
-
-document.getElementById('participantID').addEventListener('input', () => {
-    const participantID = document.getElementById('participantID').value.trim();
-    const finalButton = document.getElementById('final-button');
-    if (participantID) {
-        finalButton.style.display = 'block';
-    } else {
-        finalButton.style.display = 'none';
-    }
-});
 
 
 function generarCSV() {
@@ -314,14 +299,20 @@ function generarCSV() {
 
     return csvContent;
 }
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Obtener el id_participante de la URL
+const idParticipante = getQueryParam('id_participante');
 
 function generarTxt(taskTime) {
     const txtContent = `Tiempo dedicado a la tarea(s): ${taskTime}`;
     return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
 }
 
-function crearZip(type, participantID) {
-    document.getElementById('enterID').style.display = 'none';
+function crearZip(type) {
     document.getElementById('final-button').style.display = 'none';
 
     const zip = new JSZip();
@@ -360,14 +351,14 @@ function crearZip(type, participantID) {
     const year = now.getFullYear();
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    zip.file(`${participantID}_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${participantID}_tiempo_dedicado_${fechaFormateada}.txt`, txtBlob);
+    zip.file(`${idParticipante}_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${idParticipante}_tiempo_dedicado_${fechaFormateada}.txt`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
-            downloadLink.download = `${participantID}_digital_span_${type}_${fechaFormateada}.zip`;
+            downloadLink.download = `${idParticipante}_digital_span_${type}_${fechaFormateada}.zip`;
             downloadLink.textContent = 'Descargar todas las grabaciones';
             document.body.appendChild(downloadLink);
 

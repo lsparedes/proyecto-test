@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let endTimeExecution = null;
     let recordedChunks = [];
     let selectedHand = "";
-    let participantID = 0;
     let mediaRecorder = null;
     let fecha = new Date();
     let dia = fecha.getDate();
@@ -17,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     //Screen
     const container2 = document.getElementById('container2');
     const finishScreen = document.getElementById('finishScreen');
-    const enterID = document.getElementById('enterID');
     const selectHandContainer = document.getElementById('selectHand');
     const handInputs = document.getElementsByName('hand');
     const DownloadButton = document.getElementById('download');
@@ -66,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
         endTimeExecution = new Date();
         console.log("Tiempo de Termino: ", endTimeExecution);
         selectHandContainer.style.display = 'block';
-        enterID.style.display = 'inline-block';
     });
 
     DownloadButton.addEventListener('click', () => {
@@ -84,9 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function validateInputs() {
-        participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
-        console.log("ID del participante: ", participantID);
         console.log("Mano seleccionada: ", selectedHand);
     }
 
@@ -257,6 +252,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
 
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
+
     async function GenerateZIP() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
@@ -267,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Generar el contenido del CSV
         const csvContent = generateCSV();
-        zip.file(`${participantID}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${idParticipante}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
 
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('memory-canvas');
@@ -283,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `${participantID}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                    link.download = `${idParticipante}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -298,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             zip.generateAsync({ type: 'blob' }).then((content) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
-                link.download = `${participantID}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                link.download = `${idParticipante}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

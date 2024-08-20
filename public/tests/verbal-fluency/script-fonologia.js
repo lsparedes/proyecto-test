@@ -117,10 +117,12 @@ function nextSection(part) {
         document.getElementById('testSection1').style.display = 'none';
         document.getElementById('instructionAudio1').pause();
         showHandSelection();
+
     } else if (part === 2) {
         document.getElementById('testSection2').style.display = 'none';
         document.getElementById('instructionAudio2').pause();
         showHandSelection();
+
     }
 }
 
@@ -132,7 +134,7 @@ function endGame() {
 function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
-    
+
     switch (part) {
         case 1:
             audio.src = 'audios/M.mp3';
@@ -176,6 +178,14 @@ function showRecordingCreatedMessage(part) {
     }
     messageElement.style.display = 'block';
 }
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Obtener el id_participante de la URL
+const idParticipante = getQueryParam('id_participante');
+
 
 function downloadRecordingAndTime() {
     // Obtener la fecha actual en formato YYYYMMDD
@@ -196,14 +206,14 @@ function downloadRecordingAndTime() {
 
     const link = document.createElement('a');
     link.href = timeUrl;
-    link.download = `${participantID}_verbal_fluency_fonologia_${formattedDate}.txt`;
+    link.download = `${idParticipante}_verbal_fluency_fonologia_${formattedDate}.txt`;
     // link.click();
 
     const zip = new JSZip();
-    zip.file(`${participantID}_verbal_fluency_fonologia_${formattedDate}.txt`, timeBlob);
+    zip.file(`${idParticipante}_verbal_fluency_fonologia_${formattedDate}.txt`, timeBlob);
 
     const audio1Blob = new Blob(audioChunks[1], { type: 'audio/wav' });
-    zip.file(`${participantID}_verbal_fluency_fonologia_${formattedDate}.wav`, audio1Blob);
+    zip.file(`${idParticipante}_verbal_fluency_fonologia_${formattedDate}.wav`, audio1Blob);
 
     const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
     // zip.file("Fonológica - Parte 2.wav", audio2Blob);
@@ -211,9 +221,9 @@ function downloadRecordingAndTime() {
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
         zipLink.href = URL.createObjectURL(content);
-        
+
         // Construir el nombre del archivo ZIP
-        const fileName = `${participantID}_verbal_fluency_fonologia_${formattedDate}.zip`;
+        const fileName = `${idParticipante}_verbal_fluency_fonologia_${formattedDate}.zip`;
 
         zipLink.download = fileName;
         zipLink.click();
@@ -226,11 +236,12 @@ const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
 
 // Variable con la mano seleccionada
-let participantID = 0;
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
     document.getElementById("preEnd").style.display = 'block';
+    handButton.style.display = 'block';
+
 }
 
 // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
@@ -241,13 +252,5 @@ function confirmHandSelection() {
     endGame();
 }
 
-document.getElementById('participantID').addEventListener('input', validateInputs);
 document.getElementById('handButton').addEventListener('click', confirmHandSelection);
 
-function validateInputs() {
-    participantID = document.getElementById('participantID').value;
-
-    if (participantID) {
-        handButton.style.display = 'block';
-    }
-}

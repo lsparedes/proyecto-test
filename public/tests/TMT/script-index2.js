@@ -559,6 +559,14 @@ function drawNextButtonB2() {
     document.body.appendChild(nextButtonB2);
 }
 
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Obtener el id_participante de la URL
+const idParticipante = getQueryParam('id_participante');
+
 function downloadCanvasImage(canvas, fileName) {
     const dataURL = canvas.toDataURL('image/png');
     const link = document.createElement('a');
@@ -616,7 +624,7 @@ function testFinalizado() {
                 zip.file("canvasPartB2Screenshot.png", blobPartB2);
 
                 zip.generateAsync({ type: 'blob' }).then(function (content) {
-                    saveAs(content, `${participantID}_TMTPartB_${fechaFormateada}.zip`);
+                    saveAs(content, `${idParticipante}_TMTPartB_${fechaFormateada}.zip`);
                 });
                 window.close(); 
             });
@@ -649,7 +657,6 @@ function generateCSV(data) {
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
-const enterIDContainer = document.getElementById("enterID");
 
 let selectedHand = "";
 
@@ -657,19 +664,15 @@ function showHandSelection() {
     document.getElementById('preEnd').style.display = 'block';
     document.getElementById('fin').style.display = 'block';
     selectHandContainer.style.display = "block";
-    enterIDContainer.style.display = "block";
 }
 
 handButton.addEventListener('click', confirmHandSelection);
 
-document.getElementById('participantID').addEventListener('input', validateInputs);
-let participantID = 0;
 
 function validateInputs() {
-    participantID = document.getElementById('participantID').value;
     selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
-    if (participantID && selectedHand) {
+    if (selectedHand) {
         handButton.style.display = 'block';
     }
 }

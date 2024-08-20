@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const endScreen = document.getElementById('finish');
     const finishScreen = document.getElementById('finishScreen');
     const NXButton6 = document.getElementById('nxbutton6');
-    const enterID = document.getElementById('enterID');
     let mediaRecorder;
     let audioChunks = [];
     let startTime = new Date();
@@ -112,20 +111,19 @@ document.addEventListener('DOMContentLoaded', () => {
         wordsScreen3.style.display = 'none';
         recordingControls3.style.display = 'none';
         endScreen.style.display = 'flex';
+        
     });
 
     NXButton6.addEventListener('click', () => {
         pauseAudios();
         endScreen.style.display = 'none';
-        enterID.style.display = 'inline-block';
-        
+
         finishScreen.style.display = 'flex';
         finishTime = new Date();
         console.log(`${finishTime}`);
         startFinishTimer();
     });
 
-    document.getElementById('participantID').addEventListener('input', validateInputs);
 
     DownloadButton.addEventListener('click', () => {
         downloadZip();
@@ -224,6 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mediaRecorder.stop();
         stopButton.disabled = true;
         initButton.disabled = false;
+        DownloadButton.style.display = 'block';
+
     }
 
     function formatTime(seconds) {
@@ -233,8 +233,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
-
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
+    
     function saveToCSV() {
+        
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
         const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options);
         const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options);
@@ -246,14 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
         return csvContent;
     }
 
-    let participantID;
 
-    function validateInputs() {
-        participantID = document.getElementById('participantID').value;
-        if (participantID) {
-            DownloadButton.style.display = 'block';
-        }
-    }
+
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
@@ -280,14 +282,14 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${participantID}_HVLT-R_Inmediato_${diaStr}_${mesStr}_${añoStr}.zip`;
+            a.download = `${idParticipante}_HVLT-R_Inmediato_${diaStr}_${mesStr}_${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-
+            window.close();
 
         });
-        window.close();
+
     }
 
     function startFinishTimer() {

@@ -599,8 +599,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const formattedDate = `${day}_${month}_${year}`;
-        const csvFileName = `${participantID}_vienna_${formattedDate}.csv`;
-        const txtFileName = `${participantID}_vienna_${formattedDate}.txt`;
+        const csvFileName = `${idParticipante}_vienna_${formattedDate}.csv`;
+        const txtFileName = `${idParticipante}_vienna_${formattedDate}.txt`;
     
         zip.file(csvFileName, csvBlob);
         zip.file(txtFileName, txtBlob);
@@ -610,7 +610,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const link = document.createElement('a');
                 if (link.download !== undefined) {
                     const url = URL.createObjectURL(content);
-                    const zipFileName = `${participantID}_vienna_${formattedDate}.zip`;
+                    const zipFileName = `${idParticipante}_vienna_${formattedDate}.zip`;
     
                     link.setAttribute('href', url);
                     link.setAttribute('download', zipFileName);
@@ -625,6 +625,14 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     };
 
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
+    
     const showCompletionScreen = () => {
         const preEndScreen = document.getElementById('preEnd');
         const completionScreen = document.getElementById('completionScreen');
@@ -814,11 +822,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // SELECCION DE MANO JS
 
     let selectedHand = "";
-    let participantID = 0;
     const handInputs = document.getElementsByName('hand');
 
     document.getElementById('handButton').addEventListener('click', showCompletionScreen);
-    document.getElementById('participantID').addEventListener('input', validateInputs);
 
     const showPreEnd = () => {
         const testScreen = document.getElementById('testScreen');
@@ -843,10 +849,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function validateInputs() {
-        participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
     
-        if (participantID && selectedHand) {
+        if ( selectedHand) {
             handButton.style.display = 'block';
         }
     }

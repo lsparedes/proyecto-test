@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     let participantAnswer = "";
     let selectedFigure = null;
     let selectedHand = "";
-    let participantID = "";
     let accuracy = null;
     let fecha = new Date();
     let dia = fecha.getDate();
@@ -17,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const container2 = document.getElementById('container2');
     const finishScreen = document.getElementById('finishScreen');
-    const enterID = document.getElementById('enterID');
     const selectHandContainer = document.getElementById("selectHand");
     const selectableImages = document.querySelectorAll('.selectable');
     const handInputs = document.querySelectorAll('input[name="hand"]');
@@ -57,7 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
         selectHandContainer.style.display = 'block';
-        enterID.style.display = 'inline-block';
         calculateAccuracy(); // Calcular el accuracy cuando se termina de identificar la figura
     });
 
@@ -94,9 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function validateInputs() {
-        participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
-        console.log("ID del participante: ", participantID);
         console.log("Mano seleccionada: ", selectedHand);
     }
 
@@ -105,6 +100,14 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Precision: ", accuracy);
     }
 
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
     function generateCSV() {
 
         let csvContent = "Actividad;Tiempo Total(s);Tiempo Total(ms);Mano Seleccionada; FiguraCorrecta; FiguraSeleccionada; Precision\n";
@@ -132,14 +135,14 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('No se puede generar el CSV');
             return;
         }
-        zip.file(`${participantID}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${idParticipante}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
 
         // Crear el archivo zip y forzar la descarga
         zip.generateAsync({ type: 'blob' })
             .then(function(content) {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
-                a.download = `${participantID}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                a.download = `${idParticipante}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);

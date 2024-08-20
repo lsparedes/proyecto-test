@@ -124,6 +124,7 @@ function nextSection(part) {
     } else if (part === 2) {
         document.getElementById('categoryFluency2').style.display = 'none';
         document.getElementById('instructionAudio2').pause();
+        handButton.style.display = 'block';
         showHandSelection();
     }
 }
@@ -181,6 +182,15 @@ function showRecordingCreatedMessage(part) {
     messageElement.style.display = 'block';
 }
 
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Obtener el id_participante de la URL
+const idParticipante = getQueryParam('id_participante');
+
+
 function downloadRecordingAndTime() {
     // Obtener la fecha actual en formato YYYYMMDD
     const date = new Date();
@@ -200,24 +210,24 @@ function downloadRecordingAndTime() {
 
     const link = document.createElement('a');
     link.href = timeUrl;
-    link.download = `${participantID}_verbal_fluency_categoria_${formattedDate}.txt`;
+    link.download = `${idParticipante}_verbal_fluency_categoria_${formattedDate}.txt`;
     // link.click();
 
     const zip = new JSZip();
-    zip.file(`${participantID}_verbal_fluency_categoria_${formattedDate}.txt`, timeBlob);
+    zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.txt`, timeBlob);
 
     const audio1Blob = new Blob(audioChunks[1], { type: 'audio/wav' });
     // zip.file("Categoría - Parte 1.wav", audio1Blob);
 
     const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
-    zip.file(`${participantID}_verbal_fluency_categoria_${formattedDate}.wav`, audio2Blob);
+    zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.wav`, audio2Blob);
 
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
         zipLink.href = URL.createObjectURL(content);
         
         // Construir el nombre del archivo ZIP
-        const fileName = `${participantID}_verbal_fluency_categoria_${formattedDate}.zip`;
+        const fileName = `${idParticipante}_verbal_fluency_categoria_${formattedDate}.zip`;
 
         zipLink.download = fileName;
         zipLink.click();
@@ -230,7 +240,6 @@ const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
 
 // Variable con la mano seleccionada
-let participantID = 0;
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
@@ -244,13 +253,5 @@ function confirmHandSelection() {
     endGame();
 }
 
-document.getElementById('participantID').addEventListener('input', validateInputs);
 document.getElementById('handButton').addEventListener('click', confirmHandSelection);
 
-function validateInputs() {
-    participantID = document.getElementById('participantID').value;
-
-    if (participantID) {
-        handButton.style.display = 'block';
-    }
-}

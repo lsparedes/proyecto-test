@@ -463,7 +463,6 @@ practiceCanvas.addEventListener('click', (e) => {
 });
 function showHandSelection() {
     fin.style.display = 'block';
-    enterID.style.display = 'block';
     selectHandContainer.style.display = "block";
     mainScreen.style.display = 'none';
     handButton.addEventListener('click', function () {
@@ -568,7 +567,6 @@ function downloadVideo(callback) {
 
 function validateClicks() {
     fin.style.display = 'block';
-    enterID.style.display = 'none';
     selectHandContainer.style.display = "none";
     mainScreen.style.display = 'none';
     handButton.style.display = 'none';
@@ -687,22 +685,22 @@ function validateClicks() {
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
             const zip = new JSZip();
-            zip.file(`${participantID}_${baseFileName}.csv`, csvBlob);
-            zip.file(`${participantID}_${baseFileName}.png`, canvasBlob);
-            zip.file(`${participantID}_${baseFileName}.mp4`, videoBlob);
+            zip.file(`${idParticipante}_${baseFileName}.csv`, csvBlob);
+            zip.file(`${idParticipante}_${baseFileName}.png`, canvasBlob);
+            zip.file(`${idParticipante}_${baseFileName}.mp4`, videoBlob);
             zip.generateAsync({ type: 'blob' }).then(content => {
                 // Define la fecha actual y la formateas
                 const url = URL.createObjectURL(content);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `${participantID}_${baseFileName}.zip`;
+                link.download = `${idParticipante}_${baseFileName}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
                 window.close();
-            });
-
+            }); 
+            
         });
     });
 
@@ -729,9 +727,7 @@ function stopRecording() {
 
 // SELECCION DE MANO JS
 const fin = document.getElementById('fin');
-const enterID = document.getElementById('enterID');
 const selectHandContainer = document.getElementById("selectHand");
-const participantIDInput = document.getElementById('participantID');
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
 
@@ -740,7 +736,6 @@ const handInputs = document.getElementsByName('hand');
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
     fin.style.display = 'block';
-    enterID.style.display = 'block';
     selectHandContainer.style.display = "block";
     mainScreen.style.display = 'none';
     handButton.addEventListener('click', function () {
@@ -754,18 +749,19 @@ function showHandSelection() {
 function confirmHandSelection() {
     selectHandContainer.style.display = "none";
     fin.style.display = 'none';
-    enterID.style.display = 'none';
     endScreen.style.display = 'block';
 }
-let participantID = 0;
 let selectedHand = "";
 
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 // Actualiza el participantID cuando se cambia el input
-participantIDInput.addEventListener('input', (e) => {
-    participantID = e.target.value;
-    validateHandSelection();
-});
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Obtener el id_participante de la URL
+const idParticipante = getQueryParam('id_participante');
 
 // Se asigna el valor seleccionado a la variable selectedHand para su uso en csv
 handInputs.forEach((input) => {
@@ -777,7 +773,7 @@ handInputs.forEach((input) => {
 
 // Valida que ambos campos estén llenos antes de mostrar el botón
 function validateHandSelection() {
-    if (participantID && selectedHand) {
+    if (selectedHand) {
         handButton.style.display = "block";
     } else {
         handButton.style.display = "none";

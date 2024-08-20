@@ -220,6 +220,14 @@ const fullscreenButton = document.getElementById('fullscreenButton');
 let selectedHand = "";
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
 
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Obtener el id_participante de la URL
+const idParticipante = getQueryParam('id_participante');
+
 fullscreenButton.addEventListener('click', () => {
     if (document.fullscreenEnabled && !document.fullscreenElement) {
         fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')"; // Cambiar la imagen del botón a 'minimize'
@@ -287,14 +295,11 @@ function handleContinueClick() {
     cambiarImagen(); 
 }
 
-document.getElementById('participantID').addEventListener('input', validateInputs);
-let participantID = 0;
 
 function validateInputs() {
-    participantID = document.getElementById('participantID').value;
     selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
     
-    if (participantID && selectedHand) {
+    if (selectedHand) {
         handButton.style.display = 'block';
     } 
 }
@@ -473,14 +478,14 @@ function generarArchivoCSV() {
 
     // Crear el archivo ZIP
     const zip = new JSZip();
-    zip.file(`${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.txt`, txtBlob);
+    zip.file(`${idParticipante}_StoryBasedEmpathyTask_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${idParticipante}_StoryBasedEmpathyTask_${fechaFormateada}.txt`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const link = document.createElement('a');
             if (link.download !== undefined) {
-                const zipFilename = `${participantID}_StoryBasedEmpathyTask_${fechaFormateada}.zip`;
+                const zipFilename = `${idParticipante}_StoryBasedEmpathyTask_${fechaFormateada}.zip`;
                 const url = URL.createObjectURL(content);
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

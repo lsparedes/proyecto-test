@@ -90,4 +90,11 @@
         </div>
 
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var idParticipante = @json($IDparticipante);
+            console.log('ID Participante:', idParticipante);
+        });
+    </script>
 @endsection

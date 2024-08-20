@@ -19,7 +19,7 @@
                 Por favor, imagine que sostiene cada objeto en su mano porque su tarea consistirá en mostra como se usa.
                 Es importante que recuerde no usar su mano o dedos como si fuese el objeto.</p>
 
-            <audio controls id="instrucciones" >
+            <audio controls id="instrucciones">
                 <source src="pantomima.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
@@ -67,17 +67,10 @@
                 <br>
                 <h1>¡Muchas gracias!</h1>
             </div>
-            <div class="container-fluid d-flex justify-content-center">
-                <div class="row justify-content-center align-items-end" style="position: absolute; bottom: 15px;">
-                    <div id="enterID" class="card opacity-75 col-3 col-md-4 col-xl-6 me-3"
-                        style="display: none; height: 20%; width: 40%; background-color: #f9f9f9;">
-                        <div class="card-body">
-                            <h4>ID participante</h4>
-                            <input type="number" id="participantID" class="form-control" style="margin-bottom: 29%;">
-                        </div>
-                    </div>
-                    <div id="selectHand" class="col-3 col-md-4 col-xl-6 card opacity-75 ms-3 p-3"
-                        style="display: none; height: 20%; width: 40%; background-color: #f9f9f9;">
+            <div class="container-fluid justify-content-center" style="position: absolute; right: 0px; bottom: 15px;">
+                <div class="row justify-content-center">
+                    <div id="selectHand" class="card opacity-75 col-3 col-md-4 col-xl-6"
+                        style="display: none; height: 10%; width: 20%; background-color: #f9f9f9;">
                         <div class="card-body" style="padding: 0;">
                             <h4>Mano usada</h4>
                             <div class="d-flex align-items-start">
@@ -94,6 +87,7 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
             <button id="handButton" style="display: none;"></button>

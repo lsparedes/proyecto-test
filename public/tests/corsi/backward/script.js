@@ -121,6 +121,13 @@ document.addEventListener('DOMContentLoaded', () => {
             event.target.classList.add('selected');
         }
     }
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
 
     function startTest() {
         playerSequence = [];
@@ -235,7 +242,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function endGame() {
-        downloadResultsAsZip(testData, startTime, selectedHand, participantID)
+        downloadResultsAsZip(testData, startTime, selectedHand)
     }
 
     function endPractice() {
@@ -364,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Variable con la mano seleccionada
     let selectedHand = "";
-    let participantID = 0;
+
 
 
     // Funcion para mostrar la pantalla de seleccion de mano
@@ -389,15 +396,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    document.getElementById('participantID').addEventListener('input', validateInputs);
 
     document.getElementById('handButton').addEventListener('click', confirmHandSelection);
 
     function validateInputs() {
-        participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
-        if (participantID && selectedHand) {
+        if (selectedHand) {
             handButton.style.display = 'block';
         }
     }
@@ -412,7 +417,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${day}_${month}_${year}`;
     }
 
-    function generateCSV(results, participantID) {
+    function generateCSV(results) {
         const headers = ["en", "rp_c", "rp", "pc", "tr"];
         const rows = results.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
@@ -435,37 +440,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
         return {
             content: csvContent,
-            filename: `${participantID}_corsi_inverso_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_corsi_inverso_${getCurrentDate()}.csv`
         };
     }
 
-    function generateTxt(startTimeTotal, selectedHand, participantID) {
+    function generateTxt(startTimeTotal, selectedHand) {
         const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
             + "Mano Utilizada: " + selectedHand;
         return {
             content: txtContent,
-            filename: `${participantID}_corsi_inverso_${getCurrentDate()}.txt`
+            filename: `${idParticipante}_corsi_inverso_${getCurrentDate()}.txt`
         };
     }
 
-    async function downloadZip(csvFile, txtFile, participantID) {
+    async function downloadZip(csvFile, txtFile) {
         const zip = new JSZip();
         zip.file(csvFile.filename, csvFile.content);
         zip.file(txtFile.filename, txtFile.content);
         const videoBlob = await stopScreenRecording();
-        zip.file(`${participantID}_corsi_inverso_${getCurrentDate()}.webm`, videoBlob);
+        zip.file(`${idParticipante}_corsi_inverso_${getCurrentDate()}.webm`, videoBlob);
         
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
-        link.setAttribute("download", `${participantID}_corsi_inverso_${getCurrentDate()}.zip`);
+        link.setAttribute("download", `${idParticipante}_corsi_inverso_${getCurrentDate()}.zip`);
         document.body.appendChild(link);
         link.click();
+        window.close();
     }
     
-    async function downloadResultsAsZip(results, startTimeTotal, selectedHand, participantID) {
-        const csvFile = generateCSV(results, participantID);
-        const txtFile = generateTxt(startTimeTotal, selectedHand, participantID);
-        await downloadZip(csvFile, txtFile, participantID);
+    async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
+        const csvFile = generateCSV(results);
+        const txtFile = generateTxt(startTimeTotal, selectedHand);
+        await downloadZip(csvFile, txtFile);
     }
 });

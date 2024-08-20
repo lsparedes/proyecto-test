@@ -553,6 +553,15 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.appendChild(nextButtonA);
     }
 
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
+    
     function testFinalizado() {
         const fechaActual = new Date();
         const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -589,7 +598,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     zip.file("canvasPartAScreenshot.png", blobPartA);
 
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `${participantID}_TMTPartA_${fechaFormateada}.zip`);
+                        saveAs(content, `${idParticipante}_TMTPartA_${fechaFormateada}.zip`);
                         
                     });
                 });
@@ -613,7 +622,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectHandContainer = document.getElementById("selectHand");
     const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
-    const enterIDContainer = document.getElementById("enterID");
 
     let selectedHand = "";
 
@@ -621,19 +629,16 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('preEnd').style.display = 'block';
         document.getElementById('fin').style.display = 'block';
         selectHandContainer.style.display = "block";
-        enterIDContainer.style.display = "block";
     }
 
     handButton.addEventListener('click', confirmHandSelection);
 
-    document.getElementById('participantID').addEventListener('input', validateInputs);
-    let participantID = 0;
+   
 
     function validateInputs() {
-        participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
-        if (participantID && selectedHand) {
+        if (selectedHand) {
             handButton.style.display = 'block';
         }
     }

@@ -240,6 +240,13 @@ window.onload = function () {
     
         return new Blob([txtContent], { type: 'text/plain' });
     }
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
 
     function testFinalizado() {
         // Detener las grabaciones (ya se hace dentro de startPracticeRecording y startRecording)
@@ -257,7 +264,7 @@ window.onload = function () {
     
             // Generar y añadir el archivo TXT al ZIP
             const txtContent = generateTXT(data);
-            zip.file(`${participantID}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.txt`, txtContent);
+            zip.file(`${idParticipante}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.txt`, txtContent);
     
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
@@ -268,7 +275,7 @@ window.onload = function () {
 
                     // Generar el archivo ZIP y descargar
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `${participantID}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
+                        saveAs(content, `${idParticipante}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
                     });
                 });
 
@@ -310,14 +317,11 @@ window.onload = function () {
 
     // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
     // En este caso fue mostrarFinalizacion()
-    document.getElementById('participantID').addEventListener('input', validateInputs);
-    let participantID = 0;
 
     function validateInputs() {
-        participantID = document.getElementById('participantID').value;
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
-        if (participantID && selectedHand) {
+        if (selectedHand) {
             handButton.style.display = 'block';
         }
     }

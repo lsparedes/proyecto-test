@@ -30,21 +30,11 @@ let currentImageIndex = -1;
 let startTime;
 let answers = [];
 let itemStartTime;
-let participantID = '';
+
+const finalButton = document.getElementById('final-button');
 
 document.getElementById('final-button').addEventListener('click', () => {
-    const participantID = document.getElementById('participantID').value.trim();
-    generateCSV(participantID);
-});
-
-document.getElementById('participantID').addEventListener('input', () => {
-    const participantID = document.getElementById('participantID').value.trim();
-    const finalButton = document.getElementById('final-button');
-    if (participantID) {
-        finalButton.style.display = 'block';
-    } else {
-        finalButton.style.display = 'none';
-    }
+    generateCSV();
 });
 
 function showNextImage() {
@@ -70,6 +60,7 @@ function showNextImage() {
     } else {
         document.getElementById('test-screen').style.display = 'none';
         document.getElementById('end-screen').style.display = 'block';
+        finalButton.style.display = 'block';
     }
 }
 
@@ -120,9 +111,15 @@ fullscreenButton.addEventListener('click', () => {
     }
 });
 
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
 
-function generateCSV(participantID) {
-    document.getElementById('enterID').style.display = 'none';
+// Obtener el id_participante de la URL
+const idParticipante = getQueryParam('id_participante');
+
+function generateCSV() {
     document.getElementById('final-button').style.display = 'none';
     const endTime = new Date();
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
@@ -149,8 +146,8 @@ function generateCSV(participantID) {
     const dia = String(fechaActual.getDate()).padStart(2, '0');
     // Formatear la fecha y la hora
     const fechaHoraFormateada = `${dia}_${mes}_${año}`;
-    const csvFilename = `${participantID}_VisualObjectSpacePerception_${fechaHoraFormateada}.csv`;
-    const txtFilename = `${participantID}_VisualObjectSpacePerception_${fechaHoraFormateada}.txt`;
+    const csvFilename = `${idParticipante}_VisualObjectSpacePerception_${fechaHoraFormateada}.csv`;
+    const txtFilename = `${idParticipante}_VisualObjectSpacePerception_${fechaHoraFormateada}.txt`;
 
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const txtBlob = new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
@@ -164,7 +161,7 @@ function generateCSV(participantID) {
             const link = document.createElement('a');
             if (link.download !== undefined) {
                 const url = URL.createObjectURL(content);
-                const zipFilename = `${participantID}_VisualObjectSpacePerception_${fechaHoraFormateada}.zip`;
+                const zipFilename = `${idParticipante}_VisualObjectSpacePerception_${fechaHoraFormateada}.zip`;
 
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

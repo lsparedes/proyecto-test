@@ -16,8 +16,10 @@ class FrontendController extends Controller
         // Obtener los IDs de los tests en el orden deseado
         $testIds = $tests->pluck('id')->toArray();
 
+        $IDparticipante = session('id_participante');
+
         // Renderizar la vista y pasar la colección de tests y la lista de IDs
-        return view('frontend.index', compact('tests', 'testIds'));
+        return view('frontend.index', compact('tests', 'testIds','IDparticipante'));
     }
 
     public function infotest($id)
@@ -33,7 +35,10 @@ class FrontendController extends Controller
         // Obtener información adicional si es necesario, por ejemplo, el tipo de test
         $tipoTest = $test->tipoTest;
 
+        $IDparticipante = session('id_participante');
+
+
         // Pasar los datos a la vista
-        return view('frontend.infotest', compact('test', 'tipoTest'));
+        return view('frontend.infotest', compact('test', 'tipoTest','IDparticipante'));
     }
 }

@@ -252,7 +252,6 @@ fullscreenButton.addEventListener('click', () => {
 
 function mostrarFinalizacion() {
     // const imagenNumero = document.getElementById('imagenNumero');
-    document.getElementById('enterID').style.display = 'none';
     document.getElementById('next-button').style.display = 'none';
     clearTimeout(temporizador);
     document.getElementById('fin').style.display = 'block'; // Ocultar el botón "next-button"
@@ -324,6 +323,13 @@ function cambiarImagen() {
     }
 }
 
+function getQueryParam(param) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(param);
+}
+
+// Obtener el id_participante de la URL
+const idParticipante = getQueryParam('id_participante');
 function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -350,14 +356,14 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const txtBlob = new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
 
     const zip = new JSZip();
-    zip.file(`${participantID}_FacialEmotion_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${participantID}_FacialEmotion_${fechaFormateada}.txt`, txtBlob);
+    zip.file(`${idParticipante}_FacialEmotion_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${idParticipante}_FacialEmotion_${fechaFormateada}.txt`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const link = document.createElement('a');
             if (link.download !== undefined) {
-                const zipFilename = `${participantID}_FacialEmotion_${fechaFormateada}.zip`;
+                const zipFilename = `${idParticipante}_FacialEmotion_${fechaFormateada}.zip`;
                 const url = URL.createObjectURL(content);
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);
@@ -414,7 +420,6 @@ window.onload = function () {
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
 const handInputs = document.getElementsByName('hand');
-const enterIDContainer = document.getElementById("enterID");
 
 // Variable con la mano seleccionada
 let selectedHand = "";
@@ -428,19 +433,15 @@ function showHandSelection() {
     document.getElementById('imageContainer').style.display = 'none';
     document.getElementById('emotionsList').style.display = 'none';
     selectHandContainer.style.display = "block";
-    enterIDContainer.style.display = "block";
 }
 
 // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
 // En este caso fue mostrarFinalizacion()
-document.getElementById('participantID').addEventListener('input', validateInputs);
-let participantID = 0;
 
 function validateInputs() {
-    participantID = document.getElementById('participantID').value;
     selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
     
-    if (participantID && selectedHand) {
+    if (selectedHand) {
         handButton.style.display = 'block';
     } 
 }
