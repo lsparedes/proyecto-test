@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const NXButton = document.getElementById('nxbutton');
     const enterID = document.getElementById('enterID');
     const DownloadButton = document.getElementById('download');
+    const selectHand = document.getElementById('selectHand')
     let answers = {};
     let currentAudioIndex = 0;
     let startTime = new Date();  // Guardar la hora de inicio automáticamente al cargar la página
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Si no hay más audios, mostrar la pantalla final
             audioContainer.style.display = 'none';
             enterID.style.display = 'inline-block';
+            selectHand.style.display = 'inline-block';
             finishScreen.style.display = 'block';
             finishTime = new Date();
             console.log(`${finishTime}`);
@@ -101,14 +103,11 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Audio", audioIndex, "respuesta", answer);
         });
     });
-    
-
-    
 
     function createCSV() {
         const total = Object.keys(correctAnswers).length;
         let csvContent = 'nro;palabra;respuesta_correcta;respuesta_participante;precision\n';
-    
+        
         for (let i = 1; i <= total; i++) {
             const word = words[i];
             const correctAnswer = correctAnswers[i];
@@ -117,6 +116,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
             csvContent += `${i};${word};${correctAnswer};${participantAnswer};${isCorrect}\n`;
         }
+    
+        // Obtener el valor de la mano seleccionada
+        let selectedHandElement = document.querySelector('input[name="hand"]:checked');
+        let selectedHand = selectedHandElement ? selectedHandElement.value : 'No seleccionado';
+        
+        csvContent += `\nMano seleccionada:;${selectedHand}\n`;
     
         const endTime = new Date(); // Obtener la hora de finalización
         const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
@@ -131,6 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
         csvContent += `\nTiempo dedicado a la tarea:;${formattedTime}\n`;
         return csvContent;
     }
+    
+    
+    
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
