@@ -68,6 +68,7 @@ window.onload = function () {
     document.getElementById('toMainTestButton').addEventListener('click', function () {
         stopAllAudios();
         document.getElementById('instructionsE1').style.display = 'flex';
+        document.getElementById('instructionAudio').style.display = 'block';
         practiceFinishScreen.style.display = 'none';
         canvasContainer.style.display = 'block';
         image.src = 'imagen2.png';
@@ -85,6 +86,7 @@ window.onload = function () {
     document.getElementById('finishButton').addEventListener('click', function () {
         stopAllAudios();
         document.getElementById('instructionsE1').style.display = 'none';
+        document.getElementById('instructionAudio').style.display = 'none';
         canvasContainer.style.display = 'none';
         showHandSelection();
 

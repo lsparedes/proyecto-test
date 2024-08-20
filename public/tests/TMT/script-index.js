@@ -558,16 +558,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const fechaFormateada = `${day}_${month}_${year}`;
 
         // mediaRecorderCanvas.stop();
-        mediaRecorderCanvasPartA.stop();
+        if(isRecordingStarted){
+            mediaRecorderCanvasPartA.stop();
+            
+            mediaRecorderCanvasPartA.onstop = () => {
+                const blob = new Blob(recordedChunksCanvasPartA, { type: 'video/webm' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+            };
+        }
 
         
 
-        mediaRecorderCanvasPartA.onstop = () => {
-            const blob = new Blob(recordedChunksCanvasPartA, { type: 'video/webm' });
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-        };
 
         setTimeout(() => {
             const zip = new JSZip();
@@ -593,10 +596,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function generateCSV(data) {
-        let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha),Numero de errores de comision,Numero de lineas correctas,Numero de veces en que el participante levanto el lapiz de la pantalla,Tiempo total de lapiz en el aire desde la primera respuesta en el canvas,Tiempo dedicado a la tarea(s), Mano utilizada\n";
+        let csvContent = "Tiempo de ejecucion de la tarea (desde el beep a la flecha);Numero de errores de comision;Numero de lineas correctas;Numero de veces en que el participante levanto el lapiz de la pantalla;Tiempo total de lapiz en el aire desde la primera respuesta en el canvas;Tiempo dedicado a la tarea(s); Mano utilizada\n";
 
         data.forEach(row => {
-            let linea = `${row.executionTime},${row.commissionErrors},${row.correctLines},${row.liftPenCount},${row.penAirTime},${row.taskTime},${selectedHand}\n`;
+            let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime};${row.taskTime};${selectedHand}\n`;
             csvContent += linea;
         });
 

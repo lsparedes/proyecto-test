@@ -52,27 +52,36 @@
     <button id="toMainTestButton" class="finish-button"></button>
   </div>
 
-  <div class="cont d-flex justify-content-center p-0 mt-3">
+  <div class="cont d-flex justify-content-center p-0">
     <!-- style=" max-width: 100vw; width: 100vw; max-height: 120vh;" -->
-    <div id="instructionsE1" class="container flex-column justify-content-center align-items-center" style="display: none;">
+    <div id="instructionsE1" class="container flex-column justify-content-center align-items-center p-0 m-0" style="display: none;">
       <!-- margin-top: 50px; max-width: 150vw; -->
 
-      <div id="canvasContainer" class="container" style="display: none; margin-top: 25%;">
+      <div id="canvasContainer" class="container p-0 m-0" style="display: none; width: 87%;">
         <!-- margin: 0px; padding: 0px; max-width: 65vw; -->
         <h2 class="imageText">E1</h2>
-        <canvas id="designCanvas" width="1200" height="900"></canvas>
+        <canvas id="designCanvas" width="1200" height="900" style="width: 85%;"></canvas>
         <button id="finishButton" class="finish-button" style="display: none;"></button>
       </div>
-
-      
-      <audio controls id="instructionAudio" style="margin-bottom: 5%;">
-        <source src="desing-fluency-instructions2.mp3" type="audio/mpeg">
-        Tu navegador no soporta el elemento de audio.
-      </audio>
     </div>
+    
+    
+    
+  </div>
 
-
-
+  <div id="instructionAudio" class="dropup" style="position: absolute; left: 14px; bottom: 17%; display: none;">
+    <a class="btn btn-light " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="height: 65px; width: 65px;">
+      <img src="play-solid.svg" alt="">
+    </a>
+  
+    <ul class="dropdown-menu rounded-pill p-0 m-0" style="height: 56px;">
+      <li>
+        <audio controls>
+          <source src="desing-fluency-instructions2.mp3" type="audio/mpeg">
+          Tu navegador no soporta el elemento de audio.
+        </audio>
+      </li>
+    </ul>
   </div>
 
   <!-- SELECCION DE MANO HTML -->
