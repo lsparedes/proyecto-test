@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const finishScreen = document.getElementById('finishScreen');
     const NXButton6 = document.getElementById('nxbutton6');
     const enterID = document.getElementById('enterID');
-
     let mediaRecorder;
     let audioChunks = [];
     let startTime = new Date();
@@ -119,6 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         endScreen.style.display = 'none';
         enterID.style.display = 'inline-block';
+        
         finishScreen.style.display = 'flex';
         finishTime = new Date();
         console.log(`${finishTime}`);
