@@ -287,13 +287,24 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("No trial found for current index:", currentTrial);
             return;
         }
-        const reward = trial[`${side}Reward`];
+    
+        let reward;
+        if (side === 'Izquierda') {
+            reward = trial.leftReward;
+        } else if (side === 'Derecha') {
+            reward = trial.rightReward;
+        } else {
+            console.error("Invalid side selected:", side);
+            return;
+        }
+    
         feedbackImage1.src = reward ? 'img/win.jpg' : 'img/lose.jpg';
         feedbackImage2.src = reward ? 'img/5000.png' : 'img/1000.png';
         feedbackMessage.innerText = reward ? '¡Ganaste!' : '¡Perdiste!';
         score += reward ? 5000 : -1000;
         scoreAmount.innerText = `$${score}`;
         scoreAmount.style.color = score < 0 ? 'red' : score === 0 ? 'black' : 'blue';
+    
         results.push([
             practiceMode ? 'Práctica' : currentBlock,
             currentTrial + 1,
@@ -303,10 +314,11 @@ document.addEventListener('DOMContentLoaded', () => {
             reward ? 'Ganancia' : 'Pérdida',
             responseTime,
         ]);
+    
         practiceTrial.style.display = 'none';
         feedbackScreen.style.display = 'block';
         currentTrial++;
-
+    
         setTimeout(() => {
             if (currentTrial < trials.length) {
                 showNextTrial();
@@ -315,6 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 3000);
     }
+    
 
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
