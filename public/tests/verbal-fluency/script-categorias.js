@@ -143,7 +143,7 @@ function loadAudio(part) {
             audio.src = 'audios/prendas-de-vestir.mp3';
             break;
         case 2:
-            audio.src = 'audios/animales.mp3';
+            audio.src = 'audios/instruction_verbal_fluency_2.mp3';
             break;
     }
 
