@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         endTimeExecution = new Date();
         console.log("Tiempo de Termino: ", endTimeExecution);
         selectHandContainer.style.display = 'block';
+        startFinishTimer();
     });
 
     DownloadButton.addEventListener('click', () => {
@@ -291,7 +292,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    window.close();
                 });
             };
             reader.readAsDataURL(blob);
@@ -306,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                window.close();
             });
         }
     }

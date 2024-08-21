@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         mainScreen2.style.display = 'none';
         finishScreen.style.display = 'block';
-        // DownloadButton.style.display = 'block';
+        DownloadButton.style.display = 'block';
         startFinishTimer();
     });
 
@@ -171,11 +171,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            window.close();
+            
         });
-        
-
-
     }
 
     function pauseAudios() {

@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    DownloadButton.addEventListener('click', () => {
+    NXButton6.addEventListener('click', () => {
         downloadZip();
     });
 
@@ -222,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mediaRecorder.stop();
         stopButton.disabled = true;
         initButton.disabled = false;
-        DownloadButton.style.display = 'block';
+
 
     }
 
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            window.close();
+ 
 
         });
 
