@@ -56,9 +56,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function startDemoScreen() {
     practiceContainer.style.display = 'block';
+    practiceCtx.clearRect(0, 0, practiceCtx.canvas.width, practiceCtx.canvas.height);
     generateDots(practiceCtx);
     practiceTrialIndicator.innerText = `P1`;
-    document.getElementById('demoButton').style.display = 'block';
+    const demoButton = document.getElementById('demoButton');
+    demoButton.style.display = 'none';
+
+    setTimeout(() => {
+        demoButton.click();
+    }, 3000);
   }
 
   function endDemoScreen() {
@@ -152,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function updateTrialIndicator(type) {
     if (type === 'practica') {
-      practiceTrialIndicator.innerText = `P${trialCount}`;
+      practiceTrialIndicator.innerText = `E${trialCount}`;
     } else {
       testTrialIndicator.innerText = `E${trialCount}`;
     }
@@ -340,7 +346,9 @@ document.addEventListener('DOMContentLoaded', () => {
       lastColorAnswer = 'red';
       timeColor = new Date() - startTime;
       startTime = new Date();
-      // recordAnswer('red');
+      document.getElementById('resetDemoButton').style.display = 'none';
+    } else {
+      document.getElementById('demoButton2').style.display = 'block';
     }
     resetConfidenceSlider();
   });
@@ -352,7 +360,9 @@ document.addEventListener('DOMContentLoaded', () => {
       lastColorAnswer = 'blue';
       timeColor = new Date() - startTime;
       startTime = new Date();
-      // recordAnswer('blue');
+      document.getElementById('resetDemoButton').style.display = 'none';
+    } else {
+      document.getElementById('demoButton2').style.display = 'block';
     }
     resetConfidenceSlider();
   });
@@ -371,6 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('submitConfidenceButton').addEventListener('click', () => {
     confidenceScreen.style.display = 'none';
+    document.getElementById('demoButton2').style.display = 'none';
     if (blockType === 'demo') {
       endDemoScreen();
     } else {
@@ -453,6 +464,18 @@ document.addEventListener('DOMContentLoaded', () => {
     practiceContainer.style.display = 'none';
     document.getElementById('demoButton').style.display = 'none';
     questionScreen.style.display = 'block';
+  });
+
+  document.getElementById('demoButton2').addEventListener('click', () => {
+    document.getElementById('demoButton2').style.display = 'none';
+    endDemoScreen();
+  });
+
+  document.getElementById('resetDemoButton').addEventListener('click', () => {
+    confidenceScreen.style.display = 'none';
+    document.getElementById('demoButton2').style.display = 'none';
+    resetConfidenceSlider();
+    startDemoScreen();
   });
 
   document.getElementById('downloadResultsButton').addEventListener('click', () => {

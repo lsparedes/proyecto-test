@@ -51,7 +51,7 @@
   <div id="practiceContainer" class="container" style="display: none;">
     <h2 class="imageText"><span id="practiceTrialIndicator" class="badge bg-light text-dark shadow">New</span></h2>
     <canvas id="practiceCanvas" width="1200" height="900"></canvas>
-    <button id="restartPracticeButton" type="button" class="btn btn-light text-dark btn-lg shadow"><b>Reiniciar
+    <button id="restartPracticeButton" type="button" class="btn btn-light text-dark btn-lg shadow" hidden><b>Reiniciar
         Práctica</b></button>
   </div>
 
@@ -82,6 +82,7 @@
   </div>
 
   <button id="demoButton" style="display: none"></button>
+  <button id="demoButton2" style="display: none"></button>
 
   <div id="questionScreen" class="container" style="display: none;">
     <div class="container"></div>
@@ -122,7 +123,10 @@
       </div>
       <div class="range-labels"></div>
       <br><br><br>
-      <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>LISTO</b></button>
+      <div class="button-group" style="display: flex; flex-direction: column; align-items: center;">
+        <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>LISTO</b></button>
+        <button class="btn btn-light btn-lg shadow" id="resetDemoButton" style="margin-top: 20px;"><b>REINICIAR</b></button>
+      </div>
     </center>
   </div>
 
