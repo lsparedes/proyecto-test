@@ -138,10 +138,10 @@ function avanzarSinGrabar(itemDiv, type, index) {
 function playBeepAndShowButtons(itemDiv, titleElement, index) {
     const beep = new Audio('audio/beep.wav');
     beep.play();
+    startRecording(itemDiv, titleElement, index);
     beep.addEventListener('ended', () => {
         if (!itemDiv.querySelector('.new-button')) {
             setTimeout(() => {
-                startRecording(itemDiv, titleElement, index);
             }, -1500);
         }
     });

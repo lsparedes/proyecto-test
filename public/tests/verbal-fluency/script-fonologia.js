@@ -145,10 +145,28 @@ function loadAudio(part) {
     }
 
     audio.addEventListener('loadedmetadata', () => {
-        const displayTime = audio.duration - 3;
-        setTimeout(() => {
-            letterDisplay.style.display = 'block';
-        }, displayTime * 1000);
+        let recordingStarted = false; // Bandera para evitar múltiples ejecuciones de startRecording
+        const checkTimeRemaining = () => {
+            const timeRemaining = (audio.duration - audio.currentTime) / audio.playbackRate;
+    
+            if (!recordingStarted && timeRemaining <= 1) {
+                startRecording(part);
+                recordingStarted = true; // Actualizar la bandera para evitar múltiples ejecuciones
+            }
+    
+            if (timeRemaining <= 3) {
+                letterDisplay.style.display = 'block';
+            }
+        };
+    
+        const intervalId = setInterval(() => {
+            checkTimeRemaining();
+            
+            // Detener el setInterval una vez que la grabación ha comenzado y el tiempo restante es menor a 3 segundos.
+            if (recordingStarted && timeRemaining <= 3) {
+                clearInterval(intervalId);
+            }
+        }, 100);
     });
 
     audio.addEventListener('ended', () => {
@@ -160,13 +178,13 @@ function loadAudio(part) {
 }
 
 document.getElementById('startRecButton1').addEventListener('click', () => {
-    startRecording(1);
+    // startRecording(1);
     document.getElementById('startRecButton1').style.display = 'none'; // Ocultar botón después de hacer clic
     document.getElementById('recButton1').style.display = 'inline-block'; // Mostrar imagen de grabando
 });
 
 document.getElementById('startRecButton2').addEventListener('click', () => {
-    startRecording(2);
+    // startRecording(2);
     document.getElementById('startRecButton2').style.display = 'none'; // Ocultar botón después de hacer clic
     document.getElementById('recButton2').style.display = 'inline-block'; // Mostrar imagen de grabando
 });
