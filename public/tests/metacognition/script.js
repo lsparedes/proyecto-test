@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const instructions = document.getElementById('instructions');
   const instructionsText = document.getElementById('instructionsText');
   const instructionsAudio = document.getElementById('instructionsAudio');
+  const instructionsAudioB = document.getElementById('instructionsAudioB');
   const fullscreenButton = document.getElementById('fullscreenButton');
   const practiceContainer = document.getElementById('practiceContainer');
   const practiceFinishScreen = document.getElementById('practiceFinishScreen');
@@ -275,7 +276,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('startDemoButton').addEventListener('click', () => {
     if (instructionsPhase === 0) {
       var audioContainer = instructionsAudio.parentNode;
+      var audioContainerB = instructionsAudioB.parentNode;
       audioContainer.pause();
+      audioContainerB.pause();
       instructionsText.innerHTML = 'A lo largo de la tarea se utiliza una \
       escala de calificación como la que se muestra aquí. Podrá calificar cuan seguro esta de sus decisiones posicionando \
       el cursor en distintas partes de esta escala. <br>\
@@ -288,19 +291,25 @@ document.addEventListener('DOMContentLoaded', () => {
       fullscreenButton.style.display = 'none';
       document.getElementById('startDemoButton').style.display = 'none';
       sliderPractice.style.display = 'block';
-      instructionsAudio.src = 'metacognition2.mp3'
+      instructionsAudio.src = 'audios/metacognition2.mp3'
+      instructionsAudioB.src = 'audios/metacognition2B.mp3'
       audioContainer.load();
+      audioContainerB.load();
     } else if (instructionsPhase === 1) {
       var audioContainer = instructionsAudio.parentNode;
+      var audioContainerB = instructionsAudioB.parentNode;
       audioContainer.pause();
+      audioContainerB.pause();
       document.getElementById('startDemoButton').style.display = 'block';
       sliderPractice.style.display = 'none';
       instructionsText.style.fontSize = '37px';
       instructionsText.innerHTML = 'Ahora usted realizará una ronda de práctica. Por favor, indique si el recuadro contiene más puntos de color rojo o azul.<br>\
       Posteriormente mueva el cursor a lo largo de la escala de calificación para expresar que tan seguro(a) o inseguro(a) se siente acerca de su decisión y presione <b>LISTO</b> para continuar.<br>';
       instructionsPhase++;
-      instructionsAudio.src = 'metacognition3.mp3'
+      instructionsAudio.src = 'audios/metacognition3.mp3'
+      instructionsAudioB.src = 'audios/metacognition3B.mp3'
       audioContainer.load();
+      audioContainerB.load();
     } else {
       var audioContainer = instructionsAudio.parentNode;
       audioContainer.pause();

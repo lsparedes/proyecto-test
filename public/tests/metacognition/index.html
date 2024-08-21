@@ -22,10 +22,16 @@
       Después de responder, deberá calificar su confianza en su decisión usando una escala que se desplegará en la
       pantalla.
     </p>
-    <audio controls>
-      <source src="metacognition1.mp3" type="audio/mpeg" id="instructionsAudio">
-      Tu navegador no soporta el elemento de audio.
-    </audio>
+    <div class="d-flex justify-content-center">
+      <audio controls class="me-3">
+        <source src="audios/metacognition1B.mp3" type="audio/mpeg" id="instructionsAudio">
+        Tu navegador no soporta el elemento de audio.
+      </audio>
+      <audio controls>
+        <source src="metacognition1.mp3" type="audio/mpeg" id="instructionsAudioB">
+        Tu navegador no soporta el elemento de audio.
+      </audio>
+    </div>
     <div id="sliderPractice" style="display:none;">
       <div class="mt-5 slider-container" style="position: relative;">
         <input type="range" id="confidenceSliderPractice" min="-100" max="100" value="0" style="width: 100%;">
