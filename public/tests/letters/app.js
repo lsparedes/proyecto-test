@@ -460,7 +460,7 @@ imageCanvas.addEventListener('click', handleClick, false);
 practiceCanvas.addEventListener('click', (e) => {
     const { x, y } = adjustClickCoordinates(e, practiceCanvas, originalCanvasSize);
     practiceClicks.push({ x, y });
-    drawCircle(ctxPractice, e.clientX - practiceCanvas.getBoundingClientRect().left, e.clientY - practiceCanvas.getBoundingClientRect().top, 'blue');
+    drawCirclePractice(e.clientX - practiceCanvas.getBoundingClientRect().left, e.clientY - practiceCanvas.getBoundingClientRect().top, 'blue');
 });
 function showHandSelection() {
     fin.style.display = 'block';
@@ -527,7 +527,7 @@ function handleClickPractice(e) {
     const x = (e.clientX - rect.left) * (2105 / practiceCanvas.width);
     const y = (e.clientY - rect.top) * (1489 / practiceCanvas.height);
     practiceClicks.push({ x, y });
-    drawCircle(ctxPractice, e.clientX - rect.left, e.clientY - rect.top, 'blue');
+    drawCirclePractice(e.clientX - rect.left, e.clientY - rect.top, 'blue');
 }
 
 
@@ -539,6 +539,16 @@ function drawCircle(x, y, color) {
     ctx.lineWidth = 1;
     ctx.strokeStyle = color;
     ctx.stroke();
+}
+
+function drawCirclePractice(x, y, color) {
+    ctxPractice.beginPath();
+    ctxPractice.arc(x, y, 10, 0, 2 * Math.PI, false);
+    ctxPractice.fillStyle = color;
+    ctxPractice.fill();
+    ctxPractice.lineWidth = 1;
+    ctxPractice.strokeStyle = color;
+    ctxPractice.stroke();
 }
 
 function drawLine(x1, y1, x2, y2) {
