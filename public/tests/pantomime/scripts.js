@@ -249,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function createZipAndDownload() {
         handButton.style.display = "none";
         selectHandContainer.style.display = "none";
-        enterID.style.display = 'none';
         createTxtFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');

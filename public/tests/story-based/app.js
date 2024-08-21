@@ -440,7 +440,6 @@ function cambiarImagen(selectedOptionIndex) {
 
 function generarArchivoCSV() {
     selectHandContainer.style.display = "none";
-    enterID.style.display = 'none';
     handButton.style.display = 'none';
     if (respuestasSeleccionadas.length === 0) {
         console.log('No hay respuestas seleccionadas.');
@@ -534,7 +533,6 @@ const enterID = document.getElementById('enterID');
 function showHandSelection() {
     fin.style.display = 'block';
     selectHandContainer.style.display = "block";
-    enterID.style.display = 'block';
 
     handButton.addEventListener('click', function () {
         generarArchivoCSV();
