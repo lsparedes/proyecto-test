@@ -14,7 +14,8 @@ const mainScreen = document.getElementById('mainScreen');
 const endScreen = document.getElementById('end-screen');
 const clearButton = document.getElementById('clear-canvas-button');
 let clicks = [];
-let recorder, chunks = [];
+let recorder;
+let chunks = [];
 let practiceClicks = [];
 let startItemTime, endTime, totalStartTime;
 let originalCanvasSize = { width: 2105, height: 1489 };
@@ -647,7 +648,7 @@ function validateClicks() {
     const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
     const normalizedCenterY = (centerY - (1489 / 2)) / (1489 / 2);
 
-
+    console.log(sumX, sumY, correctClicks);
     endTime = new Date();
     const testDuration = (endTime - startItemTime);
     const totalDuration = (endTime - totalStartTime) / 1000;
@@ -707,16 +708,22 @@ function validateClicks() {
     clicks = [];
     chunks = [];
 }
+let stream;
 
-function startRecording() {
-    const stream = imageCanvas.captureStream();
+function prepareRecording() {
+    stream = imageCanvas.captureStream();
     recorder = new MediaRecorder(stream);
     recorder.ondataavailable = event => {
         if (event.data.size > 0) {
             chunks.push(event.data);
         }
     };
-    recorder.start();
+}
+
+function startRecording() {
+    if (recorder) {
+        recorder.start();
+    }
 }
 
 function stopRecording() {
@@ -724,6 +731,7 @@ function stopRecording() {
         recorder.stop();
     }
 }
+
 
 // SELECCION DE MANO JS
 const fin = document.getElementById('fin');
@@ -782,6 +790,7 @@ function validateHandSelection() {
 
 window.confirmHandSelection = confirmHandSelection;
 
+window.addEventListener('load', prepareRecording);
 
 nextButton.addEventListener('click', () => {
     showHandSelection();
