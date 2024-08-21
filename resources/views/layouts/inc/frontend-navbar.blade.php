@@ -1,6 +1,5 @@
 <head>
     <!-- Otros elementos head... -->
-    <link rel="stylesheet" href="{{ asset('ruta/a/tu/styles.css') }}">
 </head>
 
 
