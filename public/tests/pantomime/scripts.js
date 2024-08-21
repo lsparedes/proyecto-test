@@ -72,6 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let testStartTime;
     let selectedHand = "";
     const zip = new JSZip();
+    let audioPlayed = false; 
+
 
     startBtn.addEventListener('click', () => {
         stopAllAudios();
@@ -100,7 +102,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     testAudio.addEventListener('ended', () => {
+        audioPlayed = true;
+
         startRecording();
+
     });
 
     async function startRecording() {
@@ -131,10 +136,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextBtn.addEventListener('click', () => {
         stopAllAudios();
-        stopRecording(true);
+        // Si el audio no se ha reproducido, no guardes el video, solo avanza a la siguiente imagen
+        if (audioPlayed) {
+            stopRecording(true); // Guarda el video y avanza a la siguiente imagen
+        } else {
+            proceedToNextImage(); // Simplemente avanza a la siguiente imagen
+        }
     });
 
 
+
+    
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
@@ -162,7 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 stopBtn.disabled = true;
                 stopBtn.style.display = 'none';
                 audioBtn.style.display = 'inline';
-                nextBtn.style.display = 'none';
+                nextBtn.disabled = false; // Habilitar el botón Next después de la grabación
+                nextBtn.style.display = 'inline-block';
                 timerDisplay.classList.add('hidden');
                 stopTimer();
 
@@ -174,6 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function proceedToNextImage() {
         currentImageIndex++;
+        audioPlayed = false; // Reinicia la bandera para la siguiente imagen
+
         if (currentImageIndex < images.length) {
             loadNextImage();
         } else {
@@ -249,7 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function createZipAndDownload() {
         handButton.style.display = "none";
         selectHandContainer.style.display = "none";
-        enterID.style.display = 'none';
         createTxtFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
