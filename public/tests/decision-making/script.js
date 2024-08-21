@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let results = [];
     let practiceMode = true;
     let selectionMade = false;
-    let score = 0;
+    let score = 0; // Puntaje inicializado
     let currentBlock = 0; // Track the current block
     let selectionTimeout;
     let caseOption; // Variable to track which case (A or B) is selected
@@ -27,13 +27,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const leftSlot = document.getElementById('leftSlot');
     const rightSlot = document.getElementById('rightSlot');
     const instructions = document.getElementById('instructions');
-    const scoreAmount = document.getElementById('scoreAmount');
+    const scoreAmount = document.getElementById('scoreAmount'); // Elemento del puntaje
 
     document.getElementById('startPracticeButton').addEventListener('click', () => {
         totalStartTime = Date.now(); // Start the total time counter
         startPractice();
         stopAllAudios();
     });
+
     const fullscreenButton = document.getElementById('fullscreenButton');
     fullscreenButton.addEventListener('click', () => {
         if (document.fullscreenEnabled && !document.fullscreenElement) {
@@ -77,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTrial = 0;
         trials = generatePracticeTrials();
         startTime = Date.now();
+        scoreAmount.style.display = 'none'; // Ocultar el puntaje en la práctica
         instructions.style.display = 'none';
         practiceTrial.style.display = 'block';
         showNextTrial();
@@ -85,6 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function startTestBlock() {
         practiceMode = false;
         currentTrial = 0;
+        score = 0; // Reiniciar puntaje al comenzar el Bloque 1
+        scoreAmount.innerText = `$${score}`;
+        scoreAmount.style.color = 'black';
+        scoreAmount.style.display = 'block'; // Mostrar el puntaje a partir del Bloque 1
         trials = generateTestTrials(currentBlock);
         startTime = Date.now();
         practiceTrial.style.display = 'block';
@@ -110,6 +116,69 @@ document.addEventListener('DOMContentLoaded', () => {
                 handleSkippedTrial();
             }
         }, 5000); // 5 seconds
+    }
+
+    function selectMachine(side) {
+        const responseTime = Date.now() - startTime;
+        if (side === 'Izquierda') {
+            leftSlot.src = 'img/slot-machine-left-down.png';
+        } else {
+            rightSlot.src = 'img/slot-machine-right-down.png';
+        }
+
+        setTimeout(() => {
+            showFeedback(side, responseTime);
+        }, 1000);
+    }
+
+    function showFeedback(side, responseTime) {
+        const trial = trials[currentTrial];
+        if (!trial) {
+            console.error("No trial found for current index:", currentTrial);
+            return;
+        }
+
+        let reward;
+        if (side === 'Izquierda') {
+            reward = trial.leftReward;
+        } else if (side === 'Derecha') {
+            reward = trial.rightReward;
+        } else {
+            console.error("Invalid side selected:", side);
+            return;
+        }
+
+        feedbackImage1.src = reward ? 'img/win.jpg' : 'img/lose.jpg';
+        feedbackImage2.src = reward ? 'img/5000.png' : 'img/1000.png';
+        feedbackMessage.innerText = reward ? '¡Ganaste!' : '¡Perdiste!';
+
+        if (!practiceMode) { // Solo actualizar el puntaje si no es el modo de práctica
+            score += reward ? 5000 : -1000;
+            scoreAmount.innerText = `Ganancia: $${score}`;
+            scoreAmount.style.color = score < 0 ? 'red' : score === 0 ? 'black' : 'blue';
+        }
+
+        results.push([
+            practiceMode ? 'Práctica' : currentBlock,
+            currentTrial + 1,
+            trial.rightReward ? 'Ganancia' : 'Pérdida',
+            trial.leftReward ? 'Ganancia' : 'Pérdida',
+            side,
+            reward ? 'Ganancia' : 'Pérdida',
+            responseTime,
+        ]);
+
+        practiceTrial.style.display = 'none';
+        feedbackScreen.style.display = 'block';
+        currentTrial++;
+
+        setTimeout(() => {
+            if (currentTrial < trials.length) {
+                showNextTrial();
+            } else {
+                finishBlock();
+            }
+        }, 3000);
     }
 
     function handleSkippedTrial() {
@@ -157,11 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     break;
                 case 3:
                     console.log("Bloque 3 completado");
-                    //endScreen.style.display = 'block';
                     showHandSelection();
-                    //setTimeout(() => {
-                    //    downloadResults(); // Automatically download results
-                    //}, 1000); // Give a slight delay for user to see the message
                     break;
             }
         }
@@ -268,75 +333,6 @@ document.addEventListener('DOMContentLoaded', () => {
         rightSlot.src = 'img/slot-machine-right-up.png';
     }
 
-    function selectMachine(side) {
-        const responseTime = Date.now() - startTime;
-        if (side === 'Izquierda') {
-            leftSlot.src = 'img/slot-machine-left-down.png';
-        } else {
-            rightSlot.src = 'img/slot-machine-right-down.png';
-        }
-
-        setTimeout(() => {
-            showFeedback(side, responseTime);
-        }, 1000);
-    }
-
-    function showFeedback(side, responseTime) {
-        const trial = trials[currentTrial];
-        if (!trial) {
-            console.error("No trial found for current index:", currentTrial);
-            return;
-        }
-    
-        let reward;
-        if (side === 'Izquierda') {
-            reward = trial.leftReward;
-        } else if (side === 'Derecha') {
-            reward = trial.rightReward;
-        } else {
-            console.error("Invalid side selected:", side);
-            return;
-        }
-    
-        feedbackImage1.src = reward ? 'img/win.jpg' : 'img/lose.jpg';
-        feedbackImage2.src = reward ? 'img/5000.png' : 'img/1000.png';
-        feedbackMessage.innerText = reward ? '¡Ganaste!' : '¡Perdiste!';
-        score += reward ? 5000 : -1000;
-        scoreAmount.innerText = `$${score}`;
-        scoreAmount.style.color = score < 0 ? 'red' : score === 0 ? 'black' : 'blue';
-    
-        results.push([
-            practiceMode ? 'Práctica' : currentBlock,
-            currentTrial + 1,
-            trial.rightReward ? 'Ganancia' : 'Pérdida',
-            trial.leftReward ? 'Ganancia' : 'Pérdida',
-            side,
-            reward ? 'Ganancia' : 'Pérdida',
-            responseTime,
-        ]);
-    
-        practiceTrial.style.display = 'none';
-        feedbackScreen.style.display = 'block';
-        currentTrial++;
-    
-        setTimeout(() => {
-            if (currentTrial < trials.length) {
-                showNextTrial();
-            } else {
-                finishBlock();
-            }
-        }, 3000);
-    }
-    
-
-    function getQueryParam(param) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-    }
-    
-    // Obtener el id_participante de la URL
-    const idParticipante = getQueryParam('id_participante');
-
     async function downloadResults() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
@@ -411,7 +407,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-
     document.getElementById('handButton').addEventListener('click', confirmHandSelection);
 
     function validateInputs() {
@@ -421,6 +416,14 @@ document.addEventListener('DOMContentLoaded', () => {
             handButton.style.display = 'block';
         }
     }
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
 
     window.confirmHandSelection = confirmHandSelection;
 });
