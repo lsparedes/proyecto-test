@@ -90,12 +90,6 @@ canvas {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-
-
-
-
-
-
 #downloadCSVButton {
     font-size: 16px;
     padding: 12px 22px;
@@ -240,4 +234,46 @@ canvas {
     font-size: 14px;
     font-weight: bold;
     text-align: center;
+}
+
+#practiceVideo1, 
+#instructionCanvas,
+#practiceCanvas1,
+#practiceCanvas2,
+#imageCanvas,
+#practiceVideo2,
+#practiceVideo3,
+#testVideo {
+    width: 100%;
+    height: auto;
+} 
+
+#itemsTest1,
+#itemsTest2,
+#itemsTest3,
+#itemsTest4 {
+    display: flex;
+    gap: 50px;
+}
+
+#izquierda1,
+#izquierda2,
+#izquierda3,
+#izquierda4,
+#derecha1,
+#derecha2,
+#derecha3,
+#derecha4 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    flex: 1;
+}
+
+#derecha1,
+#derecha2,
+#derecha3,
+#derecha4 {
+    border: 2px solid black;
 }
