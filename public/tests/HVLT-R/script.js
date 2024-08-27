@@ -219,12 +219,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopRecording(initButton, stopButton) {
-        mediaRecorder.stop();
-        stopButton.disabled = true;
-        initButton.disabled = false;
-
-
+        if (mediaRecorder) {
+            mediaRecorder.stop();
+            stopButton.disabled = true;
+            initButton.disabled = false;
+        } else {
+            console.warn('No mediaRecorder available to stop.');
+        }
     }
+    
 
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
