@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.pause();
-        if (isPractice) {
+        if (!isPractice) {
             await startScreenRecording();
         }
         startTest();
