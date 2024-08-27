@@ -687,10 +687,10 @@ function validateClicks() {
     csvContent += `search_speed;${searchSpeed}\n`;
 
     csvContent += `search_distance;${searchDistanceFormatted} px\n`;
-    csvContent += `center_of_cancelation_px;(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
-    csvContent += `center_of_cancelation_norm;(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
-    csvContent += `center_of_cancelation_value;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
-    csvContent += `center_of_cancelation_side;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
+    // csvContent += `center_of_cancelation_px;(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
+    // csvContent += `center_of_cancelation_norm;(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
+    csvContent += `center_of_cancelation;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
+    // csvContent += `center_of_cancelation_side;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
 
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {

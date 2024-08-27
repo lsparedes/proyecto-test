@@ -156,8 +156,10 @@ function startRecording(itemDiv, titleElement, index) {
     // Detener la grabación actual si está en curso
     if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop(); // Detenemos la grabación actual
-        chunks = []; // Limpiamos los chunks actuales
     }
+
+    // Inicializar un nuevo array de chunks para la nueva grabación
+    let chunks = [];
 
     // Crear una nueva instancia de MediaRecorder
     mediaRecorder = new MediaRecorder(audioStream);
@@ -326,7 +328,7 @@ function crearZip(type) {
     if (downloadLinks.length > 0) {
         downloadLinks.forEach(linkData => {
             if (linkData.title && linkData.blob) {
-                const fileName = `${type}_${linkData.title}.ogg`;
+                const fileName = `${type}_${linkData.title}.wav`;
                 audioFolder.file(fileName, linkData.blob);
                 console.log(`Archivo añadido al ZIP: ${fileName}`);
             } else {
