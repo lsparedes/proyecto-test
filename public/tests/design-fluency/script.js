@@ -75,6 +75,7 @@ window.onload = function () {
         image.onload = function () {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         };
+        startRecording('designCanvas');
     });
     
     const instructionAudio = document.getElementById('instructionAudio');
@@ -153,6 +154,7 @@ window.onload = function () {
         };
 
         mediaRecorder.start();
+        console.log("grabando");
 
 
 
@@ -250,7 +252,6 @@ window.onload = function () {
 
     function testFinalizado() {
         // Detener las grabaciones (ya se hace dentro de startPracticeRecording y startRecording)
-        document.getElementById('enterID').style.display = 'none';
         stopPracticeRecording();
         stopRecording();
     
@@ -259,7 +260,6 @@ window.onload = function () {
             const date = new Date();
     
             // Añadir los videos grabados al ZIP
-            // zip.file("canvasPractice-recording.webm", new Blob(practiceRecordedChunks, { type: 'video/webm' }));
             zip.file("canvas-recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
     
             // Generar y añadir el archivo TXT al ZIP
@@ -271,19 +271,21 @@ window.onload = function () {
                 zip.file("canvasScreenshot.png", blob);
     
                 practiceCanvas.toBlob(function (blobPractice) {
-                    // zip.file("canvasPracticeScreenshot.png", blobPractice);
-
-                    // Generar el archivo ZIP y descargar
+                    zip.file("canvasPracticeScreenshot.png", blobPractice);
+    
+                    // Generar el archivo ZIP y descargarlo
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
                         saveAs(content, `${idParticipante}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
+                        
+                        setTimeout(() => {
+                            window.close();
+                        }, 100);
                     });
                 });
-
-                window.close(); 
-
             });
         }, 1000);
     }
+    
 
 
     // SELECCION DE MANO JS
@@ -301,7 +303,7 @@ window.onload = function () {
         document.getElementById('finishButton').style.display = 'none';
         document.getElementById('fin').style.display = 'block';
         selectHandContainer.style.display = "block";
-        enterIDContainer.style.display = "block";
+        // enterIDContainer.style.display = "block";
     }
 
     document.getElementById('handButton').addEventListener('click', function () {

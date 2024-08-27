@@ -126,9 +126,9 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('JSZip is not loaded.');
             return;
         }
-
+    
         const zip = new JSZip();
-
+    
         // Generar el contenido del CSV
         const csvContent = generateCSV();
         if (!csvContent) {
@@ -136,8 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         zip.file(`${idParticipante}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
-
-        // Crear el archivo zip y forzar la descarga
+    
+        // Crear el archivo ZIP y forzar la descarga
         zip.generateAsync({ type: 'blob' })
             .then(function(content) {
                 const a = document.createElement('a');
@@ -146,8 +146,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+    
+                // Cerrar la ventana después de la descarga
+                setTimeout(() => {
+                    window.close();
+                }, 1000);
+            })
+            .catch(function(err) {
+                console.error('Error generating ZIP:', err);
             });
     }
+    
 
     function formatDate(date) {
         if (!date) return '';

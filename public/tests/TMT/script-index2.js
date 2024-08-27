@@ -599,10 +599,9 @@ function testFinalizado() {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    if(isRecordingStarted){
+    if (isRecordingStarted) {
         mediaRecorderCanvasPartB2.stop();
-    
-    
+
         mediaRecorderCanvasPartB2.onstop = () => {
             const blob = new Blob(recordedChunksCanvasPartB2, { type: 'video/webm' });
             const url = URL.createObjectURL(blob);
@@ -625,8 +624,12 @@ function testFinalizado() {
 
                 zip.generateAsync({ type: 'blob' }).then(function (content) {
                     saveAs(content, `${idParticipante}_TMTPartB_${fechaFormateada}.zip`);
+
+                    // Cerrar la ventana después de que se haya descargado el ZIP
+                    setTimeout(() => {
+                        window.close();
+                    }, 100); // Ajusta el tiempo de espera según sea necesario
                 });
-                window.close(); 
             });
         });
 
@@ -642,6 +645,7 @@ function testFinalizado() {
         instructions.style.marginTop = '0';
     }, 1000);
 }
+
 
 function generateCSV(data) {
     let csvContent = "tr;errores_comision;lineas_correctas;lapiz_levantado;tr;t_lapiz_levantado;t_tarea;mano\n";

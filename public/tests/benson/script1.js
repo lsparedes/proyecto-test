@@ -345,6 +345,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 zip.file('DrawWithFigure.webm', reader.result.split(',')[1], { base64: true });
+    
+                // Generar el ZIP y descargarlo
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
@@ -352,11 +354,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
+    
+                    // Cerrar la ventana después de la descarga
+                    setTimeout(() => {
+                        window.close();
+                    }, 1000); // Ajusta el tiempo si es necesario
                 });
             };
             reader.readAsDataURL(blob);
-           
-
+    
         } catch (error) {
             console.warn(`No video available: ${error}`);
             // Generar el archivo ZIP sin el video
@@ -367,8 +373,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+    
+                // Cerrar la ventana después de la descarga
+                setTimeout(() => {
+                    window.close();
+                }, 1000);
             });
         }
     }
+    
     
 });

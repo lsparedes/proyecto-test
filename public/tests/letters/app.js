@@ -14,7 +14,8 @@ const mainScreen = document.getElementById('mainScreen');
 const endScreen = document.getElementById('end-screen');
 const clearButton = document.getElementById('clear-canvas-button');
 let clicks = [];
-let recorder, chunks = [];
+let recorder;
+let chunks = [];
 let practiceClicks = [];
 let startItemTime, endTime, totalStartTime;
 let originalCanvasSize = { width: 2105, height: 1489 };
@@ -459,7 +460,7 @@ imageCanvas.addEventListener('click', handleClick, false);
 practiceCanvas.addEventListener('click', (e) => {
     const { x, y } = adjustClickCoordinates(e, practiceCanvas, originalCanvasSize);
     practiceClicks.push({ x, y });
-    drawCircle(ctxPractice, e.clientX - practiceCanvas.getBoundingClientRect().left, e.clientY - practiceCanvas.getBoundingClientRect().top, 'blue');
+    drawCirclePractice(e.clientX - practiceCanvas.getBoundingClientRect().left, e.clientY - practiceCanvas.getBoundingClientRect().top, 'blue');
 });
 function showHandSelection() {
     fin.style.display = 'block';
@@ -526,7 +527,7 @@ function handleClickPractice(e) {
     const x = (e.clientX - rect.left) * (2105 / practiceCanvas.width);
     const y = (e.clientY - rect.top) * (1489 / practiceCanvas.height);
     practiceClicks.push({ x, y });
-    drawCircle(ctxPractice, e.clientX - rect.left, e.clientY - rect.top, 'blue');
+    drawCirclePractice(e.clientX - rect.left, e.clientY - rect.top, 'blue');
 }
 
 
@@ -538,6 +539,16 @@ function drawCircle(x, y, color) {
     ctx.lineWidth = 1;
     ctx.strokeStyle = color;
     ctx.stroke();
+}
+
+function drawCirclePractice(x, y, color) {
+    ctxPractice.beginPath();
+    ctxPractice.arc(x, y, 10, 0, 2 * Math.PI, false);
+    ctxPractice.fillStyle = color;
+    ctxPractice.fill();
+    ctxPractice.lineWidth = 1;
+    ctxPractice.strokeStyle = color;
+    ctxPractice.stroke();
 }
 
 function drawLine(x1, y1, x2, y2) {
@@ -647,7 +658,7 @@ function validateClicks() {
     const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
     const normalizedCenterY = (centerY - (1489 / 2)) / (1489 / 2);
 
-
+    console.log(sumX, sumY, correctClicks);
     endTime = new Date();
     const testDuration = (endTime - startItemTime);
     const totalDuration = (endTime - totalStartTime) / 1000;
@@ -707,16 +718,22 @@ function validateClicks() {
     clicks = [];
     chunks = [];
 }
+let stream;
 
-function startRecording() {
-    const stream = imageCanvas.captureStream();
+function prepareRecording() {
+    stream = imageCanvas.captureStream();
     recorder = new MediaRecorder(stream);
     recorder.ondataavailable = event => {
         if (event.data.size > 0) {
             chunks.push(event.data);
         }
     };
-    recorder.start();
+}
+
+function startRecording() {
+    if (recorder) {
+        recorder.start();
+    }
 }
 
 function stopRecording() {
@@ -724,6 +741,7 @@ function stopRecording() {
         recorder.stop();
     }
 }
+
 
 // SELECCION DE MANO JS
 const fin = document.getElementById('fin');
@@ -782,6 +800,7 @@ function validateHandSelection() {
 
 window.confirmHandSelection = confirmHandSelection;
 
+window.addEventListener('load', prepareRecording);
 
 nextButton.addEventListener('click', () => {
     showHandSelection();
