@@ -14,16 +14,16 @@ document.getElementById('next-button').addEventListener('click', () => {
 const images = [
     { src: "img/P1.png", title: 'P1', answer: '1' },
     { src: "img/P2.png", title: 'P2', answer: '5' },
-    { src: "img/1.png", title: 'I1', answer: '7' },
-    { src: "img/2.png", title: 'I2', answer: '4' },
-    { src: "img/3.png", title: 'I3', answer: '3' },
-    { src: "img/4.png", title: 'I4', answer: '7' },
-    { src: "img/5.png", title: 'I5', answer: '8' },
-    { src: "img/6.png", title: 'I6', answer: '2' },
-    { src: "img/7.png", title: 'I7', answer: '6' },
-    { src: "img/8.png", title: 'I8', answer: '4' },
-    { src: "img/9.png", title: 'I9', answer: '8' },
-    { src: "img/10.png", title: 'I10', answer: '5' },
+    { src: "img/1.png", title: 'E1', answer: '7' },
+    { src: "img/2.png", title: 'E2', answer: '4' },
+    { src: "img/3.png", title: 'E3', answer: '3' },
+    { src: "img/4.png", title: 'E4', answer: '7' },
+    { src: "img/5.png", title: 'E5', answer: '8' },
+    { src: "img/6.png", title: 'E6', answer: '2' },
+    { src: "img/7.png", title: 'E7', answer: '6' },
+    { src: "img/8.png", title: 'E8', answer: '4' },
+    { src: "img/9.png", title: 'E9', answer: '8' },
+    { src: "img/10.png", title: 'E10', answer: '5' },
 ];
 
 let currentImageIndex = -1;

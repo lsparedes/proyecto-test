@@ -136,7 +136,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startSequenceButton.style.visibility = 'visible';
         startSequenceButton.style.display = 'inline-block';
         endSequenceButton.style.display = 'inline-block'; // Ocultar el botón "Terminar" al iniciar el test
-        endSequenceButton.style.cursor = 'not-allowed';
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
@@ -168,6 +167,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displaySequence(index) {
+        if (!sequenceDisplaying) return null;
         if (index < sequence.length) {
             const block = blocksContainer.children[sequence[index]];
             block.style.backgroundColor = 'yellow';
@@ -175,21 +175,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 block.style.backgroundColor = 'rgb(29, 63, 255)';
                 setTimeout(() => displaySequence(index + 1), 300);
             }, 500);
+            if (index === sequence.length - 1) {
+                setTimeout(() => playBeep(), 500);
+            }
         } else {
             sequenceDisplaying = false;
             continueTest = true;
             endSequenceButton.style.cursor = 'pointer';
-            playBeep(); // Llamar a playBeep aquí para reproducir el sonido después de la secuencia
             startTimer();
         }
     }
 
     function checkSequence() {
         let correct = true;
-        for (let i = 0; i < sequence.length; i++) {
-            if (sequence[i] !== playerSequence[sequence.length - 1 - i]) { // Comprobación en orden inverso
-                correct = false;
-                break;
+
+        if (playerSequence.length === 0) {
+            correct = false;
+        } else {
+            for (let i = 0; i < sequence.length; i++) {
+                if (sequence[i] !== playerSequence[sequence.length - 1 - i]) { // Comprobación en orden inverso
+                    correct = false;
+                    break;
+                }
             }
         }
 
@@ -257,7 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
         endSequenceButton.style.display = 'none';
         indicator.style.display = 'none';
         startTestButton.display = 'inline-block';
-        sequenceDisplaying = true;
+        sequenceDisplaying = false;
         resetBlocks();
     }
 
@@ -281,7 +288,6 @@ document.addEventListener('DOMContentLoaded', () => {
     endSequenceButton.addEventListener('click', () => {
         if (continueTest) {
             continueTest = false;
-            endSequenceButton.style.cursor = 'not-allowed';
             if (!isPractice) {
                 const exerciseData = {
                     exerciseTitle: fixedTitles[sequenceCount],
@@ -292,6 +298,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 testData.push(exerciseData);
             }
             checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
+        } else if (sequenceDisplaying) {
+            sequenceDisplaying = false;
+            continueTest = false;
+            stopTimer();
+            resetBlocks();
+            checkSequence();
+        } else {
+            stopTimer();
+            checkSequence();
         }
     });
 
