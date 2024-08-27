@@ -157,7 +157,7 @@ function loadAudio(part) {
                 recordingStarted = true; // Actualizar la bandera para evitar múltiples ejecuciones
             }
     
-            if (timeRemaining <= 3) {
+            if (timeRemaining <= 3 && timeRemaining > 0) {
                 letterDisplay.style.display = 'block';
             }
         };
