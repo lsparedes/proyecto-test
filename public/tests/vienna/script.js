@@ -319,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const incrementScreenIndex = (event) => {
         stopAllAudios();
+        hideQuestion();
         console.log('Current Screen Index: ', currentScreenIndex);
         if (currentScreenIndex < screens.length - 1) {
             currentScreenIndex++;
@@ -330,11 +331,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const goToPreTestInstruction = () => {
+        hideQuestion();
         currentScreenIndex = 7; // Ajustar al índice correcto de la pantalla PreTestInstruction
         showScreen(currentScreenIndex);
     };
 
     const showTestScreen = () => {
+        hideQuestion();
         currentScreenIndex = 8; // Ajustar al índice correcto de la primera pantalla de test
         contador = 3; // Iniciar en el índice correcto para E1
         showScreen(currentScreenIndex);
@@ -618,6 +621,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
+                    
+                    window.close();
                 }
             })
             .catch(err => {
@@ -685,13 +690,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const showQuestion = () => {
-            const questionText = document.createElement('h2');
-            questionText.textContent = '¿Qué puerta eligió la persona?';
-            questionText.style.textAlign = 'center';
-            questionText.style.fontSize = '32px';
-            questionText.id = 'questionText'; // Add an ID for easier removal
-            const currentScreen = screens[currentScreenIndex];
-            currentScreen.appendChild(questionText);
+            document.getElementById('questionContainer').style.display = 'block';
         };
 
         [testVideo, practiceVideo1, practiceVideo2, practiceVideo3].forEach(video => {
@@ -699,6 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         nextButtonTest.addEventListener('click', () => {
+            hideQuestion();
             console.log('Current Test Index (contador): ', contador);
             if (contador < videos.length - 1) {
                 contador++;
@@ -858,5 +858,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializar la primera carga de video e imagen
     showScreen(currentScreenIndex);
+
+    function hideQuestion() {
+        document.getElementById('questionContainer').style.display = 'none';
+    };
 });
 

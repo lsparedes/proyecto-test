@@ -48,8 +48,7 @@
         <div class="row">
             <div class="col-12 text-center">
                 <p id="instructionText" style="margin-top: 20px;">Aquí usted puede ver un ejemplo de un mapa. Los iconos azules representan puertas en partes específicas del pasillo. La posición inicial de la persona está marcada en el mapa con la palabra 'Inicio'.</p>
-                <br>
-                <audio id="instructionAudio3" controls>
+                <audio id="instructionAudio3" style="margin-bottom: 50px;" controls>
                     <source src="" type="audio/mpeg">
                     Tu navegador no soporta el elemento de audio.
                 </audio>
@@ -373,6 +372,10 @@
     <h1> ¡Ha completado esta tarea con éxito! </h1> <br>
     <h1> ¡Muchas gracias!</h1>
     <button id="downloadCSVButton" style="display: none;">Descargar Respuestas (CSV)</button>
+  </div>
+
+  <div id="questionContainer" style="display: none;">
+    <h2 id="questionText">¿Qué puerta eligió la persona?</h2>
   </div>
 
   <script src="script.js"></script>
