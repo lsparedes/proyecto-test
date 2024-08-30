@@ -55,7 +55,7 @@
 
                                 <h2 class="card-title mt-3">{{ $test->tipoTest->num_test }} -
                                     {{ $test->tipoTest->descripcion }}</h2>
-                                <p class="card-text"> {{ $test->name_test }}</p>
+                                {{-- <p class="card-text"> {{ $test->name_test }}</p> --}}
                                 <p class="card-text"><i class="fas fa-clock"></i> Duración estimada:
                                     {{ $test->duracion_minutos }} minutos</p>
                                 <div class="card-footer ">
