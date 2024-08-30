@@ -58,6 +58,7 @@ window.onload = function () {
     practiceNextButton.addEventListener('click', function () {
         stopAllAudios();
         instructions.style.display = 'none';
+        document.getElementById('fullscreenButton').style.display = 'none';
         practiceContainer.style.display = 'none';
         practiceFinishScreen.style.display = 'block';
         // downloadCanvas(practiceCanvas, 'practice-drawing.png'); // REVISAR (debe ir al final la descarga)
@@ -232,15 +233,15 @@ window.onload = function () {
 
     }
 
-    function generateTXT(data) {
-        let txtContent = "";
+    function generateCSV(data) {
+        let csvContent = `Tiempo dedicado a la tarea (s);Mano utilizada\n`;
     
         data.forEach(row => {
-            let linea = `Tiempo dedicado a la tarea (s): ${row.taskTime}\nMano utilizada: ${selectedHand}\n`;
-            txtContent += linea;
+            let linea = ` ${row.taskTime};${selectedHand}\n`;
+            csvContent += linea;
         });
     
-        return new Blob([txtContent], { type: 'text/plain' });
+        return new Blob([csvContent], { type: 'text/csv' });
     }
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -263,15 +264,15 @@ window.onload = function () {
             zip.file("canvas-recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
     
             // Generar y añadir el archivo TXT al ZIP
-            const txtContent = generateTXT(data);
-            zip.file(`${idParticipante}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.txt`, txtContent);
+            const csvContent = generateCSV(data);
+            zip.file(`${idParticipante}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.csv`, csvContent);
     
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
                 zip.file("canvasScreenshot.png", blob);
     
                 practiceCanvas.toBlob(function (blobPractice) {
-                    zip.file("canvasPracticeScreenshot.png", blobPractice);
+                    // zip.file("canvasPracticeScreenshot.png", blobPractice);
     
                     // Generar el archivo ZIP y descargarlo
                     zip.generateAsync({ type: 'blob' }).then(function (content) {

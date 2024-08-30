@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     const redLinesCount = 0;
-    let circleRadius = 40; // Cambiado de const a let para permitir reasignación
+    let circleRadius = 30; // Cambiado de const a let para permitir reasignación
 
 
     fullscreenButton.addEventListener('click', () => {
@@ -283,6 +283,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nextButton.addEventListener('click', () => {
             document.getElementById('instructionAudio1').pause();
             document.getElementById('show').style.display = 'none';
+            document.getElementById('fullscreenButton').style.display = 'none';
             document.getElementById('instructionAudio1').style.display = 'none';
             canvas.style.display = 'none';
             document.getElementById('partA').style.display = 'flex';
@@ -527,6 +528,7 @@ document.addEventListener('DOMContentLoaded', function () {
         nextButtonA.style.display = 'inline-block';
 
         nextButtonA.addEventListener('click', () => {
+            clearTimeout(temporizador); // Detener temporizador para evitar que se ejecute la función arrowToRed
             document.getElementById('instructionAudio').pause();
             document.getElementById('partA').style.display = 'none';
             canvasPartA.style.display = 'none';
@@ -592,14 +594,17 @@ document.addEventListener('DOMContentLoaded', function () {
             zip.file("test_result_TMT_part_A.csv", csvContent);
 
             canvas.toBlob(function (blob) {
-                zip.file("canvasScreenshot.png", blob);
+                // zip.file("canvasScreenshot.png", blob);
 
                 canvasPartA.toBlob(function (blobPartA) {
                     zip.file("canvasPartAScreenshot.png", blobPartA);
 
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
                         saveAs(content, `${idParticipante}_TMTPartA_${fechaFormateada}.zip`);
-                        
+                        // cerrar ventana al descargar
+                        setTimeout(() => {
+                            window.close();
+                        }, 100);
                     });
                 });
             });

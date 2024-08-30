@@ -275,6 +275,7 @@ function drawNextButtonB() {
     nextButtonB.addEventListener('click', () => {
         document.getElementById('instructionAudio1').pause();
         document.getElementById('instructionAudio1').style.display = 'none';
+        document.getElementById('fullscreenButton').style.display = 'none';
         canvasPartB.style.display = 'none';
         show.style.display = 'none';
         show1.style.display = 'block';
@@ -533,6 +534,7 @@ function drawNextButtonB2() {
     nextButtonB2.style.display = 'inline-block';
 
     nextButtonB2.addEventListener('click', () => {
+        clearTimeout(temporizador); // Detiene el temporizador para que la flecha no se ponga roja en la pantalla final
         document.getElementById('instructionAudio').pause();
         document.getElementById('partB2').style.display = 'none';
         canvasPartB2.style.display = 'none';
@@ -617,7 +619,7 @@ function testFinalizado() {
         zip.file("test_result_TMT_part_B.csv", csvContent);
 
         canvasPartB.toBlob(function (blob) {
-            zip.file("canvasBScreenshot.png", blob);
+            // zip.file("canvasBScreenshot.png", blob);
 
             canvasPartB2.toBlob(function (blobPartB2) {
                 zip.file("canvasPartB2Screenshot.png", blobPartB2);
