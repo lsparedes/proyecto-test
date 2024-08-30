@@ -126,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startSequenceButton.style.visibility = 'visible';
         startSequenceButton.style.display = 'inline-block';
         endSequenceButton.style.display = 'inline-block';
-        endSequenceButton.style.cursor = 'not-allowed';
         highestCount = 0;
         totalCorrectBlocks = 0;
         sequenceCount = 0;
@@ -158,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function displaySequence(index) {
+        if (!sequenceDisplaying) return null;
         if (index < sequence.length) {
             const block = blocksContainer.children[sequence[index]];
             block.style.backgroundColor = 'yellow';
@@ -165,21 +165,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 block.style.backgroundColor = 'rgb(29, 63, 255)';
                 setTimeout(() => displaySequence(index + 1), 300);
             }, 500);
+            if (index === sequence.length - 1) {
+                setTimeout(() => playBeep(), 500);
+            }
         } else {
             sequenceDisplaying = false;
             continueTest = true;
             endSequenceButton.style.cursor = 'pointer';
-            playBeep();
             startTimer();
         }
     }
 
     function checkSequence() {
         let correct = true;
-        for (let i = 0; i < sequence.length; i++) {
-            if (sequence[i] !== playerSequence[i]) {
-                correct = false;
-                break;
+        
+        if (playerSequence.length === 0) {
+            correct = false;
+        } else {
+            for (let i = 0; i < sequence.length; i++) {
+                if (sequence[i] !== playerSequence[i]) {
+                    correct = false;
+                    break;
+                }
             }
         }
 
@@ -255,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
         endSequenceButton.style.display = 'none';
         indicator.style.display = 'none';
         startTestButton.style.display = 'inline-block';
-        sequenceDisplaying = true;
+        sequenceDisplaying = false;
         resetBlocks();
     }
 
@@ -266,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.pause();
-        if (isPractice) {
+        if (!isPractice) {
             await startScreenRecording();
         }
         startTest();
@@ -279,7 +286,6 @@ document.addEventListener('DOMContentLoaded', () => {
     endSequenceButton.addEventListener('click', () => {
         if (continueTest) {
             continueTest = false;
-            endSequenceButton.style.cursor = 'not-allowed';
             if (!isPractice) {
                 const exerciseData = {
                     exerciseTitle: fixedTitles[sequenceCount],
@@ -289,6 +295,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 testData.push(exerciseData);
             }
+            checkSequence();
+        } else if (sequenceDisplaying) {
+            sequenceDisplaying = false;
+            continueTest = false;
+            stopTimer();
+            resetBlocks();
+            checkSequence();
+        } else {
+            stopTimer();
             checkSequence();
         }
     });

@@ -60,7 +60,7 @@ canvas {
 #instructionText {
     font-size: 35px;
     text-align: justify;
-    margin-bottom: 100px;
+    margin-bottom: 20px;
 }
 
 #initialScreen, #instructionScreen1, #instructionScreen2, #instructionScreen3, #instructionScreen4, #preTestInstructionScreen {
@@ -111,16 +111,8 @@ canvas {
     color: white;
 }
 
-.arrow-button {
-    background: url('arrow.png') no-repeat center;
-    background-size: contain;
-    width: 100px;
-    height: 70px;
-    background-color: transparent;
-    border: none;
-    position: absolute !important;
-    bottom: 15px;
-    right: 15px;
+audio {
+    margin-bottom: 20px;
 }
 
 #header {
@@ -156,7 +148,7 @@ canvas {
     border-top: 1px solid #dee2e6;
 }
 
-#startButton, #next-button {
+#startButton, #next-button, .arrow-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -276,4 +268,14 @@ canvas {
 #derecha3,
 #derecha4 {
     border: 2px solid black;
+}
+
+#questionText {
+    position: fixed;
+    top: 84%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    text-align: center;
+    z-index: 9999;
 }
