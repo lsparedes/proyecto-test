@@ -62,13 +62,16 @@ body {
     margin-top: 70px;
 }
 
-#instruccionesdespues{
+#instruccionesdespues {
     background: #fff;
     text-align: center;
     width: 100%;
     height: 100%;
     display: flex;
-    box-sizing: border-box; /* Para incluir el padding dentro del tamaño total */
+    flex-direction: column; /* Para alinear los elementos en columna */
+    align-items: center; /* Centra horizontalmente */
+    justify-content: center; /* Centra verticalmente */
+    box-sizing: border-box;
 }
 
 audio{
@@ -137,6 +140,15 @@ button:active {
 #instruccion {
     visibility: hidden;
     opacity: 0;
+    position: relative;
+    top: 70px; /* Ajusta la posición según sea necesario */
+    text-align: center;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-bottom: 100px;
+}
+
+#instruccion2{
     position: relative;
     top: 70px; /* Ajusta la posición según sea necesario */
     text-align: center;
@@ -244,6 +256,13 @@ canvas {
 }
 
 #figure-image {
+    max-width: 81vh;
+    max-height: 81vh;
+    min-width: 75vh;
+    margin-top: 1vh;
+}
+
+#figure-image2 {
     max-width: 81vh;
     max-height: 81vh;
     min-width: 75vh;

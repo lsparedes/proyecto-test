@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('audio1').pause();
         document.getElementById('audio1_2').pause();
         container2.style.display = 'none';
-        instruccionesDespues.style.display = 'block';
+        instruccionesDespues.style.display = 'flex';
         endDrawingTime = new Date();
         console.log("Terminó de dibujar: ", endDrawingTime)
 
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (startDrawingTime) {
             drawingTime = (endDrawingTime - startDrawingTime); //tiempo de dibujo en milisegundos
         }
-        csvContent += `DrawWithFigure;${timeTotal};${drawingTime};${selectedHand}\n`;
+        csvContent += `CopiarFigura;${timeTotal};${drawingTime};${selectedHand}\n`;
     
         return csvContent;
     }
@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Generar el contenido del CSV
         const csvContent = generateCSV();
-        zip.file(`${idParticipante}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
     
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('drawing-canvas');
@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `${idParticipante}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                    link.download = `${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', () => {
             zip.generateAsync({ type: 'blob' }).then((content) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
-                link.download = `${idParticipante}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                link.download = `${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

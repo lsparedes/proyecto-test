@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (startDrawingTime) {
             drawingTime = (endDrawingTime - startDrawingTime); //tiempo de dibujo en milisegundos
         }
-        csvContent += `DrawWithFigure;${timeTotal};${drawingTime};${selectedHand}\n`;
+        csvContent += `RecordarFigura;${timeTotal};${drawingTime};${selectedHand}\n`;
 
         return csvContent;
     }
@@ -272,12 +272,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Generar el contenido del CSV
         const csvContent = generateCSV();
-        zip.file(`${idParticipante}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${idParticipante}_Recordar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
 
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('memory-canvas');
         const canvasImage = canvas.toDataURL('image/png').split(',')[1];
-        zip.file('Draw_From_Memory_figure.png', canvasImage, { base64: true });
+        zip.file('Recordar_figura_Benson.png', canvasImage, { base64: true });
 
         // Añadir video del canvas al ZIP
         try {
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `${idParticipante}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                    link.download = `${idParticipante}_Recordar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             zip.generateAsync({ type: 'blob' }).then((content) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
-                link.download = `${idParticipante}_benson_draw_from_memory_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                link.download = `${idParticipante}_Recordar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
