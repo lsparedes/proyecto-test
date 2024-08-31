@@ -287,6 +287,9 @@ document.addEventListener('DOMContentLoaded', () => {
             a.click();
             document.body.removeChild(a);
  
+            setTimeout(() => {
+                window.close();
+            }, 1000);
 
         });
 

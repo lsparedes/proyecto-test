@@ -68,13 +68,20 @@ document.addEventListener('DOMContentLoaded', () => {
             audioContainer.style.display = 'none';
             selectHand.style.display = 'inline-block';
             finishScreen.style.display = 'block';
-            DownloadButton.style.display = 'block';
+            // DownloadButton.style.display = 'block';
 
             finishTime = new Date();
             console.log(`${finishTime}`);
         }
     });
-    
+
+    const handInputs = document.getElementsByName('hand');
+
+    handInputs.forEach((input) => {
+        input.addEventListener('change', (e) => {
+            DownloadButton.style.display = 'block';
+        });
+    });
     
     DownloadButton.addEventListener('click', () => {
         downloadZip();
@@ -165,6 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
+
+            window.close();
  
         });
 
