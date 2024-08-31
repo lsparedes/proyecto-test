@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     const practiceSequences = [
-        [1, 3, 8],
-        [7, 3, 6]
+        [0, 2, 7],
+        [6, 2, 5]
     ];
 
     // Secuencias fijas de bloques
