@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 20;
+  let maxTrials = 1;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let diferenciaInicial = 15;
   let ajusteDificultad = 1;
+  let diferenciaAjustada = 0;
   let correctStreak = 0; // Variable global para contar respuestas correctas consecutivas
   let startTimeTotal = new Date();
   let startTime;
@@ -168,22 +169,26 @@ document.addEventListener('DOMContentLoaded', () => {
   function ajustarDificultad(respuesta) {
     if (respuesta === true) { // Respuesta correcta
       correctStreak++;
-      if (correctStreak >= 2) {
-        if (diferenciaInicial > 1) {
-          diferenciaInicial -= ajusteDificultad;
+      if (correctStreak >= 2) { // Aumenta la dificultad si hay 2 respuestas correctas consecutivas
+        if (diferenciaAjustada < 7) {
+          diferenciaAjustada += 1;
+          diferenciaInicial -= 2;
         }
         correctStreak = 0; // Reinicia el contador después de aumentar la dificultad
       }
     } else { // Respuesta incorrecta
+      if (diferenciaAjustada > -24) {
+        diferenciaAjustada -= 1;
+        diferenciaInicial += 2;
+      }
       correctStreak = 0; // Reinicia el contador
-      diferenciaInicial += ajusteDificultad;
     }
   }
 
   function generateDots(ctx) {
-    const numPuntosMayor = Math.floor(50 + diferenciaInicial / 2);
-    const numPuntosMenor = 100 - numPuntosMayor;
-    const totalDots = numPuntosMayor + numPuntosMenor;
+    const totalDots = 65;
+    let numPuntosMayor = 40 - diferenciaAjustada;
+    let numPuntosMenor = totalDots - numPuntosMayor;
     const colors = [];
     let colorMayor = Math.random() < 0.5 ? 'red' : 'blue';
 
@@ -240,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     correctColor = numRedDots > numBlueDots ? 'red' : 'blue';
-    console.log(`Correct color is ${correctColor}. Red: ${numRedDots}, Blue: ${numBlueDots}`);
+    console.log(`Correct color is ${correctColor}. Red: ${numRedDots}, Blue: ${numBlueDots}, diferencia: ${diferenciaInicial}, puntos mayor: ${numPuntosMayor}, puntos menor: ${numPuntosMenor}`); 
   }
 
   function recordAnswer(answer) {
@@ -577,8 +582,8 @@ const idParticipante = getQueryParam('id_participante');
   }
 
   function generateCSV(results) {
-    const csvContent = "bq;en;rp_c;rp;seguridad;pc;dificultad;tr_color;tr_seguridad;t_pausa\n"
-      + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP}`).join("\n")
+    const csvContent = "bq;en;rp_c;rp;seguridad;pc;dificultad;tr_color;tr_seguridad;t_pausa;RedDotSide\n"
+      + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP};izquierda`).join("\n")
     return {
       content: csvContent,
       filename: `${idParticipante}_metacognicion_${getCurrentDate()}.csv`
