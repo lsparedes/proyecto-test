@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
         testImage.src = images[currentImageIndex];
         audioSource.src = audios[currentImageIndex];
         testAudio.load();
-        currentItem.textContent = `I${currentImageIndex + 1}`;
+        currentItem.textContent = `E${currentImageIndex + 1}`;
         testImage.classList.remove('hidden');
         testAudio.classList.remove('hidden');
         videoPreview.classList.add('hidden');

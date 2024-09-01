@@ -172,6 +172,8 @@ document.addEventListener('DOMContentLoaded', () => {
             a.click();
             document.body.removeChild(a);
             
+            window.close();
+
         });
     }
 
