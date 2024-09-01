@@ -14,7 +14,7 @@ const incorrectPathsPartB = [];
 const incorrectPathsPartB2 = [];
 let drawingCompletedB = false;
 
-let circleRadius = 50;
+let circleRadius = 30;
 const circlesToCorrectB = [];
 const recordedChunksCanvasB = [];
 
@@ -34,14 +34,14 @@ const show1 = document.getElementById('show1');
 show1.style.display = 'none';
 
 const circleCoordinatesPartB = [
-    { x: 498, y: 497 },
-    { x: 653, y: 237 },
-    { x: 847, y: 494 },
-    { x: 671, y: 364 },
-    { x: 670, y: 619 },
-    { x: 272, y: 621 },
-    { x: 209, y: 253 },
-    { x: 433, y: 335 }
+    { x: 498 - 70, y: 497 },
+    { x: 653 - 70, y: 237 },
+    { x: 847 - 70, y: 494 },
+    { x: 671 - 70, y: 364 },
+    { x: 670 - 70, y: 619 },
+    { x: 272 - 70, y: 621 },
+    { x: 209 - 70, y: 253 },
+    { x: 433 - 70, y: 335 }
 ];
 
 const firstCircleLabelB = "Empezar";
@@ -100,7 +100,7 @@ function startPartB() {
     circleCoordinatesPartB.forEach((coord, index) => {
         const label = index % 2 === 0 ? (index / 2) + 1 : String.fromCharCode(65 + (index - 1) / 2);
         const name = index === 0 ? firstCircleLabelB : (index === circleCoordinatesPartB.length - 1 ? lastCircleLabelB : "");
-        drawCircleWithLabel(ctxPartB, coord.x, coord.y, label, circlesPartB, name, 50);
+        drawCircleWithLabel(ctxPartB, coord.x, coord.y, label, circlesPartB, name, circleRadius);
     });
     drawNextButtonB();
 }
@@ -150,7 +150,7 @@ let drawingCompleted = false;
 function startDrawing(x, y) {
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 50 && circle.label === currentCirclePartB) {
+        if (distance < circleRadius && circle.label === currentCirclePartB) {
             isDrawingPartB = true;
             lastCirclePartB = circle;
             ctxPartB.beginPath();
@@ -168,12 +168,12 @@ function drawMove(x, y) {
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 50 && circle.label != getNextLabel(currentCirclePartB) && circle.label != lastCirclePartB.label) {
+        if (distance < circleRadius && circle.label != getNextLabel(currentCirclePartB) && circle.label != lastCirclePartB.label) {
             highlightCircle(ctxPartB, circle, 'red', x, y);
             incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
             circlesToCorrectB.push({ x: circle.x, y: circle.y, number: circle.number });
             isDrawingPartB = false;
-        } else if (distance < 50 && circle.label === getNextLabel(currentCirclePartB)) {
+        } else if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB)) {
             highlightCircle(ctxPartB, circle, 'black', x, y);
             correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB = getNextLabel(currentCirclePartB);
@@ -276,6 +276,7 @@ function drawNextButtonB() {
         document.getElementById('instructionAudio1').pause();
         document.getElementById('instructionAudio1').style.display = 'none';
         document.getElementById('fullscreenButton').style.display = 'none';
+        document.getElementById('partB').style.display = 'none';
         canvasPartB.style.display = 'none';
         show.style.display = 'none';
         show1.style.display = 'block';

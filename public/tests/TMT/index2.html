@@ -44,10 +44,7 @@
     style="transform: rotate(-90deg); width: 50px; height: 50px; background-image: url('imagenes/eye.png'); background-size: cover; background-repeat: no-repeat; background-position: center; border: none; background-color: transparent; position: absolute; top: 15px; left: 15px;">
   </button>
 
-  <audio controls id="instructionAudio1" style="transform: rotate(-90deg);">
-    <source src="TMT-MuestraB.mp3" type="audio/mpeg">
-    Tu navegador no soporta el elemento de audio.
-  </audio>
+  
 
 
   <div class="modal fade" id="instructionModal1" tabindex="-1" aria-labelledby="instructionModal1Label"
@@ -71,7 +68,16 @@
       </div>
     </div>
   </div>
+  <div id="partB" style="transform: rotate(-90deg);">
+    <audio controls id="instructionAudio1">
+      <source src="TMT-MuestraB.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
 
+    <canvas id="tmtCanvasPartB" style="display:none;" width="880" height="800">
+        <p id="pCanvas" style="display: none;"></p>
+    </canvas>
+  </div>
   <!-- Botón para abrir el segundo modal -->
   <button id="show1" type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#instructionModal1"
     style="transform: rotate(-90deg); width: 50px; height: 50px; background-image: url('imagenes/eye.png'); background-size: cover; background-repeat: no-repeat; background-position: center; border: none; background-color: transparent; position: absolute; top: 15px; left: 15px;">
@@ -89,10 +95,7 @@
 
     <canvas id="tmtCanvasPartB2" width="880" height="1300" style="display:none;"></canvas>
   </div>
-
-  <canvas id="tmtCanvasPartB" style="display:none; transform: rotate(-90deg);" width="1000" height="800">
-    <p id="pCanvas" style="display: none;"></p>
-  </canvas>
+  
 
 
   <!-- SELECCION DE MANO HTML -->

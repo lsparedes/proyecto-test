@@ -133,14 +133,14 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesToCorrect.length = 0;
 
         const circleCoordinates = [
-            { x: 450, y: 460 },
-            { x: 600, y: 200 },
-            { x: 840, y: 470 },
-            { x: 650, y: 350 },
-            { x: 670, y: 580 },
-            { x: 180, y: 610 },
-            { x: 130, y: 320 },
-            { x: 400, y: 250 }
+            { x: 450 - 70, y: 460 },
+            { x: 600 - 70, y: 200 },
+            { x: 840 - 70, y: 470 },
+            { x: 650 - 70, y: 350 },
+            { x: 670 - 70, y: 580 },
+            { x: 180 - 70, y: 610 },
+            { x: 130 - 70, y: 320 },
+            { x: 400 - 70, y: 250 }
         ];
 
         circleCoordinates.forEach((coord, index) => {
@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function startDrawing(x, y) {
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+            console.log('distancia: '+distance);
             if (distance < circleRadius && circle.number === currentCircle) {
                 isDrawing = true;
                 lastCircle = circle;
@@ -237,11 +238,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     canvas.addEventListener('mousedown', function (event) {
         if (drawingCompleted) return;
+        console.log(event.offsetX, event.offsetY);
         startDrawing(event.offsetX, event.offsetY);
     });
-
+    
     canvas.addEventListener('mousemove', function (event) {
         if (!isDrawing || drawingCompleted) return;
+        console.log(event.offsetX, event.offsetY);
         drawMove(event.offsetX, event.offsetY);
     });
 
@@ -285,6 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('show').style.display = 'none';
             document.getElementById('fullscreenButton').style.display = 'none';
             document.getElementById('instructionAudio1').style.display = 'none';
+            document.getElementById('instructions').style.display = 'none';
             canvas.style.display = 'none';
             document.getElementById('partA').style.display = 'flex';
             document.getElementById('show1').style.display = 'flex';

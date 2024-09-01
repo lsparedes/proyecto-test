@@ -42,14 +42,14 @@
     style="transform: rotate(-90deg); width: 50px; height: 50px; background-image: url('imagenes/eye.png'); background-size: cover; background-repeat: no-repeat; background-position: center; border: none; background-color: transparent; position: absolute; top: 15px; left: 15px;">
   </button>
 
-  <audio controls id="instructionAudio1" style="transform: rotate(-90deg);">
-    <source src="TMT.mp3" type="audio/mpeg">
-    Tu navegador no soporta el elemento de audio.
-  </audio>
-
-
-  <canvas id="tmtCanvas" width="1000" height="800" style="display:flex; transform: rotate(-90deg);"></canvas>
-
+  <div id="instructions" style="display:flex; transform: rotate(-90deg);">  
+    <audio controls id="instructionAudio1">
+      <source src="TMT.mp3" type="audio/mpeg">
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+    <canvas id="tmtCanvas" width="850" height="800" style="display:flex;"></canvas>
+  </div>
+  
 
 
   <div id="partA" style="display:none; transform: rotate(-90deg);">
