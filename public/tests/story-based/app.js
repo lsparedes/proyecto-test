@@ -513,7 +513,7 @@ function mostrarInstrucciones() {
 
     // Cambia la fuente del audio
     const audioElement = document.getElementById('instrucciones');
-    audioElement.src = 'instrucciones2.mp3';
+    audioElement.src = 'sonidos/2.wav';
     audioElement.load(); // Carga la nueva fuente
 }
 
