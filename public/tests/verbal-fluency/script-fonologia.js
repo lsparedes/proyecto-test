@@ -137,10 +137,10 @@ function loadAudio(part) {
 
     switch (part) {
         case 1:
-            audio.src = 'audios/instruction_verbal_fluency_4.mp3';
+            audio.src = 'audios/Fonologica_2.wav';
             break;
         case 2:
-            audio.src = 'audios/instruction_verbal_fluency_4.mp3';
+            audio.src = 'audios/Fonologica_2.wav';
             break;
     }
 

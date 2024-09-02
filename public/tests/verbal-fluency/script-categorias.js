@@ -137,13 +137,13 @@ function endGame() {
 function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
-    
+
     switch (part) {
         case 1:
             audio.src = 'audios/prendas-de-vestir.mp3';
             break;
         case 2:
-            audio.src = 'audios/instruction_verbal_fluency_2.mp3';
+            audio.src = 'audios/Semantica_2.wav';
             break;
     }
 
@@ -151,20 +151,20 @@ function loadAudio(part) {
         let recordingStarted = false; // Bandera para evitar múltiples ejecuciones de startRecording
         const checkTimeRemaining = () => {
             const timeRemaining = (audio.duration - audio.currentTime) / audio.playbackRate;
-    
+
             if (!recordingStarted && timeRemaining <= 1) {
                 startRecording(part);
                 recordingStarted = true; // Actualizar la bandera para evitar múltiples ejecuciones
             }
-    
+
             if (timeRemaining <= 3 && timeRemaining > 0) {
                 letterDisplay.style.display = 'block';
             }
         };
-    
+
         const intervalId = setInterval(() => {
             checkTimeRemaining();
-            
+
             // Detener el setInterval una vez que la grabación ha comenzado y el tiempo restante es menor a 3 segundos.
             if (recordingStarted && timeRemaining <= 3) {
                 clearInterval(intervalId);
@@ -243,7 +243,7 @@ function downloadRecordingAndTime() {
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
         zipLink.href = URL.createObjectURL(content);
-        
+
         // Construir el nombre del archivo ZIP
         const fileName = `${idParticipante}_verbal_fluency_categoria_${formattedDate}.zip`;
 
