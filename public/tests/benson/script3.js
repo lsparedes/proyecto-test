@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let csvContent = "Actividad;Tiempo Total(s);Tiempo Total(ms);Mano Seleccionada; FiguraCorrecta; FiguraSeleccionada; Precision\n";
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
-        csvContent += `IdentifyFigure;${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy}\n`;
+        csvContent += `FiguraIdentificada;${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy}\n`;
 
         return csvContent;
     }
@@ -126,37 +126,28 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('JSZip is not loaded.');
             return;
         }
-    
+
         const zip = new JSZip();
-    
+
         // Generar el contenido del CSV
         const csvContent = generateCSV();
         if (!csvContent) {
             console.error('No se puede generar el CSV');
             return;
         }
-        zip.file(`${idParticipante}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
-    
-        // Crear el archivo ZIP y forzar la descarga
+        zip.file(`${idParticipante}_Identificar_Figura_Benson_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+
+        // Crear el archivo zip y forzar la descarga
         zip.generateAsync({ type: 'blob' })
             .then(function(content) {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
-                a.download = `${idParticipante}_benson_identifying_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
+                a.download = `${idParticipante}_Identificar_Figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
-    
-                // Cerrar la ventana después de la descarga
-                setTimeout(() => {
-                    window.close();
-                }, 1000);
-            })
-            .catch(function(err) {
-                console.error('Error generating ZIP:', err);
             });
     }
-    
 
     function formatDate(date) {
         if (!date) return '';

@@ -113,6 +113,7 @@ button:active {
 #nxbutton5,
 #nxbutton6,
 #startButton2,
+#nxbutton21,
 #download {
     background-color: transparent;
     border: none;
@@ -131,13 +132,19 @@ button:active {
 #nxbutton4,
 #nxbutton5,
 #nxbutton6,
-#startButton2,
+#nxbutton21,
 #download {
     background-image: url('flecha3.png');
     right: 15px;
     bottom: 15px;
 }
 
+
+#startButton2{
+    background-image: url('flecha3.png');
+    right: 15px;
+    bottom: 15px;
+}
 
 #startButton {
     background-image: url('flecha3.png');
@@ -191,6 +198,8 @@ audio-container {
     flex-direction: column;
 }
 
+
+
 .audio-options audio {
     margin-right: 10px;
 }
@@ -225,6 +234,12 @@ audio-container {
     border-radius: 5px;
 }
 
+.option-btn:focus {
+    background-color: #007bff; /* Cambia este color al que desees */
+    color: white;
+    outline: none; /* Opcional, para remover el borde por defecto */
+}
+
 #initRecordingButton1,
 #startRecordingButton1,
 #stopRecordingButton1,
@@ -238,6 +253,7 @@ audio-container {
 #stopRecordingButton4 {
     background-size: cover;
     background-position: center;
+    background-color: transparent;
     width: 100px;
     /* Ajusta el tamaño según sea necesario */
     height: 100px;
