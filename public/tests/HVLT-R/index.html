@@ -16,11 +16,11 @@
 
         <!-- Pantalla Principal -->
         <div id="main-screen" class="screen">
-            
-            <p class="instructionText">A continuación, le voy a dar una lista de palabras. Por favor, escuche
+
+            <p id="instructionText">A continuación, le voy a dar una lista de palabras. Por favor, escuche
                 atentamente e intente memorizar estas palabras.</p>
             <audio id="audio1" controls>
-                <source src="audio1.mp3" type="audio/mpeg">
+                <source src="audios/Inmediato_1.wav" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
@@ -34,7 +34,7 @@
         <div id="words" style="display: none;">
             <div class="item-indicator"><span id="current-item">E1</span></div>
             <audio id="audio_E1" controls>
-                <source src="audio_E1.mp3" type="audio/mpeg">
+                <source src="audios/Inmediato_Lista_Palabras.wav" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
@@ -52,9 +52,9 @@
         <div class="container-fluid justify-content-center">
             <div class="row justify-content-center">
                 <div id="ensayo2" style="display: none;" class="col-12">
-                    <p class="instructionText">Ahora vamos a hacer lo mismo otra vez, así que escuche atentamente.</p>
+                    <p class="instructionText">Ahora vamos a hacer lo mismo otra vez, así que escuche la lista que le voy a decir atentamente.</p>
                     <audio id="audio4" controls class="justify-content-center">
-                        <source src="audio4.mp3" type="audio/mpeg">
+                        <source src="audios/Inmediato_2.wav" type="audio/mpeg">
                         Tu navegador no soporta el elemento de audio.
                     </audio>
                     <div class="button-container">
@@ -69,7 +69,7 @@
         <div id="words2" style="display: none;">
             <div class="item-indicator"><span id="current-item">E2</span></div>
             <audio id="audio_E2" controls>
-                <source src="audio_E2.mp3" type="audio/mpeg">
+                <source src="Inmediato_Lista_Palabras.wav" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
@@ -87,10 +87,10 @@
         <div class="container-fluid justify-content-center">
             <div class="row justify-content-center">
                 <div id="ensayo3" style="display: none;" class="col-12 flex-column align-items-center">
-                    <p class="instructionText">Ahora vamos a hacer lo mismo una última vez, así que escuche atentamente.
+                    <p class="instructionText">Ahora vamos a hacer lo mismo una última vez, así que escuche la lista que le voy a decir atentamente.
                     </p>
                     <audio id="audio5" controls>
-                        <source src="audio5.mp3" type="audio/mpeg">
+                        <source src="audios/Inmediato_3.wav" type="audio/mpeg">
                         Tu navegador no soporta el elemento de audio.
                     </audio>
                     <div class="button-container">
@@ -104,7 +104,7 @@
         <div id="words3" style="display: none;">
             <div class="item-indicator"><span id="current-item">E3</span></div>
             <audio id="audio_E3" controls>
-                <source src="audio_E3.mp3" type="audio/mpeg">
+                <source src="audios/Inmediato_Lista_Palabras.wav" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
@@ -120,10 +120,11 @@
         <div class="container-fluid justify-content-center">
             <div class="row justify-content-center">
                 <div id="finish" style="display: none;" class="col-12 flex-column align-items-center">
-                    <p class="instructionText">Es posible que se le pida recordar la lista de palabras nuevamente más adelante.
+                    <p class="instructionText">Es posible que se le pida recordar la lista de palabras nuevamente más
+                        adelante.
                     </p>
                     <audio id="audio7" controls>
-                        <source src="audio7.mp3" type="audio/mpeg">
+                        <source src="audios/Inmediato_4.wav" type="audio/mpeg">
                         Tu navegador no soporta el elemento de audio.
                     </audio>
                     <div class="button-container">
@@ -135,7 +136,7 @@
         </div>
 
         <!-- Pantalla Final -->
-        
+
         <div id="finishScreen" style="display: none;" class="flex-column align-items-center text-center">
             <h1>¡Ha completado esta tarea con éxito! <br> ¡Muchas gracias!</h1>
         </div>

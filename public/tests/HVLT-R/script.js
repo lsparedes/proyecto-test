@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playBeepSound() {
-        const beep = new Audio('beep.wav');
+        const beep = new Audio('audios/beep.wav');
         beep.play();
     }
 

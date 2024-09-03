@@ -41,6 +41,7 @@ body {
 
 #main-screen,
 #main-screen2,
+#main-screen3,
 #ensayo2 {
     display: flex;
     flex-direction: column;
@@ -179,6 +180,7 @@ button:active {
 
 #instructionText {
     font-size: 37px;
+    text-align: justify;
 }
 
 audio-container {
@@ -298,22 +300,22 @@ audio-container {
     margin: 0 !important;
   }
    */
-   .card-body h4 {
+.card-body h4 {
     margin-bottom: 10px;
     font-size: 14px;
     font-weight: bold;
     text-align: center;
-  }
-  
-  #selectHand label {
+}
+
+#selectHand label {
     font-weight: bold;
     margin-bottom: 5px;
     font-size: 12px;
-  }
-  
-  #selectHand input[type="radio"] {
+}
+
+#selectHand input[type="radio"] {
     margin-right: 10px;
-  }
+}
 
 .item-indicator {
     position: absolute;
