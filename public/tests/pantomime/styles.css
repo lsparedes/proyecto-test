@@ -157,7 +157,7 @@ button:not(:disabled):active {
 }
 
 #recording-btn {
-    background-image: url('grabando.png');
+    background-image: url('boton-rec.png');
 }
 
 #download-btn {

@@ -61,16 +61,6 @@ body {
     background-color: #8f8f8f;
   }
   
-  .arrow-button {
-    background: url('img/arrow.png') no-repeat center;
-    background-size: contain;
-    width: 50px;
-    height: 50px;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-}
-  
   .feedback-image {
     margin-bottom: 10px;
   }
@@ -110,6 +100,7 @@ body {
     font-size: 72px;
   }
 
+  .arrow-button,
   #startPracticeButton {
     display: inline-block;
     background-color: transparent;
@@ -147,17 +138,6 @@ body {
   font-size: 37px;
   text-align: justify;
   margin-bottom: 1rem;
-}
-
-#startNextBlockButton{
-  position: absolute;
-  bottom: 35px;
-  right: 35px;
-}
-#startBlock1Button{
-  position: absolute;
-  bottom: 35px;
-  right: 35px;
 }
 
 /* SELECCION DE MANO CSS */

@@ -268,7 +268,7 @@ audio-container {
 #initRecordingButton2,
 #initRecordingButton3,
 #startRecordingButton4 {
-    background-image: url('grabando.png');
+    background-image: url('boton-rec.png');
 
 }
 

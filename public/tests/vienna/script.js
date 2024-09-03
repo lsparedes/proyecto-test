@@ -73,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let showCorrectDoors = false;
     let showRotationErrors = false;
     let showUpdateErrors = false;
+    let images = [];
 
     const resetVideoI1 = () => {
         practiceVideo1.currentTime = 0; // Reiniciar el tiempo del video al inicio
@@ -608,6 +609,14 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.file(csvFileName, csvBlob);
         zip.file(txtFileName, txtBlob);
     
+        // Crear una carpeta en el ZIP para las imágenes
+        const imgFolder = zip.folder("imagenes");
+        images.forEach((dataURL, index) => {
+            const imgBlob = dataURLtoBlob(dataURL);
+            const imgFileName = `E${index + 1}.png`;
+            imgFolder.file(imgFileName, imgBlob);
+        });
+    
         zip.generateAsync({ type: "blob" })
             .then(content => {
                 const link = document.createElement('a');
@@ -629,6 +638,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Error generando el archivo ZIP:", err);
             });
     };
+    
+    // Función para convertir dataURL a Blob
+    function dataURLtoBlob(dataURL) {
+        const byteString = atob(dataURL.split(',')[1]);
+        const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+        return new Blob([ab], { type: mimeString });
+    }
+    
 
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -700,6 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nextButtonTest.addEventListener('click', () => {
             hideQuestion();
             console.log('Current Test Index (contador): ', contador);
+            images.push(imageCanvas.toDataURL('image/png'));
             if (contador < videos.length - 1) {
                 contador++;
                 loadCurrentVideo(contador);
