@@ -171,10 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
         results.push([
             practiceMode ? 'Práctica' : currentBlock,
             currentTrial + 1,
-            trial.rightReward ? 'Saldo' : 'Pérdida',
-            trial.leftReward ? 'Saldo' : 'Pérdida',
+            trial.rightReward ? 'Ganancia' : 'Pérdida',
+            trial.leftReward ? 'Ganancia' : 'Pérdida',
             side,
-            reward ? 'Saldo' : 'Pérdida',
+            reward ? 'Ganancia' : 'Pérdida',
             responseTime,
         ]);
 
@@ -197,8 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
         results.push([
             practiceMode ? 'Práctica' : currentBlock,
             currentTrial + 1,
-            trials[currentTrial].rightReward ? 'Saldo' : 'Pérdida',
-            trials[currentTrial].leftReward ? 'Saldo' : 'Pérdida',
+            trials[currentTrial].rightReward ? 'Ganancia' : 'Pérdida',
+            trials[currentTrial].leftReward ? 'Ganancia' : 'Pérdida',
             'omitido',
             '',
             '',
