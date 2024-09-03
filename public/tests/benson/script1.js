@@ -99,14 +99,30 @@ document.addEventListener('DOMContentLoaded', () => {
         DownloadButton.style.display = 'block';
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
+        
+        // Guardar en localStorage
+        localStorage.setItem('endTimeExecution', endTimeExecution);
+    
         startFinishTimer();
     });
+    
 
 
-    DownloadButton.addEventListener('click', () => {
+    DownloadButton.addEventListener('click', async () => {
         selectHandContainer.style.display = 'none';  
         validateInputs();
-        GenerateZIP();
+    
+        try {
+            await GenerateZIP();
+        } catch (error) {
+            console.error("Error al generar el ZIP:", error);
+        }
+    
+        // Cerrar la pestaña después de la descarga
+        // Retraso antes de cerrar la pestaña para asegurarse de que la descarga se complete
+        setTimeout(() => {
+            window.close();
+        }, 3000); // 3 segundos de retraso, puedes ajustar este valor si es necesario
     });
     
     handInputs.forEach(input => {
@@ -343,32 +359,26 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const blob = await stopCanvasRecording();
             const reader = new FileReader();
-            reader.onloadend = () => {
+            reader.onloadend = async () => {
                 zip.file('DrawWithFigure.webm', reader.result.split(',')[1], { base64: true });
-                zip.generateAsync({ type: 'blob' }).then((content) => {
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(content);
-                    link.download = `${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                });
+                const content = await zip.generateAsync({ type: 'blob' });
+                downloadZIP(content);
             };
             reader.readAsDataURL(blob);
-           
-
         } catch (error) {
             console.warn(`No video available: ${error}`);
-            // Generar el archivo ZIP sin el video
-            zip.generateAsync({ type: 'blob' }).then((content) => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(content);
-                link.download = `${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            });
+            const content = await zip.generateAsync({ type: 'blob' });
+            downloadZIP(content);
         }
+    }
+
+    function downloadZIP(content) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = `${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     }
     
 });
