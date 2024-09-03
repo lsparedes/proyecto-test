@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let results = [];
     let practiceMode = true;
     let selectionMade = false;
+    let scoreBuffer = 0; // Buffer para el puntaje
     let score = 0; // Puntaje inicializado
     let currentBlock = 0; // Track the current block
     let selectionTimeout;
@@ -87,9 +88,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function startTestBlock() {
         practiceMode = false;
         currentTrial = 0;
+        scoreBuffer = score + scoreBuffer; // Guardar el puntaje actual antes de comenzar el Bloque 1
         score = 0; // Reiniciar puntaje al comenzar el Bloque 1
-        scoreAmount.innerText = `$${score}`;
-        scoreAmount.style.color = 'black';
+        scoreAmount.innerText = `$${score + scoreBuffer}`; // Mostrar el puntaje total
+        scoreAmount.style.color = (score + scoreBuffer) < 0 ? 'red' : (score + scoreBuffer) === 0 ? 'black' : 'blue';
         scoreAmount.style.display = 'block'; // Mostrar el puntaje a partir del Bloque 1
         trials = generateTestTrials(currentBlock);
         startTime = Date.now();
@@ -100,7 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function showNextTrial() {
         selectionMade = false;
         const trial = trials[currentTrial];
-        trialIndicator.innerText = practiceMode ? `P${currentTrial + 1}` : `E${currentTrial + 1}`;
+        if (practiceMode) {
+            trialIndicator.innerText = `P${currentTrial + 1}`;
+        } else if(currentBlock === 1) {
+            trialIndicator.innerText = `E${currentTrial + 1}`;
+        } else if(currentBlock === 2) {
+            trialIndicator.innerText = `E${(currentTrial + 1) + (cantidad_ensayos_bloque_1)}`;
+        } else if(currentBlock === 3) {
+            trialIndicator.innerText = `E${(currentTrial + 1) + (cantidad_ensayos_bloque_1 + cantidad_ensayos_bloque_2)}`;
+        }
         feedbackScreen.style.display = 'none';
         skippedScreen.style.display = 'none';
         endScreen.style.display = 'none';
@@ -154,17 +164,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!practiceMode) { // Solo actualizar el puntaje si no es el modo de práctica
             score += reward ? 5000 : -1000;
-            scoreAmount.innerText = `Ganancia: $${score}`;
-            scoreAmount.style.color = score < 0 ? 'red' : score === 0 ? 'black' : 'blue';
+            scoreAmount.innerText = `Saldo: $${score + scoreBuffer}`;
+            scoreAmount.style.color = (score + scoreBuffer) < 0 ? 'red' : (score + scoreBuffer) === 0 ? 'black' : 'blue';
         }
 
         results.push([
             practiceMode ? 'Práctica' : currentBlock,
             currentTrial + 1,
-            trial.rightReward ? 'Ganancia' : 'Pérdida',
-            trial.leftReward ? 'Ganancia' : 'Pérdida',
+            trial.rightReward ? 'Saldo' : 'Pérdida',
+            trial.leftReward ? 'Saldo' : 'Pérdida',
             side,
-            reward ? 'Ganancia' : 'Pérdida',
+            reward ? 'Saldo' : 'Pérdida',
             responseTime,
         ]);
 
@@ -178,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 finishBlock();
             }
-        }, 3000);
+        }, 2000);
     }
 
     function handleSkippedTrial() {
@@ -187,8 +197,8 @@ document.addEventListener('DOMContentLoaded', () => {
         results.push([
             practiceMode ? 'Práctica' : currentBlock,
             currentTrial + 1,
-            trials[currentTrial].rightReward ? 'Ganancia' : 'Pérdida',
-            trials[currentTrial].leftReward ? 'Ganancia' : 'Pérdida',
+            trials[currentTrial].rightReward ? 'Saldo' : 'Pérdida',
+            trials[currentTrial].leftReward ? 'Saldo' : 'Pérdida',
             'omitido',
             '',
             '',
