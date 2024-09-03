@@ -72,7 +72,7 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
 }
 
 function startRecording(canvas, recordedChunks) {
-    const stream = canvas.captureStream();
+    const stream = canvas.captureStream(30); // 30 FPS
     const mediaRecorder = new MediaRecorder(stream);
 
     mediaRecorder.ondataavailable = function (event) {
