@@ -27,7 +27,7 @@
             En esta pantalla se muestran números dentro de unos círculos. Por favor, tome el lápiz y haga una línea de
             un número a otro, en orden. Empiece en el 1, luego vaya al 2, luego
             vaya al 3, y así sucesivamente. Por favor, trate de no levantar el lápiz de la pantalla
-            al ir de un número al siguiente. Trabaje lo más rápido que pueda.
+            al ir de un número al siguiente. Trabaje lo más rápido que pueda. Empiece aquí, y termine aquí.
           </p>
         </div>
         <div class="modal-footer">
@@ -43,8 +43,8 @@
   </button>
 
   <div id="instructions" style="display:flex; transform: rotate(-90deg);">  
-    <audio controls id="instructionAudio1">
-      <source src="TMT.mp3" type="audio/mpeg">
+    <audio controls id="instructionAudio1" style="transform: rotate(-90deg);">
+      <source src="sonidos/TMT_A_1.wav" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
     <canvas id="tmtCanvas" width="850" height="800" style="display:flex;"></canvas>
@@ -52,11 +52,13 @@
   
 
 
+
+
   <div id="partA" style="display:none; transform: rotate(-90deg);">
 
 
     <audio controls id="instructionAudio">
-      <source id="audioPartA" src="TMT-ParteA.mp3" type="audio/mpeg">
+      <source id="audioPartA" src="sonidos/TMT_A_2.wav" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
     <canvas id="tmtCanvasPartA" width="850" height="1300"></canvas>
@@ -74,7 +76,7 @@
           <p id="instructionText1">En esta pantalla hay más números dentro de unos círculos. Por favor, tome el lápiz y
             haga una línea de un círculo a otro, en orden. Empiece en el 1 y termine aquí. Por favor, trate de no
             levantar el lápiz de la pantalla al ir de un círculo
-            a otro. Trabaje lo más rápido que pueda</p>
+            a otro. Trabaje lo más rápido que pueda. Empiece</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

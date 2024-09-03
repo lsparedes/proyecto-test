@@ -41,26 +41,26 @@ document.addEventListener('DOMContentLoaded', () => {
         'img-jpg/20.jpg'
     ];
     const audios = [
-        'audio/1.mp3',
-        'audio/2.mp3',
-        'audio/3.mp3',
-        'audio/4.mp3',
-        'audio/5.mp3',
-        'audio/6.mp3',
-        'audio/7.mp3',
-        'audio/8.mp3',
-        'audio/9.mp3',
-        'audio/10.mp3',
-        'audio/11.mp3',
-        'audio/12.mp3',
-        'audio/13.mp3',
-        'audio/14.mp3',
-        'audio/15.mp3',
-        'audio/16.mp3',
-        'audio/17.mp3',
-        'audio/18.mp3',
-        'audio/19.mp3',
-        'audio/20.mp3'
+        'audio/2_Ampolleta.wav',
+        'audio/3_Cepillo.wav',
+        'audio/4_Martillo.wav',
+        'audio/5_Llave.wav',
+        'audio/6_Lápiz.wav',
+        'audio/7_Manzana.wav',
+        'audio/8_Peineta.wav',
+        'audio/9_Regadera.wav',
+        'audio/10_Tijeras.wav',
+        'audio/11_Pipa.wav',
+        'audio/12_Cuchara.wav',
+        'audio/13_Brocha.wav',
+        'audio/14_Destornillador.wav',
+        'audio/15_Exprimidor.wav',
+        'audio/16_Plancha.wav',
+        'audio/17_Vaso.wav',
+        'audio/18_Dardos.wav',
+        'audio/19_Piano.wav',
+        'audio/20_Binoculares.wav',
+        'audio/21_Serrucho.wav'
     ];
 
 
@@ -101,11 +101,14 @@ document.addEventListener('DOMContentLoaded', () => {
         testAudio.play();
     });
 
-    testAudio.addEventListener('ended', () => {
-        audioPlayed = true;
-
-        startRecording();
-
+    testAudio.addEventListener('timeupdate', () => {
+        const timeRemaining = testAudio.duration - testAudio.currentTime;
+        
+        // Verifica si el tiempo restante es menor o igual a 0.5 segundos
+        if (timeRemaining <= 1 && !audioPlayed) {
+            audioPlayed = true; // Evita que la función se llame más de una vez
+            startRecording();
+        }
     });
 
     async function startRecording() {

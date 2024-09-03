@@ -24,11 +24,11 @@
     </p>
     <div class="d-flex justify-content-center">
       <audio controls class="me-3">
-        <source src="audios/metacognition1B.mp3" type="audio/mpeg" id="instructionsAudio">
+        <source src="audios/1.wav" type="audio/mpeg" id="instructionsAudio">
         Tu navegador no soporta el elemento de audio.
       </audio>
-      <audio controls>
-        <source src="metacognition1.mp3" type="audio/mpeg" id="instructionsAudioB">
+      <audio controls style="display: none;">
+        <source src="" type="audio/mpeg" id="instructionsAudioB">
         Tu navegador no soporta el elemento de audio.
       </audio>
     </div>
@@ -70,7 +70,7 @@
       Por favor, responda tan rápido como pueda.
     </p>
     <audio id="instructionsAudio2" controls>
-      <source src="metacognition4.mp3" type="audio/mpeg">
+      <source src="audios/4.wav" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
     <div class="button-container">
@@ -131,7 +131,8 @@
       <br><br><br>
       <div class="button-group" style="display: flex; flex-direction: column; align-items: center;">
         <button class="btn btn-light btn-lg shadow" id="submitConfidenceButton" disabled><b>LISTO</b></button>
-        <button class="btn btn-light btn-lg shadow" id="resetDemoButton" style="margin-top: 20px;"><b>REINICIAR</b></button>
+        <button class="btn btn-light btn-lg shadow" id="resetDemoButton"
+          style="margin-top: 20px;"><b>REINICIAR</b></button>
       </div>
     </center>
   </div>

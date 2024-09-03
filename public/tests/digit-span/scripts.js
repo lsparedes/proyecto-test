@@ -59,7 +59,7 @@ function startTest(type) {
         titleElement.textContent = title;
 
         const audio = document.createElement('audio');
-        audio.src = `audio/${type}/${index + 1}.mp3`;
+        audio.src = `audio/${type}/${index + 1}.wav`;
         audio.controls = true;
 
         audio.addEventListener('ended', () => {

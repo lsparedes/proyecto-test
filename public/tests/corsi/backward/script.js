@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function endPractice() {
-        instructionsAudio.src = 'corsi-backward-2.mp3';
+        instructionsAudio.src = 'sonidos/Inverso_2.wav';
         var audioContainer = instructionsAudio.parentNode;
         audioContainer.load();
         instructions.innerHTML = 'La longitud de las secuencias que tendrá que memorizar aumentará gradualmente. Un sonido de alarma le indicará que es momento de iniciar su respuesta. Por favor, responda tan rápido como pueda.';
@@ -349,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playBeep() {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const audioUrl = 'beep.wav';
+        const audioUrl = 'sonidos/beep.wav';
 
         fetch(audioUrl)
             .then(response => response.arrayBuffer())

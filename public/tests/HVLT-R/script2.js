@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const startRecordingButton4 = document.getElementById('startRecordingButton4');
     const stopRecordingButton4 = document.getElementById('stopRecordingButton4');
     const DownloadButton = document.getElementById('download');
+    const NXButton21 = document.getElementById('nxbutton21')
+    const mainScreen3 = document.getElementById('main-screen2-1')
 
     let mediaRecorder;
     let audioChunks = [];
@@ -35,11 +37,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    NXButton21.addEventListener('click', () => {
+        mainScreen3.style.display = 'none'
+        recordingControls4.style.display = 'none';
+        finishScreen.style.display = 'block';
+        startRecordingButton4.style.display = 'none';
+        stopRecording();
+        finishTime = new Date();
+    });
+
     startButton2.addEventListener('click', () => {
         pauseAudios();
         mainScreen2.style.display = 'none';
-        finishScreen.style.display = 'block';
-        DownloadButton.style.display = 'block';
+        mainScreen3.style.display = 'block';
+        recordingControls4.style.display = 'block';
+        startRecording('HVLT-R Ensayo 1.mp3');
         startFinishTimer();
     });
 
@@ -50,6 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recordingControls4.style.display = 'block';
         startRecording('HVLT-R Ensayo 1.mp3');
     });
+
 
     startRecordingButton4.addEventListener('click', () => {
         startRecording();
@@ -110,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playBeepSound() {
-        const beep = new Audio('beep.wav');
+        const beep = new Audio('audios/beep.wav');
         beep.play();
     }
 
