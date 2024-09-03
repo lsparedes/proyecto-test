@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     demoButton.style.display = 'none';
 
     setTimeout(() => {
-        demoButton.click();
+      demoButton.click();
     }, 3000);
   }
 
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     correctColor = numRedDots > numBlueDots ? 'red' : 'blue';
-    console.log(`Correct color is ${correctColor}. Red: ${numRedDots}, Blue: ${numBlueDots}, diferencia: ${diferenciaInicial}, puntos mayor: ${numPuntosMayor}, puntos menor: ${numPuntosMenor}`); 
+    console.log(`Correct color is ${correctColor}. Red: ${numRedDots}, Blue: ${numBlueDots}, diferencia: ${diferenciaInicial}, puntos mayor: ${numPuntosMayor}, puntos menor: ${numPuntosMenor}`);
   }
 
   function recordAnswer(answer) {
@@ -282,6 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (instructionsPhase === 0) {
       var audioContainer = instructionsAudio.parentNode;
       var audioContainerB = instructionsAudioB.parentNode;
+      audioContainerB.style.display = 'block';
       audioContainer.pause();
       audioContainerB.pause();
       instructionsText.innerHTML = 'A lo largo de la tarea se utiliza una \
@@ -296,8 +297,8 @@ document.addEventListener('DOMContentLoaded', () => {
       fullscreenButton.style.display = 'none';
       document.getElementById('startDemoButton').style.display = 'none';
       sliderPractice.style.display = 'block';
-      instructionsAudio.src = 'audios/metacognition2.mp3'
-      instructionsAudioB.src = 'audios/metacognition2B.mp3'
+      instructionsAudio.src = 'audios/2_femenino.wav'
+      instructionsAudioB.src = 'audios/2_masculino.wav'
       audioContainer.load();
       audioContainerB.load();
     } else if (instructionsPhase === 1) {
@@ -311,8 +312,8 @@ document.addEventListener('DOMContentLoaded', () => {
       instructionsText.innerHTML = 'Ahora usted realizará una ronda de práctica. Por favor, indique si el recuadro contiene más puntos de color rojo o azul.<br>\
       Posteriormente mueva el cursor a lo largo de la escala de calificación para expresar que tan seguro(a) o inseguro(a) se siente acerca de su decisión y presione <b>LISTO</b> para continuar.<br>';
       instructionsPhase++;
-      instructionsAudio.src = 'audios/metacognition3.mp3'
-      instructionsAudioB.src = 'audios/metacognition3B.mp3'
+      instructionsAudio.src = 'audios/3_femenino.wav'
+      instructionsAudioB.src = 'audios/3_masculino.wav'
       audioContainer.load();
       audioContainerB.load();
     } else {
@@ -568,10 +569,10 @@ document.addEventListener('DOMContentLoaded', () => {
   function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
-}
+  }
 
-// Obtener el id_participante de la URL
-const idParticipante = getQueryParam('id_participante');
+  // Obtener el id_participante de la URL
+  const idParticipante = getQueryParam('id_participante');
 
   function getCurrentDate() {
     const now = new Date();
