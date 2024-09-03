@@ -651,7 +651,7 @@ function testFinalizado() {
 
 
 function generateCSV(data) {
-    let csvContent = "tr;errores_comision;lineas_correctas;lapiz_levantado;tr;t_lapiz_levantado;t_tarea;mano\n";
+    let csvContent = "TotTime;NoCommErr;NoCorrLines;NoLiftPen;ExecLiftTime;ExecTime;Hand\n";
 
     data.forEach(row => {
         let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime};${row.taskTime};${selectedHand}\n`;
