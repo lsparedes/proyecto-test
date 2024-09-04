@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let startDrawingTime = null;
     let endDrawingTime = null;
     let startTimeExecution = null;
-    let endTimeExecution = null;
+    let endTimeExecution2 = null;
     let recordedChunks = [];
     let selectedHand = "";
     let mediaRecorder = null;
@@ -61,15 +61,26 @@ document.addEventListener('DOMContentLoaded', () => {
         DownloadButton.style.display = 'block';
         endDrawingTime = new Date();
         console.log("Terminó de Dibujar: ", endDrawingTime);
-        endTimeExecution = new Date();
-        console.log("Tiempo de Termino: ", endTimeExecution);
+        endTimeExecution2 = new Date();
+        console.log("Tiempo de Termino: ", endTimeExecution2);
         selectHandContainer.style.display = 'block';
-        startFinishTimer();
+
+        // Guardar en localStorage
+        localStorage.setItem('endTimeExecution2', endTimeExecution2);
+
     });
 
-    DownloadButton.addEventListener('click', () => {
+    DownloadButton.addEventListener('click', async ()  => {
         validateInputs();
-        GenerateZIP();
+        try {
+            await GenerateZIP();
+        } catch (error) {
+            console.error("Error al generar el ZIP:", error);
+        }
+    
+        setTimeout(() => {
+            window.close();
+        }, 3000);
     });
 
 
@@ -239,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function generateCSV() {
         // let csvContent = "data:text/csv;charset=utf-8,";
         let csvContent = "Actividad;Tiempo Total(s);Tiempo Dibujo(ms);Mano Seleccionada\n";
-        let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
+        let timeTotal = (endTimeExecution2 - startTimeExecution) / 1000; //tiempo total en segundos
         let drawingTime = 0;
         if (startDrawingTime) {
             drawingTime = (endDrawingTime - startDrawingTime); //tiempo de dibujo en milisegundos
