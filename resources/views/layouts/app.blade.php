@@ -45,7 +45,6 @@
     <script>
 $(document).ready(function() {
     const endTimeExecution = localStorage.getItem('endTimeExecution');
-    let playBeepAfterInteraction = false;
 
     if (endTimeExecution) {
         const endTimeDate = new Date(endTimeExecution);
@@ -55,19 +54,22 @@ $(document).ready(function() {
         if (timeElapsed < 30) {
             const remainingTime = 30 - timeElapsed;
             setTimeout(() => {
-                playBeepAfterInteraction = true;
-                playBeepSound(); // Reproduce el sonido directamente después del tiempo
+                playBeepSound();
             }, remainingTime * 1000);
         } else {
-            playBeepAfterInteraction = true;
-            playBeepSound(); // Reproduce el sonido si el tiempo ya ha pasado
+            playBeepSound();
         }
     }
 
     function playBeepSound() {
         const beep = new Audio('/assets/audio/beep.wav');
-        beep.play().catch(error => {
-            console.error("Error al reproducir el sonido: ", error);
+        beep.addEventListener('canplaythrough', () => {
+            beep.play().then(() => {
+                // Clear the localStorage after playing the sound
+                localStorage.removeItem('endTimeExecution');
+            }).catch(error => {
+                console.error("Error al reproducir el sonido: ", error);
+            });
         });
     }
 
@@ -86,6 +88,7 @@ $(document).ready(function() {
         testContainer.empty().append(visibleCards);
     });
 });
+
 
 </script>
 
