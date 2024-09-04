@@ -24,10 +24,17 @@ fullscreenButton.addEventListener('click', () => {
 let mediaRecorder2;
 let audioChunks2 = [];
 let mediaRecorders = [null, null, mediaRecorder2];
-let audioChunks = [null, null, audioChunks2];
 let timers = [null, null, null];
 
 let audioStream = null; // Guardar el stream de audio
+
+let mediaRecorder;
+let audioChunks = [];
+let audioContext;
+let destination;
+let micStream;
+let audioElementStream;
+let combinedStream;
 
 document.addEventListener('DOMContentLoaded', () => {
     requestMicrophonePermission();
@@ -54,27 +61,37 @@ function requestMicrophonePermission() {
         });
 }
 
-function startRecording(part) {
+async function startRecording(part) {
     if (!audioStream) {
         alert('No se puede acceder al micrófono. Por favor, revisa los permisos.');
         return;
     }
 
-    mediaRecorders[part] = new MediaRecorder(audioStream);
-    mediaRecorders[part].start();
-    audioChunks[part] = [];
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    mediaRecorders[part].addEventListener('dataavailable', event => {
-        audioChunks[part].push(event.data);
-    });
+    const audio = new Audio('beep.wav');
+    audio.crossOrigin = "anonymous"; 
+    audio.play();
 
-    mediaRecorders[part].addEventListener('stop', () => {
-        const audioBlob = new Blob(audioChunks[part], { type: 'audio/wav' });
-        const audioUrl = URL.createObjectURL(audioBlob);
-        document.getElementById('nextButton' + part).style.display = 'inline-block';
-        showRecordingCreatedMessage(part);
-        clearInterval(timers[part]); // Clear the timer when recording stops
-    });
+    audioContext = new AudioContext();
+
+    destination = audioContext.createMediaStreamDestination();
+
+    const micSource = audioContext.createMediaStreamSource(micStream);
+    micSource.connect(destination);
+
+    const audioElementSource = audioContext.createMediaElementSource(audio);
+    audioElementSource.connect(audioContext.destination);
+    audioElementSource.connect(destination);
+
+    combinedStream = destination.stream;
+
+    mediaRecorder = new MediaRecorder(combinedStream);
+    mediaRecorder.ondataavailable = event => {
+        audioChunks.push(event.data);
+    };
+
+    mediaRecorder.start();
 
     document.getElementById('stopRecordingButton' + part).style.display = 'inline-block';
     document.getElementById('recButton' + part).style.display = 'inline-block';
@@ -82,13 +99,14 @@ function startRecording(part) {
 }
 
 function stopRecording(part) {
-    if (mediaRecorders[part]) {
-        mediaRecorders[part].stop();
-        document.getElementById('stopRecordingButton' + part).style.display = 'none';
-        document.getElementById('recButton' + part).style.display = 'none';
-        document.getElementById('instructionAudio' + part).style.display = 'none'; // Ocultar el reproductor de audio
-        nextSection(part);
-    }
+    mediaRecorder.stop();
+
+    audioContext.close();
+
+    document.getElementById('stopRecordingButton' + part).style.display = 'none';
+    document.getElementById('recButton' + part).style.display = 'none';
+    document.getElementById('instructionAudio' + part).style.display = 'none'; // Ocultar el reproductor de audio
+    nextSection(part);
 }
 
 function startTimer(part) {
@@ -145,9 +163,9 @@ function loadAudio(part) {
             checkTimeRemaining();
 
             // Detener el setInterval una vez que la grabación ha comenzado y el tiempo restante es menor a 3 segundos.
-            if (recordingStarted && timeRemaining <= 3) {
-                clearInterval(intervalId);
-            }
+            // if (recordingStarted && timeRemaining <= 3) {
+            //     clearInterval(intervalId);
+            // }
         }, 100);
     });
 
@@ -203,8 +221,8 @@ function downloadRecordingAndTime() {
     const zip = new JSZip();
     zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.txt`, timeBlob);
 
-    const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
-    zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.wav`, audio2Blob);
+    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+    zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.wav`, audioBlob);
 
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
