@@ -122,8 +122,13 @@
 
 <!-- Script para abrir enlaces en pantalla completa -->
 <script>
-    document.getElementById('openIframeButton').addEventListener('click', function() {
-        window.open('{{ $test->url_test }}?id_participante={{ $IDparticipante }}', '_blank');
+    document.addEventListener('DOMContentLoaded', function() {
+        var openIframeButton = document.getElementById('openIframeButton');
+        if (openIframeButton) {
+            openIframeButton.addEventListener('click', function() {
+                window.open('{{ $test->url_test }}?id_participante={{ $IDparticipante }}', '_blank');
+            });
+        }
     });
 </script>
 
@@ -142,25 +147,30 @@
         var fuenteDropdown = document.getElementById('fuenteDropdown');
         var fuenteArrow = document.getElementById('fuenteArrow');
 
-        fuenteContainer.addEventListener('click', function() {
-            if (fuenteDropdown.style.display === 'none') {
-                fuenteDropdown.style.display = 'block';
-                fuenteArrow.classList.remove('fa-chevron-down');
-                fuenteArrow.classList.add('fa-chevron-up');
-            } else {
-                fuenteDropdown.style.display = 'none';
-                fuenteArrow.classList.remove('fa-chevron-up');
-                fuenteArrow.classList.add('fa-chevron-down');
-            }
-        });
+        if (fuenteContainer) {
+            fuenteContainer.addEventListener('click', function() {
+                if (fuenteDropdown.style.display === 'none') {
+                    fuenteDropdown.style.display = 'block';
+                    fuenteArrow.classList.remove('fa-chevron-down');
+                    fuenteArrow.classList.add('fa-chevron-up');
+                } else {
+                    fuenteDropdown.style.display = 'none';
+                    fuenteArrow.classList.remove('fa-chevron-up');
+                    fuenteArrow.classList.add('fa-chevron-down');
+                }
+            });
+        }
 
         document.addEventListener('click', function(event) {
-            if (!fuenteContainer.contains(event.target) && !fuenteDropdown.contains(event.target)) {
+            if (fuenteDropdown && fuenteContainer && !fuenteContainer.contains(event.target) && !fuenteDropdown.contains(event.target)) {
                 fuenteDropdown.style.display = 'none';
-                fuenteArrow.classList.remove('fa-chevron-up');
-                fuenteArrow.classList.add('fa-chevron-down');
+                if (fuenteArrow) {
+                    fuenteArrow.classList.remove('fa-chevron-up');
+                    fuenteArrow.classList.add('fa-chevron-down');
+                }
             }
         });
     });
 </script>
+
 @endsection

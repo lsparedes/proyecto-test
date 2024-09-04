@@ -433,19 +433,28 @@ function adjustClickCoordinates(e, canvas, originalSize) {
     return { x, y };
 }
 
-function resizeCanvas(canvas, ctx, image, desktopPercentage = 90, tabletPercentage = 80) {
-    const percentage = isTablet() ? tabletPercentage : desktopPercentage;
+function resizeCanvas(canvas, ctx, image, desktopPercentage = 95, tabletPercentage = 80) {
+    const isTabletDevice = isTablet();
+    const percentage = isTabletDevice ? tabletPercentage : desktopPercentage;
     const aspectRatio = image.width / image.height;
     const windowAspectRatio = window.innerWidth / window.innerHeight;
 
+    let newWidth, newHeight;
+
     // Ajustar dimensiones del canvas según la relación de aspecto
     if (windowAspectRatio > aspectRatio) {
-        canvas.height = window.innerHeight * (percentage / 100);
-        canvas.width = canvas.height * aspectRatio;
+        newHeight = window.innerHeight * (percentage / 100);
+        newWidth = newHeight * aspectRatio;
     } else {
-        canvas.width = window.innerWidth * (percentage / 100);
-        canvas.height = canvas.width / aspectRatio;
+        newWidth = window.innerWidth * (percentage / 100);
+        newHeight = newWidth / aspectRatio;
     }
+
+    // Ajustar el tamaño del canvas
+    canvas.width = newWidth;
+    canvas.height = newHeight;
+
+    console.log(`Canvas size on ${isTabletDevice ? 'tablet' : 'desktop'}: ${newWidth}px x ${newHeight}px`);
 
     // Limpiar el canvas antes de redibujar
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -710,8 +719,8 @@ function validateClicks() {
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
                 window.close();
-            }); 
-            
+            });
+
         });
     });
 

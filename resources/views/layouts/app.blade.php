@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'NeuroCogTest') }}</title>
+    <title>{{ config('app.name', 'NeuroTest') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -42,71 +42,83 @@
 
 
     <!-- Script de busqueda test frontpage-->
-    <script>
-    $(document).ready(function() {
-        // Búsqueda y filtrado de tarjetas
-        var testContainer = $("#testContainer");
-        var originalOrder = testContainer.children('.col-md-4').clone(); 
+ <!-- Script de busqueda test frontpage-->
+ <script>
+        $(document).ready(function() {
+            function getEndTime(key) {
+                const endTime = localStorage.getItem(key);
+                return endTime ? new Date(endTime) : null;
+            }
 
-        $("#searchInput").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
+            const endTimeExecution = getEndTime('endTimeExecution');
+            const endTimeExecution2 = getEndTime('endTimeExecution2');
+            const endTimeExecution3 = getEndTime('endTimeExecution3');
 
-            var visibleCards = originalOrder.filter(function() {
-                var cardText = $(this).text().toLowerCase();
-                return cardText.indexOf(value) > -1;
-            }).clone();
+            // Duraciones en segundos
+            const durationExecution = 600; // 10 minutos
+            const durationExecution2 = 600; // 10 minutos
+            const durationExecution3 = 1200; // 20 minutos
 
-            testContainer.empty().append(visibleCards);
-        });
+            // Ajusta las fechas de finalización según la duración
+            const endTimes = [
+                endTimeExecution ? new Date(endTimeExecution.getTime() + durationExecution * 1000) : null,
+                endTimeExecution2 ? new Date(endTimeExecution2.getTime() + durationExecution2 * 1000) : null,
+                endTimeExecution3 ? new Date(endTimeExecution3.getTime() + durationExecution3 * 1000) : null
+            ];
 
-        document.addEventListener('click', () => {
-            iniciarTemporizador();
-        }, { once: true });
+            const now = new Date();
 
-        function iniciarTemporizador() {
-            let endTimeExecution = localStorage.getItem('endTimeExecution');
-            let beepPlayed = localStorage.getItem('beepPlayed'); 
-            let currentTime = new Date();
+            // Determinar el mayor tiempo de espera
+            const maxEndTime = endTimes.reduce((max, endTime) => {
+                return endTime && (max === null || endTime > max) ? endTime : max;
+            }, null);
 
-            if (!beepPlayed) {
-                if (endTimeExecution) {
-                    endTimeExecution = new Date(endTimeExecution);
-                    let timeElapsed = currentTime - endTimeExecution;
+            if (maxEndTime) {
+                const timeRemaining = (maxEndTime - now) / 1000; // Tiempo restante en segundos
 
-                    console.log(`Tiempo transcurrido desde el fin de la ejecución: ${timeElapsed} ms`);
-
-                    if (timeElapsed >= 0 && timeElapsed < 30 * 1000) {
-                        setTimeout(() => {
-                            playBeepSound();
-                            localStorage.removeItem('endTimeExecution');
-                            localStorage.setItem('beepPlayed', true); 
-                        }, 30 * 1000 - timeElapsed);
-                    } else {
-                        console.log("El tiempo ya ha pasado. Reproduciendo sonido inmediatamente.");
-                        playBeepSound();
-                        localStorage.removeItem('endTimeExecution');
-                        localStorage.setItem('beepPlayed', true); 
-                    }
-                } else {
-                    console.log("No se encontró 'endTimeExecution' en localStorage. Estableciendo nuevo tiempo de ejecución.");
-                    endTimeExecution = new Date(currentTime.getTime() + 30 * 1000);
-                    localStorage.setItem('endTimeExecution', endTimeExecution.toISOString());
-
+                if (timeRemaining > 0) {
                     setTimeout(() => {
                         playBeepSound();
-                        localStorage.removeItem('endTimeExecution');
-                        localStorage.setItem('beepPlayed', true); 
-                    }, 30 * 1000);
+                    }, timeRemaining * 1000);
+                } else {
+                    playBeepSound();
                 }
             }
-        }
-        function playBeepSound() {
-            const beep = new Audio('{{ asset('assets/audio/beep.wav') }}');
-            beep.play().catch(error => console.error("Error al reproducir el sonido:", error));
-        }
-    });
-</script>
 
+            function playBeepSound() {
+                const beep = new Audio('/assets/audio/beep.wav');
+                beep.addEventListener('loadedmetadata', () => {
+                    beep.play().then(() => {
+                        // Clear the localStorage after playing the sound
+                        localStorage.removeItem('endTimeExecution');
+                        localStorage.removeItem('endTimeExecution2');
+                        localStorage.removeItem('endTimeExecution3');
+                    }).catch(error => {
+                        console.error("Error al reproducir el sonido: ", error);
+                    });
+                });
+
+                beep.addEventListener('error', (e) => {
+                    console.error("Error al cargar el audio: ", e);
+                });
+            }
+
+            // Tu código existente para búsqueda y filtrado de tarjetas
+            var testContainer = $("#testContainer");
+            var originalOrder = testContainer.children('.col-md-4').clone();
+
+            $("#searchInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+
+                var visibleCards = originalOrder.filter(function() {
+                    var cardText = $(this).text().toLowerCase();
+                    return cardText.indexOf(value) > -1;
+                }).clone();
+
+                testContainer.empty().append(visibleCards);
+            });
+        });
+</script>
     <div class="global-footer">
         <!-- Pie de página -->
         <!--@include('layouts.inc.frontend-footer')-->
