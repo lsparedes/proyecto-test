@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('audio1').pause();
         document.getElementById('audio1_2').pause();
         container2.style.display = 'none';
-        instruccionesDespues.style.display = 'block';
+        instruccionesDespues.style.display = 'flex';
         endDrawingTime = new Date();
         console.log("Terminó de dibujar: ", endDrawingTime)
 
@@ -99,14 +99,28 @@ document.addEventListener('DOMContentLoaded', () => {
         DownloadButton.style.display = 'block';
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
+        
+        // Guardar en localStorage
+        localStorage.setItem('endTimeExecution', endTimeExecution);
+    
         startFinishTimer();
     });
+    
 
 
-    DownloadButton.addEventListener('click', () => {
+    DownloadButton.addEventListener('click', async () => {
         selectHandContainer.style.display = 'none';  
         validateInputs();
-        GenerateZIP();
+    
+        try {
+            await GenerateZIP();
+        } catch (error) {
+            console.error("Error al generar el ZIP:", error);
+        }
+    
+        setTimeout(() => {
+            window.close();
+        }, 3000);
     });
     
     handInputs.forEach(input => {
@@ -279,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (startDrawingTime) {
             drawingTime = (endDrawingTime - startDrawingTime); //tiempo de dibujo en milisegundos
         }
-        csvContent += `DrawWithFigure;${timeTotal};${drawingTime};${selectedHand}\n`;
+        csvContent += `CopiarFigura;${timeTotal};${drawingTime};${selectedHand}\n`;
     
         return csvContent;
     }
@@ -332,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Generar el contenido del CSV
         const csvContent = generateCSV();
-        zip.file(`${idParticipante}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
     
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('drawing-canvas');
@@ -343,44 +357,26 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const blob = await stopCanvasRecording();
             const reader = new FileReader();
-            reader.onloadend = () => {
+            reader.onloadend = async () => {
                 zip.file('DrawWithFigure.webm', reader.result.split(',')[1], { base64: true });
-    
-                // Generar el ZIP y descargarlo
-                zip.generateAsync({ type: 'blob' }).then((content) => {
-                    const link = document.createElement('a');
-                    link.href = URL.createObjectURL(content);
-                    link.download = `${idParticipante}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-    
-                    // Cerrar la ventana después de la descarga
-                    setTimeout(() => {
-                        window.close();
-                    }, 1000); // Ajusta el tiempo si es necesario
-                });
+                const content = await zip.generateAsync({ type: 'blob' });
+                downloadZIP(content);
             };
             reader.readAsDataURL(blob);
-    
         } catch (error) {
             console.warn(`No video available: ${error}`);
-            // Generar el archivo ZIP sin el video
-            zip.generateAsync({ type: 'blob' }).then((content) => {
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(content);
-                link.download = `${idParticipante}_benson_draw_with_figure_${diaStr}_${mesStr}_${añoStr}.zip`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-    
-                // Cerrar la ventana después de la descarga
-                setTimeout(() => {
-                    window.close();
-                }, 1000);
-            });
+            const content = await zip.generateAsync({ type: 'blob' });
+            downloadZIP(content);
         }
     }
-    
+
+    function downloadZIP(content) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(content);
+        link.download = `${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
     
 });

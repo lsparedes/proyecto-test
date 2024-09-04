@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'NeuroCogTest') }}</title>
+    <title>{{ config('app.name', 'NeuroTest') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -43,69 +43,52 @@
 
     <!-- Script de busqueda test frontpage-->
     <script>
-    $(document).ready(function() {
-        // Búsqueda y filtrado de tarjetas
-        var testContainer = $("#testContainer");
-        var originalOrder = testContainer.children('.col-md-4').clone(); 
+$(document).ready(function() {
+    const endTimeExecution = localStorage.getItem('endTimeExecution');
+    let playBeepAfterInteraction = false;
 
-        $("#searchInput").on("keyup", function() {
-            var value = $(this).val().toLowerCase();
+    if (endTimeExecution) {
+        const endTimeDate = new Date(endTimeExecution);
+        const now = new Date();
+        const timeElapsed = (now - endTimeDate) / 1000; // Tiempo transcurrido en segundos
 
-            var visibleCards = originalOrder.filter(function() {
-                var cardText = $(this).text().toLowerCase();
-                return cardText.indexOf(value) > -1;
-            }).clone();
+        if (timeElapsed < 30) {
+            const remainingTime = 30 - timeElapsed;
+            setTimeout(() => {
+                playBeepAfterInteraction = true;
+                playBeepSound(); // Reproduce el sonido directamente después del tiempo
+            }, remainingTime * 1000);
+        } else {
+            playBeepAfterInteraction = true;
+            playBeepSound(); // Reproduce el sonido si el tiempo ya ha pasado
+        }
+    }
 
-            testContainer.empty().append(visibleCards);
+    function playBeepSound() {
+        const beep = new Audio('/assets/audio/beep.wav');
+        beep.play().catch(error => {
+            console.error("Error al reproducir el sonido: ", error);
         });
+    }
 
-        document.addEventListener('click', () => {
-            iniciarTemporizador();
-        }, { once: true });
+    // Tu código existente para búsqueda y filtrado de tarjetas
+    var testContainer = $("#testContainer");
+    var originalOrder = testContainer.children('.col-md-4').clone();
 
-        function iniciarTemporizador() {
-            let endTimeExecution = localStorage.getItem('endTimeExecution');
-            let beepPlayed = localStorage.getItem('beepPlayed'); 
-            let currentTime = new Date();
+    $("#searchInput").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
 
-            if (!beepPlayed) {
-                if (endTimeExecution) {
-                    endTimeExecution = new Date(endTimeExecution);
-                    let timeElapsed = currentTime - endTimeExecution;
+        var visibleCards = originalOrder.filter(function() {
+            var cardText = $(this).text().toLowerCase();
+            return cardText.indexOf(value) > -1;
+        }).clone();
 
-                    console.log(`Tiempo transcurrido desde el fin de la ejecución: ${timeElapsed} ms`);
-
-                    if (timeElapsed >= 0 && timeElapsed < 30 * 1000) {
-                        setTimeout(() => {
-                            playBeepSound();
-                            localStorage.removeItem('endTimeExecution');
-                            localStorage.setItem('beepPlayed', true); 
-                        }, 30 * 1000 - timeElapsed);
-                    } else {
-                        console.log("El tiempo ya ha pasado. Reproduciendo sonido inmediatamente.");
-                        playBeepSound();
-                        localStorage.removeItem('endTimeExecution');
-                        localStorage.setItem('beepPlayed', true); 
-                    }
-                } else {
-                    console.log("No se encontró 'endTimeExecution' en localStorage. Estableciendo nuevo tiempo de ejecución.");
-                    endTimeExecution = new Date(currentTime.getTime() + 30 * 1000);
-                    localStorage.setItem('endTimeExecution', endTimeExecution.toISOString());
-
-                    setTimeout(() => {
-                        playBeepSound();
-                        localStorage.removeItem('endTimeExecution');
-                        localStorage.setItem('beepPlayed', true); 
-                    }, 30 * 1000);
-                }
-            }
-        }
-        function playBeepSound() {
-            const beep = new Audio('{{ asset('assets/audio/beep.wav') }}');
-            beep.play().catch(error => console.error("Error al reproducir el sonido:", error));
-        }
+        testContainer.empty().append(visibleCards);
     });
+});
+
 </script>
+
 
     <div class="global-footer">
         <!-- Pie de página -->
