@@ -290,7 +290,7 @@ function mostrarFinalizacion(type) {
 
 
 function generarCSV() {
-    let csvContent = "en;tr\n";
+    let csvContent = "Trial;RT\n";
 
     downloadLinks.forEach(linkData => {
         if (linkData.title && linkData.duration) {
@@ -309,9 +309,9 @@ function getQueryParam(param) {
 // Obtener el id_participante de la URL
 const idParticipante = getQueryParam('id_participante');
 
-function generarTxt(taskTime) {
-    const txtContent = `Tiempo dedicado a la tarea(s): ${taskTime}`;
-    return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+function generarCSV2(taskTime) {
+    const txtContent = [['TotTime'], [taskTime]].join('\n');
+    return new Blob([txtContent], { type: 'text/csv;charset=utf-8' });
 }
 
 function crearZip(type) {
@@ -344,7 +344,7 @@ function crearZip(type) {
 
     console.log("Contenido del CSV:", csvContent);
 
-    const txtBlob = generarTxt(taskTime);
+    const txtBlob = generarCSV2(taskTime);
 
     const fechaActual = new Date();
     const now = new Date();
@@ -354,7 +354,7 @@ function crearZip(type) {
     const fechaFormateada = `${day}_${month}_${year}`;
 
     zip.file(`${idParticipante}_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_tiempo_dedicado_${fechaFormateada}.txt`, txtBlob);
+    zip.file(`${idParticipante}_tiempo_dedicado_${fechaFormateada}.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {

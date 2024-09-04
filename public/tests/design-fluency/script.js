@@ -234,7 +234,7 @@ window.onload = function () {
     }
 
     function generateCSV(data) {
-        let csvContent = `Tiempo dedicado a la tarea (s);Mano utilizada\n`;
+        let csvContent = `TotTime;Hand\n`;
     
         data.forEach(row => {
             let linea = ` ${row.taskTime};${selectedHand}\n`;

@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function generateCSV(results) {
-        const headers = ["en", "rp_c", "rp", "pc", "tr"];
+        const headers = ["Trial", "CorrResp", "PartResp", "Acc", "RT"];
         const rows = results.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
             const userResponseIncremented = data.userResponse.map(num => num + 1);
@@ -448,12 +448,11 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    function generateTxt(startTimeTotal, selectedHand) {
-        const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
-            + "Mano Utilizada: " + selectedHand;
+    function generateCSV2(startTimeTotal, selectedHand) {
+        const txtContent = [["TotTime", "Hand"] , [(new Date() - startTimeTotal) / 1000, selectedHand ]].map(e => e.join(";")).join("\n"); 
         return {
             content: txtContent,
-            filename: `${idParticipante}_corsi_directo_${getCurrentDate()}.txt`
+            filename: `${idParticipante}_corsi_directo_${getCurrentDate()}.csv`
         };
     }
 
@@ -475,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
         const csvFile = generateCSV(results);
-        const txtFile = generateTxt(startTimeTotal, selectedHand);
+        const txtFile = generateCSV2(startTimeTotal, selectedHand);
         await downloadZip(csvFile, txtFile);
     }
 });

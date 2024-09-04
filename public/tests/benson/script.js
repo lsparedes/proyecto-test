@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveResultsToCSV(activity, startTime, endTime, taskStartTime, taskEndTime, hand, correctAnswer, participantAnswer, accuracy, executionTime) {
         const totalTime = (endTime - startTime) / 1000; // en segundos
         const rows = [
-            ["Actividad", "Tiempo de Inicio", "Tiempo de Fin", "Tiempo Total (s)", "Tiempo Inicio de Tarea (s)", "Tiempo de Finalizacion de Tarea (s)", "Mano Utilizada", "Respuesta Correcta", "Respuesta Participante", "Precisión"],
+            ["Actividad", "Tiempo de Inicio", "Tiempo de Fin", "TotTime", "Tiempo Inicio de Tarea (s)", "Tiempo de Finalizacion de Tarea (s)", "Hand", "CorrResp", "PartResp", "Acc"],
             [activity, formatDate(startTime), formatDate(endTime), totalTime, formatDate(taskStartTime), formatDate(taskEndTime), hand, correctAnswer, participantAnswer, accuracy]
         ];
     
