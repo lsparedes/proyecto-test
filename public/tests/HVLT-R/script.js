@@ -39,8 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const endScreen = document.getElementById('finish');
     const finishScreen = document.getElementById('finishScreen');
     const NXButton6 = document.getElementById('nxbutton6');
-    let mediaRecorder;
-    let audioChunks = [];
     let startTime = new Date();
     let fecha = new Date();
 
@@ -51,6 +49,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let año = fecha.getFullYear();
 
     let is_recording = false;
+
+    let mediaRecorder;
+    let audioChunks = [];
+    let audioContext;
+    let destination;
+    let micStream;
+    let audioElementStream;
+    let combinedStream;
 
     // An array to hold all the audio files to be zipped
     const audioFiles = [];
@@ -130,7 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
     audioE1.addEventListener('timeupdate', () => {
         if (audioE1.currentTime >= audioE1.duration - 1) {
             // Iniciar la grabación un segundo antes de que termine el audio
+            if (!is_recording) {
             startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.wav');
+            };
         }
     });
 
@@ -142,7 +150,9 @@ document.addEventListener('DOMContentLoaded', () => {
     audioE2.addEventListener('timeupdate', () => {
         if (audioE2.currentTime >= audioE2.duration - 1) {
             // Iniciar la grabación un segundo antes de que termine el audio
+            if (!is_recording) {
             startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.wav');
+            };
         }
     });
 
@@ -155,7 +165,9 @@ document.addEventListener('DOMContentLoaded', () => {
     audioE3.addEventListener('timeupdate', () => {
         if (audioE3.currentTime >= audioE3.duration - 1) {
             // Iniciar la grabación un segundo antes de que termine el audio
-            startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.wav');
+            if (!is_recording) {
+                startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.wav');
+            };
         }
     });
 
@@ -192,26 +204,42 @@ document.addEventListener('DOMContentLoaded', () => {
         initRecordingButton3.style.display = 'none';
     });
 
-    function startRecording(initButton, stopButton, fileName) {
+    async function startRecording(initButton, stopButton, fileName) {
         is_recording = true;
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.start();
-                audioChunks = [];
-                mediaRecorder.addEventListener('dataavailable', event => {
-                    audioChunks.push(event.data);
-                });
-                mediaRecorder.addEventListener('stop', () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                    audioFiles.push({ blob: audioBlob, fileName: fileName });
-                });
-                initButton.disabled = true;
-                stopButton.disabled = false;
-            })
-            .catch(err => {
-                console.error('Error accessing media devices.', err);
-            });
+        audioChunks = [];
+
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+        const beep = new Audio('audios/beep.wav');
+        beep.crossOrigin = "anonymous";
+        beep.play();
+
+        audioContext = new AudioContext();
+
+        destination = audioContext.createMediaStreamDestination();
+
+        const micSource = audioContext.createMediaStreamSource(micStream);
+        micSource.connect(destination);
+
+        const audioElementSource = audioContext.createMediaElementSource(beep);
+        audioElementSource.connect(audioContext.destination);
+        audioElementSource.connect(destination);
+
+        combinedStream = destination.stream;
+
+        mediaRecorder = new MediaRecorder(combinedStream);
+        mediaRecorder.ondataavailable = event => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.start();
+
+        mediaRecorder.addEventListener('stop', () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
+            audioFiles.push({ blob: audioBlob, fileName: fileName });
+        });
+        initButton.disabled = true;
+        stopButton.disabled = false;
     }
 
     function stopRecording(initButton, stopButton) {

@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const NXButton21 = document.getElementById('nxbutton21')
     const mainScreen3 = document.getElementById('main-screen2-1')
 
-    let mediaRecorder;
-    let audioChunks = [];
     let recordingInterval;
     let recordingSeconds = 0;
     let startTime = new Date();
@@ -24,6 +22,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let año = fecha.getFullYear();
 
     const audioFiles = [];
+
+    let mediaRecorder;
+    let audioChunks = [];
+    let audioContext;
+    let destination;
+    let micStream;
+    let audioElementStream;
+    let combinedStream;
 
     fullscreenButton.addEventListener('click', () => {
         if (document.fullscreenEnabled && !document.fullscreenElement) {
@@ -82,29 +88,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    function startRecording(fileName) {
-        navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.start();
-                audioChunks = [];
+    async function startRecording(fileName) {
+        micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-                mediaRecorder.addEventListener('dataavailable', event => {
-                    audioChunks.push(event.data);
-                });
+        const audio = new Audio('audios/beep.wav');
+        audio.crossOrigin = "anonymous";
+        audio.play();
 
-                mediaRecorder.addEventListener('stop', () => {
-                    const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-                    audioFiles.push({ blob: audioBlob, fileName: fileName })
-                });
+        audioContext = new AudioContext();
 
-                recordingInterval = setInterval(() => {
-                    recordingSeconds++;
-                }, 1000);
+        destination = audioContext.createMediaStreamDestination();
 
-                startRecordingButton4.disabled = true;
-                stopRecordingButton4.disabled = false;
-            });
+        const micSource = audioContext.createMediaStreamSource(micStream);
+        micSource.connect(destination);
+
+        const audioElementSource = audioContext.createMediaElementSource(audio);
+        audioElementSource.connect(audioContext.destination);
+        audioElementSource.connect(destination);
+
+        combinedStream = destination.stream;
+
+        audioChunks = [];
+        mediaRecorder = new MediaRecorder(combinedStream);
+        mediaRecorder.ondataavailable = event => {
+            audioChunks.push(event.data);
+        };
+
+        mediaRecorder.start();
+
+        mediaRecorder.addEventListener('stop', () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
+            audioFiles.push({ blob: audioBlob, fileName: fileName })
+        });
+
+        recordingInterval = setInterval(() => {
+            recordingSeconds++;
+        }, 1000);
+
+        startRecordingButton4.disabled = true;
+        stopRecordingButton4.disabled = false;
     }
 
     function stopRecording() {
