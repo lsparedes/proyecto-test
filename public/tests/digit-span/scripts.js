@@ -63,8 +63,11 @@ function startTest(type) {
         audio.controls = true;
 
         audio.addEventListener('ended', () => {
-            playBeepAndShowButtons(itemDiv, titleElement, index + 1);
+            setTimeout(() => {
+                playBeepAndShowButtons(itemDiv, titleElement, index + 1);
+            }, 600); // Espera 1000 milisegundos (1 segundo)
         });
+
 
         // Mostrar el botón "next-button" cuando el audio se cargue completamente
         audio.addEventListener('loadeddata', () => {
@@ -136,15 +139,7 @@ function avanzarSinGrabar(itemDiv, type, index) {
 
 
 function playBeepAndShowButtons(itemDiv, titleElement, index) {
-    const beep = new Audio('audio/beep.wav');
-    beep.play();
     startRecording(itemDiv, titleElement, index);
-    beep.addEventListener('ended', () => {
-        if (!itemDiv.querySelector('.new-button')) {
-            setTimeout(() => {
-            }, -1500);
-        }
-    });
 }
 
 function startRecording(itemDiv, titleElement, index) {
@@ -192,6 +187,9 @@ function startRecording(itemDiv, titleElement, index) {
     // Iniciar la grabación
     mediaRecorder.start();
     recordingStartTime = new Date();
+    const beep = new Audio('audio/beep.wav');
+    beep.play();
+
 
     const stopImg = itemDiv.querySelector('.stop-img');
     stopImg.classList.remove('hidden');
@@ -205,6 +203,7 @@ function startRecording(itemDiv, titleElement, index) {
     if (existingNewButton) {
         existingNewButton.parentNode.removeChild(existingNewButton);
     }
+    
 
     stopImg.parentNode.insertBefore(newButton, stopImg);
 
@@ -283,7 +282,7 @@ function mostrarFinalizacion(type) {
     fin.style.display = 'block';
     finalButton.style.display = 'block';
     document.getElementById('final-button').addEventListener('click', () => {
-        
+
         crearZip(type);
     });
 }
@@ -366,7 +365,7 @@ function crearZip(type) {
 
             downloadLink.click();
             document.body.removeChild(downloadLink);
-            window.close(); 
+            window.close();
 
             const completionMessage = document.getElementById('completion-message');
             if (completionMessage) {
