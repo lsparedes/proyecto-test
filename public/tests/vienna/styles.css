@@ -148,7 +148,7 @@ audio {
     border-top: 1px solid #dee2e6;
 }
 
-#startButton, #next-button, .arrow-button {
+#nextButton2, #nextButton1, #startButton, #next-button, .arrow-button, #handButton {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -192,24 +192,6 @@ audio {
 }
 
 /* SELECCION DE MANO CSS */
-
-#handButton {
-    display: inline-block;
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    background-image: url('arrow.png');
-    background-size: contain;
-    background-repeat: no-repeat;
-    padding: 5px;
-    width: 80px;
-    height: 65px;
-    margin: 20px;
-    vertical-align: middle;
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-}
 
 #selectHand label {
     font-weight: bold;

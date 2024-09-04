@@ -6,12 +6,6 @@ document.getElementById('startTestButton').addEventListener('click', () => {
     document.getElementById('instructions').style.display = 'none';
     document.getElementById('categoryFluency2').style.display = 'block';
     loadAudio(2); // Cargar el segundo audio
-
-    // document.getElementById('mainInstructionAudio').pause();
-    // startTime = Date.now();
-    // document.getElementById('instructions').style.display = 'none';
-    // document.getElementById('categoryFluency1').style.display = 'block';
-    // loadAudio(1); // Cargar el primer audio
 });
 
 const fullscreenButton = document.getElementById('fullscreenButton');
@@ -27,12 +21,10 @@ fullscreenButton.addEventListener('click', () => {
     }
 });
 
-
-
-let mediaRecorder1, mediaRecorder2;
-let audioChunks1 = [], audioChunks2 = [];
-let mediaRecorders = [null, mediaRecorder1, mediaRecorder2];
-let audioChunks = [null, audioChunks1, audioChunks2];
+let mediaRecorder2;
+let audioChunks2 = [];
+let mediaRecorders = [null, null, mediaRecorder2];
+let audioChunks = [null, null, audioChunks2];
 let timers = [null, null, null];
 
 let audioStream = null; // Guardar el stream de audio
@@ -109,19 +101,11 @@ function startTimer(part) {
     }, 1000);
 }
 
-document.getElementById('stopRecordingButton1').addEventListener('click', () => stopRecording(1));
 document.getElementById('stopRecordingButton2').addEventListener('click', () => stopRecording(2));
-
-document.getElementById('nextButton1').addEventListener('click', () => nextSection(1));
-document.getElementById('nextButton2').addEventListener('click', () => nextSection(2));
+document.getElementById('nextButton2').addEventListener('click', () => stopRecording(2));
 
 function nextSection(part) {
-    if (part === 1) {
-        document.getElementById('categoryFluency1').style.display = 'none';
-        document.getElementById('categoryFluency2').style.display = 'block';
-        document.getElementById('instructionAudio1').pause();
-        loadAudio(2); // Cargar el segundo audio
-    } else if (part === 2) {
+    if (part === 2) {
         document.getElementById('categoryFluency2').style.display = 'none';
         document.getElementById('instructionAudio2').pause();
         handButton.style.display = 'block';
@@ -138,13 +122,8 @@ function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
 
-    switch (part) {
-        case 1:
-            audio.src = 'audios/prendas-de-vestir.mp3';
-            break;
-        case 2:
-            audio.src = 'audios/Semantica_2.wav';
-            break;
+    if (part === 2) {
+        audio.src = 'audios/Semantica_2.wav';
     }
 
     audio.addEventListener('loadedmetadata', () => {
@@ -180,12 +159,6 @@ function loadAudio(part) {
     });
 }
 
-document.getElementById('startRecButton1').addEventListener('click', () => {
-    // startRecording(1);
-    document.getElementById('startRecButton1').style.display = 'none'; // Ocultar botón después de hacer clic
-    document.getElementById('recButton1').style.display = 'inline-block'; // Mostrar imagen de grabando
-});
-
 document.getElementById('startRecButton2').addEventListener('click', () => {
     // startRecording(2);
     document.getElementById('startRecButton2').style.display = 'none'; // Ocultar botón después de hacer clic
@@ -208,9 +181,7 @@ function getQueryParam(param) {
 // Obtener el id_participante de la URL
 const idParticipante = getQueryParam('id_participante');
 
-
 function downloadRecordingAndTime() {
-    // Obtener la fecha actual en formato YYYYMMDD
     const date = new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -221,7 +192,6 @@ function downloadRecordingAndTime() {
     const totalTimeMs = totalTime;
     const totalTimeSecs = (totalTime / 1000).toFixed(2);
 
-    // Crear el contenido del archivo .txt con la mano utilizada
     const txtContent = `Tiempo total: ${totalTimeMs} ms (${totalTimeSecs} s)`;
     const timeBlob = new Blob([txtContent], { type: 'text/plain' });
     const timeUrl = URL.createObjectURL(timeBlob);
@@ -229,13 +199,9 @@ function downloadRecordingAndTime() {
     const link = document.createElement('a');
     link.href = timeUrl;
     link.download = `${idParticipante}_verbal_fluency_categoria_${formattedDate}.txt`;
-    // link.click();
 
     const zip = new JSZip();
     zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.txt`, timeBlob);
-
-    const audio1Blob = new Blob(audioChunks[1], { type: 'audio/wav' });
-    // zip.file("Categoría - Parte 1.wav", audio1Blob);
 
     const audio2Blob = new Blob(audioChunks[2], { type: 'audio/wav' });
     zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.wav`, audio2Blob);
@@ -244,7 +210,6 @@ function downloadRecordingAndTime() {
         const zipLink = document.createElement('a');
         zipLink.href = URL.createObjectURL(content);
 
-        // Construir el nombre del archivo ZIP
         const fileName = `${idParticipante}_verbal_fluency_categoria_${formattedDate}.zip`;
 
         zipLink.download = fileName;
@@ -255,21 +220,14 @@ function downloadRecordingAndTime() {
 
 // SELECCION DE MANO JS
 const handButton = document.getElementById("handButton");
-const handInputs = document.getElementsByName('hand');
 
-// Variable con la mano seleccionada
-
-// Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
     document.getElementById("preEnd").style.display = 'block';
 }
 
-// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
-// En este caso fue mostrarFinalizacion()
 function confirmHandSelection() {
     document.getElementById("preEnd").style.display = 'none';
     endGame();
 }
 
 document.getElementById('handButton').addEventListener('click', confirmHandSelection);
-

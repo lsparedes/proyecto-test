@@ -105,8 +105,8 @@ function startTimer(part) {
 document.getElementById('stopRecordingButton1').addEventListener('click', () => stopRecording(1));
 document.getElementById('stopRecordingButton2').addEventListener('click', () => stopRecording(2));
 
-document.getElementById('nextButton1').addEventListener('click', () => nextSection(1));
-document.getElementById('nextButton2').addEventListener('click', () => nextSection(2));
+document.getElementById('nextButton1').addEventListener('click', () => stopRecording(1));
+document.getElementById('nextButton2').addEventListener('click', () => stopRecording(2));
 
 function nextSection(part) {
     if (part === 1) {
