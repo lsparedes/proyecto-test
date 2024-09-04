@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mes = fecha.getMonth() + 1;
     let año = fecha.getFullYear();
 
+    let is_recording = false;
 
     // An array to hold all the audio files to be zipped
     const audioFiles = [];
@@ -79,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     NXButton.addEventListener('click', () => {
-        pauseAudios();
         stopRecording(initRecordingButton1, stopRecordingButton1); // Detener y guardar la grabación
         wordsScreen.style.display = 'none';
         recordingControls1.style.display = 'none';
@@ -93,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     NXButton3.addEventListener('click', () => {
-        pauseAudios();
         stopRecording(initRecordingButton2, stopRecordingButton2); // Detener y guardar la grabación
         wordsScreen2.style.display = 'none';
         recordingControls2.style.display = 'none';
@@ -107,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     NXButton5.addEventListener('click', () => {
-        pauseAudios();
         stopRecording(initRecordingButton3, stopRecordingButton3); // Detener y guardar la grabación
         wordsScreen3.style.display = 'none';
         recordingControls3.style.display = 'none';
@@ -195,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function startRecording(initButton, stopButton, fileName) {
+        is_recording = true;
         navigator.mediaDevices.getUserMedia({ audio: true })
             .then(stream => {
                 mediaRecorder = new MediaRecorder(stream);
@@ -216,12 +215,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function stopRecording(initButton, stopButton) {
-        if (mediaRecorder) {
-            mediaRecorder.stop();
-            stopButton.disabled = true;
-            initButton.disabled = false;
-        } else {
-            console.warn('No mediaRecorder available to stop.');
+        if (is_recording) {
+            if (mediaRecorder) {
+                mediaRecorder.stop();
+                stopButton.disabled = true;
+                initButton.disabled = false;
+                is_recording = false;
+            } else {
+                console.warn('No mediaRecorder available to stop.');
+            }
         }
     }
 

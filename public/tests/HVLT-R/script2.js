@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audio1_ej2.addEventListener('ended', () => {
         mainScreen2.style.display = 'none';
         audio1_ej2.style.display = 'none';
+        mainScreen3.style.display = 'block';
         fullscreenButton.style.display = 'none';
         recordingControls4.style.display = 'block';
         startRecording('HVLT-R Ensayo 1.wav');
