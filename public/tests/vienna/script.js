@@ -685,9 +685,17 @@ document.addEventListener('DOMContentLoaded', () => {
             resizeCanvas(imageCanvas);
             drawImageScaled(imageCanvas, img);
         };
+        
+        // Pausar el video y configurar la reproducción después de 3 segundos
+        testVideo.pause(); // Asegurarse de que el video esté pausado
         console.log(`Mostrando video: ${videos[contador].src}`);
         clickStartTime = Date.now(); // Reiniciar el tiempo de inicio para calcular el tiempo de respuesta
+    
+        setTimeout(() => {
+            testVideo.play(); // Reproducir el video después de 3 segundos
+        }, 2000); // 2000 milisegundos = 3 segundos
     };
+    
 
     if (imageCanvas && testVideo) {
         fullScreenButton.addEventListener('click', () => {
