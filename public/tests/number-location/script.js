@@ -124,18 +124,20 @@ function generateCSV() {
     const endTime = new Date();
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
 
-    let csvContent = "Trial;CorrResp;PartResp;Acc;TotTime\n";
-
+    // Contenido del primer CSV
+    let csvContent1 = "Trial;CorrResp;PartResp;Acc;RT\n";
     answers.forEach(answer => {
-        csvContent += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')}\n`;
+        csvContent1 += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')}\n`;
     });
 
+    // Calcular el tiempo dedicado en segundos
     const tiempoDedicadoSegundos = (totalTestTime / 1000).toFixed(3).replace('.', ',');
 
-    const txtContent = `Tiempo dedicado (Segundos): ${tiempoDedicadoSegundos}`;
+    // Contenido del segundo CSV
+    let csvContent2 = `TotTime\n${tiempoDedicadoSegundos}\n`;
 
     const options = { timeZone: 'America/Santiago' };
-    const fechaActual = new Date(); // Declarar e inicializar la variable fechaActual
+    const fechaActual = new Date(); // Obtener la fecha actual
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
@@ -146,15 +148,16 @@ function generateCSV() {
     const dia = String(fechaActual.getDate()).padStart(2, '0');
     // Formatear la fecha y la hora
     const fechaHoraFormateada = `${dia}_${mes}_${año}`;
-    const csvFilename = `${idParticipante}_VisualObjectSpacePerception_${fechaHoraFormateada}.csv`;
-    const txtFilename = `${idParticipante}_VisualObjectSpacePerception_${fechaHoraFormateada}.txt`;
 
-    const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const txtBlob = new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
+    const csvFilename1 = `${idParticipante}_VisualObjectSpacePerception_${fechaHoraFormateada}.csv`;
+    const csvFilename2 = `${idParticipante}_VisualObjectSpacePerception_Uniques_${fechaHoraFormateada}.csv`;
+
+    const csvBlob1 = new Blob([csvContent1], { type: 'text/csv;charset=utf-8;' });
+    const csvBlob2 = new Blob([csvContent2], { type: 'text/csv;charset=utf-8;' });
 
     const zip = new JSZip();
-    zip.file(csvFilename, csvBlob);
-    zip.file(txtFilename, txtBlob);
+    zip.file(csvFilename1, csvBlob1);
+    zip.file(csvFilename2, csvBlob2);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
@@ -176,6 +179,7 @@ function generateCSV() {
             console.error("Error generando el archivo ZIP:", err);
         });
 }
+
 
 function validateInput(input) {
     let value = input.value;

@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     let currentTrial = 0;
-    const cantidad_ensayos_prueba = 10; // Ajusta este valor según sea necesario
-    const cantidad_ensayos_bloque_1 = 20;
-    const cantidad_ensayos_bloque_2 = 20;
-    const cantidad_ensayos_bloque_3 = 20;
+    const cantidad_ensayos_prueba = 2; // Ajusta este valor según sea necesario
+    const cantidad_ensayos_bloque_1 = 2;
+    const cantidad_ensayos_bloque_2 = 2;
+    const cantidad_ensayos_bloque_3 = 2;
     let trials = [];
     let startTime;
     let results = [];
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
             trial.rightReward ? 'Ganancia' : 'Pérdida',
             trial.leftReward ? 'Ganancia' : 'Pérdida',
             side,
-            reward ? 'Ganancia' : 'Pérdida',
+            reward ? 1 : 0,
             responseTime,
         ]);
 
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentTrial + 1,
             trials[currentTrial].rightReward ? 'Ganancia' : 'Pérdida',
             trials[currentTrial].leftReward ? 'Ganancia' : 'Pérdida',
-            'omitido',
+            '',
             '',
             '',
             ''
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const zip = new JSZip();
 
-        let csvContent = "Block;Trial;OLSlMach;ORSlMach;PartResp;resultado;RT\n";
+        let csvContent = "Block;Trial;OLSlMach;ORSlMach;PartResp;Acc;RT\n";
         csvContent += results.map(e => e.join(";")).join("\n");
 
         const totalTaskTime = (Date.now() - totalStartTime) / 1000;

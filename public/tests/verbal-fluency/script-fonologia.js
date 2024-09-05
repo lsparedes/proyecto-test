@@ -232,17 +232,17 @@ function downloadRecordingAndTime() {
     const totalTimeSecs = (totalTime / 1000).toFixed(2);
 
     // Crear el contenido del archivo .txt con la mano utilizada
-    const txtContent = `Tiempo total: ${totalTimeMs} ms (${totalTimeSecs} s)`;
+    const txtContent = `TotTime\n${totalTimeSecs}`;
     const timeBlob = new Blob([txtContent], { type: 'text/plain' });
     const timeUrl = URL.createObjectURL(timeBlob);
 
     const link = document.createElement('a');
     link.href = timeUrl;
-    link.download = `${idParticipante}_verbal_fluency_fonologia_${formattedDate}.txt`;
+    link.download = `${idParticipante}_verbal_fluency_fonologia_${formattedDate}.csv`;
     // link.click();
 
     const zip = new JSZip();
-    zip.file(`${idParticipante}_verbal_fluency_fonologia_${formattedDate}.txt`, timeBlob);
+    zip.file(`${idParticipante}_verbal_fluency_fonologia_${formattedDate}.csv`, timeBlob);
 
     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
     zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.wav`, audioBlob);

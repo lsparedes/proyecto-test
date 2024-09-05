@@ -678,7 +678,7 @@ function getCurrentDate() {
 
 function generateCSV(results) {
     // Crear el encabezado del CSV
-    let csvContent = "Trial;item;CorrResp;PartResp;Acc;RT\n";
+    let csvContent = "Trial;Item;CorrResp;PartResp;Acc;RT\n";
 
     // Recorrer las respuestas seleccionadas
     results.forEach(respuesta => {
@@ -696,11 +696,11 @@ function generateCSV(results) {
 }
 
 function generateTxt(startTimeTotal, selectedHand) {
-    const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
-        + "Mano Utilizada: " + selectedHand;
+    const txtContent = "TotTime;Hand\n" + (new Date() - startTimeTotal) / 1000 + ";"
+        + selectedHand + "\n";
     return {
         content: txtContent,
-        filename: `${idParticipante}_modified_camel_and_cactus_${getCurrentDate()}.txt`
+        filename: `${idParticipante}_modified_camel_and_cactus_Uniques_${getCurrentDate()}.csv`
     };
 }
 

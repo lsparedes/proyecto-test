@@ -353,7 +353,7 @@ function crearZip(type) {
     const fechaFormateada = `${day}_${month}_${year}`;
 
     zip.file(`${idParticipante}_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_tiempo_dedicado_${fechaFormateada}.csv`, txtBlob);
+    zip.file(`${idParticipante}_digital_span_${type}_Uniques_${fechaFormateada}.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {

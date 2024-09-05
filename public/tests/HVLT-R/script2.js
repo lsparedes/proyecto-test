@@ -172,9 +172,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options);
         const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options);
         const timeSpent = (finishTime - startTime) / 1000;
-        const timeSpentFormatted = formatTime(timeSpent);
+        const timeSpentFormatted = timeSpent;
 
-        const csvContent = `Start Time;Finish Time;Time Spent (HH:MM:SS)\n${startTimeFormatted};${finishTimeFormatted};${timeSpentFormatted}`;
+        const csvContent = `TotTime\n${timeSpentFormatted}`;
         return csvContent;
     }
 

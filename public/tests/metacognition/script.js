@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function generateCSV(results) {
-    const csvContent = "Block;Trial;CorrResp;PartResp;ConfRa;Acc;DiffLvl;RTDecision;RTConfRa;t_pausa;RedDotSide\n"
+    const csvContent = "Block;Trial;CorrResp;PartResp;ConfRa;Acc;DiffLvl;RTDecision;RTConfRa;PauseTime;RedDotSide\n"
       + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP};izquierda`).join("\n")
     return {
       content: csvContent,

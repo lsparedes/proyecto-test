@@ -573,20 +573,20 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const generarTxt = (tiempoTotalSegundos, manoUtilizada) => {
-        const txtContent = `tiempo_total_segundos: ${tiempoTotalSegundos}\nmano_utilizada: ${manoUtilizada}`;
+        const txtContent = `TotTime;Hand\n${tiempoTotalSegundos};${manoUtilizada}`;
         return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
     };
     
     const downloadCSV = () => {
         const csvData = responses.map(response => ({
-            ensayo: response.ensayo,
-            respuesta_correcta: response.respuestaCorrecta,
-            error_actualizacion: response.errorActualizacion,
-            error_rotacion: response.errorRotacion,
-            respuesta_participante: response.respuestaParticipante,
-            precision: response.precision,
-            tiempo_respuesta: response.tiempoRespuesta,
-            tiempo_dedicado: response.tiempoDedicado
+            Trial: response.ensayo,
+            CorrResp: response.respuestaCorrecta,
+            NoUpdErr: response.errorActualizacion,
+            NoRotErr: response.errorRotacion,
+            PartResp: response.respuestaParticipante,
+            Acc: response.precision,
+            RT: response.tiempoRespuesta,
+            ExecTime: response.tiempoDedicado
         }));
     
         let csv = Papa.unparse(csvData, { delimiter: ';' });
@@ -604,7 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const day = String(date.getDate()).padStart(2, '0');
         const formattedDate = `${day}_${month}_${year}`;
         const csvFileName = `${idParticipante}_vienna_${formattedDate}.csv`;
-        const txtFileName = `${idParticipante}_vienna_${formattedDate}.txt`;
+        const txtFileName = `${idParticipante}_vienna_Uniques_${formattedDate}.csv`;
     
         zip.file(csvFileName, csvBlob);
         zip.file(txtFileName, txtBlob);

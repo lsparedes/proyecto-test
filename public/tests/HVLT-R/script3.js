@@ -133,19 +133,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const endTime = new Date(); // Obtener la hora de finalización
         const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
         
-        // Convertir los segundos a minutos y segundos
-        const minutes = Math.floor(timeSpentInSeconds / 60);
-        const seconds = Math.floor(timeSpentInSeconds % 60);
-        
-        // Formatear el tiempo en mm:ss
-        const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        
-        csvContent += `\nTiempo dedicado a la tarea:;${formattedTime}\n`;
+        csvContent += `\nTiempo dedicado a la tarea:;${timeSpentInSeconds}\n`;
         return csvContent;
     }
+
+    function createCSV() {
+        const total = Object.keys(correctAnswers).length;
+        
+        // Contenido para el primer CSV
+        let mainCsvContent = 'Trial;Word;CorrResp;PartResp;Acc\n';
+        for (let i = 1; i <= total; i++) {
+            const word = words[i];
+            const correctAnswer = correctAnswers[i];
+            const participantAnswer = answers[i] || ''; // Dejar en blanco si no hay respuesta
+            const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
     
+            mainCsvContent += `${i};${word};${correctAnswer};${participantAnswer};${isCorrect}\n`;
+        }
     
+        // Obtener el valor de la mano seleccionada
+        let selectedHandElement = document.querySelector('input[name="hand"]:checked');
+        let selectedHand = selectedHandElement ? selectedHandElement.value : 'No seleccionado';
+        const endTime = new Date(); // Obtener la hora de finalización
+        const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
+        
+        let additionalCsvContent = `Hand;TotTime\n${selectedHand};${timeSpentInSeconds}\n`;
     
+        return { mainCsvContent, additionalCsvContent };
+    }
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
@@ -159,10 +174,13 @@ document.addEventListener('DOMContentLoaded', () => {
     
         const zip = new JSZip();
         
-    
-        // Agregar el archivo CSV al zip
-        const csvContent = createCSV();
-        zip.file('HVLT-R_Reconocimiento_.csv', csvContent);
+        const { mainCsvContent, additionalCsvContent } = createCSV();
+        // Agregar los archivos CSV al ZIP
+        zip.file("HVLT-R_Reconocimiento.csv", mainCsvContent);
+        zip.file("HVLT-R_Reconocimiento_Uniques.csv", additionalCsvContent);
+        // // Agregar el archivo CSV al zip
+        // const csvContent = createCSV();
+        // zip.file('HVLT-R_Reconocimiento_.csv', csvContent);
     
         // Generar y descargar el zip
         zip.generateAsync({ type: 'blob' }).then((content) => {

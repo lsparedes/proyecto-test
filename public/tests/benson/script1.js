@@ -287,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generateCSV() {
         // let csvContent = "data:text/csv;charset=utf-8,";
-        let csvContent = "Actividad;TotTime;RT;Hand\n";
+        let csvContent = "Activity;TotTime;RT;Hand\n";
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
         let drawingTime = 0;
         if (startDrawingTime) {
