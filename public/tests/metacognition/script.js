@@ -583,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function generateCSV(results) {
-    const csvContent = "bq;en;rp_c;rp;seguridad;pc;dificultad;tr_color;tr_seguridad;t_pausa;RedDotSide\n"
+    const csvContent = "Block;Trial;CorrResp;PartResp;ConfRa;Acc;DiffLvl;RTDecision;RTConfRa;t_pausa;RedDotSide\n"
       + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP};izquierda`).join("\n")
     return {
       content: csvContent,
@@ -591,12 +591,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
-  function generateTxt(startTimeTotal, selectedHand) {
-    const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
-      + "Mano Utilizada: " + selectedHand;
+  function generateCSV2(startTimeTotal, selectedHand) {
+    const txtContent = [["TotTime", "Hand"], [(new Date() - startTimeTotal) / 1000, selectedHand]].map(e => e.join(";")).join("\n");
     return {
       content: txtContent,
-      filename: `${idParticipante}_metacognicion_${getCurrentDate()}.txt`
+      filename: `${idParticipante}_metacognicion_TH_${getCurrentDate()}.csv`
     };
   }
 
@@ -616,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
     const csvFile = generateCSV(results);
-    const txtFile = generateTxt(startTimeTotal, selectedHand);
+    const txtFile = generateCSV2(startTimeTotal, selectedHand);
     await downloadZip(csvFile, txtFile);
   }
 });

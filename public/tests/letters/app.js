@@ -684,21 +684,21 @@ function validateClicks() {
     let searchSpeed = (correctClicks / testDuration) * 1000;
 
     let csvContent = 'variable;valor\n';
-    csvContent += `t_tarea;${totalDurationFormatted}\n`;
-    csvContent += `tr;${testDurationFormatted}\n`;
-    csvContent += `mano;${selectedHand}\n`;
-    csvContent += `aciertos;${correctClicks}\n`;
-    csvContent += `errores_omision;${totalErrors}\n`;
-    csvContent += `errores_comision;${erroresComision}\n`;
+    csvContent += `TotTime;${totalDurationFormatted}\n`;
+    csvContent += `ExecTime;${testDurationFormatted}\n`;
+    csvContent += `Hand;${selectedHand}\n`;
+    csvContent += `NoTargets;${correctClicks}\n`;
+    csvContent += `NoOmiErr;${totalErrors}\n`;
+    csvContent += `NoCommErr;${erroresComision}\n`;
     csvContent += `clics_izquierda;${leftClicks}\n`;
     csvContent += `clics_derecha;${rightClicks}\n`;
     csvContent += `clics_totales;${clicks.length}\n`;
-    csvContent += `search_speed;${searchSpeed}\n`;
+    csvContent += `SSpeed;${searchSpeed}\n`;
 
-    csvContent += `search_distance;${searchDistanceFormatted} px\n`;
+    csvContent += `SDistance;${searchDistanceFormatted} px\n`;
     // csvContent += `center_of_cancelation_px;(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
     // csvContent += `center_of_cancelation_norm;(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
-    csvContent += `center_of_cancelation;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
+    csvContent += `CoC;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
     // csvContent += `center_of_cancelation_side;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
 
     const csvBlob = downloadCSV(csvContent);

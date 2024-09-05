@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const idParticipante = getQueryParam('id_participante');
     function generateCSV() {
 
-        let csvContent = "Actividad;Tiempo Total(s);Tiempo Total(ms);Mano Seleccionada; FiguraCorrecta; FiguraSeleccionada; Precision\n";
+        let csvContent = "Actividad;TotTime;RT;Mano Seleccionada; CorrResp; PartResp; Acc\n";
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
         csvContent += `FiguraIdentificada;${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy}\n`;
 

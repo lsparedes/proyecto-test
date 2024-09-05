@@ -351,12 +351,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const zip = new JSZip();
 
-        let csvContent = "bq;en;rp_derecha;rp_izquierda;rp;resultado;tr\n";
+        let csvContent = "Block;Trial;OLSlMach;ORSlMach;PartResp;resultado;RT\n";
         csvContent += results.map(e => e.join(";")).join("\n");
 
         const totalTaskTime = (Date.now() - totalStartTime) / 1000;
-        let txtContent = `Tiempo Dedicado a la Tarea: ${totalTaskTime} s\n`;
-        txtContent += `Mano Utilizada: ${selectedHand}\n`;
+        let txtContent = [["TotTime","Hand"], [totalTaskTime, selectedHand]].map(e => e.join(";")).join("\n");
 
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
@@ -366,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Añadir archivos al ZIP
         zip.file(`${idParticipante}_decision_making_${date}.csv`, csvContent);
-        zip.file(`${idParticipante}_decision_making_${date}.txt`, txtContent);
+        zip.file(`${idParticipante}_decision_making_TH_${date}.csv`, txtContent);
         const fileName = `${idParticipante}_decision_making_${date}.zip`;
 
         // Generar y descargar el archivo ZIP

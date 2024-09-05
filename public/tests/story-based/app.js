@@ -450,7 +450,7 @@ function generarArchivoCSV() {
     const endTime = new Date();
     const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
 
-    csvContent += "en;rp_c;rp;pc;tr\n";
+    csvContent += "Trial;CorrResp;PartResp;Acc;RT\n";
 
     let respuestasCorrectas = respuestasSeleccionadas.filter(respuesta =>
         respuesta.opcionSeleccionada === respuesta.respuestaCorrecta
@@ -465,8 +465,8 @@ function generarArchivoCSV() {
 
     const csvBlob = new Blob([csvContent], { type: 'text/csv' });
 
-    const txtContent = `Tiempo dedicado (segundos): ${totalTestTime / 1000}\nMano utilizada: ${selectedHand}\n`;
-    const txtBlob = new Blob([txtContent], { type: 'text/plain' });
+    const txtContent = [["TotTime", "Hand"], [totalTestTime / 1000,selectedHand ]].map(e => e.join(";")).join("\n");
+    const txtBlob = new Blob([txtContent], { type: 'text/csv' });
 
     // Obtener la fecha y la hora actuales
     const fechaActual = new Date();
@@ -478,7 +478,7 @@ function generarArchivoCSV() {
     // Crear el archivo ZIP
     const zip = new JSZip();
     zip.file(`${idParticipante}_StoryBasedEmpathyTask_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_StoryBasedEmpathyTask_${fechaFormateada}.txt`, txtBlob);
+    zip.file(`${idParticipante}_StoryBasedEmpathyTask_TH_${fechaFormateada}.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {

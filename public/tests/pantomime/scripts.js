@@ -255,10 +255,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     function createTxtFile() {
-        const filename = `${idParticipante}_Pantomime_${fechaFormateada}.txt`;
+        const filename = `${idParticipante}_Pantomime_${fechaFormateada}.csv`;
         // Definir el contenido del archivo TXT
-        const txtContent = `Tiempo dedicado (Segundos): ${totalTestTime / 1000}\nMano utilizada: ${selectedHand}\n`;
-        const blob = new Blob([txtContent], { type: 'text/plain' });
+        const txtContent = [["TotTime", "Hand"], [totalTestTime / 1000, selectedHand]].map(e => e.join(';')).join('\n');
+        const blob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
     
         // Agregar el archivo TXT al ZIP con el nombre dinámico
         zip.file(filename, blob);

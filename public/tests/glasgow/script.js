@@ -209,7 +209,7 @@ function getQueryParam(param) {
 const idParticipante = getQueryParam('id_participante');
 
 function generateCSV(results) {
-    const csvData = [['en', 'rp_c', 'rp', 'pc', 'tr']];
+    const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT']];
     results.forEach((response) => {
         const numeroImagen = response.imageIndex + 1; 
         const rutaImagen = response.imageSrc;
@@ -227,12 +227,11 @@ function generateCSV(results) {
     };
 }
 
-function generateTxt(startTimeTotal, selectedHand) {
-    const txtContent = "Tiempo total(s): " + (new Date() - startTimeTotal) / 1000 + "\n"
-        + "Mano Utilizada: " + selectedHand;
+function generateCSV2(startTimeTotal, selectedHand) {
+    const txtContent = [["TotTime", "Hand"], [(new Date() - startTimeTotal) / 1000, selectedHand]].map(row => row.join(';')).join('\n');
     return {
         content: txtContent,
-        filename: `${idParticipante}_glasgow_face_matching_${getCurrentDate()}.txt`
+        filename: `${idParticipante}_glasgow_face_matching_TH_${getCurrentDate()}.csv`
     };
 }
 
@@ -252,6 +251,6 @@ async function downloadZip(csvFile, txtFile) {
 
 async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
     const csvFile = generateCSV(results);
-    const txtFile = generateTxt(startTimeTotal, selectedHand);
+    const txtFile = generateCSV2(startTimeTotal, selectedHand);
     await downloadZip(csvFile, txtFile);
 }

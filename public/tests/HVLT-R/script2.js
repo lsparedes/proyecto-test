@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mainScreen2.style.display = 'none';
         mainScreen3.style.display = 'block';
         recordingControls4.style.display = 'block';
-        startRecording('HVLT-R Ensayo 1.mp3');
+        startRecording('HVLT-R Ensayo 1.wav');
         startFinishTimer();
     });
 
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         audio1_ej2.style.display = 'none';
         fullscreenButton.style.display = 'none';
         recordingControls4.style.display = 'block';
-        startRecording('HVLT-R Ensayo 1.mp3');
+        startRecording('HVLT-R Ensayo 1.wav');
     });
 
 

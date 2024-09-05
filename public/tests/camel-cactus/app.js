@@ -678,7 +678,7 @@ function getCurrentDate() {
 
 function generateCSV(results) {
     // Crear el encabezado del CSV
-    let csvContent = "en;item;rp_c;rp;pc;tr\n";
+    let csvContent = "Trial;item;CorrResp;PartResp;Acc;RT\n";
 
     // Recorrer las respuestas seleccionadas
     results.forEach(respuesta => {

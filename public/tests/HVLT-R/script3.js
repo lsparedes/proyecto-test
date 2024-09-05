@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function createCSV() {
         const total = Object.keys(correctAnswers).length;
-        let csvContent = 'nro;palabra;respuesta_correcta;respuesta_participante;precision\n';
+        let csvContent = 'Trial;palabra;CorrResp;PartResp;Acc\n';
         
         for (let i = 1; i <= total; i++) {
             const word = words[i];

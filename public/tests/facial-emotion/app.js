@@ -337,7 +337,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    const csvData = [['en', 'rp_c', 'rp', 'pc', 'tr']];
+    const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT']];
 
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;
@@ -352,12 +352,13 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const csvContent = csvData.map(row => row.join(';')).join('\n');
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
-    const txtContent = `Tiempo dedicado a la tarea: ${tiempoTranscurrido}\nMano utilizada: ${selectedHand}`;
-    const txtBlob = new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
+    // const txtContent = `TotTime: ${tiempoTranscurrido}\nHand: ${selectedHand}`;
+    const txtContent = [['TotTime', 'Hand'], [tiempoTranscurrido, selectedHand]].map(row => row.join(';')).join('\n');
+    const txtBlob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
 
     const zip = new JSZip();
     zip.file(`${idParticipante}_FacialEmotion_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_FacialEmotion_${fechaFormateada}.txt`, txtBlob);
+    zip.file(`${idParticipante}_FacialEmotion_TH_${fechaFormateada}.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
