@@ -19,7 +19,8 @@
                             <div class="header-container">
                                 <div class="text-container">
                                     <!-- Título y descripciones -->
-                                    <h1 class="display-5 fw-bolder text-white mb-2">{{ $test->tipoTest->descripcion}}</h1>
+                                     
+                                    <h1 class="display-5 fw-bolder text-white mb-2">{{ $test->tipoTest->num_test }} - {{ $test->tipoTest->descripcion}}</h1>
                                     <p class="lead text-white-50 mb-1"><i class="fas fa-clock"></i> Duración estimada: {{ $test->duracion_minutos }} minutos</p>
                                     <p class="lead text-white-50 mb-1">
                                         <i class="fa-solid fa-globe"></i>
