@@ -149,8 +149,8 @@ function generateCSV() {
     // Formatear la fecha y la hora
     const fechaHoraFormateada = `${dia}_${mes}_${año}`;
 
-    const csvFilename1 = `${idParticipante}_VisualObjectSpacePerception_${fechaHoraFormateada}.csv`;
-    const csvFilename2 = `${idParticipante}_VisualObjectSpacePerception_Uniques_${fechaHoraFormateada}.csv`;
+    const csvFilename1 = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.csv`;
+    const csvFilename2 = `${idParticipante}_5_VOSP_Number_Location_Metricas_${fechaHoraFormateada}.csv`;
 
     const csvBlob1 = new Blob([csvContent1], { type: 'text/csv;charset=utf-8;' });
     const csvBlob2 = new Blob([csvContent2], { type: 'text/csv;charset=utf-8;' });
@@ -164,7 +164,7 @@ function generateCSV() {
             const link = document.createElement('a');
             if (link.download !== undefined) {
                 const url = URL.createObjectURL(content);
-                const zipFilename = `${idParticipante}_VisualObjectSpacePerception_${fechaHoraFormateada}.zip`;
+                const zipFilename = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.zip`;
 
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

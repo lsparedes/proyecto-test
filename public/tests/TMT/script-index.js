@@ -593,18 +593,18 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => {
             const zip = new JSZip();
             // zip.file("canvasRecording.webm", new Blob(recordedChunksCanvas, { type: 'video/webm' }));
-            zip.file("canvasPartARecording.webm", new Blob(recordedChunksCanvasPartA, { type: 'video/webm' }));
+            zip.file("2_TMT_Part_A_Canvas_Recording.webm", new Blob(recordedChunksCanvasPartA, { type: 'video/webm' }));
             const csvContent = generateCSV(data);
-            zip.file("test_result_TMT_part_A.csv", csvContent);
+            zip.file("2_TMT_Part_A.csv", csvContent);
 
             canvas.toBlob(function (blob) {
                 // zip.file("canvasScreenshot.png", blob);
 
                 canvasPartA.toBlob(function (blobPartA) {
-                    zip.file("canvasPartAScreenshot.png", blobPartA);
+                    zip.file("2_TMT_Part_A_Canvas_Screenshot.png", blobPartA);
 
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `${idParticipante}_TMTPartA_${fechaFormateada}.zip`);
+                        saveAs(content, `${idParticipante}_2_TMT_Part_A_${fechaFormateada}.zip`);
                         // cerrar ventana al descargar
                         setTimeout(() => {
                             window.close();

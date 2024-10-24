@@ -261,22 +261,22 @@ window.onload = function () {
             const date = new Date();
     
             // Añadir los videos grabados al ZIP
-            zip.file("canvas-recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
+            zip.file("3_Design_Fluency_Canvas_Recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
     
             // Generar y añadir el archivo TXT al ZIP
             const csvContent = generateCSV(data);
-            zip.file(`${idParticipante}_designFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.csv`, csvContent);
+            zip.file(`${idParticipante}_3_Design_Fluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.csv`, csvContent);
     
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
-                zip.file("canvasScreenshot.png", blob);
+                zip.file("3_Design_Fluency_Canvas_Screenshot.png", blob);
     
                 practiceCanvas.toBlob(function (blobPractice) {
                     // zip.file("canvasPracticeScreenshot.png", blobPractice);
     
                     // Generar el archivo ZIP y descargarlo
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `${idParticipante}_metricsDesignFluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
+                        saveAs(content, `${idParticipante}_3_Design_Fluency_Metricas_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
                         
                         setTimeout(() => {
                             window.close();

@@ -38,10 +38,10 @@
                             <th>Tipo Test (esp)</th>
                             <th>Descripcion</th>
                             <th>Instrucciones</th>
-                            <th>Instrucciones de descarga</th>
+                            <!-- <th>Instrucciones de descarga</th> -->
                             <th>Audio Instrucciones</th>
                             <th>Fuente</th>
-                            <th>Icono</th>
+                            <!-- <th>Icono</th> -->
                             <th>Implementación</th>
                             <th>Acciones</th>
                         </tr>
@@ -54,14 +54,14 @@
                                 <td>{{ $item->nombre_esp }}</td>
                                 <td>{{ $item->descripcion_test }}</td>
                                 <td>{{ $item->instruccion_test }}</td>
-                                <td>{{ $item->instrucciones_adicionales }}</td>
+                                <!-- <td>{{ $item->instrucciones_adicionales }}</td> -->
                                 <td>
                                     <audio controls>
                                         <source src="{{ asset('uploads/' . $item->audio_instruccion) }}" type="audio/mpeg">
                                     </audio>
                                 </td>
                                 <td>{{ $item->fuente }}</td>
-                                <td>{{ $item->icono }}</td>
+                                <!-- <td>{{ $item->icono }}</td> -->
                                 <td>{{ $item->implementacion }}</td>
 
                                 <td>

@@ -238,21 +238,21 @@ function downloadRecordingAndTime() {
 
     const link = document.createElement('a');
     link.href = timeUrl;
-    link.download = `${idParticipante}_verbal_fluency_fonologia_${formattedDate}.csv`;
+    link.download = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.csv`;
     // link.click();
 
     const zip = new JSZip();
-    zip.file(`${idParticipante}_verbal_fluency_fonologia_${formattedDate}.csv`, timeBlob);
+    zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.csv`, timeBlob);
 
     const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-    zip.file(`${idParticipante}_verbal_fluency_categoria_${formattedDate}.wav`, audioBlob);
+    zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.wav`, audioBlob);
 
     zip.generateAsync({ type: 'blob' }).then(content => {
         const zipLink = document.createElement('a');
         zipLink.href = URL.createObjectURL(content);
 
         // Construir el nombre del archivo ZIP
-        const fileName = `${idParticipante}_verbal_fluency_fonologia_${formattedDate}.zip`;
+        const fileName = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.zip`;
 
         zipLink.download = fileName;
         zipLink.click();

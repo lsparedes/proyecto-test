@@ -346,19 +346,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Generar el contenido del CSV
         const csvContent = generateCSV();
-        zip.file(`${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${idParticipante}_6_Benson_Copia_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
     
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('drawing-canvas');
         const canvasImage = canvas.toDataURL('image/png').split(',')[1];
-        zip.file('Draw_With_figure.png', canvasImage, { base64: true });
+        zip.file('6_Benson_Copia_Dibujo.png', canvasImage, { base64: true });
     
         // Añadir video del canvas al ZIP
         try {
             const blob = await stopCanvasRecording();
             const reader = new FileReader();
             reader.onloadend = async () => {
-                zip.file('DrawWithFigure.webm', reader.result.split(',')[1], { base64: true });
+                zip.file('6_Benson_Copia_Grabacion.webm', reader.result.split(',')[1], { base64: true });
                 const content = await zip.generateAsync({ type: 'blob' });
                 downloadZIP(content);
             };
@@ -373,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function downloadZIP(content) {
         const link = document.createElement('a');
         link.href = URL.createObjectURL(content);
-        link.download = `${idParticipante}_Copiar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
+        link.download = `${idParticipante}_6_Benson_Copia_${diaStr}_${mesStr}_${añoStr}.zip`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

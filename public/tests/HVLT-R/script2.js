@@ -197,13 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Agregar el archivo CSV al zip
         const csvContent = saveToCSV();
-        zip.file('HVLT-R_Recuerdo_Libre_Diferido_.csv', csvContent);
+        zip.file('1_HVLT-R_Diferido.csv', csvContent);
 
         // Generar y descargar el zip
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${idParticipante}_HVLT-R_Diferido_${diaStr}_${mesStr}_${añoStr}.zip`;
+            a.download = `${idParticipante}_1_HVLT-R_Diferido_${diaStr}_${mesStr}_${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

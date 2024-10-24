@@ -283,23 +283,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Generar el contenido del CSV
         const csvContent = generateCSV();
-        zip.file(`${idParticipante}_Recordar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${idParticipante}_6_Benson_Recuerdo_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
 
         // Añadir imagen del canvas al ZIP
         const canvas = document.getElementById('memory-canvas');
         const canvasImage = canvas.toDataURL('image/png').split(',')[1];
-        zip.file('Recordar_figura_Benson.png', canvasImage, { base64: true });
+        zip.file('6_Benson_Recuerdo_Dibujo.png', canvasImage, { base64: true });
 
         // Añadir video del canvas al ZIP
         try {
             const blob = await stopCanvasRecording();
             const reader = new FileReader();
             reader.onloadend = () => {
-                zip.file('DrawFromMemoryFigure.webm', reader.result.split(',')[1], { base64: true });
+                zip.file('_6_Benson_Recuerdo_Grabacion.webm', reader.result.split(',')[1], { base64: true });
                 zip.generateAsync({ type: 'blob' }).then((content) => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
-                    link.download = `${idParticipante}_Recordar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
+                    link.download = `${idParticipante}_6_Benson_Recuerdo_${diaStr}_${mesStr}_${añoStr}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             zip.generateAsync({ type: 'blob' }).then((content) => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
-                link.download = `${idParticipante}_Recordar_figura_Benson_${diaStr}_${mesStr}_${añoStr}.zip`;
+                link.download = `${idParticipante}_6_Benson_Recuerdo_${diaStr}_${mesStr}_${añoStr}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

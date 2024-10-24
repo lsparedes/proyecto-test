@@ -615,18 +615,18 @@ function testFinalizado() {
 
     setTimeout(() => {
         const zip = new JSZip();
-        zip.file("canvasPartB2Recording.webm", new Blob(recordedChunksCanvasPartB2, { type: 'video/webm' }));
+        zip.file("2_TMT_Part_B_Canvas_Recording.webm", new Blob(recordedChunksCanvasPartB2, { type: 'video/webm' }));
         const csvContent = generateCSV(data);
-        zip.file("test_result_TMT_part_B.csv", csvContent);
+        zip.file("2_TMT_Part_B.csv", csvContent);
 
         canvasPartB.toBlob(function (blob) {
             // zip.file("canvasBScreenshot.png", blob);
 
             canvasPartB2.toBlob(function (blobPartB2) {
-                zip.file("canvasPartB2Screenshot.png", blobPartB2);
+                zip.file("2_TMT_Part_B_Canvas_Screenshot.png", blobPartB2);
 
                 zip.generateAsync({ type: 'blob' }).then(function (content) {
-                    saveAs(content, `${idParticipante}_TMTPartB_${fechaFormateada}.zip`);
+                    saveAs(content, `${idParticipante}_2_TMT_Part_B_${fechaFormateada}.zip`);
 
                     // Cerrar la ventana después de que se haya descargado el ZIP
                     setTimeout(() => {

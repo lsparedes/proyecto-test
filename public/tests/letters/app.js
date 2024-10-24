@@ -678,7 +678,7 @@ function validateClicks() {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
-    const baseFileName = `CancellationTasks_${fechaFormateada}`;
+    const baseFileName = `4_Cancelación_Letras_A_${fechaFormateada}`;
     const searchDistanceFormatted = (searchDistance / promedio.length).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     let searchSpeed = (correctClicks / testDuration) * 1000;

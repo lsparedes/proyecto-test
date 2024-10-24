@@ -176,8 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const { mainCsvContent, additionalCsvContent } = createCSV();
         // Agregar los archivos CSV al ZIP
-        zip.file("HVLT-R_Reconocimiento.csv", mainCsvContent);
-        zip.file("HVLT-R_Reconocimiento_Uniques.csv", additionalCsvContent);
+        zip.file("1_HVLT-R_Reconocimiento.csv", mainCsvContent);
+        zip.file("1_HVLT-R_Reconocimiento_Metricas.csv", additionalCsvContent);
         // // Agregar el archivo CSV al zip
         // const csvContent = createCSV();
         // zip.file('HVLT-R_Reconocimiento_.csv', csvContent);
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${idParticipante}_HVLT-R_Reconocimiento_${diaStr}_${mesStr}_${añoStr}.zip`;
+            a.download = `${idParticipante}_1_HVLT-R_Reconocimiento_${diaStr}_${mesStr}_${añoStr}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

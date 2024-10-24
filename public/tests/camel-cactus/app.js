@@ -691,7 +691,7 @@ function generateCSV(results) {
     });
     return {
         content: csvContent,
-        filename: `${idParticipante}_modified_camel_and_cactus_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_7_mCCT_${getCurrentDate()}.csv`
     };
 }
 
@@ -700,7 +700,7 @@ function generateTxt(startTimeTotal, selectedHand) {
         + selectedHand + "\n";
     return {
         content: txtContent,
-        filename: `${idParticipante}_modified_camel_and_cactus_Uniques_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_7_mCCT_Metricas_${getCurrentDate()}.csv`
     };
 }
 
@@ -712,7 +712,7 @@ async function downloadZip(csvFile, txtFile) {
     const zipContent = await zip.generateAsync({ type: "blob" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipContent);
-    link.setAttribute("download", `${idParticipante}_modified_camel_and_cactus_${getCurrentDate()}.zip`);
+    link.setAttribute("download", `${idParticipante}_7_mCCT_${getCurrentDate()}.zip`);
     document.body.appendChild(link);
     link.click();
     window.close();
