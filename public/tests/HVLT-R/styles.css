@@ -269,13 +269,22 @@ audio-container {
 #initRecordingButton3,
 #startRecordingButton4 {
     background-image: url('boton-rec.png');
-
+    background-color: transparent;
+    background-repeat: no-repeat; 
+    border: none;
+    outline: none; 
+   
 }
 
 #startRecordingButton1,
 #startRecordingButton2,
 #startRecordingButton3 {
     background-image: url('grabar.png');
+    background-color: transparent; 
+    background-repeat: no-repeat;
+    border: none;
+    outline: none; 
+    
 }
 
 #stopRecordingButton1,

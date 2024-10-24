@@ -62,12 +62,27 @@ function startTest(type) {
         audio.src = `audio/${type}/${index + 1}.wav`;
         audio.controls = true;
 
-        audio.addEventListener('ended', () => {
-            setTimeout(() => {
-                playBeepAndShowButtons(itemDiv, titleElement, index + 1);
-            }, 600); // Espera 1000 milisegundos (1 segundo)
+        // Iniciar la grabación 2 segundos antes de que termine el audio
+        audio.addEventListener('play', () => {
+            const remainingTime = audio.duration - audio.currentTime;
+            if (remainingTime > 2) {
+                setTimeout(() => {
+                    startRecording(itemDiv, titleElement, index + 1);
+                }, (remainingTime - 2) * 1000); 
+            } else {
+                startRecording(itemDiv, titleElement, index + 1);
+            }
         });
 
+        // Reproducir el beep solo al finalizar el audio
+        audio.addEventListener('ended', () => {
+            const beep = new Audio('audio/beep.wav');
+            beep.play();
+            
+            setTimeout(() => {
+                playBeepAndShowButtons(itemDiv, titleElement, index + 1);
+            }, 600); // Espera 600 milisegundos
+        });
 
         // Mostrar el botón "next-button" cuando el audio se cargue completamente
         audio.addEventListener('loadeddata', () => {
@@ -96,7 +111,7 @@ function startTest(type) {
         nextButton.textContent = '';
         nextButton.classList.add('hidden', 'next-button');
         nextButton.addEventListener('click', () => {
-            avanzarSinGrabar(itemDiv, type, index + 1); // Pasamos el índice del ítem actual
+            avanzarSinGrabar(itemDiv, type, index + 1); 
         });
 
         itemDiv.appendChild(titleElement);
@@ -114,6 +129,7 @@ function startTest(type) {
         testItemsContainer.appendChild(itemDiv);
     });
 }
+
 
 function avanzarSinGrabar(itemDiv, type, index) {
     // Verificar si está grabando algo
@@ -187,8 +203,6 @@ function startRecording(itemDiv, titleElement, index) {
     // Iniciar la grabación
     mediaRecorder.start();
     recordingStartTime = new Date();
-    const beep = new Audio('audio/beep.wav');
-    beep.play();
 
 
     const stopImg = itemDiv.querySelector('.stop-img');
