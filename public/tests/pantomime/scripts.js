@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeRemaining = testAudio.duration - testAudio.currentTime;
         
         // Verifica si el tiempo restante es menor o igual a 0.5 segundos
-        if (timeRemaining <= 1 && !audioPlayed) {
+        if (timeRemaining <= 2 && !audioPlayed) {
             audioPlayed = true; // Evita que la función se llame más de una vez
             startRecording();
         }

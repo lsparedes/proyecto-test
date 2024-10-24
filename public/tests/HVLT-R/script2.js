@@ -70,7 +70,16 @@ document.addEventListener('DOMContentLoaded', () => {
         startRecording('HVLT-R Ensayo 1.wav');
     });
 
-
+    audio1_ej2.addEventListener('play', () => {
+        const remainingTime = audio1_ej2.duration - audio1_ej2.currentTime;
+        if (remainingTime > 2) {
+            setTimeout(() => {
+                startRecording('HVLT-R Ensayo 1.wav');
+            }, (remainingTime - 2) * 1000); 
+        } else {
+            startRecording('HVLT-R Ensayo 1.wav');
+        }
+    });
     startRecordingButton4.addEventListener('click', () => {
         startRecording();
     });
