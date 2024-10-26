@@ -31,14 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const hideButton = document.getElementById('hideButton');
     const showRotationErrorButton = document.getElementById('showRotationErrorButton');
     const hideRotationErrorButton = document.getElementById('hideRotationErrorButton');
-    
+
     const showUpdateErrorButton = document.getElementById('showUpdateErrorButton');
     const hideUpdateErrorButton = document.getElementById('hideUpdateErrorButton');
     const downloadCSVButton = document.getElementById('downloadCSVButton');
     const fullScreenButton = document.getElementById('fullScreenButton');
     const resetButtonI1 = document.getElementById('resetButtonI1');
-   
-    
+
+
 
     // Botones específicos para I1, P1, P2
     const validateButtonI1 = document.getElementById('validateButtonI1');
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Añadir el event listener al botón de reinicio
     resetButtonI1.addEventListener('click', resetVideoI1);
 
-    
+
     function stopAllAudios() {
         const audios = document.querySelectorAll('audio');
         audios.forEach(audio => audio.pause());
@@ -92,8 +92,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resizeCanvas = (canvas) => {
         if (canvas && canvas.parentElement) {
             const container = canvas.parentElement;
-            canvas.width = container.clientWidth;
-            canvas.height = container.clientHeight;
+            
         } else {
             console.error('Canvas or its parent element not found:', canvas);
         }
@@ -102,11 +101,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawImageScaled = (canvas, img) => {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-        const x = (canvas.width / 2) - (img.width / 2) * scale;
-        const y = (canvas.height / 2) - (img.height / 2) * scale;
+    
+        // Calcular el escalado adecuado para ajustar la imagen al canvas
+        const scaleWidth = canvas.width / img.width;
+        const scaleHeight = canvas.height / img.height;
+        const scale = Math.min(scaleWidth, scaleHeight);
+    
+        // Calcular la posición centralizada de la imagen dentro del canvas
+        const x = (canvas.width - img.width * scale) / 2;
+        const y = (canvas.height - img.height * scale) / 2;
+    
         ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
     };
+    
 
     const videos = [
         {
@@ -154,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items: {
                 correcto: [{ x: 335, y: 70 }],
                 error_rotacion: [{ x: 404, y: 65 }],
-                error_actualizacion: [{ x: 335, y: 35 },{ x: 335, y: 99 }],
+                error_actualizacion: [{ x: 335, y: 35 }, { x: 335, y: 99 }],
             },
             indicator: 'E2',
             imageSrc: 'img/2.png'
@@ -164,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items: {
                 correcto: [{ x: 382, y: 69 }],
                 error_rotacion: [{ x: 316, y: 69 }],
-                error_actualizacion: [{ x: 382, y: 30 },{ x: 382, y: 109 }],
+                error_actualizacion: [{ x: 382, y: 30 }, { x: 382, y: 109 }],
             },
             indicator: 'E3',
             imageSrc: 'img/3.png'
@@ -184,7 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items: {
                 correcto: [{ x: 263, y: 108 }],
                 error_rotacion: [{ x: 263, y: 188 }],
-                error_actualizacion: [{ x: 225, y: 108 },{ x: 309, y: 108 }],
+                error_actualizacion: [{ x: 225, y: 108 }, { x: 309, y: 108 }],
             },
             indicator: 'E5',
             imageSrc: 'img/5.png'
@@ -193,8 +200,8 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_5a.mp4',
             items: {
                 correcto: [{ x: 461, y: 101 }],
-                error_rotacion: [{ x: 459, y: 15 },{ x: 232, y: 15 }],
-                error_actualizacion: [{ x: 408, y: 101 },{ x: 513, y: 101 },{ x: 461, y: 281 }],
+                error_rotacion: [{ x: 459, y: 15 }, { x: 232, y: 15 }],
+                error_actualizacion: [{ x: 408, y: 101 }, { x: 513, y: 101 }, { x: 461, y: 281 }],
             },
             indicator: 'E6',
             imageSrc: 'img/6.png'
@@ -204,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items: {
                 correcto: [{ x: 583, y: 243 }],
                 error_rotacion: [{ x: 664, y: 243 }],
-                error_actualizacion: [{ x: 455, y: 243 },{ x: 609, y: 287 }],
+                error_actualizacion: [{ x: 455, y: 243 }, { x: 609, y: 287 }],
             },
             indicator: 'E7',
             imageSrc: 'img/7.png'
@@ -213,8 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_7.mp4',
             items: {
                 correcto: [{ x: 123, y: 117 }],
-                error_rotacion: [{ x: 123, y: 263 },{ x: 589, y: 263 }],
-                error_actualizacion: [{ x: 77, y: 143 },{ x: 312, y: 117 }],
+                error_rotacion: [{ x: 123, y: 263 }, { x: 589, y: 263 }],
+                error_actualizacion: [{ x: 77, y: 143 }, { x: 312, y: 117 }],
             },
             indicator: 'E8',
             imageSrc: 'img/8.png'
@@ -223,8 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_7a.mp4',
             items: {
                 correcto: [{ x: 377, y: 217 }],
-                error_rotacion: [{ x: 445, y: 217 },{ x: 445, y: 50 }],
-                error_actualizacion: [{ x: 377, y: 181 },{ x: 250, y: 217 }],
+                error_rotacion: [{ x: 445, y: 217 }, { x: 445, y: 50 }],
+                error_actualizacion: [{ x: 377, y: 181 }, { x: 250, y: 217 }],
             },
             indicator: 'E9',
             imageSrc: 'img/9.png'
@@ -244,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items: {
                 correcto: [{ x: 226, y: 203 }],
                 error_rotacion: [{ x: 470, y: 203 }],
-                error_actualizacion: [{ x: 273, y: 146 },{ x: 273, y: 264 }],
+                error_actualizacion: [{ x: 273, y: 146 }, { x: 273, y: 264 }],
             },
             indicator: 'E11',
             imageSrc: 'img/11.png'
@@ -254,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items: {
                 correcto: [{ x: 304, y: 173 }],
                 error_rotacion: [{ x: 399, y: 173 }],
-                error_actualizacion: [{ x: 304, y: 109 },{ x: 304, y: 234 }],
+                error_actualizacion: [{ x: 304, y: 109 }, { x: 304, y: 234 }],
             },
             indicator: 'E12',
             imageSrc: 'img/12.png'
@@ -263,18 +270,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const loadImageForCanvas = (canvas, videoIndex) => {
         const img = new Image();
-        img.src = videos[videoIndex].imageSrc; // Obtener la imagen directamente del objeto videos
+        img.src = videos[videoIndex].imageSrc;
     
         img.onload = function () {
-            resizeCanvas(canvas);
+            canvas.width = 500; 
+            canvas.height = 250;
             drawImageScaled(canvas, img);
         };
     
         img.onerror = function () {
-            console.error(`Failed to load image: ${videos[videoIndex].imageSrc}`);
+            console.error(`Error al cargar la imagen: ${videos[videoIndex].imageSrc}`);
         };
     };
-    
+
     const showScreen = (index) => {
         screens.forEach((screen, i) => {
             if (screen) {
@@ -283,9 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error(`Screen with index ${i} not found`);
             }
         });
-    
+
         updateTrialIndicator();
-    
+
         // Cargar la imagen correspondiente para cada pantalla al mostrarla
         if (index === 4) { // I1
             loadImageForCanvas(instructionCanvas, 0);
@@ -390,14 +398,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleClick = (e) => {
         const canvas = e.target;
         const rect = canvas.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const scaleX = 700 / canvas.width;
-        const scaleY = 400 / canvas.height;
-        const click = { x: x * scaleX, y: y * scaleY };
-
+    
+        // Obtener las coordenadas del clic relativas al canvas
+        const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+    
+        // Guardar el clic ajustado
+        const click = { x: x, y: y };
+    
         let videoIndex;
-
         if (canvas === instructionCanvas) {
             clicksByImage[0].push(click);
             videoIndex = 0;
@@ -411,12 +420,15 @@ document.addEventListener('DOMContentLoaded', () => {
             clicksByImage[contador].push(click);
             videoIndex = contador;
         }
-
+    
+        // Registrar la respuesta con las coordenadas ajustadas
         const responseTime = Date.now() - clickStartTime;
         recordResponse(videoIndex, click, responseTime);
-
+    
+        // Dibujar el círculo en las coordenadas del clic ajustado
         drawCircle(canvas, x, y, 'blue');
     };
+    
 
     const recordResponse = (videoIndex, click, responseTime) => {
         const videoData = videos[videoIndex];
@@ -576,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const txtContent = `TotTime;Hand\n${tiempoTotalSegundos};${manoUtilizada}`;
         return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
     };
-    
+
     const downloadCSV = () => {
         const csvData = responses.map(response => ({
             Trial: response.ensayo,
@@ -630,8 +642,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-                    
-                    window.close();
+    
+                    // Esperar 1 segundo antes de cerrar la ventana
+                    setTimeout(() => {
+                        window.close();
+                    }, 1000); // Esperar 1 segundo para asegurar que la descarga se inicie
                 }
             })
             .catch(err => {
@@ -639,6 +654,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     };
     
+    
+
     // Función para convertir dataURL a Blob
     function dataURLtoBlob(dataURL) {
         const byteString = atob(dataURL.split(',')[1]);
@@ -650,16 +667,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         return new Blob([ab], { type: mimeString });
     }
-    
+
 
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
-    
+
     const showCompletionScreen = () => {
         const preEndScreen = document.getElementById('preEnd');
         const completionScreen = document.getElementById('completionScreen');
@@ -681,21 +698,33 @@ document.addEventListener('DOMContentLoaded', () => {
         testVideo.src = videos[contador].src;
         const img = new Image();
         img.src = videos[contador].imageSrc; // Obtener la imagen directamente del objeto videos
+
         img.onload = function () {
             resizeCanvas(imageCanvas);
             drawImageScaled(imageCanvas, img);
         };
-        
-        // Pausar el video y configurar la reproducción después de 3 segundos
-        testVideo.pause(); // Asegurarse de que el video esté pausado
+
+        // Configurar los eventos para controlar la visibilidad del video
+        testVideo.addEventListener('pause', () => {
+            testVideo.style.display = 'none'; // Ocultar el video al pausar
+        });
+
+        testVideo.addEventListener('play', () => {
+            testVideo.style.display = 'block'; // Mostrar el video al reproducir
+        });
+
+        // Pausar el video y configurarlo para la reproducción después de 2 segundos
+        testVideo.style.display = 'none'; // Asegurarse de que esté oculto al cargar
+        testVideo.pause(); // Pausar el video inicialmente
         console.log(`Mostrando video: ${videos[contador].src}`);
         clickStartTime = Date.now(); // Reiniciar el tiempo de inicio para calcular el tiempo de respuesta
-    
+
         setTimeout(() => {
-            testVideo.play(); // Reproducir el video después de 3 segundos
-        }, 2000); // 2000 milisegundos = 3 segundos
+            testVideo.play(); // Reproducir el video después de 2 segundos
+        }, 2000); // 2000 milisegundos = 2 segundos
     };
-    
+
+
 
     if (imageCanvas && testVideo) {
         fullScreenButton.addEventListener('click', () => {
@@ -709,7 +738,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('El modo de pantalla completa no es soportado por tu navegador.');
             }
         });
-        
+
 
         window.addEventListener('resize', () => {
             resizeCanvas(imageCanvas);
@@ -881,12 +910,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
-    
-        if ( selectedHand) {
+
+        if (selectedHand) {
             handButton.style.display = 'block';
         }
     }
-
     // Inicializar la primera carga de video e imagen
     showScreen(currentScreenIndex);
 
