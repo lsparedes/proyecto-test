@@ -480,7 +480,11 @@ document.addEventListener('DOMContentLoaded', () => {
         link.setAttribute("download", `${idParticipante}_corsi_inverso_${getCurrentDate()}.zip`);
         document.body.appendChild(link);
         link.click();
-        window.close();
+        document.body.removeChild(link);
+    
+        setTimeout(() => {
+            window.close();
+        }, 100);
     }
     
     async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
