@@ -379,7 +379,9 @@ function crearZip(type) {
 
             downloadLink.click();
             document.body.removeChild(downloadLink);
-            window.close();
+            setTimeout(() => {
+                window.close();
+            }, 100);
 
             const completionMessage = document.getElementById('completion-message');
             if (completionMessage) {

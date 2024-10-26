@@ -456,21 +456,28 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+
     async function downloadZip(csvFile, txtFile) {
         const zip = new JSZip();
         zip.file(csvFile.filename, csvFile.content);
         zip.file(txtFile.filename, txtFile.content);
         const videoBlob = await stopScreenRecording();
         zip.file(`${idParticipante}_corsi_directo_${getCurrentDate()}.webm`, videoBlob);
-        
+    
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
         link.setAttribute("download", `${idParticipante}_corsi_directo_${getCurrentDate()}.zip`);
         document.body.appendChild(link);
+    
         link.click();
-        window.close();
+        document.body.removeChild(link);
+    
+        setTimeout(() => {
+            window.close();
+        }, 100);
     }
+    
     
     async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
         const csvFile = generateCSV(results);
