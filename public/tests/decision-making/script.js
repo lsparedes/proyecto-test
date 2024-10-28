@@ -364,9 +364,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const date = `${day}_${month}_${year}`;
 
         // Añadir archivos al ZIP
-        zip.file(`${idParticipante}_decision_making_${date}.csv`, csvContent);
-        zip.file(`${idParticipante}_decision_making_TH_${date}.csv`, txtContent);
-        const fileName = `${idParticipante}_decision_making_${date}.zip`;
+        zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.csv`, csvContent);
+        zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_Metricas_${date}.csv`, txtContent);
+        const fileName = `${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.zip`;
 
         // Generar y descargar el archivo ZIP
         zip.generateAsync({ type: 'blob' }).then((content) => {

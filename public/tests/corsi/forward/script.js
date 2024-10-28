@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
         return {
             content: csvContent,
-            filename: `${idParticipante}_corsi_directo_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.csv`
         };
     }
 
@@ -452,7 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const txtContent = [["TotTime", "Hand"] , [(new Date() - startTimeTotal) / 1000, selectedHand ]].map(e => e.join(";")).join("\n"); 
         return {
             content: txtContent,
-            filename: `${idParticipante}_corsi_directo_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.csv`
         };
     }
 
@@ -462,12 +462,12 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.file(csvFile.filename, csvFile.content);
         zip.file(txtFile.filename, txtFile.content);
         const videoBlob = await stopScreenRecording();
-        zip.file(`${idParticipante}_corsi_directo_${getCurrentDate()}.webm`, videoBlob);
+        zip.file(`${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.webm`, videoBlob);
     
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
-        link.setAttribute("download", `${idParticipante}_corsi_directo_${getCurrentDate()}.zip`);
+        link.setAttribute("download", `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.zip`);
         document.body.appendChild(link);
     
         link.click();

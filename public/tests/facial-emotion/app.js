@@ -357,14 +357,14 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const txtBlob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
 
     const zip = new JSZip();
-    zip.file(`${idParticipante}_FacialEmotion_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_FacialEmotion_TH_${fechaFormateada}.csv`, txtBlob);
+    zip.file(`${idParticipante}_12_Facial_Emotion_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${idParticipante}_12_Facial_Emotion_Metricas_${fechaFormateada}.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const link = document.createElement('a');
             if (link.download !== undefined) {
-                const zipFilename = `${idParticipante}_FacialEmotion_${fechaFormateada}.zip`;
+                const zipFilename = `${idParticipante}_12_Facial_Emotion_${fechaFormateada}.zip`;
                 const url = URL.createObjectURL(content);
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

@@ -255,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     function createTxtFile() {
-        const filename = `${idParticipante}_Pantomime_${fechaFormateada}.csv`;
+        const filename = `${idParticipante}_17_Pantomima_del_uso_de_objetos_${fechaFormateada}.csv`;
         // Definir el contenido del archivo TXT
         const txtContent = [["TotTime", "Hand"], [totalTestTime / 1000, selectedHand]].map(e => e.join(';')).join('\n');
         const blob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createTxtFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
-            const zipname = `${idParticipante}_Pantomime_${fechaFormateada}.zip`;
+            const zipname = `${idParticipante}_17_Pantomima_del_uso_de_objetos_${fechaFormateada}.zip`;
     
             link.href = URL.createObjectURL(content);
             link.download = zipname;

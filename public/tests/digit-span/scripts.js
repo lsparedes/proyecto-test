@@ -366,14 +366,14 @@ function crearZip(type) {
     const year = now.getFullYear();
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    zip.file(`${idParticipante}_digital_span_${type}_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_digital_span_${type}_Uniques_${fechaFormateada}.csv`, txtBlob);
+    zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${idParticipante}_9_Span_Verbal_${type}_Metricas_${fechaFormateada}.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
-            downloadLink.download = `${idParticipante}_digital_span_${type}_${fechaFormateada}.zip`;
+            downloadLink.download = `${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}.zip`;
             downloadLink.textContent = 'Descargar todas las grabaciones';
             document.body.appendChild(downloadLink);
 

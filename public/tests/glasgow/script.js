@@ -223,7 +223,7 @@ function generateCSV(results) {
     const csvContent = csvData.map(row => row.join(';')).join('\n');
     return {
         content: csvContent,
-        filename: `${idParticipante}_glasgow_face_matching_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_14_GFMT2_Low_${getCurrentDate()}.csv`
     };
 }
 
@@ -231,7 +231,7 @@ function generateCSV2(startTimeTotal, selectedHand) {
     const txtContent = [["TotTime", "Hand"], [(new Date() - startTimeTotal) / 1000, selectedHand]].map(row => row.join(';')).join('\n');
     return {
         content: txtContent,
-        filename: `${idParticipante}_glasgow_face_matching_TH_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_14_GFMT2_Low_Metricas_${getCurrentDate()}.csv`
     };
 }
 
@@ -243,7 +243,7 @@ async function downloadZip(csvFile, txtFile) {
     const zipContent = await zip.generateAsync({ type: "blob" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipContent);
-    link.setAttribute("download", `${idParticipante}_glasgow_face_matching_${getCurrentDate()}.zip`);
+    link.setAttribute("download", `${idParticipante}_14_GFMT2_Low_${getCurrentDate()}.zip`);
     document.body.appendChild(link);
     link.click();
     window.close();

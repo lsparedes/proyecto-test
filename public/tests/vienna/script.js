@@ -615,8 +615,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const formattedDate = `${day}_${month}_${year}`;
-        const csvFileName = `${idParticipante}_vienna_${formattedDate}.csv`;
-        const txtFileName = `${idParticipante}_vienna_Uniques_${formattedDate}.csv`;
+        const csvFileName = `${idParticipante}_13_VIENNA_${formattedDate}.csv`;
+        const txtFileName = `${idParticipante}_13_VIENNA_Metricas_${formattedDate}.csv`;
     
         zip.file(csvFileName, csvBlob);
         zip.file(txtFileName, txtBlob);
@@ -634,7 +634,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const link = document.createElement('a');
                 if (link.download !== undefined) {
                     const url = URL.createObjectURL(content);
-                    const zipFileName = `${idParticipante}_vienna_${formattedDate}.zip`;
+                    const zipFileName = `${idParticipante}_13_VIENNA_${formattedDate}.zip`;
     
                     link.setAttribute('href', url);
                     link.setAttribute('download', zipFileName);

@@ -477,14 +477,14 @@ function generarArchivoCSV() {
 
     // Crear el archivo ZIP
     const zip = new JSZip();
-    zip.file(`${idParticipante}_StoryBasedEmpathyTask_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_StoryBasedEmpathyTask_TH_${fechaFormateada}.csv`, txtBlob);
+    zip.file(`${idParticipante}_11_SET_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${idParticipante}_11_SET_Metricas_${fechaFormateada}.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const link = document.createElement('a');
             if (link.download !== undefined) {
-                const zipFilename = `${idParticipante}_StoryBasedEmpathyTask_${fechaFormateada}.zip`;
+                const zipFilename = `${idParticipante}_11_SET_${fechaFormateada}.zip`;
                 const url = URL.createObjectURL(content);
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);
