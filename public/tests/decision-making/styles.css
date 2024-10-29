@@ -66,7 +66,8 @@ body {
   }
 
   .feedback-image-money{
-    width: 600px;
+    width: 500px;
+    margin: 0 !important;
   }
   .feedback-image-person{
     width: 200px;
