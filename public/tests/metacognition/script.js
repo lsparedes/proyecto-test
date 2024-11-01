@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 1;
+  let maxTrials = 10;
   let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
@@ -46,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let pauseStartTime;
   let instructionsPhase = 0;
   let blockType = 'demo';
+  let RedDotSide = "izquierda";
 
   let diferenciaInicial = 15;
   let ajusteDificultad = 1;
@@ -191,8 +192,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let numPuntosMenor = totalDots - numPuntosMayor;
     const colors = [];
     let colorMayor = Math.random() < 0.5 ? 'red' : 'blue';
+    
 
     if (colorMayor === 'red') {
+      RedDotSide = "izquierda"; // Rojo a la izquierda
       for (let i = 0; i < numPuntosMayor; i++) {
         colors.push('red');
       }
@@ -200,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         colors.push('blue');
       }
     } else {
+      RedDotSide = "derecha"; // Rojo a la derecha
       for (let i = 0; i < numPuntosMayor; i++) {
         colors.push('blue');
       }
@@ -584,12 +588,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function generateCSV(results) {
     const csvContent = "Block;Trial;CorrResp;PartResp;ConfRa;Acc;DiffLvl;RTDecision;RTConfRa;PauseTime;RedDotSide\n"
-      + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP};izquierda`).join("\n")
+        + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP};${RedDotSide}`).join("\n");
     return {
-      content: csvContent,
-      filename: `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.csv`
+        content: csvContent,
+        filename: `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.csv`
     };
-  }
+}
+
 
   function generateCSV2(startTimeTotal, selectedHand) {
     const txtContent = [["TotTime", "Hand"], [(new Date() - startTimeTotal) / 1000, selectedHand]].map(e => e.join(";")).join("\n");
