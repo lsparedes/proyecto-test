@@ -216,9 +216,20 @@ audio-container {
 
 .option-btn {
     margin: 0 10px;
-    width: 100px;
-    text-align: center;
+    width: 400px;
+    height: 200px; /* Establece una altura para centrar verticalmente */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center !important;
+    font-size: 64px;
+    padding: 0; /* Quita el padding para centrar mejor el contenido */
+    cursor: pointer;
+    border: 1px solid #333;
+    background-color: #fff;
+    border-radius: 5px;
 }
+
 
 .options {
     display: flex;
@@ -227,14 +238,6 @@ audio-container {
     margin-top: 100px;
 }
 
-.option-btn {
-    margin: 0;
-    padding: 5px 40px;
-    cursor: pointer;
-    border: 1px solid #333;
-    background-color: #fff;
-    border-radius: 5px;
-}
 
 .option-btn:focus {
     background-color: #007bff; /* Cambia este color al que desees */
