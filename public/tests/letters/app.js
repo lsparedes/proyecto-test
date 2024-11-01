@@ -669,6 +669,7 @@ function validateClicks() {
 
     console.log(sumX, sumY, correctClicks);
     endTime = new Date();
+    const CoC = Math.sign(normalizedCenterX) === -1 ? -1 : 1;
     const testDuration = (endTime - startItemTime);
     const totalDuration = (endTime - totalStartTime) / 1000;
     const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
@@ -698,7 +699,8 @@ function validateClicks() {
     csvContent += `SDistance;${searchDistanceFormatted} px\n`;
     // csvContent += `center_of_cancelation_px;(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
     // csvContent += `center_of_cancelation_norm;(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
-    csvContent += `CoC;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
+    //csvContent += `CoC;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
+    csvContent += `CoC;${CoC}\n`;
     // csvContent += `center_of_cancelation_side;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
 
     const csvBlob = downloadCSV(csvContent);
