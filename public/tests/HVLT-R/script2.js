@@ -8,52 +8,63 @@ document.addEventListener('DOMContentLoaded', () => {
     const startRecordingButton4 = document.getElementById('startRecordingButton4');
     const stopRecordingButton4 = document.getElementById('stopRecordingButton4');
     const DownloadButton = document.getElementById('download');
-    const NXButton21 = document.getElementById('nxbutton21')
-    const mainScreen3 = document.getElementById('main-screen2-1')
+    const NXButton21 = document.getElementById('nxbutton21');
+    const mainScreen3 = document.getElementById('main-screen2-1');
 
     let recordingInterval;
     let recordingSeconds = 0;
     let startTime = new Date();
     let finishTime;
-    let audioBlob;  // Guardar el audioBlob aquí para uso posterior
+    let audioBlob;
     let fecha = new Date();
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
     let año = fecha.getFullYear();
 
     const audioFiles = [];
-
     let mediaRecorder;
     let audioChunks = [];
     let audioContext;
     let destination;
     let micStream;
-    let audioElementStream;
     let combinedStream;
 
     fullscreenButton.addEventListener('click', () => {
         if (document.fullscreenEnabled && !document.fullscreenElement) {
-            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+            fullscreenButton.style.backgroundImage = "url('minimize.png')";
             document.documentElement.requestFullscreen();
         } else if (document.fullscreenElement) {
-            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')";
             document.exitFullscreen();
         } else {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
 
+    function stopAllMedia() {
+        audio1_ej2.pause();
+        audio1_ej2.currentTime = 0;
+
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            clearInterval(recordingInterval);
+            startRecordingButton4.disabled = false;
+            stopRecordingButton4.disabled = true;
+            DownloadButton.style.display = 'block';
+        }
+    }
+
     NXButton21.addEventListener('click', () => {
-        mainScreen3.style.display = 'none'
+        stopAllMedia();
+        mainScreen3.style.display = 'none';
         recordingControls4.style.display = 'none';
         finishScreen.style.display = 'block';
         startRecordingButton4.style.display = 'none';
-        stopRecording();
         finishTime = new Date();
     });
 
     startButton2.addEventListener('click', () => {
-        pauseAudios();
+        stopAllMedia();
         mainScreen2.style.display = 'none';
         mainScreen3.style.display = 'block';
         recordingControls4.style.display = 'block';
@@ -62,6 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     audio1_ej2.addEventListener('ended', () => {
+        stopAllMedia();
         mainScreen2.style.display = 'none';
         audio1_ej2.style.display = 'none';
         mainScreen3.style.display = 'block';
@@ -80,22 +92,23 @@ document.addEventListener('DOMContentLoaded', () => {
             startRecording('HVLT-R Ensayo 1.wav');
         }
     });
+
     startRecordingButton4.addEventListener('click', () => {
+        stopAllMedia();
         startRecording();
     });
 
     stopRecordingButton4.addEventListener('click', () => {
+        stopAllMedia();
         recordingControls4.style.display = 'none';
         finishScreen.style.display = 'block';
         startRecordingButton4.style.display = 'none';
-        stopRecording();
         finishTime = new Date();
     });
 
     DownloadButton.addEventListener('click', () => {
         generateZip();
     });
-
 
     async function startRecording(fileName) {
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -105,7 +118,6 @@ document.addEventListener('DOMContentLoaded', () => {
         audio.play();
 
         audioContext = new AudioContext();
-
         destination = audioContext.createMediaStreamDestination();
 
         const micSource = audioContext.createMediaStreamSource(micStream);
@@ -124,10 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         mediaRecorder.start();
-
         mediaRecorder.addEventListener('stop', () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
-            audioFiles.push({ blob: audioBlob, fileName: fileName })
+            audioFiles.push({ blob: audioBlob, fileName: fileName });
         });
 
         recordingInterval = setInterval(() => {
@@ -141,17 +152,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function stopRecording() {
         clearInterval(recordingInterval);
         recordingSeconds = 0;
-        mediaRecorder.stop();
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+        }
         startRecordingButton4.disabled = false;
         stopRecordingButton4.disabled = true;
         DownloadButton.style.display = 'block';
-
     }
 
     function startFinishTimer() {
         setTimeout(() => {
             playBeepSound();
-        }, 20 * 60 * 1000); // 20 minutos en milisegundos
+        }, 20 * 60 * 1000);
     }
 
     function playBeepSound() {
@@ -163,7 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = Math.floor(seconds % 60);
-
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
 
@@ -172,9 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return urlParams.get(param);
     }
     
-    // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
-    
 
     function saveToCSV() {
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
@@ -182,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options);
         const timeSpent = (finishTime - startTime) / 1000;
         const timeSpentFormatted = timeSpent;
-
         const csvContent = `TotTime\n${timeSpentFormatted}`;
         return csvContent;
     }
@@ -198,17 +206,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const zip = new JSZip();
-
-        // Agregar archivos de audio al zip
         audioFiles.forEach((file) => {
             zip.file(file.fileName, file.blob);
         });
 
-        // Agregar el archivo CSV al zip
         const csvContent = saveToCSV();
         zip.file('1_HVLT-R_Diferido.csv', csvContent);
 
-        // Generar y descargar el zip
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
@@ -216,13 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            
             window.close();
-
         });
     }
 
     function pauseAudios() {
-        document.getElementById('audio1_ejercicio2').pause();
+        audio1_ej2.pause();
     }
 });

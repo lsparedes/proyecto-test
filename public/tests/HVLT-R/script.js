@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const wordsScreen = document.getElementById('words');
     const NXButton = document.getElementById('nxbutton');
 
-    const audioE1 = document.getElementById('audio_E1')
+    const audioE1 = document.getElementById('audio_E1');
     const recordingControls1 = document.getElementById('recordingControls1');
     const initRecordingButton1 = document.getElementById('initRecordingButton1');
     const stopRecordingButton1 = document.getElementById('stopRecordingButton1');
@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const NXButton2 = document.getElementById('nxbutton2');
     const NXButton3 = document.getElementById('nxbutton3');
 
-    const audioE2 = document.getElementById('audio_E2')
+    const audioE2 = document.getElementById('audio_E2');
     const recordingControls2 = document.getElementById('recordingControls2');
     const initRecordingButton2 = document.getElementById('initRecordingButton2');
     const stopRecordingButton2 = document.getElementById('stopRecordingButton2');
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const NXButton4 = document.getElementById('nxbutton4');
     const NXButton5 = document.getElementById('nxbutton5');
 
-    const audioE3 = document.getElementById('audio_E3')
+    const audioE3 = document.getElementById('audio_E3');
     const recordingControls3 = document.getElementById('recordingControls3');
     const initRecordingButton3 = document.getElementById('initRecordingButton3');
     const stopRecordingButton3 = document.getElementById('stopRecordingButton3');
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime = new Date();
     let fecha = new Date();
 
-    let endTimeExecution3 = null; // EndTimeExecution
+    let endTimeExecution3 = null;
 
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
@@ -58,10 +58,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let audioElementStream;
     let combinedStream;
 
-    // An array to hold all the audio files to be zipped
     const audioFiles = [];
 
-    // Include JSZip script
     const script = document.createElement('script');
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js';
     document.head.appendChild(script);
@@ -69,15 +67,36 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(`${startTime}`);
     fullscreenButton.addEventListener('click', () => {
         if (document.fullscreenEnabled && !document.fullscreenElement) {
-            fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
+            fullscreenButton.style.backgroundImage = "url('minimize.png')";
             document.documentElement.requestFullscreen();
         } else if (document.fullscreenElement) {
-            fullscreenButton.style.backgroundImage = "url('full-screen.png')"; // Cambiar la imagen del botón a 'full-screen'
+            fullscreenButton.style.backgroundImage = "url('full-screen.png')";
             document.exitFullscreen();
         } else {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
+
+    function stopAllMedia() {
+        audioE1.pause();
+        audioE2.pause();
+        audioE3.pause();
+        audioE1.currentTime = 0;
+        audioE2.currentTime = 0;
+        audioE3.currentTime = 0;
+
+        if (is_recording) {
+            stopRecording(initRecordingButton1, stopRecordingButton1);
+            stopRecording(initRecordingButton2, stopRecordingButton2);
+            stopRecording(initRecordingButton3, stopRecordingButton3);
+            initRecordingButton1.style.display = 'none';
+            initRecordingButton2.style.display = 'none';
+            initRecordingButton3.style.display = 'none';
+            stopRecordingButton1.style.display = 'none';
+            stopRecordingButton2.style.display = 'none';
+            stopRecordingButton3.style.display = 'none';
+        }
+    }
 
     startButton.addEventListener('click', () => {
         pauseAudios();
@@ -86,41 +105,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     NXButton.addEventListener('click', () => {
-        stopRecording(initRecordingButton1, stopRecordingButton1); // Detener y guardar la grabación
+        stopAllMedia();
         wordsScreen.style.display = 'none';
         recordingControls1.style.display = 'none';
         Ensayo2Screen.style.display = 'flex';
     });
 
     NXButton2.addEventListener('click', () => {
-        pauseAudios();
+        stopAllMedia();
         Ensayo2Screen.style.display = 'none';
         wordsScreen2.style.display = 'block';
     });
 
     NXButton3.addEventListener('click', () => {
-        stopRecording(initRecordingButton2, stopRecordingButton2); // Detener y guardar la grabación
+        stopAllMedia();
         wordsScreen2.style.display = 'none';
         recordingControls2.style.display = 'none';
         Ensayo3Screen.style.display = 'flex';
     });
 
     NXButton4.addEventListener('click', () => {
-        pauseAudios();
+        stopAllMedia();
         Ensayo3Screen.style.display = 'none';
         wordsScreen3.style.display = 'block';
     });
 
     NXButton5.addEventListener('click', () => {
-        stopRecording(initRecordingButton3, stopRecordingButton3); // Detener y guardar la grabación
+        stopAllMedia();
         wordsScreen3.style.display = 'none';
         recordingControls3.style.display = 'none';
         endScreen.style.display = 'flex';
-
     });
 
     NXButton6.addEventListener('click', () => {
-        pauseAudios();
+        stopAllMedia();
         endScreen.style.display = 'none';
         finishScreen.style.display = 'flex';
         endTimeExecution3 = new Date();
@@ -128,17 +146,15 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('endTimeExecution3', endTimeExecution3);
     });
 
-
     NXButton6.addEventListener('click', () => {
         downloadZip();
     });
 
     audioE1.addEventListener('timeupdate', () => {
         if (audioE1.currentTime >= audioE1.duration - 2) {
-            // Iniciar la grabación dos segundo antes de que termine el audio
             if (!is_recording) {
-            startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.wav');
-            };
+                startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.wav');
+            }
         }
     });
 
@@ -149,32 +165,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     audioE2.addEventListener('timeupdate', () => {
         if (audioE2.currentTime >= audioE2.duration - 2) {
-            // Iniciar la grabación un segundo antes de que termine el audio
             if (!is_recording) {
-            startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.wav');
-            };
+                startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.wav');
+            }
         }
     });
 
     audioE2.addEventListener('ended', () => {
         audioE2.style.display = 'none';
         recordingControls2.style.display = 'block';
-
     });
 
     audioE3.addEventListener('timeupdate', () => {
         if (audioE3.currentTime >= audioE3.duration - 2) {
-            // Iniciar la grabación un segundo antes de que termine el audio
             if (!is_recording) {
                 startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.wav');
-            };
+            }
         }
     });
 
     audioE3.addEventListener('ended', () => {
         audioE3.style.display = 'none';
         recordingControls3.style.display = 'block';
-
     });
 
     initRecordingButton1.addEventListener('click', () => {
@@ -192,48 +204,41 @@ document.addEventListener('DOMContentLoaded', () => {
     stopRecordingButton1.addEventListener('click', () => {
         stopRecording(initRecordingButton1, stopRecordingButton1);
         initRecordingButton1.style.display = 'none';
+        stopRecordingButton1.style.display = 'none';
     });
 
     stopRecordingButton2.addEventListener('click', () => {
         stopRecording(initRecordingButton2, stopRecordingButton2);
         initRecordingButton2.style.display = 'none';
+        stopRecordingButton2.style.display = 'none';
     });
 
     stopRecordingButton3.addEventListener('click', () => {
         stopRecording(initRecordingButton3, stopRecordingButton3);
         initRecordingButton3.style.display = 'none';
+        stopRecordingButton3.style.display = 'none';
     });
 
     async function startRecording(initButton, stopButton, fileName) {
         is_recording = true;
         audioChunks = [];
-
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
         const beep = new Audio('audios/beep.wav');
         beep.crossOrigin = "anonymous";
         beep.play();
-
         audioContext = new AudioContext();
-
         destination = audioContext.createMediaStreamDestination();
-
         const micSource = audioContext.createMediaStreamSource(micStream);
         micSource.connect(destination);
-
         const audioElementSource = audioContext.createMediaElementSource(beep);
         audioElementSource.connect(audioContext.destination);
         audioElementSource.connect(destination);
-
         combinedStream = destination.stream;
-
         mediaRecorder = new MediaRecorder(combinedStream);
         mediaRecorder.ondataavailable = event => {
             audioChunks.push(event.data);
         };
-
         mediaRecorder.start();
-
         mediaRecorder.addEventListener('stop', () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
             audioFiles.push({ blob: audioBlob, fileName: fileName });
@@ -259,26 +264,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
         const secs = Math.floor(seconds % 60);
-
         return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
+
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
 
-    // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
     function saveToCSV() {
-
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
         const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options);
         const finishTimeFormatted = new Date(endTimeExecution3).toLocaleString('en-US', options);
-
         const timeSpent = (endTimeExecution3 - startTime) / 1000;
         const timeSpentFormatted = timeSpent;
-
         const csvContent = `TotTime\n${timeSpentFormatted}`;
         return csvContent;
     }
@@ -292,16 +293,12 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('JSZip is not loaded.');
             return;
         }
-
         const zip = new JSZip();
-
         audioFiles.forEach((file) => {
             zip.file(file.fileName, file.blob);
         });
-
         const csvContent = saveToCSV();
         zip.file('1_HVLT-R_Inmediato.csv', csvContent);
-
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
@@ -309,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-
             setTimeout(() => {
                 window.close();
             }, 1000);
@@ -319,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function startFinishTimer() {
         setTimeout(() => {
             playBeepSound();
-        }, 20 * 60 * 1000); // 20 minutos en milisegundos
+        }, 20 * 60 * 1000);
     }
 
     function playBeepSound() {

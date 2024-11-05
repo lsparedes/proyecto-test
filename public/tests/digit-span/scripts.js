@@ -187,8 +187,7 @@ function startRecording(itemDiv, titleElement, index) {
             const recordingTime = new Date();
             const duration = recordingTime - recordingStartTime;
             downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob, duration: duration });
-            const stopImg = itemDiv.querySelector('.stop-img');
-            stopImg.classList.add('hidden');
+           
             const nextButton = itemDiv.querySelector('.next-button');
             nextButton.classList.remove('hidden');
         } else {
