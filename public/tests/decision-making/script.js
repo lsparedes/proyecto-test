@@ -159,11 +159,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         feedbackImage1.src = reward ? 'img/win.jpg' : 'img/lose.jpg';
-        feedbackImage2.src = reward ? 'img/5000.png' : 'img/1000.png';
+        feedbackImage2.src = reward ? 'img/2000.png' : 'img/1000.png';
         feedbackMessage.innerText = reward ? '¡Ganaste!' : '¡Perdiste!';
 
         if (!practiceMode) { // Solo actualizar el puntaje si no es el modo de práctica
-            score += reward ? 5000 : -1000;
+            score += reward ? 2000 : -1000;
             scoreAmount.innerText = `Saldo: $${score + scoreBuffer}`;
             scoreAmount.style.color = (score + scoreBuffer) < 0 ? 'red' : (score + scoreBuffer) === 0 ? 'black' : 'blue';
         }
