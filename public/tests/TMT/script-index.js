@@ -35,10 +35,6 @@ document.addEventListener('DOMContentLoaded', function () {
     endSequenceButton.id = 'endSequenceButton';
     document.body.appendChild(endSequenceButton);
 
-
-
-
-    const redLinesCount = 0;
     let circleRadius = 30; // Cambiado de const a let para permitir reasignación
 
 
@@ -176,39 +172,43 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!isDrawing) return;
         ctx.lineTo(x, y);
         ctx.stroke();
-
+    
         let validDrop = false;
-
+    
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance <= circleRadius && circle.number != currentCircle + 1 && lastCircle.number != circle.number) {
                 highlightCircle(ctx, circle, 'red', x, y);
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
-                circlesToCorrect.push({ x: circle.x, y: circle.y, number: circle.number });
+    
+                // Añadir el círculo a una lista de círculos incorrectos para mantener el color rojo
+                if (!circlesToCorrect.some(c => c.number === circle.number)) {
+                    circlesToCorrect.push({ x: circle.x, y: circle.y, number: circle.number });
+                }
+    
                 isDrawing = false;
-                // erroresComision++;
             } else if (distance < circleRadius && circle.number === currentCircle + 1) {
                 highlightCircle(ctx, circle, 'black', x, y);
-                // drawLineToCircleEdge(ctx, lastCircle.x, lastCircle.y, circle.x, circle.y);
                 correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
                 currentCircle++;
                 lastCircle = circle;
                 validDrop = true;
                 correctLines++;
-
+    
+                // Mantener círculos incorrectos en rojo
                 if (circlesToCorrect.length > 0) {
                     circlesToCorrect.forEach(circle => {
-                        highlightCircle(ctx, circle, 'black', x, y);
+                        highlightCircle(ctx, circle, 'red', x, y);
                     });
-                    circlesToCorrect = [];
                 }
             }
         });
-
+    
         if (currentCircle === 8) {
             drawingCompleted = true;
         }
     }
+    
 
     function endDrawing(x, y) {
         let validDrop = false;
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         isDrawing = false;
     }
-
+    //MOUSE DOWN
     canvas.addEventListener('mousedown', function (event) {
         if (drawingCompleted) return;
         console.log(event.offsetX, event.offsetY);
@@ -397,35 +397,39 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!isDrawingPartA) return;
         ctxPartA.lineTo(x, y);
         ctxPartA.stroke();
-
+    
         let validDrop = false;
-
+    
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance <= circleRadius && circle.number != currentCirclePartA + 1 && lastCirclePartA.number != circle.number) {
                 highlightCircle(ctxPartA, circle, 'red', x, y);
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
-                circlesToCorrectA.push({ x: circle.x, y: circle.y, number: circle.number });
+    
+                // Añadir el círculo a una lista de círculos incorrectos para mantener el color rojo
+                if (!circlesToCorrectA.some(c => c.number === circle.number)) {
+                    circlesToCorrectA.push({ x: circle.x, y: circle.y, number: circle.number });
+                }
+    
                 isDrawingPartA = false;
                 erroresComision++;
             } else if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
                 highlightCircle(ctxPartA, circle, 'black', x, y);
-                // drawLineToCircleEdge(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, circle.x, circle.y);
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
                 currentCirclePartA++;
                 lastCirclePartA = circle;
                 validDrop = true;
                 correctLines++;
-
+    
+                // Mantener círculos incorrectos en rojo
                 if (circlesToCorrectA.length > 0) {
                     circlesToCorrectA.forEach(circle => {
-                        highlightCircle(ctxPartA, circle, 'black', x, y);
+                        highlightCircle(ctxPartA, circle, 'red', x, y);
                     });
-                    circlesToCorrectA = [];
                 }
             }
         });
-
+    
         if (currentCirclePartA === 25) {
             drawingCompletedA = true;
         }
@@ -457,6 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
         isDrawingPartA = false;
     }
 
+    //MOUSE TOUCH
     canvasPartA.addEventListener('mousedown', function (event) {
         if (drawingCompletedA) return;
         startDrawingPartA(event.offsetX, event.offsetY);
