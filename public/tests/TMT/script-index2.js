@@ -221,6 +221,20 @@ function endDrawing(x, y) {
     isDrawingPartB = false;
 }
 
+canvasPartB.addEventListener('mousedown', function (event) {
+    if (drawingCompletedB) return;
+    startDrawing(event.offsetX, event.offsetY);
+});
+
+canvasPartB.addEventListener('mousemove', function (event) {
+    if (drawingCompletedB) return;
+    drawMove(event.offsetX, event.offsetY);
+});
+
+canvasPartB.addEventListener('mouseup', function (event) {
+    if (drawingCompletedB) return;
+    endDrawing(event.offsetX, event.offsetY);
+});
 
 canvasPartB.addEventListener('touchstart', function (event) {
     if (drawingCompletedB) return;
@@ -449,6 +463,35 @@ function endDrawingPartB2(x, y) {
     isDrawingPartB2 = false;
 }
 
+canvasPartB2.addEventListener('mousedown', function (event) {
+    if (isDrawingPartB2) return;
+    startDrawingPartB2(event.offsetX, event.offsetY);
+    if (airStartTime) {
+        let airEndTime = new Date();
+        let airTime = (airEndTime - airStartTime) / 1000;
+        penAirTime += airTime;
+        airStartTime = null;
+    }
+
+    if (!isRecordingStarted) {
+        mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
+        isRecordingStarted = true; // Actualiza la variable de control
+        inicio = new Date();
+        reiniciarTemporizador();
+    }
+});
+
+canvasPartB2.addEventListener('mousemove', function (event) {
+    if (drawingCompletedB2) return;
+    drawMovePartB2(event.offsetX, event.offsetY);
+});
+
+canvasPartB2.addEventListener('mouseup', function (event) {
+    if (drawingCompletedB2) return;
+    endDrawingPartB2(event.offsetX, event.offsetY);
+    liftPenCount++;
+    airStartTime = new Date();
+});
 
 canvasPartB2.addEventListener('touchstart', function (event) {
     if (drawingCompletedB2) return;

@@ -40,7 +40,7 @@
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
-                <button id="start-button"></button>
+                <button id="final-instruction-button"></button>
             </div>
         </div>
 
@@ -80,9 +80,15 @@
             document.getElementById('welcome-screen').classList.add('hidden');
             document.getElementById('instruction-screen').classList.remove('hidden');
         });
-        document.getElementById('start-button').addEventListener('click', () => {
+
+        document.getElementById('final-instruction-button').addEventListener('click', () => {
             stopAllAudios();
             document.getElementById('instruction-screen').classList.add('hidden');
+            document.getElementById('instruction-final-screen').classList.remove('hidden');
+        });
+        document.getElementById('start-button').addEventListener('click', () => {
+            stopAllAudios();
+            document.getElementById('instruction-final-screen').classList.add('hidden');
             document.getElementById('test-items-backward').classList.remove('hidden');
             startTest('backward');
         });
