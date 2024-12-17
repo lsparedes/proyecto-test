@@ -84,6 +84,8 @@ document.addEventListener('DOMContentLoaded', () => {
     resetButtonI1.addEventListener('click', resetVideoI1);
 
 
+    
+
     function stopAllAudios() {
         const audios = document.querySelectorAll('audio');
         audios.forEach(audio => audio.pause());
@@ -380,10 +382,11 @@ document.addEventListener('DOMContentLoaded', () => {
         nextButtonPreTestInstruction.addEventListener('click', showTestScreen);
     }
 
+    //Cambiar tamaño del circulo
     const drawCircle = (canvas, x, y, color) => {
         const ctx = canvas.getContext('2d');
         ctx.beginPath();
-        ctx.arc(x, y, 15, 0, 2 * Math.PI, false);
+        ctx.arc(x, y, 7, 0, 2 * Math.PI, false);
         ctx.fillStyle = color;
         ctx.fill();
         ctx.lineWidth = 1;
@@ -724,7 +727,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2000); // 2000 milisegundos = 2 segundos
     };
 
-
+    const loadPracticeVideo = (videoElement, videoSrc) => {
+        // Configuración inicial del video
+        videoElement.src = videoSrc;
+        videoElement.style.display = 'none'; // Ocultar inicialmente
+        videoElement.pause(); // Pausar por si está reproduciéndose
+    
+        console.log(`Cargando video con retraso: ${videoSrc}`);
+    
+        setTimeout(() => {
+            videoElement.style.display = 'block'; // Mostrar el video
+            videoElement.play(); // Reproducir después de 2 segundos
+            console.log(`Reproduciendo video: ${videoSrc}`);
+        }, 2000); // Retraso de 2 segundos
+    };
+    
+    // Reproducir los videos de práctica con retraso
+    loadPracticeVideo(practiceVideo1, 'videos/Instructions.mp4');
+    loadPracticeVideo(practiceVideo2, 'videos/Practice_1.mp4');
+    loadPracticeVideo(practiceVideo3, 'videos/Practice_2.mp4');
+    
 
     if (imageCanvas && testVideo) {
         fullScreenButton.addEventListener('click', () => {

@@ -20,13 +20,20 @@ function requestMicrophonePermission() {
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
             audioStream = stream;
-            document.getElementById('permission-message').classList.add('hidden');
+            const permissionMessage = document.getElementById('permission-message');
+            if (permissionMessage) {
+                permissionMessage.classList.add('hidden');
+            }
         })
         .catch(err => {
             console.error('Error al solicitar permisos de micrófono:', err);
-            document.getElementById('permission-message').classList.remove('hidden');
+            const permissionMessage = document.getElementById('permission-message');
+            if (permissionMessage) {
+                permissionMessage.classList.remove('hidden');
+            }
         });
 }
+
 const fullscreenButton = document.getElementById('fullscreen-button');
 fullscreenButton.addEventListener('click', () => {
     if (document.fullscreenEnabled && !document.fullscreenElement) {

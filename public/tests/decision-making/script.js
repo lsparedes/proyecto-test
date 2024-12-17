@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentTrial = 0;
         scoreBuffer = score + scoreBuffer; // Guardar el puntaje actual antes de comenzar el Bloque 1
         score = 0; // Reiniciar puntaje al comenzar el Bloque 1
-        scoreAmount.innerText = `$${score + scoreBuffer}`; // Mostrar el puntaje total
+        scoreAmount.innerText = `$${(score + scoreBuffer).toLocaleString('es-CL')}`; // Mostrar el puntaje total con formato de saldo
         scoreAmount.style.color = (score + scoreBuffer) < 0 ? 'red' : (score + scoreBuffer) === 0 ? 'black' : 'blue';
         scoreAmount.style.display = 'block'; // Mostrar el puntaje a partir del Bloque 1
         trials = generateTestTrials(currentBlock);
@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!practiceMode) { // Solo actualizar el puntaje si no es el modo de práctica
             score += reward ? 2000 : -1000;
-            scoreAmount.innerText = `Saldo: $${score + scoreBuffer}`;
+            scoreAmount.innerText = `Saldo: $${(score + scoreBuffer).toLocaleString('es-CL')}`;
             scoreAmount.style.color = (score + scoreBuffer) < 0 ? 'red' : (score + scoreBuffer) === 0 ? 'black' : 'blue';
         }
 

@@ -38,8 +38,6 @@ body {
     
 }
 
-
-
 #instructionText {
     font-size: 37px;
     text-align: justify;
@@ -98,7 +96,7 @@ button {
 }
 
 .button-container button {
-    margin: 20px;
+    margin: 10px;
     /* Ajusta el margen entre los botones */
 }
 
@@ -106,7 +104,7 @@ button {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     /* Dos columnas con el mismo ancho */
-    grid-gap: 50px;
+    grid-gap: 150px;
     /* Aumenta el espacio entre las imágenes */
     justify-content: center;
     /* Centra las imágenes horizontalmente */
@@ -119,10 +117,10 @@ button {
     /* Ocupa todo el ancho disponible en la cuadrícula */
     height: auto;
     /* Ajusta automáticamente la altura para mantener la proporción */
-    max-width: 30vh;
-    max-height: 30vh;
+    max-width: 60vh;
+    max-height: 40vh;
     /* Establece una altura máxima mayor para las imágenes */
-    margin: 4px;
+
     /* Agrega un pequeño margen entre las imágenes */
 }
 
@@ -151,8 +149,8 @@ button {
     /* Añade margen a la parte inferior */
     display: block;
     /* Asegura que la imagen se muestre correctamente */
-    margin-top: 8px;
     padding: 0;
+    margin-top: -300px;
 }
 
 .hidden {
