@@ -25,7 +25,10 @@
                         <label for="name" class="form-label">Nombre:</label>
                         <input type="text" name="name" value="{{ $user->name }}" class="form-control">
                     </div>
-
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Apellido:</label>
+                        <input type="text" name="last_name" class="form-control" required>
+                    </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo Electrónico:</label>
 

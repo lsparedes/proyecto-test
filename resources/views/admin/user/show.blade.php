@@ -34,6 +34,7 @@
                                         <img src="{{ asset('assets/img/default-avatar.png') }}" alt="image"
                                             class="avatar">
                                         <h4 class="title mt-3">{{ $user->name }}</h4>
+                                        <h4 class="title mt-3">{{ $user->last_name }}</h4>
                                     </a>
                                     <p class="description">
                                         - Email: {{ $user->email }} <br>

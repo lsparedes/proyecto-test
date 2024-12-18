@@ -34,6 +34,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nombre de Usuario</th>
+                            <th>Apellido</th>
                             <th>Email</th>
                             <th>Rol</th>
                             <th>Acciones</th>
@@ -44,6 +45,7 @@
                             <tr>
                                 <td>{{ $user->id }}</td>
                                 <td>{{ $user->name }}</td>
+                                <td>{{ $user->last_name }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     @forelse ($user->roles as $role)

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-07-2024 a las 00:11:45
--- Versión del servidor: 10.4.22-MariaDB
--- Versión de PHP: 7.4.3
+-- Tiempo de generación: 18-12-2024 a las 04:34:35
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `proyecto-test`
+-- Base de datos: `neurotest`
 --
 
 -- --------------------------------------------------------
@@ -29,7 +29,7 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `alternativa` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `texto_alternativa` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `texto_alternativa` text NOT NULL,
   `es_correcta` tinyint(1) NOT NULL,
   `id_pregunta` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -52,8 +52,8 @@ INSERT INTO `alternativa` (`id`, `texto_alternativa`, `es_correcta`, `id_pregunt
 
 CREATE TABLE `criterio_evaluacion` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `Nombre_Criterio` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descripcion_Criterio` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `Nombre_Criterio` varchar(50) NOT NULL,
+  `Descripcion_Criterio` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -85,8 +85,8 @@ CREATE TABLE `criterio_evaluacion_test` (
 --
 
 INSERT INTO `criterio_evaluacion_test` (`id`, `id_criterio_evaluacion`, `id_test`, `created_at`, `updated_at`) VALUES
-(1, 1, 16, '2024-06-28 05:06:13', '2024-06-28 05:06:13'),
-(2, 2, 13, '2024-06-28 05:07:32', '2024-06-28 05:07:32');
+(1, 1, 11, '2024-06-28 05:06:13', '2024-06-28 05:06:13'),
+(2, 2, 8, '2024-06-28 05:07:32', '2024-06-28 05:07:32');
 
 -- --------------------------------------------------------
 
@@ -99,16 +99,16 @@ CREATE TABLE `examinador_persona_test` (
   `users_id` bigint(20) UNSIGNED NOT NULL,
   `test_id` bigint(20) UNSIGNED NOT NULL,
   `persons_id` bigint(20) UNSIGNED NOT NULL,
-  `observacion` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `fecha_observacion` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `observacion` text NOT NULL,
+  `fecha_observacion` text NOT NULL,
   `fecha_termino` datetime DEFAULT NULL,
   `puntuacion` int(11) DEFAULT NULL,
   `duracion` int(11) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `csv_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `image_path` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`image_path`)),
-  `audio_path` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`audio_path`))
+  `csv_path` varchar(255) DEFAULT NULL,
+  `image_path` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `audio_path` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -116,7 +116,7 @@ CREATE TABLE `examinador_persona_test` (
 --
 
 INSERT INTO `examinador_persona_test` (`id`, `users_id`, `test_id`, `persons_id`, `observacion`, `fecha_observacion`, `fecha_termino`, `puntuacion`, `duracion`, `created_at`, `updated_at`, `csv_path`, `image_path`, `audio_path`) VALUES
-(20, 20, 8, 2, 'Persona de prueba', '2024-06-25 13:29:00', '2024-06-25 13:39:00', 25, 10, '2024-06-25 21:29:41', '2024-06-26 20:07:45', 'csv_files/Kls9Tf6VYK7PN4MM96JeadjO2gRzDFYFOTRCYKnT.txt', '\"[\\\"images\\\\\\/resultados.png\\\"]\"', '\"[\\\"audios\\\\\\/metacogn.mp3\\\"]\"');
+(20, 20, 4, 2, 'Persona de prueba', '2024-06-25 13:29:00', '2024-06-25 13:39:00', 25, 10, '2024-06-25 21:29:41', '2024-06-26 20:07:45', 'csv_files/Kls9Tf6VYK7PN4MM96JeadjO2gRzDFYFOTRCYKnT.txt', '\"[\\\"images\\\\\\/resultados.png\\\"]\"', '\"[\\\"audios\\\\\\/metacogn.mp3\\\"]\"');
 
 -- --------------------------------------------------------
 
@@ -126,11 +126,11 @@ INSERT INTO `examinador_persona_test` (`id`, `users_id`, `test_id`, `persons_id`
 
 CREATE TABLE `failed_jobs` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -142,8 +142,8 @@ CREATE TABLE `failed_jobs` (
 
 CREATE TABLE `formula` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `nombre_formula` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expresion_formula` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nombre_formula` varchar(255) NOT NULL,
+  `expresion_formula` varchar(255) NOT NULL,
   `peso_formula` double(8,2) NOT NULL,
   `id_criterio_evaluacion` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -165,9 +165,9 @@ INSERT INTO `formula` (`id`, `nombre_formula`, `expresion_formula`, `peso_formul
 
 CREATE TABLE `metrica` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `nombre_metrica` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nombre_metrica` varchar(50) NOT NULL,
   `peso_metrica` double(8,2) NOT NULL,
-  `descripcion_metrica` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion_metrica` varchar(255) NOT NULL,
   `id_criterio_evaluacion` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -188,7 +188,7 @@ INSERT INTO `metrica` (`id`, `nombre_metrica`, `peso_metrica`, `descripcion_metr
 
 CREATE TABLE `migrations` (
   `id` int(10) UNSIGNED NOT NULL,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) NOT NULL,
   `batch` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -238,7 +238,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `model_has_permissions` (
   `permission_id` bigint(20) UNSIGNED NOT NULL,
-  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_type` varchar(255) NOT NULL,
   `model_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -250,7 +250,7 @@ CREATE TABLE `model_has_permissions` (
 
 CREATE TABLE `model_has_roles` (
   `role_id` bigint(20) UNSIGNED NOT NULL,
-  `model_type` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `model_type` varchar(255) NOT NULL,
   `model_id` bigint(20) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -260,10 +260,11 @@ CREATE TABLE `model_has_roles` (
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 (1, 'App\\Models\\User', 1),
+(1, 'App\\Models\\User', 20),
+(1, 'App\\Models\\User', 24),
 (2, 'App\\Models\\User', 2),
 (2, 'App\\Models\\User', 4),
 (2, 'App\\Models\\User', 5),
-(2, 'App\\Models\\User', 20),
 (2, 'App\\Models\\User', 23);
 
 -- --------------------------------------------------------
@@ -273,8 +274,8 @@ INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
 --
 
 CREATE TABLE `password_resets` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -285,7 +286,8 @@ CREATE TABLE `password_resets` (
 INSERT INTO `password_resets` (`email`, `token`, `created_at`) VALUES
 ('crisalarcon@live.com', '$2y$10$lqpYcQSwTqWtXerkFimux.5wiD0qlQKM2H0.omFgiaKvVItgZQ4lq', '2024-03-08 23:09:07'),
 ('usuario@ejemplo.com', '$2y$10$xaz06ozM350bItJh57rjzeDlGqFvz88UHhs8uZ41NaTkZbCVQMj/2', '2024-03-11 06:37:14'),
-('admin@ejemplo.com', '$2y$10$MO1lQ7Mj5rlxesl/9BWwf.jEYELmraeRZUU/8CGTmQ5B8ZRf96wym', '2024-07-02 02:17:50');
+('admin@ejemplo.com', '$2y$10$MO1lQ7Mj5rlxesl/9BWwf.jEYELmraeRZUU/8CGTmQ5B8ZRf96wym', '2024-07-02 02:17:50'),
+('pmonjes@ing.ucsc.cl', '$2y$10$qLdaPa0c/w81uZF3JTgjBuL.46u4BWkqDpE0gDOjMeX1EnRIDOnEq', '2024-12-12 05:46:27');
 
 -- --------------------------------------------------------
 
@@ -295,8 +297,8 @@ INSERT INTO `password_resets` (`email`, `token`, `created_at`) VALUES
 
 CREATE TABLE `permissions` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `guard_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `guard_name` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -405,10 +407,10 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 
 CREATE TABLE `persons` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
   `age` int(11) NOT NULL,
-  `genre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `genre` varchar(255) NOT NULL,
   `created_by` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -430,9 +432,9 @@ INSERT INTO `persons` (`id`, `name`, `last_name`, `age`, `genre`, `created_by`, 
 
 CREATE TABLE `pregunta` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `texto_pregunta` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `tipo_respuesta` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `respuesta_correcta` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `texto_pregunta` text NOT NULL,
+  `tipo_respuesta` varchar(50) NOT NULL,
+  `respuesta_correcta` varchar(255) NOT NULL,
   `id_test` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -443,7 +445,7 @@ CREATE TABLE `pregunta` (
 --
 
 INSERT INTO `pregunta` (`id`, `texto_pregunta`, `tipo_respuesta`, `respuesta_correcta`, `id_test`, `created_at`, `updated_at`) VALUES
-(1, 'Hola esto es una pregunta', 'texto', '2', 16, '2024-04-09 22:28:31', '2024-04-09 22:28:31');
+(1, 'Hola esto es una pregunta', 'texto', '2', 11, '2024-04-09 22:28:31', '2024-04-09 22:28:31');
 
 -- --------------------------------------------------------
 
@@ -453,7 +455,7 @@ INSERT INTO `pregunta` (`id`, `texto_pregunta`, `tipo_respuesta`, `respuesta_cor
 
 CREATE TABLE `respuesta` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `texto_respuesta` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `texto_respuesta` text NOT NULL,
   `id_pregunta` bigint(20) UNSIGNED NOT NULL,
   `id_test` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -465,7 +467,7 @@ CREATE TABLE `respuesta` (
 --
 
 INSERT INTO `respuesta` (`id`, `texto_respuesta`, `id_pregunta`, `id_test`, `created_at`, `updated_at`) VALUES
-(1, 'Esta es la respuesta de pregunta 1', 1, 16, '2024-07-04 04:06:03', '2024-07-04 04:06:03');
+(1, 'Esta es la respuesta de pregunta 1', 1, 11, '2024-07-04 04:06:03', '2024-07-04 04:06:03');
 
 -- --------------------------------------------------------
 
@@ -475,8 +477,8 @@ INSERT INTO `respuesta` (`id`, `texto_respuesta`, `id_pregunta`, `id_test`, `cre
 
 CREATE TABLE `roles` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `guard_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `guard_name` varchar(255) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -625,14 +627,16 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 
 CREATE TABLE `test` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name_test` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nombre_espa` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name_test` varchar(255) NOT NULL,
+  `nombre_espa` varchar(255) DEFAULT NULL,
   `points` int(11) NOT NULL,
   `duracion_minutos` int(11) NOT NULL,
-  `url_test` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `url_adicional` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `link_millisecond` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `link_millisecond2` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url_test` varchar(255) DEFAULT NULL,
+  `url_adicional` varchar(255) DEFAULT NULL,
+  `nombre_url` varchar(50) NOT NULL,
+  `nombre_url_opcional` varchar(50) NOT NULL,
+  `link_millisecond` varchar(255) DEFAULT NULL,
+  `link_millisecond2` varchar(255) DEFAULT NULL,
   `tipotest_id` bigint(20) UNSIGNED NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
@@ -642,23 +646,24 @@ CREATE TABLE `test` (
 -- Volcado de datos para la tabla `test`
 --
 
-INSERT INTO `test` (`id`, `name_test`, `nombre_espa`, `points`, `duracion_minutos`, `url_test`, `url_adicional`, `link_millisecond`, `link_millisecond2`, `tipotest_id`, `created_at`, `updated_at`) VALUES
-(2, 'two-armed bandit', NULL, 50, 15, 'two-armed-bandit/index.html', NULL, NULL, NULL, 2, '2024-02-07 17:20:21', '2024-06-26 20:46:07'),
-(6, 'GFMT2-LOW', NULL, 40, 20, 'Glasgow face matching test (GFMT2-Low)/index.html', NULL, NULL, NULL, 5, '2024-02-07 17:23:32', '2024-06-17 18:39:26'),
-(7, 'Perceptual Discrimination', NULL, 20, 15, 'Metacog-English/metacog_expt/experiment_momebis.html', NULL, NULL, NULL, 1, '2024-02-29 23:06:08', '2024-02-29 23:06:08'),
-(8, 'Letters & Bells', NULL, 60, 20, 'Letters and bells/LETTERS/index.html', NULL, 'Letters and bells/BELLS/index.html', NULL, 3, '2024-03-01 00:14:55', '2024-06-17 18:46:14'),
-(9, 'VIENNA', NULL, 20, 16, 'vienna/VIENNA/index.html', NULL, 'vienna/vienna-respuestas/index.html', NULL, 4, '2024-03-01 00:15:36', '2024-06-24 22:16:39'),
-(11, 'Corsi blocks', 'Cubos de Corsi', 50, 20, 'corsi/index.html', 'corsi backward/index.html', NULL, NULL, 6, '2024-03-01 23:46:13', '2024-06-17 18:35:52'),
-(12, 'Digital Span', NULL, 30, 10, 'Digit span/forward.html', 'Digit span/backward.html', NULL, NULL, 7, '2024-03-06 18:25:18', '2024-06-17 18:38:25'),
-(13, 'Verbal fluency', NULL, 50, 15, 'Verbal fluency/index.html', NULL, NULL, NULL, 8, '2024-03-06 22:07:51', '2024-05-28 20:55:04'),
-(14, 'Trail Making Task', NULL, 30, 20, 'TMT/index.html', NULL, NULL, NULL, 9, '2024-03-06 22:16:06', '2024-06-19 02:34:50'),
-(15, 'Facial emotion recognition (from mini-SEA)', 'Reconocimiento facial de expresión emocional', 35, 7, 'facial-emotion/index.html', NULL, NULL, NULL, 10, '2024-03-14 21:43:58', '2024-04-16 02:38:11'),
-(16, 'Story based empathy', NULL, 60, 20, 'Story based empathy task/index.html', NULL, NULL, NULL, 11, '2024-03-19 00:10:56', '2024-05-06 20:00:47'),
-(17, 'Modified camel and cactus', NULL, 32, 20, 'Modified camel cactus/index.html', NULL, NULL, NULL, 12, '2024-04-10 01:30:17', '2024-04-29 19:35:27'),
-(18, 'Number location', NULL, 11, 15, 'Number location/index.html', NULL, NULL, NULL, 13, '2024-04-10 01:34:07', '2024-04-10 01:34:07'),
-(19, 'Benson complex figure', 'Figura compleja de Benson', 3, 20, 'Benson complex figure/index.html', NULL, NULL, NULL, 15, '2024-05-28 21:10:39', '2024-06-17 18:34:25'),
-(20, 'Pantomime task', 'Pantomima del uso de objetos', 20, 20, 'Pantomima del uso de objetos/index.html', NULL, NULL, NULL, 16, '2024-05-28 21:14:47', '2024-05-28 21:14:47'),
-(21, 'Design fluency', 'Fluidez de Diseño', 35, 20, 'Design fluency -PRUEBA/index.html', NULL, NULL, NULL, 17, '2024-06-19 02:27:02', '2024-06-19 02:27:02');
+INSERT INTO `test` (`id`, `name_test`, `nombre_espa`, `points`, `duracion_minutos`, `url_test`, `url_adicional`, `nombre_url`, `nombre_url_opcional`, `link_millisecond`, `link_millisecond2`, `tipotest_id`, `created_at`, `updated_at`) VALUES
+(1, 'HVLT-R', NULL, 1, 9, 'tests/HVLT-R/index.html', 'tests/HVLT-R/index2.html', 'Inmediato', 'Diferido', 'tests/HVLT-R/index3.html', NULL, 18, NULL, NULL),
+(2, 'Trail Making Task', NULL, 30, 9, 'tests/TMT/index.html', 'tests/TMT/index2.html', 'Parte A', 'Parte B', NULL, NULL, 9, '2024-03-06 22:16:06', '2024-06-19 02:34:50'),
+(3, 'D-KEFS Design Fluency', 'Fluidez de Diseño', 35, 2, 'tests/design-fluency/index.html', NULL, 'Iniciar', '', NULL, NULL, 17, '2024-06-19 02:27:02', '2024-07-06 03:35:32'),
+(4, 'Cancelación de Letras A', NULL, 60, 3, 'tests/letters/index.html', NULL, 'Letras', '', '', NULL, 3, '2024-03-01 00:14:55', '2024-06-17 18:46:14'),
+(5, 'VOSP Number Location', NULL, 11, 2, 'tests/number-location/index.html', NULL, 'Iniciar', '', NULL, NULL, 13, '2024-04-10 01:34:07', '2024-04-10 01:34:07'),
+(6, 'Figura Compleja de Benson', 'Figura compleja de Benson', 3, 7, 'tests/benson/index.html', 'tests/benson/index2.html', 'Copia', 'Recuerdo', 'tests/benson/index3.html', NULL, 15, '2024-05-28 21:10:39', '2024-06-17 18:34:25'),
+(7, 'mCCT', NULL, 32, 4, 'tests/camel-cactus/index.html', NULL, 'Iniciar', '', NULL, NULL, 12, '2024-04-10 01:30:17', '2024-04-29 19:35:27'),
+(8, 'Fluidez Verbal', NULL, 50, 4, 'tests/verbal-fluency/categorias.html', 'tests/verbal-fluency/fonologia.html', 'Semántica', 'Fonológica', NULL, NULL, 8, '2024-03-06 22:07:51', '2024-07-06 05:39:50'),
+(9, 'Span Verbal', NULL, 30, 6, 'tests/digit-span/forward.html', 'tests/digit-span/backward.html', 'Directo', 'Inverso', NULL, NULL, 7, '2024-03-06 18:25:18', '2024-06-17 18:38:25'),
+(10, 'Span Visuoespacial', 'Cubos de Corsi', 50, 6, 'tests/corsi/forward/index.html', 'tests/corsi/backward/index.html', 'Directo', 'Inverso', NULL, NULL, 6, '2024-03-01 23:46:13', '2024-06-17 18:35:52'),
+(11, 'Story based empathy', NULL, 60, 6, 'tests/story-based/index.html', NULL, 'Iniciar', '', NULL, NULL, 11, '2024-03-19 00:10:56', '2024-05-06 20:00:47'),
+(12, 'Facial emotion recognition (from mini-SEA)', 'Reconocimiento facial de expresión emocional', 35, 4, 'tests/facial-emotion/index.html', NULL, 'Iniciar', '', NULL, NULL, 10, '2024-03-14 21:43:58', '2024-04-16 02:38:11'),
+(13, 'VIENNA', NULL, 20, 14, 'tests/vienna/index.html', NULL, 'Iniciar', '', NULL, NULL, 4, '2024-03-01 00:15:36', '2024-06-24 22:16:39'),
+(14, 'GFMT2-LOW', NULL, 40, 5, 'tests/glasgow/index.html', NULL, 'Iniciar', '', NULL, NULL, 5, '2024-02-07 17:23:32', '2024-06-17 18:39:26'),
+(15, 'Perceptual Discrimination', NULL, 20, 11, 'tests/metacognition/index.html', NULL, 'Iniciar', '', NULL, NULL, 1, '2024-02-29 23:06:08', '2024-02-29 23:06:08'),
+(16, 'two-armed bandit', NULL, 50, 4, 'tests/decision-making/index.html', NULL, 'Iniciar', '', NULL, NULL, 2, '2024-02-07 17:20:21', '2024-06-26 20:46:07'),
+(17, 'Pantomime task', 'Pantomima del uso de objetos', 20, 5, 'tests/pantomime/index.html', NULL, 'Iniciar', '', NULL, NULL, 16, '2024-05-28 21:14:47', '2024-05-28 21:14:47');
 
 -- --------------------------------------------------------
 
@@ -668,20 +673,20 @@ INSERT INTO `test` (`id`, `name_test`, `nombre_espa`, `points`, `duracion_minuto
 
 CREATE TABLE `tipo_test` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `descripcion` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
   `num_test` int(11) NOT NULL,
-  `descripcion_test` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `instruccion_test` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `instrucciones_adicionales` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `enlace_descarga` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `audio_instruccion` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `fuente` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `link_fuente` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `icono` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `descripcion_test` text NOT NULL,
+  `instruccion_test` text NOT NULL,
+  `instrucciones_adicionales` varchar(255) DEFAULT NULL,
+  `enlace_descarga` varchar(255) DEFAULT NULL,
+  `audio_instruccion` varchar(255) NOT NULL,
+  `fuente` varchar(255) DEFAULT NULL,
+  `link_fuente` varchar(255) DEFAULT NULL,
+  `icono` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `nombre_esp` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `implementacion` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL
+  `nombre_esp` varchar(255) DEFAULT NULL,
+  `implementacion` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -689,22 +694,23 @@ CREATE TABLE `tipo_test` (
 --
 
 INSERT INTO `tipo_test` (`id`, `descripcion`, `num_test`, `descripcion_test`, `instruccion_test`, `instrucciones_adicionales`, `enlace_descarga`, `audio_instruccion`, `fuente`, `link_fuente`, `icono`, `created_at`, `updated_at`, `nombre_esp`, `implementacion`) VALUES
-(1, 'Metacognition', 2, 'El test de metacognición en discriminación perceptiva tiene como propósito evaluar la capacidad de los individuos para monitorizar y regular su propio proceso cognitivo durante tareas específicas de discriminación perceptiva.', 'Para realizar este test, debes mantenerte enfocado durante toda la duración de este, para así lograr un puntaje optimo, su duración es de 5 minutos.', NULL, NULL, '1707315549.mp3', 'GitHub', 'https://github.com/marionrouault/metacognition-task-online', 'fa-solid fa-code', '2024-02-07 17:19:09', '2024-04-19 21:12:42', 'Metacognición', 'Ejecucion externa'),
-(2, 'Decision making', 3, 'El problema implica un tomador de decisiones (agente) que se enfrenta a la elección entre dos acciones u opciones, cada una asociada con una distribución de recompensas desconocida. El objetivo del tomador de decisiones es aprender cuál acción proporciona la mayor recompensa esperada y utilizar este conocimiento para maximizar las recompensas.', 'En este experimento verás aparecer dos máquinas tragamonedas en la pantalla y deberás seleccionar una de ellas. Según tus elecciones, puedes ganar puntos.  Algunas máquinas tragamonedas te darán puntos con mayor o menor frecuencia que otras.  Su trabajo es descubrir qué máquina es la mejor para elegir y seleccionarla usando las flechas de su teclado.', NULL, NULL, '1718749333.mp3', 'Pavlovia', 'https://gitlab.pavlovia.org/cherkasovabbalab/reinforcement-learning-two-armed-bandit', 'fa-solid fa-code', '2024-02-07 17:19:32', '2024-06-19 02:22:13', 'Toma de decisiones', 'Ejecucion externa'),
-(3, 'Cancellation tasks', 7, 'Los Tareas de Cancelación son pruebas neuropsicológicas diseñadas para evaluar diferentes aspectos de la atención, concentración y funciones ejecutivas. En el contexto de \"Letters & Bells\", estas tareas suelen implicar la búsqueda y marcado de objetivos específicos (como letras o símbolos) entre distracciones.', 'El test consta de 2 partes, en la primera debes seleccionar todas las campanas que pueda encontrar en la siguiente página.  Use el cursor para seleccionar las campanas ¡y sólo las campanas!,  Cuando crea que ha seleccionado todas las campanas pulse el botón \'validar\'. Para la segunda parte, debes realizar los mismos pasos, pero debes seleccionar todas las letras \'A\' que puedas encontrar en la imagen, trabaje tan rápido como pueda.   ¡Buena Suerte!', NULL, NULL, '1718633274.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-02-07 17:19:51', '2024-06-17 18:07:54', 'Test de cancelación', 'Ejecucion local'),
-(4, 'VIENNA', 13, 'La Virtual Environments Navigation Assessment es una herramienta utilizada para evaluar las habilidades de navegación de las personas en entornos virtuales. Estos entornos pueden ser simulaciones de lugares reales, como calles o edificios, o mundos completamente ficticios creados por ordenador.', 'Para realizar este test, debes mantenerte enfocado durante toda la duración de este, para así lograr un puntaje optimo, su duración es de 5 minutos.', NULL, NULL, '1707315716.mp3', 'OSF (open science framework)', 'https://osf.io/kp4c5/', 'fa-solid fa-code', '2024-02-07 17:21:56', '2024-04-16 21:24:20', NULL, 'Ejecucion externa'),
-(5, 'Glasgow face matching test', 15, 'Es una medida de la capacidad de los participantes para identificar si dos caras son la misma persona o no. Cada pregunta presenta dos imágenes de la misma persona o de dos personas diferentes. Los participantes deben responder a cada par de caras indicando si las dos caras son la misma persona o dos personas diferentes.', 'En esta prueba, verás imágenes de pares de rostros. Debes decidir si los rostros en cada imagen son iguales o diferentes. Haz clic en el botón correspondiente y luego presiona la flecha para pasar a la siguiente imagen.', NULL, NULL, '1718634466.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-02-07 17:22:27', '2024-06-17 18:27:46', NULL, 'Ejecucion local'),
-(6, 'Spatial span', 9, 'El test de Span Espacial, también conocido como el test de Bloques de Corsi evalúa la memoria de trabajo visoespacial mostrando secuencias de bloques que los participantes deben repetir, hacia adelante en la versión \"forward\" y en orden inverso en la \"backward\".', 'Este test consta de 2 partes,  Para ambas partes, Se mostrará una secuencia de 2 a 9 cuadrados. Debe Memorizar la secuencia y tocar los cuadrados en la misma secuencia mostrada o en orden inverso, según corresponda, haciendo clic en los cuadrados. Se presentaran dos secuencias en cada longitud (16 secuencias en total) en orden creciente de longitud.  La prueba se terminará cuando se entreguen respuestas incorrectas para ambas secuencias.  La puntuación será el número total de secuencias realizadas correctamente.   ¡Buena Suerte!', NULL, NULL, '1718634192.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-01 00:21:54', '2024-06-25 23:22:28', NULL, 'Ejecucion local'),
-(7, 'Memory Test', 8, 'El test de Digit Span evalúa la memoria de trabajo auditiva al requerir que los participantes repitan secuencias de dígitos, tanto en el orden original como en el inverso. Este test proporciona información sobre la capacidad de retención de información a corto plazo, la atención y la capacidad de procesamiento auditivo.', 'Este test consta de 2 partes,  Para ambas partes, le voy a pedir que me repita unos números. Espere hasta que termine de decir los números y después me los repite en el mismo orden o en orden inverso segun corresponda. Por ejemplo, en la primera parte del test, si digo 1-8-7, usted me dice 1-8-7.  En la segunda parte, deberá repetir los números en orden inverso Por ejemplo, si yo le digo 3-7-4, usted me dice 4-7-3.  ¡Buena Suerte!', NULL, NULL, '1718633899.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-06 18:24:31', '2024-06-17 18:18:19', 'Test de memoria', 'Ejecucion local'),
-(8, 'Verbal fluency', 4, 'El test de fluidez verbal mide la capacidad para generar palabras bajo ciertas restricciones en un periodo limitado, como nombrar animales o palabras que comienzan con una letra específica. Evalúa funciones ejecutivas, acceso al léxico y flexibilidad cognitiva. Se utiliza en diagnósticos neuropsicológicos para identificar problemas en áreas cerebrales asociadas al lenguaje y la memoria.', 'El test se divide en 2 etapas: Prueba Fonológica y Fluidez de Categorías. En este test, deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es decir palabras que comiencen con la letra solicitada o palabras respecto a una categoría solicitada. Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60 segundos para cada tarea. Cada grabación puede ser descargada', NULL, NULL, '1718632404.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-06 22:06:48', '2024-06-17 17:54:34', 'Fluidez verbal', 'Ejecucion local'),
-(9, 'TMT', 6, 'El Test Trail Making Task evalúa la atención visual, velocidad de procesamiento, y flexibilidad cognitiva al pedir a los participantes que conecten una secuencia de números (Parte A) o números y letras alternadamente (Parte B) lo más rápido posible. Este test se utiliza para detectar disfunciones cerebrales y deterioro cognitivo. Es ampliamente usado en evaluaciones neuropsicológicas para medir la capacidad de cambio de tarea y el procesamiento visual-espacial.', 'En este test hay 2 partes. La primera es la Parte A, en esta parte habrán números dentro de unos círculos. Haga una línea de un número a otro, en orden. Empiece en el 1, luego vaya al 2, luego vaya al 3, y así sucesivamente. Por favor, trate de hacer una sola línea de un número a otro. La parte B, tendrá números y letras, los cuales deberá unir en orden. Empiece en el 1, luego vaya a la A, luego vaya al 2, y así sucesivamente.  Trabaje lo más rápido que pueda. Partiremos por la muestra A.', NULL, NULL, '1718632841.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-06 22:15:17', '2024-06-17 18:00:41', NULL, 'Ejecucion local'),
-(10, 'Facial emotion recognition', 16, 'El test Facial Emotion Recognition (from mini-SEA) es una evaluación breve diseñada para medir la capacidad de reconocimiento de emociones faciales en individuos. Utiliza imágenes de rostros con expresiones emocionales para evaluar la habilidad de una persona para identificar y comprender diferentes emociones a través de señales faciales.', 'A continuacion se presentarán imagenes de caras. Se mostrarán una por una, las cuales expresan distintas emociónes, tales como: alegría, sorpresa, tristeza, miedo, asco, rabia o neutro cuando ninguna emoción es expresada, debe mirar cada cara atentamente y seleccionar que emoción está expresada sobre la cara. No es un test de rapidez, pero trate de ser relativamente rápido.', NULL, NULL, '1718634495.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-14 21:40:39', '2024-06-17 18:28:15', NULL, 'Ejecucion local'),
-(11, 'Story based empathy task', 17, 'El test de Story based empathy es una evaluación psicométrica que busca medir la capacidad de una persona para comprender y experimentar las emociones y perspectivas de los demás a través de historias o situaciones narrativas. Se basa en la capacidad del individuo para identificarse con los personajes y entender sus sentimientos, lo que proporciona información sobre su nivel de empatía y habilidades sociales.', 'A continuacion verás una historia representada en tres dibujos animados. Tu tarea es describir lo que les sucede a los personajes e intentar imaginar un posible final. Luego te mostraremos tres posibles finales y tu tarea será elegir el correcto para terminar la historia.', NULL, NULL, '1718634595.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-19 00:10:15', '2024-06-17 18:29:55', NULL, 'Ejecucion local'),
-(12, 'Modified camel and cactus test', 12, 'El Modified Camel and Cactus Test (MCCT) presenta una imagen en la parte superior de la pantalla y cuatro imágenes en la parte inferior. Los participantes deben seleccionar la imagen que mejor se empareje con la imagen superior. Esta prueba evalúa habilidades cognitivas como la atención, la percepción visual, la memoria de trabajo y la flexibilidad cognitiva.', 'Se mostrarán 5 imágenes en la pantalla: una en la parte superior, y 4 en la parte inferior.  Debe elegir cuál de las 4 imágenes de la parte inferior se empareja mejor con la imagen en la parte superior. Use el ratón del ordenador para clicar sobre la imagen.  Habrán 3 ítems de practica y luego se comienza con el test.', NULL, NULL, '1718634381.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-04-10 01:29:19', '2024-06-17 18:26:21', NULL, 'Ejecucion local'),
-(13, 'Visual Object and Space Perception', 14, 'El VOSP Number Location Test evalúa la habilidad de ubicar y recordar números en un patrón de rejilla. Los participantes deben identificar y recordar la ubicación de los números presentados en una cuadrícula desordenada. Esta prueba evalúa la atención selectiva, la memoria visual y la capacidad de procesamiento visuoespacial.', 'Uno de los números del cuadrado corresponde con la posición del punto en el cuadrado, debe decir el número que coincide con la posición del punto. En la práctica 1 y 2, se le mostrará la retroalimentación de su respuesta antes de pasar a la siguiente tarjeta.', NULL, NULL, '1718634435.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-04-10 01:33:21', '2024-06-17 18:27:15', NULL, 'Ejecucion local'),
-(15, 'Benson complex figure (recall & copy)', 10, 'El test de la figura compleja de Benson evalúa las habilidades visoespaciales y de memoria a través de dos tareas: copiar una figura compleja y, posteriormente, recordar y dibujar la figura sin verla. Es una herramienta usada en la evaluación neuropsicológica para detectar déficits cognitivos relacionados con funciones ejecutivas y memoria visual', 'Este test consta de tres partes:  1-Copiar la Figura: Se presentará una figura, la cual debe copiar lo más exacta posible. 2- Recuerdo Diferido: Pasado un tiempo, deberá dibujar la misma figura de memoria, sin ayudas 3-Identificar figura: Se presentará una sección para identificar la figura dibujada.', NULL, NULL, '1718634248.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-05-28 21:09:29', '2024-06-17 18:24:08', 'Figura compleja de Benson', 'Ejecucion local'),
-(16, 'Pantomime task', 18, 'La tarea de pantomima evalúa la habilidad de una persona para representar acciones o usar objetos sin hablar ni utilizar los objetos reales, imitando su uso. Se utiliza en neuropsicología para evaluar la praxis, que es la capacidad de planificar y ejecutar movimientos coordinados. Este test ayuda a identificar problemas en el control motor y la representación simbólica de acciones.', 'En esta prueba, quiero que imagine que sostiene el objeto que le voy a mostrar a continuación en su mano. Es importante que recuerde no usar su mano o dedos como si fuese el objeto. Use los botones para grabar y detener la grabación.', NULL, NULL, '1718634645.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-05-28 21:13:04', '2024-06-17 18:30:45', 'Test de pantomima', 'Ejecucion local'),
-(17, 'Design fluency', 5, 'El test de Fluidez de Diseño evalúa la capacidad creativa y ejecutiva del individuo a través de la generación de patrones o figuras abstractas en un tiempo limitado. Los participantes deben crear tantos diseños únicos como puedan en un tiempo determinado, sin repetir formas o usar símbolos familiares. Esta prueba mide funciones ejecutivas, habilidades visuoespaciales y pensamiento divergente.', 'En este test, debes unir todos los puntos en cada uno de los cuadros de la imagen. Usa el mouse para dibujar líneas entre los puntos. Debes dibujar tantos diseños diferentes como pueda hasta que le diga que pare. Recuerde usar solo cuatro líneas rectas para conectar los puntos. Trabaje lo más rápido que puedas y trate que cada diseño sea diferente.', NULL, NULL, '1718749496.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-06-19 02:24:56', '2024-06-19 02:24:56', 'Fluidez de Diseño', 'Ejecucion local');
+(1, 'Discriminación Perceptual', 15, 'El test de metacognición en discriminación perceptiva tiene como propósito evaluar la capacidad de los individuos para monitorizar y regular su propio proceso cognitivo durante tareas específicas de discriminación perceptiva.', 'Para realizar este test, debes mantenerte enfocado durante toda la duración de este, para así lograr un puntaje optimo, su duración es de 5 minutos.', NULL, NULL, '1707315549.mp3', 'Creación propia', 'https://github.com/marionrouault/metacognition-task-online', 'fa-solid fa-code', '2024-02-07 17:19:09', '2024-04-19 21:12:42', 'Metacognición', 'ejecución local'),
+(2, 'Dos Máquinas Tragamonedas', 16, 'El problema implica un tomador de decisiones (agente) que se enfrenta a la elección entre dos acciones u opciones, cada una asociada con una distribución de recompensas desconocida. El objetivo del tomador de decisiones es aprender cuál acción proporciona la mayor recompensa esperada y utilizar este conocimiento para maximizar las recompensas.', 'En este experimento verás aparecer dos máquinas tragamonedas en la pantalla y deberás seleccionar una de ellas. Según tus elecciones, puedes ganar puntos.  Algunas máquinas tragamonedas te darán puntos con mayor o menor frecuencia que otras.  Su trabajo es descubrir qué máquina es la mejor para elegir y seleccionarla usando las flechas de su teclado.', NULL, NULL, '1718749333.mp3', 'Creación propia', 'https://gitlab.pavlovia.org/cherkasovabbalab/reinforcement-learning-two-armed-bandit', 'fa-solid fa-code', '2024-02-07 17:19:32', '2024-06-19 02:22:13', 'Toma de decisiones', 'ejecución local'),
+(3, 'Cancelación de Letras A', 4, 'Los Tareas de Cancelación son pruebas neuropsicológicas diseñadas para evaluar diferentes aspectos de la atención, concentración y funciones ejecutivas. En el contexto de \"Letters & Bells\", estas tareas suelen implicar la búsqueda y marcado de objetivos específicos (como letras o símbolos) entre distracciones.', 'El test consta de 2 partes, en la primera debes seleccionar todas las campanas que pueda encontrar en la siguiente página.  Use el cursor para seleccionar las campanas ¡y sólo las campanas!,  Cuando crea que ha seleccionado todas las campanas pulse el botón \'validar\'. Para la segunda parte, debes realizar los mismos pasos, pero debes seleccionar todas las letras \'A\' que puedas encontrar en la imagen, trabaje tan rápido como pueda.   ¡Buena Suerte!', NULL, NULL, '1718633274.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-02-07 17:19:51', '2024-06-17 18:07:54', 'Test de cancelación', 'ejecución local'),
+(4, 'VIENNA', 13, 'La Virtual Environments Navigation Assessment es una herramienta utilizada para evaluar las habilidades de navegación de las personas en entornos virtuales. Estos entornos pueden ser simulaciones de lugares reales, como calles o edificios, o mundos completamente ficticios creados por ordenador.', 'Para realizar este test, debes mantenerte enfocado durante toda la duración de este, para así lograr un puntaje optimo, su duración es de 5 minutos.', NULL, NULL, '1707315716.mp3', 'Creación propia', 'https://osf.io/kp4c5/', 'fa-solid fa-code', '2024-02-07 17:21:56', '2024-04-16 21:24:20', NULL, 'ejecución local'),
+(5, 'GFMT2-Low', 14, 'Es una medida de la capacidad de los participantes para identificar si dos caras son la misma persona o no. Cada pregunta presenta dos imágenes de la misma persona o de dos personas diferentes. Los participantes deben responder a cada par de caras indicando si las dos caras son la misma persona o dos personas diferentes.', 'En esta prueba, verás imágenes de pares de rostros. Debes decidir si los rostros en cada imagen son iguales o diferentes. Haz clic en el botón correspondiente y luego presiona la flecha para pasar a la siguiente imagen.', NULL, NULL, '1718634466.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-02-07 17:22:27', '2024-06-17 18:27:46', NULL, 'ejecución local'),
+(6, 'Span Visuoespacial', 10, 'El test de Span Espacial, también conocido como el test de Bloques de Corsi evalúa la memoria de trabajo visoespacial mostrando secuencias de bloques que los participantes deben repetir, hacia adelante en la versión \"forward\" y en orden inverso en la \"backward\".', 'Este test consta de 2 partes,  Para ambas partes, Se mostrará una secuencia de 2 a 9 cuadrados. Debe Memorizar la secuencia y tocar los cuadrados en la misma secuencia mostrada o en orden inverso, según corresponda, haciendo clic en los cuadrados. Se presentaran dos secuencias en cada longitud (16 secuencias en total) en orden creciente de longitud.  La prueba se terminará cuando se entreguen respuestas incorrectas para ambas secuencias.  La puntuación será el número total de secuencias realizadas correctamente.   ¡Buena Suerte!', NULL, NULL, '1718634192.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-01 00:21:54', '2024-06-25 23:22:28', NULL, 'ejecución local'),
+(7, 'Span Verbal', 9, 'El test de Digit Span evalúa la memoria de trabajo auditiva al requerir que los participantes repitan secuencias de dígitos, tanto en el orden original como en el inverso. Este test proporciona información sobre la capacidad de retención de información a corto plazo, la atención y la capacidad de procesamiento auditivo.', 'Este test consta de 2 partes,  Para ambas partes, le voy a pedir que me repita unos números. Espere hasta que termine de decir los números y después me los repite en el mismo orden o en orden inverso segun corresponda. Por ejemplo, en la primera parte del test, si digo 1-8-7, usted me dice 1-8-7.  En la segunda parte, deberá repetir los números en orden inverso Por ejemplo, si yo le digo 3-7-4, usted me dice 4-7-3.  ¡Buena Suerte!', NULL, NULL, '1718633899.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-06 18:24:31', '2024-06-17 18:18:19', 'Test de memoria', 'ejecución local'),
+(8, 'Fluidez Verbal', 8, 'El test de fluidez verbal mide la capacidad para generar palabras bajo ciertas restricciones en un periodo limitado, como nombrar animales o palabras que comienzan con una letra específica. Evalúa funciones ejecutivas, acceso al léxico y flexibilidad cognitiva. Se utiliza en diagnósticos neuropsicológicos para identificar problemas en áreas cerebrales asociadas al lenguaje y la memoria.', 'El test se divide en 2 etapas: Prueba Fonológica y Fluidez de Categorías. En este test, deberá reproducir un audio con las instrucciones de cada ítem. Su tarea es decir palabras que comiencen con la letra solicitada o palabras respecto a una categoría solicitada. Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60 segundos para cada tarea. Cada grabación puede ser descargada', NULL, NULL, '1718632404.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-06 22:06:48', '2024-06-17 17:54:34', 'Fluidez verbal', 'ejecución local'),
+(9, 'TMT', 2, 'El Test Trail Making Task evalúa la atención visual, velocidad de procesamiento, y flexibilidad cognitiva al pedir a los participantes que conecten una secuencia de números (Parte A) o números y letras alternadamente (Parte B) lo más rápido posible. Este test se utiliza para detectar disfunciones cerebrales y deterioro cognitivo. Es ampliamente usado en evaluaciones neuropsicológicas para medir la capacidad de cambio de tarea y el procesamiento visual-espacial.', 'En este test hay 2 partes. La primera es la Parte A, en esta parte habrán números dentro de unos círculos. Haga una línea de un número a otro, en orden. Empiece en el 1, luego vaya al 2, luego vaya al 3, y así sucesivamente. Por favor, trate de hacer una sola línea de un número a otro. La parte B, tendrá números y letras, los cuales deberá unir en orden. Empiece en el 1, luego vaya a la A, luego vaya al 2, y así sucesivamente.  Trabaje lo más rápido que pueda. Partiremos por la muestra A.', NULL, NULL, '1718632841.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-06 22:15:17', '2024-06-17 18:00:41', NULL, 'ejecución local'),
+(10, 'Reconocimiento de Emociones Faciales ', 12, 'El test Facial Emotion Recognition (from mini-SEA) es una evaluación breve diseñada para medir la capacidad de reconocimiento de emociones faciales en individuos. Utiliza imágenes de rostros con expresiones emocionales para evaluar la habilidad de una persona para identificar y comprender diferentes emociones a través de señales faciales.', 'A continuacion se presentarán imagenes de caras. Se mostrarán una por una, las cuales expresan distintas emociónes, tales como: alegría, sorpresa, tristeza, miedo, asco, rabia o neutro cuando ninguna emoción es expresada, debe mirar cada cara atentamente y seleccionar que emoción está expresada sobre la cara. No es un test de rapidez, pero trate de ser relativamente rápido.', NULL, NULL, '1718634495.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-14 21:40:39', '2024-06-17 18:28:15', NULL, 'ejecución local'),
+(11, 'SET', 11, 'El test de Story based empathy es una evaluación psicométrica que busca medir la capacidad de una persona para comprender y experimentar las emociones y perspectivas de los demás a través de historias o situaciones narrativas. Se basa en la capacidad del individuo para identificarse con los personajes y entender sus sentimientos, lo que proporciona información sobre su nivel de empatía y habilidades sociales.', 'A continuacion verás una historia representada en tres dibujos animados. Tu tarea es describir lo que les sucede a los personajes e intentar imaginar un posible final. Luego te mostraremos tres posibles finales y tu tarea será elegir el correcto para terminar la historia.', NULL, NULL, '1718634595.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-03-19 00:10:15', '2024-06-17 18:29:55', NULL, 'ejecución local'),
+(12, 'mCCT', 7, 'El Modified Camel and Cactus Test (MCCT) presenta una imagen en la parte superior de la pantalla y cuatro imágenes en la parte inferior. Los participantes deben seleccionar la imagen que mejor se empareje con la imagen superior. Esta prueba evalúa habilidades cognitivas como la atención, la percepción visual, la memoria de trabajo y la flexibilidad cognitiva.', 'Se mostrarán 5 imágenes en la pantalla: una en la parte superior, y 4 en la parte inferior.  Debe elegir cuál de las 4 imágenes de la parte inferior se empareja mejor con la imagen en la parte superior. Use el ratón del ordenador para clicar sobre la imagen.  Habrán 3 ítems de practica y luego se comienza con el test.', NULL, NULL, '1718634381.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-04-10 01:29:19', '2024-06-17 18:26:21', NULL, 'ejecución local'),
+(13, 'VOSP Number Location', 5, 'El VOSP Number Location Test evalúa la habilidad de ubicar y recordar números en un patrón de rejilla. Los participantes deben identificar y recordar la ubicación de los números presentados en una cuadrícula desordenada. Esta prueba evalúa la atención selectiva, la memoria visual y la capacidad de procesamiento visuoespacial.', 'Uno de los números del cuadrado corresponde con la posición del punto en el cuadrado, debe decir el número que coincide con la posición del punto. En la práctica 1 y 2, se le mostrará la retroalimentación de su respuesta antes de pasar a la siguiente tarjeta.', NULL, NULL, '1718634435.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-04-10 01:33:21', '2024-06-17 18:27:15', NULL, 'ejecución local'),
+(15, 'Figura Compleja de Benson', 6, 'El test de la figura compleja de Benson evalúa las habilidades visoespaciales y de memoria a través de dos tareas: copiar una figura compleja y, posteriormente, recordar y dibujar la figura sin verla. Es una herramienta usada en la evaluación neuropsicológica para detectar déficits cognitivos relacionados con funciones ejecutivas y memoria visual', 'Este test consta de tres partes:  1-Copiar la Figura: Se presentará una figura, la cual debe copiar lo más exacta posible. 2- Recuerdo Diferido: Pasado un tiempo, deberá dibujar la misma figura de memoria, sin ayudas 3-Identificar figura: Se presentará una sección para identificar la figura dibujada.', NULL, NULL, '1718634248.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-05-28 21:09:29', '2024-06-17 18:24:08', 'Figura compleja de Benson', 'ejecución local'),
+(16, 'Pantomima del Uso de Objetos', 17, 'La tarea de pantomima evalúa la habilidad de una persona para representar acciones o usar objetos sin hablar ni utilizar los objetos reales, imitando su uso. Se utiliza en neuropsicología para evaluar la praxis, que es la capacidad de planificar y ejecutar movimientos coordinados. Este test ayuda a identificar problemas en el control motor y la representación simbólica de acciones.', 'En esta prueba, quiero que imagine que sostiene el objeto que le voy a mostrar a continuación en su mano. Es importante que recuerde no usar su mano o dedos como si fuese el objeto. Use los botones para grabar y detener la grabación.', NULL, NULL, '1718634645.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-05-28 21:13:04', '2024-06-17 18:30:45', 'Test de pantomima', 'ejecución local'),
+(17, 'D-KEFS Design Fluency', 3, 'El test de Fluidez de Diseño evalúa la capacidad creativa y ejecutiva del individuo a través de la generación de patrones o figuras abstractas en un tiempo limitado. Los participantes deben crear tantos diseños únicos como puedan en un tiempo determinado, sin repetir formas o usar símbolos familiares. Esta prueba mide funciones ejecutivas, habilidades visuoespaciales y pensamiento divergente.', 'En este test, debes unir todos los puntos en cada uno de los cuadros de la imagen. Usa el mouse para dibujar líneas entre los puntos. Debes dibujar tantos diseños diferentes como pueda hasta que le diga que pare. Recuerde usar solo cuatro líneas rectas para conectar los puntos. Trabaje lo más rápido que puedas y trate que cada diseño sea diferente.', NULL, NULL, '1718749496.mp3', 'Creación propia', NULL, 'fa-solid fa-code', '2024-06-19 02:24:56', '2024-06-19 02:24:56', 'Fluidez de Diseño', 'ejecución local'),
+(18, 'HVLT-R', 1, 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, quos! Voluptate iure ipsam ut numquam nihil, sit sint unde enim. Magnam nulla blanditiis a! Ipsum at fugit quidem. Distinctio, eaque!', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, quos! Voluptate iure ipsam ut numquam nihil, sit sint unde enim. Magnam nulla blanditiis a! Ipsum at fugit quidem. Distinctio, eaque!', NULL, NULL, '1722272096.mp3', 'Creación propia', 'test/HVLT-R/index.html', 'fa-solid fa-code', '2024-07-29 20:54:56', '2024-07-29 23:04:43', 'HVLT-R', 'ejecución local');
 
 -- --------------------------------------------------------
 
@@ -714,11 +720,12 @@ INSERT INTO `tipo_test` (`id`, `descripcion`, `num_test`, `descripcion_test`, `i
 
 CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -727,11 +734,12 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@ejemplo.com', NULL, '$2y$10$8noAUwMlRrqYzbfkBvzGruxLg00I5LArisQemjvYFtSrN1kZ7nagu', 'qRQAvRbrYdjGPVmQniZ1Mp5LxSWahBC2ekeBRdeEAn7AvLDhTriB9uhkTOsZ', '2024-02-10 00:41:35', '2024-02-10 00:41:35'),
-(2, 'examinador', 'prueba@ejemplo.com', NULL, '$2y$10$NBdlfDiMZ1ZQuYGd1UCLMe0leFfIia1UKlyKfE4.Q5cqm5JJvWFpe', NULL, '2024-02-27 21:11:35', '2024-02-27 21:11:35'),
-(20, 'Diego', 'usuario@ejemplo.com', NULL, '$2y$10$jg4kvz4MWBYkR5jLeWULM.Tu8pG31V208fG71SQM5UM13FjPfZmIK', NULL, '2024-03-11 05:34:01', '2024-03-11 06:24:10'),
-(23, 'visitante', 'visitante@ejemplo.com', NULL, '$2y$10$rUwCL9XoyJpwh05WaSuL9OBqWF602odua.4wry/r8/i7MRgXiypN2', NULL, '2024-03-19 21:56:47', '2024-03-19 21:57:28');
+INSERT INTO `users` (`id`, `name`, `last_name`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Admin', 'Ejemplo', 'admin@ejemplo.com', NULL, '$2y$10$8noAUwMlRrqYzbfkBvzGruxLg00I5LArisQemjvYFtSrN1kZ7nagu', 'cWJFuzt1xl4FHvfbhv4GeSmzroiRQo5KhctNG4pPbRyhtN0MqajVcOC2IA6s', '2024-02-10 00:41:35', '2024-12-18 05:56:27'),
+(2, 'examinador', 'prueba', 'prueba@ejemplo.com', NULL, '$2y$10$NBdlfDiMZ1ZQuYGd1UCLMe0leFfIia1UKlyKfE4.Q5cqm5JJvWFpe', NULL, '2024-02-27 21:11:35', '2024-12-18 05:56:45'),
+(20, 'Diego', 'Lorca', 'usuario@ejemplo.com', NULL, '$2y$10$jg4kvz4MWBYkR5jLeWULM.Tu8pG31V208fG71SQM5UM13FjPfZmIK', NULL, '2024-03-11 05:34:01', '2024-12-18 05:56:56'),
+(23, 'visitante', 'Visitante', 'visitante@ejemplo.com', NULL, '$2y$10$rUwCL9XoyJpwh05WaSuL9OBqWF602odua.4wry/r8/i7MRgXiypN2', NULL, '2024-03-19 21:56:47', '2024-12-18 05:57:12'),
+(24, 'Pablo', 'Monjes', 'pmonjes@ing.ucsc.cl', NULL, '$2y$10$vHz7P17OuEle3Pcfl1R5Qe/EuFRe0811uEzxLPWU3XHULTS..JD.K', NULL, '2024-12-12 05:45:10', '2024-12-18 05:57:03');
 
 --
 -- Índices para tablas volcadas
@@ -873,8 +881,7 @@ ALTER TABLE `tipo_test`
 -- Indices de la tabla `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `users_email_unique` (`email`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -962,19 +969,19 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `test`
 --
 ALTER TABLE `test`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_test`
 --
 ALTER TABLE `tipo_test`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Restricciones para tablas volcadas

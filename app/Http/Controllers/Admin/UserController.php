@@ -32,7 +32,7 @@ class UserController extends Controller
 
     public function update(UserEditRequest $request, User $user)
     {
-        $data = $request->only('name', 'email');
+        $data = $request->only('name', 'last_name', 'email');
         $password = $request->input('password');
         if ($password) {
             $data['password'] = bcrypt($password);
@@ -52,6 +52,7 @@ class UserController extends Controller
 
         $user = User::create([
             'name' => $request->input('name'),
+            'last_name' => $request->input('last_name'),
             'email' => $request->input('email'),
             'password' => bcrypt($password),
         ]);
