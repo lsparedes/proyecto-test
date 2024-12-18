@@ -464,9 +464,10 @@ function resizeCanvas(canvas, ctx, image, desktopPercentage = 95, tabletPercenta
 }
 
 
-imageCanvas.addEventListener('click', handleClick, false);
+imageCanvas.addEventListener('pointerdown', handleClick, false);
+practiceCanvas.addEventListener('pointerdown', handleClickPractice, false);
 
-practiceCanvas.addEventListener('click', (e) => {
+practiceCanvas.addEventListener('', (e) => {
     const { x, y } = adjustClickCoordinates(e, practiceCanvas, originalCanvasSize);
     practiceClicks.push({ x, y });
     drawCirclePractice(e.clientX - practiceCanvas.getBoundingClientRect().left, e.clientY - practiceCanvas.getBoundingClientRect().top, 'blue');
@@ -525,6 +526,9 @@ clearButton.addEventListener('click', () => {
 
 
 function handleClick(e) {
+    // Verifica que el evento provenga de un lápiz
+    if (e.pointerType !== 'pen') return;
+
     const rect = imageCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / imageCanvas.width);
     const y = (e.clientY - rect.top) * (1489 / imageCanvas.height);
@@ -532,6 +536,8 @@ function handleClick(e) {
     drawCircle(e.clientX - rect.left, e.clientY - rect.top, 'blue');
 }
 function handleClickPractice(e) {
+    if (e.pointerType !== 'pen') return;
+
     const rect = practiceCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / practiceCanvas.width);
     const y = (e.clientY - rect.top) * (1489 / practiceCanvas.height);

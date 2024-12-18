@@ -285,61 +285,85 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     };
 
-    const showScreen = (index) => {
-        screens.forEach((screen, i) => {
-            if (screen) {
-                screen.style.display = i === index ? 'flex' : 'none';
-            } else {
-                console.error(`Screen with index ${i} not found`);
-            }
-        });
+// Función para actualizar el indicador de prueba
+const updateTrialIndicator = () => {
+    if (currentScreenIndex === 4) {
+        trialIndicator.textContent = 'I1';
+    } else if (currentScreenIndex === 5) {
+        trialIndicator.textContent = 'P1';
+    } else if (currentScreenIndex === 6) {
+        trialIndicator.textContent = 'P2';
+    } else if (currentScreenIndex >= 7 && currentScreenIndex <= 18) {
+        trialIndicator.textContent = videos[contador].indicator; // Usar el indicador del video
+    } else {
+        trialIndicator.textContent = '';
+    }
+    console.log('Updated trialIndicator:', trialIndicator.textContent); // Log para depuración
 
-        updateTrialIndicator();
+    // Actualizar el contenido del span con id indicador
+    if (indicador) {
+        indicador.textContent = trialIndicator.textContent;
+    }
+};
 
-        // Cargar la imagen correspondiente para cada pantalla al mostrarla
-        if (index === 4) { // I1
-            loadImageForCanvas(instructionCanvas, 0);
-        } else if (index === 5) { // P1
-            loadImageForCanvas(practiceCanvas1, 1);
-        } else if (index === 6) { // P2
-            loadImageForCanvas(practiceCanvas2, 2);
-        } else if (index >= 7 && index <= 18) { // E1 a E12
-            loadImageForCanvas(imageCanvas, index - 5); // Ajustar índice para E1 a E12
-        }
-    };
+// Función para retrasar y mostrar videos después de 2 segundos
+const delayVideoStart = (videoElement) => {
+    if (videoElement) {
+        videoElement.style.display = 'none'; // Ocultar el video inicialmente
+        videoElement.pause(); // Pausar el video
+        videoElement.currentTime = 0; // Reiniciar el video al inicio
+        
+        setTimeout(() => {
+            videoElement.style.display = 'block'; // Mostrar el video después del retraso
+            videoElement.play(); // Reproducir el video
+        }, 2000); // Retraso de 2 segundos
+    } else {
+        console.error('El elemento de video no fue encontrado.');
+    }
+};
 
-    const updateTrialIndicator = () => {
-        if (currentScreenIndex === 4) {
-            trialIndicator.textContent = 'I1';
-        } else if (currentScreenIndex === 5) {
-            trialIndicator.textContent = 'P1';
-        } else if (currentScreenIndex === 6) {
-            trialIndicator.textContent = 'P2';
-        } else if (currentScreenIndex >= 7 && currentScreenIndex <= 18) {
-            trialIndicator.textContent = videos[contador].indicator; // Usar el indicador del video
+// Mostrar pantalla específica y cargar sus elementos
+const showScreen = (index) => {
+    screens.forEach((screen, i) => {
+        if (screen) {
+            screen.style.display = i === index ? 'flex' : 'none';
         } else {
-            trialIndicator.textContent = '';
+            console.error(`Screen with index ${i} not found`);
         }
-        console.log('Updated trialIndicator:', trialIndicator.textContent); // Log para depuración
+    });
 
-        // Actualizar el contenido del span con id indicador
-        if (indicador) {
-            indicador.textContent = trialIndicator.textContent;
-        }
-    };
+    updateTrialIndicator();
 
-    const incrementScreenIndex = (event) => {
-        stopAllAudios();
-        hideQuestion();
-        console.log('Current Screen Index: ', currentScreenIndex);
-        if (currentScreenIndex < screens.length - 1) {
-            currentScreenIndex++;
-            showScreen(currentScreenIndex);
-            console.log('New Screen Index: ', currentScreenIndex);
-        } else {
-            console.log('End of screens reached');
-        }
-    };
+    // Configurar videos para los indicadores I1, P1 y P2
+    if (index === 4) { // I1
+        loadImageForCanvas(instructionCanvas, 0);
+        delayVideoStart(practiceVideo1); // Retrasar y mostrar video para I1
+    } else if (index === 5) { // P1
+        loadImageForCanvas(practiceCanvas1, 1);
+        delayVideoStart(practiceVideo2); // Retrasar y mostrar video para P1
+    } else if (index === 6) { // P2
+        loadImageForCanvas(practiceCanvas2, 2);
+        delayVideoStart(practiceVideo3); // Retrasar y mostrar video para P2
+    } else if (index >= 7 && index <= 18) { // E1 a E12
+        loadImageForCanvas(imageCanvas, index - 5); // Ajustar índice para E1 a E12
+    }
+};
+
+
+// Incrementar el índice de la pantalla al hacer clic en "Next"
+const incrementScreenIndex = (event) => {
+    stopAllAudios();
+    hideQuestion();
+    console.log('Current Screen Index: ', currentScreenIndex);
+    if (currentScreenIndex < screens.length - 1) {
+        currentScreenIndex++;
+        showScreen(currentScreenIndex);
+        console.log('New Screen Index: ', currentScreenIndex);
+    } else {
+        console.log('End of screens reached');
+    }
+};
+
 
     const goToPreTestInstruction = () => {
         hideQuestion();
@@ -355,6 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loadCurrentVideo(contador);
         updateTrialIndicator();
     };
+
 
     // Añadir event listeners solo si los elementos existen
     if (startButton) {
@@ -726,27 +751,6 @@ document.addEventListener('DOMContentLoaded', () => {
             testVideo.play(); // Reproducir el video después de 2 segundos
         }, 2000); // 2000 milisegundos = 2 segundos
     };
-
-    const loadPracticeVideo = (videoElement, videoSrc) => {
-        // Configuración inicial del video
-        videoElement.src = videoSrc;
-        videoElement.style.display = 'none'; // Ocultar inicialmente
-        videoElement.pause(); // Pausar por si está reproduciéndose
-    
-        console.log(`Cargando video con retraso: ${videoSrc}`);
-    
-        setTimeout(() => {
-            videoElement.style.display = 'block'; // Mostrar el video
-            videoElement.play(); // Reproducir después de 2 segundos
-            console.log(`Reproduciendo video: ${videoSrc}`);
-        }, 2000); // Retraso de 2 segundos
-    };
-    
-    // Reproducir los videos de práctica con retraso
-    loadPracticeVideo(practiceVideo1, 'videos/Instructions.mp4');
-    loadPracticeVideo(practiceVideo2, 'videos/Practice_1.mp4');
-    loadPracticeVideo(practiceVideo3, 'videos/Practice_2.mp4');
-    
 
     if (imageCanvas && testVideo) {
         fullScreenButton.addEventListener('click', () => {

@@ -147,7 +147,7 @@ button:not(:disabled):active {
     background-repeat: no-repeat;
     padding: 0;
     width: 100px;
-    height: 90px;
+    height: 100px;
     display: none;
     vertical-align: middle;
 }
