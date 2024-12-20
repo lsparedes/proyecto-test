@@ -171,53 +171,57 @@ window.onload = function () {
         };
     }
 
-    practiceCanvas.addEventListener('mousedown', function (e) {
+    practiceCanvas.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'pen') return; // Acepta solo entradas del lápiz touch
         practiceDrawing = true;
         practiceStartX = e.offsetX;
         practiceStartY = e.offsetY;
     });
 
-    practiceCanvas.addEventListener('mousemove', function (e) {
-        if (practiceDrawing) {
-            practiceCtx.beginPath();
-            practiceCtx.moveTo(practiceStartX, practiceStartY);
-            practiceCtx.lineTo(e.offsetX, e.offsetY);
-            practiceCtx.stroke();
-            practiceStartX = e.offsetX;
-            practiceStartY = e.offsetY;
-        }
+    practiceCanvas.addEventListener('pointermove', function (e) {
+        if (!practiceDrawing || e.pointerType !== 'pen') return;
+        practiceCtx.beginPath();
+        practiceCtx.moveTo(practiceStartX, practiceStartY);
+        practiceCtx.lineTo(e.offsetX, e.offsetY);
+        practiceCtx.stroke();
+        practiceStartX = e.offsetX;
+        practiceStartY = e.offsetY;
     });
 
-    practiceCanvas.addEventListener('mouseup', function () {
+    practiceCanvas.addEventListener('pointerup', function (e) {
+        if (e.pointerType !== 'pen') return;
+        practiceDrawing = false;
+    });
+    
+    practiceCanvas.addEventListener('pointerleave', function (e) {
+        if (e.pointerType !== 'pen') return;
         practiceDrawing = false;
     });
 
-    practiceCanvas.addEventListener('mouseleave', function () {
-        practiceDrawing = false;
-    });
-
-    canvas.addEventListener('mousedown', function (e) {
+    canvas.addEventListener('pointerdown', function (e) {
+        if (e.pointerType !== 'pen') return;
         drawing = true;
         startX = e.offsetX;
         startY = e.offsetY;
     });
-
-    canvas.addEventListener('mousemove', function (e) {
-        if (drawing) {
-            ctx.beginPath();
-            ctx.moveTo(startX, startY);
-            ctx.lineTo(e.offsetX, e.offsetY);
-            ctx.stroke();
-            startX = e.offsetX;
-            startY = e.offsetY;
-        }
+    
+    canvas.addEventListener('pointermove', function (e) {
+        if (!drawing || e.pointerType !== 'pen') return;
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.stroke();
+        startX = e.offsetX;
+        startY = e.offsetY;
     });
-
-    canvas.addEventListener('mouseup', function () {
+    
+    canvas.addEventListener('pointerup', function (e) {
+        if (e.pointerType !== 'pen') return;
         drawing = false;
     });
-
-    canvas.addEventListener('mouseleave', function () {
+    
+    canvas.addEventListener('pointerleave', function (e) {
+        if (e.pointerType !== 'pen') return;
         drawing = false;
     });
 
