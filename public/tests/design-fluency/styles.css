@@ -37,6 +37,13 @@ button {
   margin-top: 70px;
 }
 
+#designCanvas {
+  width: 95vw; /* Ajusta a un 95% del ancho visible */
+  height: auto; /* Mantén proporción al ajustar ancho */
+  max-height: 90vh; /* Asegura que no exceda la altura */
+  background: #f0f0f0;
+}
+
 h1 {
   font-size: 40px;
 }
@@ -176,7 +183,7 @@ ol {
 #practiceNextButton{
   position: fixed;
   bottom: 15px;
-  right: 10px;
+  right: 15px;
 }
 
 #toMainTestButton{
