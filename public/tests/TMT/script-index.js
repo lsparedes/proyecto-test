@@ -235,25 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         isDrawing = false;
     }
-    //MOUSE DOWN
-    canvas.addEventListener('mousedown', function (event) {
-        if (drawingCompleted) return;
-        console.log(event.offsetX, event.offsetY);
-        startDrawing(event.offsetX, event.offsetY);
-    });
-    
-    canvas.addEventListener('mousemove', function (event) {
-        if (!isDrawing || drawingCompleted) return;
-        console.log(event.offsetX, event.offsetY);
-        drawMove(event.offsetX, event.offsetY);
-    });
 
-    canvas.addEventListener('mouseup', function (event) {
-        if (drawingCompleted) return;
-        endDrawing(event.offsetX, event.offsetY);
-        liftPenCount++;
-        airStartTime = new Date();
-    });
 
     canvas.addEventListener('touchstart', function (event) {
         if (drawingCompleted) return;
@@ -344,31 +326,31 @@ document.addEventListener('DOMContentLoaded', function () {
         circleRadius = 30; // Cambiado de const a let para permitir reasignación
 
         const circleCoordinatesPartA = [
-            { x: 610, y: 800 },
-            { x: 431, y: 937 },
-            { x: 684, y: 981 },
-            { x: 651, y: 590 },
-            { x: 397, y: 626 },
-            { x: 518, y: 717 },
-            { x: 373, y: 811 },
-            { x: 234, y: 979 },
-            { x: 288, y: 1099 },
-            { x: 351, y: 975 },
-            { x: 567, y: 1137 },
-            { x: 160, y: 1186 },
-            { x: 230, y: 704 },
-            { x: 134, y: 841 },
-            { x: 142, y: 300 },
-            { x: 232, y: 465 },
-            { x: 465, y: 266 },
-            { x: 439, y: 495 },
-            { x: 697, y: 355 },
-            { x: 549, y: 347 },
-            { x: 774, y: 248 },
-            { x: 764, y: 564 },
-            { x: 791, y: 1160 },
-            { x: 741, y: 766 },
-            { x: 702, y: 1123 }
+            { x: 610, y: 700 },
+            { x: 431, y: 837 },
+            { x: 684, y: 881 },
+            { x: 651, y: 490 },
+            { x: 397, y: 526 },
+            { x: 518, y: 617 },
+            { x: 373, y: 711 },
+            { x: 234, y: 879 },
+            { x: 288, y: 999 },
+            { x: 351, y: 875 },
+            { x: 567, y: 1037 },
+            { x: 160, y: 1086 },
+            { x: 230, y: 604 },
+            { x: 134, y: 741 },
+            { x: 142, y: 200 },
+            { x: 232, y: 365 },
+            { x: 465, y: 166 },
+            { x: 439, y: 395 },
+            { x: 697, y: 255 },
+            { x: 549, y: 247 },
+            { x: 774, y: 148 },
+            { x: 764, y: 464 },
+            { x: 791, y: 1060 },
+            { x: 741, y: 666 },
+            { x: 702, y: 1023 }
         ];
 
         circleCoordinatesPartA.forEach((coord, index) => {
