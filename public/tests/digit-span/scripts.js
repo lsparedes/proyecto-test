@@ -237,36 +237,24 @@ function startRecording(itemDiv, titleElement, index) {
 
 
 function stopRecording(timerSpan, index, itemDiv, type) {
-
     if (mediaRecorder && mediaRecorder.state === 'recording') {
         mediaRecorder.stop();
         clearInterval(timerInterval);
         updateTimerDisplay(timerSpan, 0);
 
-        // Añadimos un pequeño retraso solo al final del proceso
-        if (itemDiv.nextElementSibling === null) {
-            itemDiv.classList.add('hidden');
-
-            document.getElementById('test-items-' + type).classList.add('hidden');
-            mostrarFinalizacion(type);
-        } else {
-            // Si no es el último ítem, avanzamos inmediatamente al siguiente ítem
-            itemDiv.classList.add('hidden');
-
-            let nextItem = itemDiv.nextElementSibling;
-            if (nextItem) {
-                nextItem.classList.remove('hidden');
-            }
-
-            console.log(`Ítem ${index} grabado y oculto.`);
-            console.log(`Mostrando siguiente ítem.`);
+        // Mostrar botón "Next" para avanzar manualmente
+        const nextButton = itemDiv.querySelector('.next-button');
+        if (nextButton) {
+            nextButton.classList.remove('hidden');
         }
 
+        console.log(`Grabación del ítem ${index} detenida. Puedes avanzar manualmente.`);
         console.log("Contenido de downloadLinks:", downloadLinks);
     } else {
         console.log("No se está grabando en este momento.");
     }
 }
+
 
 
 function startTimer(displayElement) {
