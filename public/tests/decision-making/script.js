@@ -64,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
             selectMachine('Derecha');
         }
     });
+    
+ 
 
     document.getElementById('startBlock1Button').addEventListener('click', () => {
         intermediateScreen.style.display = 'none';
@@ -104,42 +106,73 @@ document.addEventListener('DOMContentLoaded', () => {
         const trial = trials[currentTrial];
         if (practiceMode) {
             trialIndicator.innerText = `P${currentTrial + 1}`;
-        } else if(currentBlock === 1) {
+        } else if (currentBlock === 1) {
             trialIndicator.innerText = `E${currentTrial + 1}`;
-        } else if(currentBlock === 2) {
+        } else if (currentBlock === 2) {
             trialIndicator.innerText = `E${(currentTrial + 1) + (cantidad_ensayos_bloque_1)}`;
-        } else if(currentBlock === 3) {
+        } else if (currentBlock === 3) {
             trialIndicator.innerText = `E${(currentTrial + 1) + (cantidad_ensayos_bloque_1 + cantidad_ensayos_bloque_2)}`;
         }
         feedbackScreen.style.display = 'none';
         skippedScreen.style.display = 'none';
         endScreen.style.display = 'none';
         resetSlotMachines();
+        randomizeSlotPositions(); // Llamada a la función para invertir aleatoriamente
         practiceTrial.style.display = 'block';
-
-        // Log the probabilities applied for each trial
+    
         console.log(`Trial ${currentTrial + 1}: Left - ${trial.leftReward ? 'Win' : 'Lose'}, Right - ${trial.rightReward ? 'Win' : 'Lose'}`);
-
-        // Start the timeout for auto-skip if no selection is made
+    
         selectionTimeout = setTimeout(() => {
             if (!selectionMade) {
                 handleSkippedTrial();
             }
         }, 5000); // 5 seconds
     }
+    
+
+    let slotsInverted = false;
+
+    function randomizeSlotPositions() {
+        const leftImage = leftSlot.src;
+        const rightImage = rightSlot.src;
+    
+        // Cambia las imágenes de manera aleatoria
+        if (Math.random() < 0.5) {
+            leftSlot.src = rightImage;
+            rightSlot.src = leftImage;
+            slotsInverted = true;  // Indica que las imágenes están invertidas
+        } else {
+            slotsInverted = false; // Las imágenes no están invertidas
+        }
+    }
 
     function selectMachine(side) {
         const responseTime = Date.now() - startTime;
+    
+        // Verificar qué imagen está en el lado izquierdo y derecho
+        const leftImage = leftSlot.src; // Imagen actual del lado izquierdo
+        const rightImage = rightSlot.src; // Imagen actual del lado derecho
+    
+        // Determinar cuál animación usar según el lado seleccionado y la imagen actual
         if (side === 'Izquierda') {
-            leftSlot.src = 'img/slot-machine-left-down.png';
-        } else {
-            rightSlot.src = 'img/slot-machine-right-down.png';
+            if (leftImage.includes('slot-machine-left-up.png')) {
+                leftSlot.src = 'img/slot-machine-left-down.png';
+            } else if (leftImage.includes('slot-machine-right-up.png')) {
+                leftSlot.src = 'img/slot-machine-right-down.png';
+            }
+        } else if (side === 'Derecha') {
+            if (rightImage.includes('slot-machine-right-up.png')) {
+                rightSlot.src = 'img/slot-machine-right-down.png';
+            } else if (rightImage.includes('slot-machine-left-up.png')) {
+                rightSlot.src = 'img/slot-machine-left-down.png';
+            }
         }
-
+    
         setTimeout(() => {
             showFeedback(side, responseTime);
         }, 1000);
     }
+    
 
     function showFeedback(side, responseTime) {
         const trial = trials[currentTrial];
