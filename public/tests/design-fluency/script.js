@@ -172,14 +172,14 @@ window.onload = function () {
     }
 
     practiceCanvas.addEventListener('pointerdown', function (e) {
-        
+        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceDrawing = true;
         practiceStartX = e.offsetX;
         practiceStartY = e.offsetY;
     });
 
     practiceCanvas.addEventListener('pointermove', function (e) {
-        
+        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceCtx.beginPath();
         practiceCtx.moveTo(practiceStartX, practiceStartY);
         practiceCtx.lineTo(e.offsetX, e.offsetY);
@@ -189,12 +189,12 @@ window.onload = function () {
     });
     
     practiceCanvas.addEventListener('pointerup', function (e) {
-    
+        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceDrawing = false;
     });
     
     practiceCanvas.addEventListener('pointerleave', function (e) {
-        
+        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceDrawing = false;
     });
 
