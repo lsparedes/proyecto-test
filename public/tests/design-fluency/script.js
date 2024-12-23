@@ -172,14 +172,14 @@ window.onload = function () {
     }
 
     practiceCanvas.addEventListener('pointerdown', function (e) {
-        if (e.pointerType !== 'pen') return; // Acepta solo entradas del lápiz touch
+        
         practiceDrawing = true;
         practiceStartX = e.offsetX;
         practiceStartY = e.offsetY;
     });
 
     practiceCanvas.addEventListener('pointermove', function (e) {
-        if (!practiceDrawing || e.pointerType !== 'pen') return;
+        
         practiceCtx.beginPath();
         practiceCtx.moveTo(practiceStartX, practiceStartY);
         practiceCtx.lineTo(e.offsetX, e.offsetY);
@@ -187,43 +187,56 @@ window.onload = function () {
         practiceStartX = e.offsetX;
         practiceStartY = e.offsetY;
     });
-
+    
     practiceCanvas.addEventListener('pointerup', function (e) {
-        if (e.pointerType !== 'pen') return;
+    
         practiceDrawing = false;
     });
     
     practiceCanvas.addEventListener('pointerleave', function (e) {
-        if (e.pointerType !== 'pen') return;
+        
         practiceDrawing = false;
     });
 
+        // Obtén el rectángulo del lienzo y calcula el factor de escala
+    function getCanvasCoordinates(canvas, clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width; // Relación entre el ancho real y el visual
+        const scaleY = canvas.height / rect.height; // Relación entre el alto real y el visual
+        const x = (clientX - rect.left) * scaleX;
+        const y = (clientY - rect.top) * scaleY;
+        return { x, y };
+    }
+
     canvas.addEventListener('pointerdown', function (e) {
-        if (e.pointerType !== 'pen') return;
         drawing = true;
-        startX = e.offsetX;
-        startY = e.offsetY;
+        const { x, y } = getCanvasCoordinates(canvas, e.clientX, e.clientY);
+        startX = x;
+        startY = y;
     });
-    
+
     canvas.addEventListener('pointermove', function (e) {
-        if (!drawing || e.pointerType !== 'pen') return;
+        if (!drawing) return;
+        const { x, y } = getCanvasCoordinates(canvas, e.clientX, e.clientY);
+
         ctx.beginPath();
         ctx.moveTo(startX, startY);
-        ctx.lineTo(e.offsetX, e.offsetY);
+        ctx.lineTo(x, y);
         ctx.stroke();
-        startX = e.offsetX;
-        startY = e.offsetY;
+
+        startX = x;
+        startY = y;
     });
-    
-    canvas.addEventListener('pointerup', function (e) {
-        if (e.pointerType !== 'pen') return;
+
+    canvas.addEventListener('pointerup', function () {
         drawing = false;
     });
-    
-    canvas.addEventListener('pointerleave', function (e) {
-        if (e.pointerType !== 'pen') return;
+
+    canvas.addEventListener('pointerleave', function () {
         drawing = false;
     });
+
+    
 
     function reiniciarTemporizador() {
         clearTimeout(temporizador);

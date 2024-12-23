@@ -38,8 +38,8 @@ button {
 }
 
 #designCanvas {
-  width: 95vw; /* Ajusta a un 95% del ancho visible */
-  height: auto; /* Mantén proporción al ajustar ancho */
+  width: 1200px; /* Ajusta a un 95% del ancho visible */
+  height: 900px; /* Mantén proporción al ajustar ancho */
   max-height: 90vh; /* Asegura que no exceda la altura */
   background: #f0f0f0;
 }
