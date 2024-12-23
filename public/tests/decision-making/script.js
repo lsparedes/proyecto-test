@@ -315,9 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const testTrials = [];
         let blockTrialsCount;
         let leftRewardChance, rightRewardChance;
-
+    
         if (caseOption === 'A') {
-            // Case A: Set probabilities for each block
             switch (block) {
                 case 1:
                     blockTrialsCount = cantidad_ensayos_bloque_1;
@@ -338,7 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return [];
             }
         } else {
-            // Case B: Set probabilities for each block
             switch (block) {
                 case 1:
                     blockTrialsCount = cantidad_ensayos_bloque_1;
@@ -359,17 +357,50 @@ document.addEventListener('DOMContentLoaded', () => {
                     return [];
             }
         }
-
-        for (let i = 0; i < blockTrialsCount; i++) {
-            const isLeftWin = Math.random() < leftRewardChance;
+    
+        for (let trial = 1; trial <= blockTrialsCount; trial++) {
+            let trialLeftRewardChance = leftRewardChance;
+            let trialRightRewardChance = rightRewardChance;
+    
+            if (trial >= 21 && trial <= 41) {
+                // Swap probabilities between trials 21-41
+                trialLeftRewardChance = rightRewardChance;
+                trialRightRewardChance = leftRewardChance;
+            }
+    
+            // Decide the winning machine based on probabilities
+            const randomValue = Math.random();
+            let leftReward = false;
+            let rightReward = false;
+    
+            if (randomValue < trialLeftRewardChance) {
+                leftReward = true;  // Left machine wins
+            } else if (randomValue < trialLeftRewardChance + trialRightRewardChance) {
+                rightReward = true; // Right machine wins
+            }
+    
+            // If no machine is chosen as the winner, select one at random
+            if (!leftReward && !rightReward) {
+                if (Math.random() < 0.5) {
+                    leftReward = true;
+                } else {
+                    rightReward = true;
+                }
+            }
+    
+            // Add trial to the testTrials array
             testTrials.push({
-                leftReward: isLeftWin,
-                rightReward: !isLeftWin
+                trialNumber: trial,
+                leftReward: leftReward,
+                rightReward: rightReward,
+                leftRewardChance: trialLeftRewardChance,
+                rightRewardChance: trialRightRewardChance,
             });
         }
-
+    
         return testTrials;
     }
+    
 
     function resetSlotMachines() {
         leftSlot.src = 'img/slot-machine-left-up.png';
