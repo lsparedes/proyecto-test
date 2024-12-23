@@ -209,6 +209,7 @@ window.onload = function () {
     }
 
     canvas.addEventListener('pointerdown', function (e) {
+        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
         drawing = true;
         const { x, y } = getCanvasCoordinates(canvas, e.clientX, e.clientY);
         startX = x;
@@ -216,6 +217,7 @@ window.onload = function () {
     });
 
     canvas.addEventListener('pointermove', function (e) {
+        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
         if (!drawing) return;
         const { x, y } = getCanvasCoordinates(canvas, e.clientX, e.clientY);
 
@@ -229,10 +231,12 @@ window.onload = function () {
     });
 
     canvas.addEventListener('pointerup', function () {
+        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
         drawing = false;
     });
 
     canvas.addEventListener('pointerleave', function () {
+        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
         drawing = false;
     });
 
