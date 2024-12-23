@@ -172,14 +172,14 @@ window.onload = function () {
     }
 
     practiceCanvas.addEventListener('pointerdown', function (e) {
-        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+        if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceDrawing = true;
         practiceStartX = e.offsetX;
         practiceStartY = e.offsetY;
     });
 
     practiceCanvas.addEventListener('pointermove', function (e) {
-        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+        if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceCtx.beginPath();
         practiceCtx.moveTo(practiceStartX, practiceStartY);
         practiceCtx.lineTo(e.offsetX, e.offsetY);
@@ -189,12 +189,12 @@ window.onload = function () {
     });
     
     practiceCanvas.addEventListener('pointerup', function (e) {
-        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+        if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceDrawing = false;
     });
     
     practiceCanvas.addEventListener('pointerleave', function (e) {
-        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+        if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceDrawing = false;
     });
 
@@ -209,7 +209,7 @@ window.onload = function () {
     }
 
     canvas.addEventListener('pointerdown', function (e) {
-        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+        if (drawingCompletedCanvas || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         drawing = true;
         const { x, y } = getCanvasCoordinates(canvas, e.clientX, e.clientY);
         startX = x;
@@ -217,7 +217,7 @@ window.onload = function () {
     });
 
     canvas.addEventListener('pointermove', function (e) {
-        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+        if (drawingCompletedCanvas || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         if (!drawing) return;
         const { x, y } = getCanvasCoordinates(canvas, e.clientX, e.clientY);
 
@@ -231,12 +231,12 @@ window.onload = function () {
     });
 
     canvas.addEventListener('pointerup', function () {
-        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+        if (drawingCompletedCanvas || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         drawing = false;
     });
 
     canvas.addEventListener('pointerleave', function () {
-        if (drawingCompletedB2 || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+        if (drawingCompletedCanvas || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         drawing = false;
     });
 
