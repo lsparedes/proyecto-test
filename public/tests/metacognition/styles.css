@@ -43,13 +43,12 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 5px;
-    width: 80px;
-    height: 65px;
+    width: 90px;
+    height: 80px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
     right: 15px;
-    margin: 20px;
   }
 
   #fullscreenButton {
@@ -60,13 +59,12 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 5px;
-    width: 80px;
-    height: 65px;
+    width: 90px;
+    height: 80px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
     left: 15px;
-    margin: 20px;
   }
   
   #instructionsText {

@@ -200,9 +200,9 @@ audio {
     background-repeat: no-repeat;
     padding: 0;
     /* Elimina el relleno para alinear el icono verticalmente */
-    width: 8vh;
+    width: 90px;
     /* Ajusta el ancho fijo */
-    height: 7vh;
+    height: 80px;
     /* Ajusta la altura fija */
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
@@ -223,8 +223,8 @@ audio {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
-    width: 80px;
-    height: 65px;
+    width: 90px;
+    height: 80px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
@@ -239,8 +239,8 @@ audio {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 0;
-    width: 80px;
-    height: 65px;
+    width: 90px;
+    height: 80px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
@@ -258,9 +258,9 @@ audio {
     background-repeat: no-repeat;
     padding: 0;
     /* Elimina el relleno para alinear el icono verticalmente */
-    width: 80px;
+    width: 90px;
     /* Ajusta el ancho fijo */
-    height: 65px;
+    height: 80px;
     /* Ajusta la altura fija */
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */

@@ -86,8 +86,8 @@ button {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 5px;
-    width: 80px;
-    height: 65px;
+    width: 90px;
+    height: 80px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
@@ -121,8 +121,8 @@ button {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 5px;
-    width: 80px;
-    height: 65px;
+    width: 90px;
+    height: 80px;
     vertical-align: middle;
     position: absolute;
     bottom: 15px;
@@ -158,9 +158,9 @@ button {
     background-repeat: no-repeat;
     padding: 0;
     /* Elimina el relleno para alinear el icono verticalmente */
-    width: 80px;
+    width: 90px;
     /* Ajusta el ancho fijo */
-    height: 65px;
+    height: 80px;
     /* Ajusta la altura fija */
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */
@@ -239,8 +239,8 @@ button {
     background-size: contain;
     background-repeat: no-repeat;
     padding: 5px;
-    width: 80px;
-    height: 65px;
+    width: 90px;
+    height: 80px;
     margin: 20px;
     vertical-align: middle;
     position: absolute;
