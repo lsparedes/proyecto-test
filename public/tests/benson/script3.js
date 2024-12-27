@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('audio3').pause();
         container2.style.display = 'none';
         finishScreen.style.display = 'block';
-        DownloadButton.style.display = 'block';
+        DownloadButton.style.display = 'none';
         endTimeExecution = new Date(); 
         console.log("Tiempo de Termino: ", endTimeExecution);
         selectHandContainer.style.display = 'block';
@@ -81,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
             console.log("Mano seleccionada: ", selectedHand);
             validateInputs(); 
+            DownloadButton.style.display = 'block';
         });
     });
 
