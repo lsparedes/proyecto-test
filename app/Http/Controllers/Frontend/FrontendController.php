@@ -41,4 +41,23 @@ class FrontendController extends Controller
         // Pasar los datos a la vista
         return view('frontend.infotest', compact('test', 'tipoTest','IDparticipante'));
     }
+
+    public function getUserInfo()
+    {
+        // Asegurarse de que el usuario esté autenticado
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Usuario no autenticado'], 401);
+        }
+    
+        // Devolver los datos del usuario en formato JSON
+        return response()->json([
+            'name' => $user->name,
+            'last_name' => $user->last_name,
+            'role' => $user->roles->pluck('name')->first(), // Usando Spatie Roles para obtener el rol
+        ]);
+    }
+    
+
+
 }

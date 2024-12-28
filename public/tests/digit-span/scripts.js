@@ -85,11 +85,16 @@ function startTest(type) {
         audio.addEventListener('ended', () => {
             const beep = new Audio('audio/beep.wav');
             beep.play();
-            
+        
+            // Registrar el tiempo en que suena el beep
+            const beepTime = Date.now();
+            itemDiv.dataset.beepTime = beepTime; // Guardar en el dataset del elemento
+        
             setTimeout(() => {
                 playBeepAndShowButtons(itemDiv, titleElement, index + 1);
             }, 600); // Espera 600 milisegundos
         });
+        
 
         // Mostrar el botón "next-button" cuando el audio se cargue completamente
         audio.addEventListener('loadeddata', () => {
@@ -242,7 +247,17 @@ function stopRecording(timerSpan, index, itemDiv, type) {
         clearInterval(timerInterval);
         updateTimerDisplay(timerSpan, 0);
 
-        // Mostrar botón "Next" para avanzar manualmente
+        // Calcular tiempo desde el beep hasta detener la grabación
+        const beepTime = parseInt(itemDiv.dataset.beepTime, 10);
+        const stopTime = Date.now();
+        const beepToStopTime = stopTime - beepTime; // Tiempo en milisegundos
+
+        // Añadir este tiempo a downloadLinks
+        const linkData = downloadLinks.find(link => link.index === index);
+        if (linkData) {
+            linkData.beepToStopTime = beepToStopTime;
+        }
+
         const nextButton = itemDiv.querySelector('.next-button');
         if (nextButton) {
             nextButton.classList.remove('hidden');
@@ -254,6 +269,7 @@ function stopRecording(timerSpan, index, itemDiv, type) {
         console.log("No se está grabando en este momento.");
     }
 }
+
 
 
 
@@ -295,19 +311,49 @@ function mostrarFinalizacion(type) {
     });
 }
 
+let userInfo;
 
-function generarCSV() {
-    let csvContent = "Trial;RT\n";
-
-    downloadLinks.forEach(linkData => {
-        if (linkData.title && linkData.duration) {
-            const row = `${linkData.title};${linkData.duration}`;
-            csvContent += row + "\n";
+fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
         }
-    });
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
 
-    return csvContent;
-}
+        // Una vez que userInfo está listo, habilitar el botón o acción que depende de él
+        document.getElementById('final-button').addEventListener('click', () => {
+            crearZip('forward');
+        });
+    })
+    .catch(error => console.error('Error:', error));
+
+    function generarCSV(taskTime) {
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return "";
+        }
+    
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+        let csvContent = `Examinador;${initials};Rol;${userInfo.role}\n`;
+        csvContent += "Trial;RT;BeepToStopTime\n";
+    
+        downloadLinks.forEach(linkData => {
+            if (linkData.title && linkData.duration && linkData.beepToStopTime !== undefined) {
+                const row = `${linkData.title};${linkData.duration};${linkData.beepToStopTime}`;
+                csvContent += row + "\n";
+            }
+        });
+    
+        csvContent += `TotTime;${taskTime};\n`;
+    
+        return csvContent;
+    }
+
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -361,7 +407,7 @@ function crearZip(type) {
     const fechaFormateada = `${day}_${month}_${year}`;
 
     zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_9_Span_Verbal_${type}_Metricas_${fechaFormateada}.csv`, txtBlob);
+    
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
