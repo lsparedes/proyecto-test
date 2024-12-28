@@ -326,7 +326,7 @@ fetch('/api/user-info')
 
         // Una vez que userInfo está listo, habilitar el botón o acción que depende de él
         document.getElementById('final-button').addEventListener('click', () => {
-            crearZip('forward');
+            crearZip(`${type}`);
         });
     })
     .catch(error => console.error('Error:', error));
