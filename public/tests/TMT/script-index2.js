@@ -343,8 +343,8 @@ instructionAudio.addEventListener('ended', function () {
     playBeep();
     if (!isRecordingStarted) {
         mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
-        isRecordingStarted = true; 
-    }  
+        isRecordingStarted = true;
+    }
 });
 
 let inicio = null;
@@ -631,7 +631,7 @@ function testFinalizado() {
                     // Cerrar la ventana después de que se haya descargado el ZIP
                     setTimeout(() => {
                         window.close();
-                    }, 100); // Ajusta el tiempo de espera según sea necesario
+                    }, 3000); // Ajusta el tiempo de espera según sea necesario
                 });
             });
         });
@@ -649,17 +649,47 @@ function testFinalizado() {
     }, 1000);
 }
 
+let userInfo;
 
-function generateCSV(data) {
-    let csvContent = "TotTime;NoCommErr;NoCorrLines;NoLiftPen;ExecLiftTime;ExecTime;Hand\n";
-
-    data.forEach(row => {
-        let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime};${row.taskTime};${selectedHand}\n`;
-        csvContent += linea;
+fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
     });
 
-    return new Blob([csvContent], { type: 'text/csv' });
-}
+
+    function generateCSV(data) {
+        // Asegúrate de que userInfo esté disponible
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return; // Salir si userInfo no está disponible
+        }
+    
+        // Obtener las iniciales del examinador
+        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+        // Comienza con los encabezados, agregando la columna para el Examinador
+        let csvContent = "TotTime;NoCommErr;NoCorrLines;NoLiftPen;ExecLiftTime;ExecTime;Hand;Examinador\n";
+    
+        // Agregar cada fila de datos, incluyendo las iniciales del examinador
+        data.forEach(row => {
+            let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime};${row.taskTime};${selectedHand};${inicialesExaminador}\n`;
+            csvContent += linea;
+        });
+    
+        // Crear el Blob con el contenido CSV
+        return new Blob([csvContent], { type: 'text/csv' });
+    }
+    
 
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");

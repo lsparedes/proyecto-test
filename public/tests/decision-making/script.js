@@ -64,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
             selectMachine('Derecha');
         }
     });
-    
- 
+
+
 
     document.getElementById('startBlock1Button').addEventListener('click', () => {
         intermediateScreen.style.display = 'none';
@@ -119,23 +119,23 @@ document.addEventListener('DOMContentLoaded', () => {
         resetSlotMachines();
         randomizeSlotPositions(); // Llamada a la función para invertir aleatoriamente
         practiceTrial.style.display = 'block';
-    
+
         console.log(`Trial ${currentTrial + 1}: Left - ${trial.leftReward ? 'Win' : 'Lose'}, Right - ${trial.rightReward ? 'Win' : 'Lose'}`);
-    
+
         selectionTimeout = setTimeout(() => {
             if (!selectionMade) {
                 handleSkippedTrial();
             }
         }, 5000); // 5 seconds
     }
-    
+
 
     let slotsInverted = false;
 
     function randomizeSlotPositions() {
         const leftImage = leftSlot.src;
         const rightImage = rightSlot.src;
-    
+
         // Cambia las imágenes de manera aleatoria
         if (Math.random() < 0.5) {
             leftSlot.src = rightImage;
@@ -148,11 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function selectMachine(side) {
         const responseTime = Date.now() - startTime;
-    
+
         // Verificar qué imagen está en el lado izquierdo y derecho
         const leftImage = leftSlot.src; // Imagen actual del lado izquierdo
         const rightImage = rightSlot.src; // Imagen actual del lado derecho
-    
+
         // Determinar cuál animación usar según el lado seleccionado y la imagen actual
         if (side === 'Izquierda') {
             if (leftImage.includes('slot-machine-left-up.png')) {
@@ -167,12 +167,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 rightSlot.src = 'img/slot-machine-left-down.png';
             }
         }
-    
+
         setTimeout(() => {
             showFeedback(side, responseTime);
         }, 1000);
     }
-    
+
 
     function showFeedback(side, responseTime) {
         const trial = trials[currentTrial];
@@ -277,9 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function endGame() {
         endScreen.style.display = 'block';
-        setTimeout(() => {
-            downloadResults(); // Automatically download results
-        }, 1000); // Give a slight delay for user to see the message
+        downloadResults(); // Automatically download results
     }
 
     function generatePracticeTrials() {
@@ -315,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const testTrials = [];
         let blockTrialsCount;
         let leftRewardChance, rightRewardChance;
-    
+
         if (caseOption === 'A') {
             switch (block) {
                 case 1:
@@ -357,28 +355,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     return [];
             }
         }
-    
+
         for (let trial = 1; trial <= blockTrialsCount; trial++) {
             let trialLeftRewardChance = leftRewardChance;
             let trialRightRewardChance = rightRewardChance;
-    
+
             if (trial >= 21 && trial <= 41) {
                 // Swap probabilities between trials 21-41
                 trialLeftRewardChance = rightRewardChance;
                 trialRightRewardChance = leftRewardChance;
             }
-    
+
             // Decide the winning machine based on probabilities
             const randomValue = Math.random();
             let leftReward = false;
             let rightReward = false;
-    
+
             if (randomValue < trialLeftRewardChance) {
                 leftReward = true;  // Left machine wins
             } else if (randomValue < trialLeftRewardChance + trialRightRewardChance) {
                 rightReward = true; // Right machine wins
             }
-    
+
             // If no machine is chosen as the winner, select one at random
             if (!leftReward && !rightReward) {
                 if (Math.random() < 0.5) {
@@ -387,7 +385,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     rightReward = true;
                 }
             }
-    
+
             // Add trial to the testTrials array
             testTrials.push({
                 trialNumber: trial,
@@ -397,15 +395,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 rightRewardChance: trialRightRewardChance,
             });
         }
-    
+
         return testTrials;
     }
-    
+
 
     function resetSlotMachines() {
         leftSlot.src = 'img/slot-machine-left-up.png';
         rightSlot.src = 'img/slot-machine-right-up.png';
     }
+
+    let userInfo;
+
+    fetch('/api/user-info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
 
     async function downloadResults() {
         if (typeof JSZip === 'undefined') {
@@ -413,14 +428,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return;
+        }
+
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+
         const zip = new JSZip();
 
-        let csvContent = "Block;Trial;OLSlMach;ORSlMach;PartResp;Acc;RT\n";
-        csvContent += results.map(e => e.join(";")).join("\n");
+        // Generar el contenido del primer archivo CSV
+        let csvContent = "Block;Trial;OLSlMach;ORSlMach;PartResp;Acc;RT;Examinador\n"; // Añadir encabezado "Examinador"
+        csvContent += results.map(e => [...e, initials].join(";")).join("\n"); // Añadir iniciales en cada fila
 
+        // Generar el contenido del archivo TXT
         const totalTaskTime = (Date.now() - totalStartTime) / 1000;
-        let txtContent = [["TotTime","Hand"], [totalTaskTime, selectedHand]].map(e => e.join(";")).join("\n");
+        let txtContent = [["TotTime", "Hand", "Examinador"], [totalTaskTime, selectedHand, initials]].map(e => e.join(";")).join("\n");
 
+        // Obtener la fecha actual para el nombre del archivo
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
@@ -430,6 +455,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Añadir archivos al ZIP
         zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.csv`, csvContent);
         zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_Metricas_${date}.csv`, txtContent);
+
         const fileName = `${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.zip`;
 
         // Generar y descargar el archivo ZIP
@@ -440,9 +466,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-            window.close();
+            setTimeout(() => {
+                window.close();
+            }, 3000);
         });
     }
+
 
     function stopAllAudios() {
         const audios = document.querySelectorAll('audio');
@@ -494,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 

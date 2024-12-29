@@ -691,6 +691,15 @@ function validateClicks() {
     let searchSpeed = (correctClicks / testDuration) * 1000;
 
     let csvContent = 'variable;valor\n';
+
+    // Obtener las iniciales del examinador
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+        console.error("Error: userInfo no está definido correctamente.");
+        return; // Salir si userInfo no está disponible
+    }
+
+    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
     csvContent += `TotTime;${totalDurationFormatted}\n`;
     csvContent += `ExecTime;${testDurationFormatted}\n`;
     csvContent += `Hand;${selectedHand}\n`;
@@ -708,6 +717,7 @@ function validateClicks() {
     //csvContent += `CoC;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
     csvContent += `CoC;${CoC}\n`;
     // csvContent += `center_of_cancelation_side;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
+    csvContent += `Examinador;${inicialesExaminador}\n`;
 
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
@@ -726,7 +736,9 @@ function validateClicks() {
                 link.click();
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
-                window.close();
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
             });
 
         });
@@ -736,6 +748,24 @@ function validateClicks() {
     chunks = [];
 }
 let stream;
+
+let userInfo;
+
+fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
+    });
+
 
 function prepareRecording() {
     stream = imageCanvas.captureStream();

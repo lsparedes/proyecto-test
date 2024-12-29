@@ -71,9 +71,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    DownloadButton.addEventListener('click', () => {
+    DownloadButton.addEventListener('click', async ()  => {
         validateInputs();
-        GenerateZIP();
+        try {
+            await GenerateZIP();
+        } catch (error) {
+            console.error("Error al generar el ZIP:", error);
+        }
+    
+        setTimeout(() => {
+            window.close();
+        }, 3000);
     });
     
     handInputs.forEach(input => {
@@ -109,11 +117,32 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
-    function generateCSV() {
 
-        let csvContent = "Activity;TotTime;RT;Hand;CorrResp;PartResp;Acc\n";
-        let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
-        csvContent += `FiguraIdentificada;${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy}\n`;
+    let userInfo;
+
+    fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => console.error('Error al cargar la información del usuario:', error));
+
+    function generateCSV() {
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return ""; 
+        }
+
+        let csvContent = "Activity;TotTime;RT;Hand;CorrResp;PartResp;Acc;Examinador\n";
+        let timeTotal = (endTimeExecution - startTimeExecution) / 1000;
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        csvContent += `FiguraIdentificada;${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`;
 
         return csvContent;
     }

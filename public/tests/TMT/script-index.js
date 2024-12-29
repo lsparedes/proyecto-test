@@ -666,7 +666,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // cerrar ventana al descargar
                         setTimeout(() => {
                             window.close();
-                        }, 100);
+                        }, 3000);
                     });
                 });
             });
@@ -675,16 +675,46 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 1000);
     }
 
-    function generateCSV(data) {
-        let csvContent = "TotTime;NoCommErr;NoCorrLines;NoLiftPen;ExecLiftTime;ExecTime;Hand\n";
+    let userInfo;
 
+    fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
+    });
+
+
+    function generateCSV(data) {
+        // Obtener las iniciales del examinador
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return; // Salir si userInfo no está disponible
+        }
+    
+        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+        // Comienza con los encabezados, agregando la columna para el Examinador
+        let csvContent = "TotTime;NoCommErr;NoCorrLines;NoLiftPen;ExecLiftTime;ExecTime;Hand;Examinador\n";
+    
+        // Agregar cada fila de datos, incluyendo las iniciales del examinador
         data.forEach(row => {
-            let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime};${row.taskTime};${selectedHand}\n`;
+            let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime};${row.taskTime};${selectedHand};${inicialesExaminador}\n`;
             csvContent += linea;
         });
-
+    
+        // Crear el Blob con el contenido CSV
         return new Blob([csvContent], { type: 'text/csv' });
     }
+    
 
     const selectHandContainer = document.getElementById("selectHand");
     const handButton = document.getElementById("handButton");

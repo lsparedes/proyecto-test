@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let numPuntosMenor = totalDots - numPuntosMayor;
     const colors = [];
     let colorMayor = Math.random() < 0.5 ? 'red' : 'blue';
-    
+
 
     if (colorMayor === 'red') {
       RedDotSide = "izquierda"; // Rojo a la izquierda
@@ -586,23 +586,76 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${day}_${month}_${year}`;
   }
 
-  function generateCSV(results) {
-    const csvContent = "Block;Trial;CorrResp;PartResp;ConfRa;Acc;DiffLvl;RTDecision;RTConfRa;PauseTime;RedDotSide\n"
-        + results.map(e => `${e.block};${e.trial};${e.correctColor};${e.answer};${e.confidence};${e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0')};${e.diferencia};${e.timeCol};${e.timeConf};${e.timeP};${RedDotSide}`).join("\n");
-    return {
-        content: csvContent,
-        filename: `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.csv`
-    };
-}
+  let userInfo;
+
+  fetch('/api/user-info')
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Error al obtener la información del usuario');
+      }
+      return response.json();
+    })
+    .then(data => {
+      userInfo = data; // Asignar los datos al objeto global
+      console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+      console.error('Error al obtener la información del usuario:', error);
+    });
 
 
-  function generateCSV2(startTimeTotal, selectedHand) {
-    const txtContent = [["TotTime", "Hand"], [(new Date() - startTimeTotal) / 1000, selectedHand]].map(e => e.join(";")).join("\n");
-    return {
-      content: txtContent,
-      filename: `${idParticipante}_15_Discriminacion_Perceptua_Metricas_${getCurrentDate()}.csv`
-    };
+    function generateCSV(results) {
+      // Asegurarse de que userInfo esté disponible
+      if (!userInfo || !userInfo.name || !userInfo.last_name) {
+          console.error("Error: userInfo no está definido correctamente.");
+          return; // Salir si userInfo no está disponible
+      }
+  
+      // Obtener las iniciales del examinador
+      const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+  
+      // Definir los encabezados del CSV
+      const csvData = [["Block", "Trial", "CorrResp", "PartResp", "ConfRa", "Acc", "DiffLvl", "RTDecision", "RTConfRa", "PauseTime", "RedDotSide", "Examinador"]]; // Agregar columna Examinador
+  
+      // Recorrer los resultados y agregar los datos junto con las iniciales del examinador
+      results.forEach((e) => {
+          const isCorrect = e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0');
+          const redDotSide = e.RedDotSide || ''; // Asegúrate de que la variable esté correctamente definida si es necesario
+  
+          // Agregar los datos de la prueba junto con las iniciales del examinador
+          csvData.push([e.block, e.trial, e.correctColor, e.answer, e.confidence, isCorrect, e.diferencia, e.timeCol, e.timeConf, e.timeP, redDotSide, inicialesExaminador]);
+      });
+  
+      // Crear el contenido del CSV
+      const csvContent = csvData.map(row => row.join(';')).join('\n');
+  
+      // Retornar el archivo CSV con el nombre adecuado
+      return {
+          content: csvContent,
+          filename: `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.csv`
+      };
   }
+  
+  function generateCSV2(startTimeTotal, selectedHand) {
+      // Asegurarse de que userInfo esté disponible
+      if (!userInfo || !userInfo.name || !userInfo.last_name) {
+          console.error("Error: userInfo no está definido correctamente.");
+          return; // Salir si userInfo no está disponible
+      }
+  
+      // Obtener las iniciales del examinador
+      const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+  
+      // Crear el contenido del archivo de métricas
+      const txtContent = [["TotTime", "Hand", "Examinador"], [(new Date() - startTimeTotal) / 1000, selectedHand, inicialesExaminador]].map(row => row.join(';')).join('\n');
+  
+      // Retornar el archivo de métricas con el nombre adecuado
+      return {
+          content: txtContent,
+          filename: `${idParticipante}_15_Discriminacion_Perceptua_Metricas_${getCurrentDate()}.csv`
+      };
+  }
+  
 
   async function downloadZip(csvFile, txtFile) {
     const zip = new JSZip();
@@ -615,7 +668,9 @@ document.addEventListener('DOMContentLoaded', () => {
     link.setAttribute("download", `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.zip`);
     document.body.appendChild(link);
     link.click();
-    window.close();
+    setTimeout(() => {
+      window.close();
+  }, 3000);
   }
 
   async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {

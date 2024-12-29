@@ -218,47 +218,80 @@ function getQueryParam(param) {
 // Obtener el id_participante de la URL
 const idParticipante = getQueryParam('id_participante');
 
+let userInfo;
 
-function downloadRecordingAndTime() {
-    // Obtener la fecha actual en formato YYYYMMDD
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const formattedDate = `${day}_${month}_${year}`;
-
-    const totalTime = Date.now() - startTime;
-    const totalTimeMs = totalTime;
-    const totalTimeSecs = (totalTime / 1000).toFixed(2);
-
-    // Crear el contenido del archivo .txt con la mano utilizada
-    const txtContent = `TotTime\n${totalTimeSecs}`;
-    const timeBlob = new Blob([txtContent], { type: 'text/plain' });
-    const timeUrl = URL.createObjectURL(timeBlob);
-
-    const link = document.createElement('a');
-    link.href = timeUrl;
-    link.download = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.csv`;
-    // link.click();
-
-    const zip = new JSZip();
-    zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.csv`, timeBlob);
-
-    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-    zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.wav`, audioBlob);
-
-    zip.generateAsync({ type: 'blob' }).then(content => {
-        const zipLink = document.createElement('a');
-        zipLink.href = URL.createObjectURL(content);
-
-        // Construir el nombre del archivo ZIP
-        const fileName = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.zip`;
-
-        zipLink.download = fileName;
-        zipLink.click();
-        window.close()
+fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
     });
-}
+
+
+    function downloadRecordingAndTime() {
+        // Asegurarse de que userInfo esté disponible para obtener las iniciales
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return; // Salir si userInfo no está disponible
+        }
+    
+        // Obtener las iniciales del examinador
+        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+        // Obtener la fecha actual en formato DD_MM_YYYY
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${day}_${month}_${year}`;
+    
+        // Calcular el tiempo total en milisegundos
+        const totalTime = Date.now() - startTime;
+        const totalTimeSecs = (totalTime / 1000).toFixed(2);
+    
+        // Crear el contenido del archivo .csv con el tiempo total y las iniciales del examinador
+        const txtContent = `TotTime;Examinador\n${totalTimeSecs};${inicialesExaminador}`;
+        const timeBlob = new Blob([txtContent], { type: 'text/csv' });
+        const timeUrl = URL.createObjectURL(timeBlob);
+    
+        // Crear un objeto JSZip para agregar archivos
+        const zip = new JSZip();
+        
+        // Agregar el archivo CSV al ZIP
+        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.csv`, timeBlob);
+    
+        // Crear y agregar el archivo de audio al ZIP
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.wav`, audioBlob);
+    
+        // Generar el archivo ZIP
+        zip.generateAsync({ type: 'blob' }).then(content => {
+            const zipLink = document.createElement('a');
+            zipLink.href = URL.createObjectURL(content);
+    
+            // Construir el nombre del archivo ZIP con las iniciales
+            const zipFilename = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.zip`;
+    
+            zipLink.download = zipFilename;
+            zipLink.click();
+            
+            // Cerrar la ventana después de un breve retraso
+            setTimeout(() => {
+                window.close();
+            }, 3000);
+        }).catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
+        });
+    }
+    
 
 // SELECCION DE MANO JS
 const handButton = document.getElementById("handButton");

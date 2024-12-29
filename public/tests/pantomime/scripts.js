@@ -249,20 +249,52 @@ document.addEventListener('DOMContentLoaded', () => {
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
+    let userInfo;
+
+    fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
+    });
+
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     function createTxtFile() {
+        // Asegurarse de que userInfo esté disponible
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return; // Salir si userInfo no está disponible
+        }
+    
+        // Obtener las iniciales del examinador
+        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+        // Formatear la fecha
         const filename = `${idParticipante}_17_Pantomima_del_uso_de_objetos_${fechaFormateada}.csv`;
-        // Definir el contenido del archivo TXT
-        const txtContent = [["TotTime", "Hand"], [totalTestTime / 1000, selectedHand]].map(e => e.join(';')).join('\n');
+    
+        // Definir el contenido del archivo CSV
+        const txtContent = [["TotTime", "Hand", "Examinador"], [totalTestTime / 1000, selectedHand, inicialesExaminador]]
+            .map(e => e.join(';'))
+            .join('\n');
+        
         const blob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
     
-        // Agregar el archivo TXT al ZIP con el nombre dinámico
+        // Agregar el archivo CSV al ZIP con el nombre dinámico
         zip.file(filename, blob);
     }
+    
     
     function createZipAndDownload() {
         handButton.style.display = "none";
@@ -275,7 +307,9 @@ document.addEventListener('DOMContentLoaded', () => {
             link.href = URL.createObjectURL(content);
             link.download = zipname;
             link.click();
-            window.close();
+            setTimeout(() => {
+                window.close();
+            }, 3000);
         });
     }
 

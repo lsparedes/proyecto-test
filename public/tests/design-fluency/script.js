@@ -78,7 +78,7 @@ window.onload = function () {
         };
         startRecording('designCanvas');
     });
-    
+
     const instructionAudio = document.getElementById('instructionAudio');
     instructionAudio.addEventListener('ended', function () {
         reiniciarTemporizador();
@@ -187,18 +187,18 @@ window.onload = function () {
         practiceStartX = e.offsetX;
         practiceStartY = e.offsetY;
     });
-    
+
     practiceCanvas.addEventListener('pointerup', function (e) {
         if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceDrawing = false;
     });
-    
+
     practiceCanvas.addEventListener('pointerleave', function (e) {
         if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
         practiceDrawing = false;
     });
 
-        // Obtén el rectángulo del lienzo y calcula el factor de escala
+    // Obtén el rectángulo del lienzo y calcula el factor de escala
     function getCanvasCoordinates(canvas, clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width; // Relación entre el ancho real y el visual
@@ -240,7 +240,7 @@ window.onload = function () {
         drawing = false;
     });
 
-    
+
 
     function reiniciarTemporizador() {
         clearTimeout(temporizador);
@@ -254,21 +254,46 @@ window.onload = function () {
 
     }
 
+    let userInfo;
+
+    fetch('/api/user-info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
+
     function generateCSV(data) {
-        let csvContent = `TotTime;Hand\n`;
-    
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return new Blob([], { type: 'text/csv' }); // Retornar un archivo vacío en caso de error
+        }
+
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+
+        let csvContent = `TotTime;Hand;Examinador\n`; // Añadir columna "Examinador"
+
         data.forEach(row => {
-            let linea = ` ${row.taskTime};${selectedHand}\n`;
+            let linea = `${row.taskTime};${selectedHand};${initials}\n`; // Incluir iniciales en cada fila
             csvContent += linea;
         });
-    
+
         return new Blob([csvContent], { type: 'text/csv' });
     }
+
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
@@ -276,38 +301,38 @@ window.onload = function () {
         // Detener las grabaciones (ya se hace dentro de startPracticeRecording y startRecording)
         stopPracticeRecording();
         stopRecording();
-    
+
         setTimeout(() => {
             const zip = new JSZip();
             const date = new Date();
-    
+
             // Añadir los videos grabados al ZIP
             zip.file("3_Design_Fluency_Canvas_Recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
-    
+
             // Generar y añadir el archivo TXT al ZIP
             const csvContent = generateCSV(data);
             zip.file(`${idParticipante}_3_Design_Fluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.csv`, csvContent);
-    
+
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
                 zip.file("3_Design_Fluency_Canvas_Screenshot.png", blob);
-    
+
                 practiceCanvas.toBlob(function (blobPractice) {
                     // zip.file("canvasPracticeScreenshot.png", blobPractice);
-    
+
                     // Generar el archivo ZIP y descargarlo
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
                         saveAs(content, `${idParticipante}_3_Design_Fluency_Metricas_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
-                        
+
                         setTimeout(() => {
                             window.close();
-                        }, 100);
+                        }, 3000);
                     });
                 });
             });
         }, 1000);
     }
-    
+
 
 
     // SELECCION DE MANO JS

@@ -676,24 +676,58 @@ function getCurrentDate() {
     return `${day}_${month}_${year}`;
 }
 
+let userInfo;
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Obtener la información del usuario desde el servidor
+    fetch('/api/user-info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
+});
+
+
 function generateCSV(results) {
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+        console.error("Error: userInfo no está definido correctamente.");
+        return {
+            content: "",
+            filename: ""
+        };
+    }
+
     // Crear el encabezado del CSV
-    let csvContent = "Trial;Item;CorrResp;PartResp;Acc;RT\n";
+    let csvContent = "Trial;Item;CorrResp;PartResp;Acc;RT;Examinador\n";
+
+    // Obtener las iniciales del examinador
+    const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
     // Recorrer las respuestas seleccionadas
     results.forEach(respuesta => {
         if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
             // Construir una línea del CSV con los datos de la respuesta
-            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado}\n`;
+            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado};${initials}\n`;
             // Agregar la línea al contenido del CSV
             csvContent += lineaCSV;
         }
     });
+
     return {
         content: csvContent,
         filename: `${idParticipante}_7_mCCT_${getCurrentDate()}.csv`
     };
 }
+
 
 function generateTxt(startTimeTotal, selectedHand) {
     const txtContent = "TotTime;Hand\n" + (new Date() - startTimeTotal) / 1000 + ";"
@@ -715,7 +749,9 @@ async function downloadZip(csvFile, txtFile) {
     link.setAttribute("download", `${idParticipante}_7_mCCT_${getCurrentDate()}.zip`);
     document.body.appendChild(link);
     link.click();
-    window.close();
+    setTimeout(() => {
+        window.close();
+    }, 3000);
 }
 
 async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {

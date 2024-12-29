@@ -248,18 +248,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function generateCSV() {
-        // let csvContent = "data:text/csv;charset=utf-8,";
-        let csvContent = "Activity;TotTime;RT;Hand\n";
-        let timeTotal = (endTimeExecution2 - startTimeExecution) / 1000; //tiempo total en segundos
-        let drawingTime = 0;
-        if (startDrawingTime) {
-            drawingTime = (endDrawingTime - startDrawingTime); //tiempo de dibujo en milisegundos
-        }
-        csvContent += `RecordarFigura;${timeTotal};${drawingTime};${selectedHand}\n`;
+    let userInfo;
 
+    fetch('/api/user-info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+
+            // Una vez que userInfo está listo, habilitar el botón o acción que depende de él
+            document.getElementById('download').addEventListener('click', () => {
+                const csvContent = generateCSV();  // Generar el CSV antes de crear el ZIP
+                if (csvContent) {
+                    crearZip(csvContent);  // Pasar el contenido del CSV al crearZip
+                }
+            });
+        })
+        .catch(error => console.error('Error:', error));
+
+    function generateCSV() {
+        // Validación previa: asegurarse de que las variables necesarias estén definidas
+        if (typeof userInfo === 'undefined' || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return "";  // Retorna vacío si falta información crítica
+        }
+    
+        if (typeof startTimeExecution === 'undefined' || typeof endTimeExecution2 === 'undefined') {
+            console.error("Error: las variables de tiempo de ejecución no están definidas.");
+            return "";  // Retorna vacío si los tiempos de ejecución no están definidos
+        }
+    
+        // Inicialización del contenido del CSV
+        let csvContent = "Activity;TotTime;RT;Hand;Examinador\n";
+    
+        // Cálculo del tiempo total en milisegundos
+        let timeTotal = (endTimeExecution2 - startTimeExecution);
+    
+        // Cálculo del tiempo de dibujo en milisegundos
+        let drawingTime = 0;
+        if (typeof startDrawingTime !== 'undefined' && typeof endDrawingTime !== 'undefined') {
+            drawingTime = (endDrawingTime - startDrawingTime);
+        }
+    
+        // Obtener iniciales del usuario
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+        // Agregar datos al contenido del CSV
+        csvContent += `RecordarFigura;${timeTotal};${drawingTime};${selectedHand};${initials}\n`;
+    
         return csvContent;
     }
+    
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');

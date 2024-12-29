@@ -185,15 +185,48 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const idParticipante = getQueryParam('id_participante');
 
+    let userInfo;
+
+    fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
+    });
+
     function saveToCSV() {
+        // Asegurarse de que userInfo esté disponible para obtener las iniciales
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return; // Salir si userInfo no está disponible
+        }
+    
+        // Obtener las iniciales del participante
+        const inicialesParticipante = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+        // Configurar las opciones de formato de fecha
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
         const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options);
         const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options);
+    
+        // Calcular el tiempo total en segundos
         const timeSpent = (finishTime - startTime) / 1000;
         const timeSpentFormatted = timeSpent;
-        const csvContent = `TotTime\n${timeSpentFormatted}`;
+    
+        // Crear el contenido del archivo CSV con las iniciales del participante
+        const csvContent = `TotTime;Iniciales\n${timeSpentFormatted};${inicialesParticipante}`;
+    
         return csvContent;
     }
+    
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
@@ -220,7 +253,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            window.close();
+            setTimeout(() => {
+                window.close();
+            }, 3000);
         });
     }
 

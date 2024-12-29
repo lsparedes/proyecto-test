@@ -134,9 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
         indicator.style.display = 'block';
         if (isPractice) {
             createBlocks();
-            indicator.textContent = `P${sequenceCount+1}`;
+            indicator.textContent = `P${sequenceCount + 1}`;
         } else {
-            indicator.textContent = `S${count}-${repeatCount+1}`;
+            indicator.textContent = `S${count}-${repeatCount + 1}`;
         }
     }
 
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkSequence() {
         let correct = true;
-        
+
         if (playerSequence.length === 0) {
             correct = false;
         } else {
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sequenceCount++;
 
         if (isPractice) {
-            indicator.textContent = `P${sequenceCount+1}`;
+            indicator.textContent = `P${sequenceCount + 1}`;
             if (sequenceCount < practiceSequences.length) {
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     repeatCount = 0;
                     errorCount = 0;
                 }
-                indicator.textContent = `S${count}-${repeatCount+1}`;
+                indicator.textContent = `S${count}-${repeatCount + 1}`;
                 setTimeout(resetBlocks, 500);
                 setTimeout(() => {
                     startSequenceButton.style.visibility = 'visible';
@@ -234,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
@@ -348,7 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function playBeep() {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
         const audioUrl = 'sonidos/beep.wav';
-    
+
         fetch(audioUrl)
             .then(response => response.arrayBuffer())
             .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
         milliseconds = 0;
         timer = setInterval(updateTimer, 10);
     }
-    
+
     function stopTimer() {
         clearInterval(timer);
     }
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("preEnd").style.display = 'block';
         selectHandContainer.style.display = "block";
     }
-    
+
     function confirmHandSelection() {
         document.getElementById("preEnd").style.display = 'none';
         selectHandContainer.style.display = "none";
@@ -402,10 +402,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     document.getElementById('handButton').addEventListener('click', confirmHandSelection);
-    
+
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
-    
+
         if (selectedHand) {
             handButton.style.display = 'block';
         }
@@ -421,8 +421,34 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${day}_${month}_${year}`;
     }
 
+    let userInfo;
+
+    fetch('/api/user-info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
+
     function generateCSV(results) {
-        const headers = ["Trial", "CorrResp", "PartResp", "Acc", "RT"];
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return {
+                content: "",
+                filename: ""
+            };
+        }
+
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        const headers = ["Trial", "CorrResp", "PartResp", "Acc", "RT", "Examinador"];
         const rows = results.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
             const userResponseIncremented = data.userResponse.map(num => num + 1);
@@ -433,14 +459,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 userResponseIncremented.join(""),
                 precision,
                 data.responseTime,
+                initials // Agregar iniciales
             ];
         });
+
         const desiredRowCount = fixedSequences.length;
         const currentRowCount = rows.length;
         const rowsToFill = desiredRowCount - currentRowCount;
+
         for (let i = 0; i < rowsToFill; i++) {
-            rows.push([fixedTitles[currentRowCount+i],fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
+            rows.push([
+                fixedTitles[currentRowCount + i],
+                fixedSequences[currentRowCount + i].map(num => num + 1).join(""),
+                "",
+                0,
+                "",
+                initials // Agregar iniciales también en las filas faltantes
+            ]);
         }
+
         const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
         return {
             content: csvContent,
@@ -448,13 +485,32 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
+
     function generateCSV2(startTimeTotal, selectedHand) {
-        const txtContent = [["TotTime", "Hand"] , [(new Date() - startTimeTotal) / 1000, selectedHand ]].map(e => e.join(";")).join("\n"); 
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return {
+                content: "",
+                filename: ""
+            };
+        }
+
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        const headers = ["TotTime", "Hand", "Examinador"];
+        const data = [
+            (new Date() - startTimeTotal) / 1000,
+            selectedHand,
+            initials
+        ];
+
+        const txtContent = [headers, data].map(row => row.join(";")).join("\n");
+
         return {
             content: txtContent,
             filename: `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.csv`
         };
     }
+
 
 
     async function downloadZip(csvFile, txtFile) {
@@ -463,22 +519,22 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.file(txtFile.filename, txtFile.content);
         const videoBlob = await stopScreenRecording();
         zip.file(`${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.webm`, videoBlob);
-    
+
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
         link.setAttribute("download", `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.zip`);
         document.body.appendChild(link);
-    
+
         link.click();
         document.body.removeChild(link);
-    
+
         setTimeout(() => {
             window.close();
-        }, 100);
+        }, 3000);
     }
-    
-    
+
+
     async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
         const csvFile = generateCSV(results);
         const txtFile = generateCSV2(startTimeTotal, selectedHand);

@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetButtonI1.addEventListener('click', resetVideoI1);
 
 
-    
+
 
     function stopAllAudios() {
         const audios = document.querySelectorAll('audio');
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resizeCanvas = (canvas) => {
         if (canvas && canvas.parentElement) {
             const container = canvas.parentElement;
-            
+
         } else {
             console.error('Canvas or its parent element not found:', canvas);
         }
@@ -103,19 +103,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const drawImageScaled = (canvas, img) => {
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
         // Calcular el escalado adecuado para ajustar la imagen al canvas
         const scaleWidth = canvas.width / img.width;
         const scaleHeight = canvas.height / img.height;
         const scale = Math.min(scaleWidth, scaleHeight);
-    
+
         // Calcular la posición centralizada de la imagen dentro del canvas
         const x = (canvas.width - img.width * scale) / 2;
         const y = (canvas.height - img.height * scale) / 2;
-    
+
         ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
     };
-    
+
 
     const videos = [
         {
@@ -273,96 +273,96 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadImageForCanvas = (canvas, videoIndex) => {
         const img = new Image();
         img.src = videos[videoIndex].imageSrc;
-    
+
         img.onload = function () {
-            canvas.width = 500; 
+            canvas.width = 500;
             canvas.height = 250;
             drawImageScaled(canvas, img);
         };
-    
+
         img.onerror = function () {
             console.error(`Error al cargar la imagen: ${videos[videoIndex].imageSrc}`);
         };
     };
 
-// Función para actualizar el indicador de prueba
-const updateTrialIndicator = () => {
-    if (currentScreenIndex === 4) {
-        trialIndicator.textContent = 'I1';
-    } else if (currentScreenIndex === 5) {
-        trialIndicator.textContent = 'P1';
-    } else if (currentScreenIndex === 6) {
-        trialIndicator.textContent = 'P2';
-    } else if (currentScreenIndex >= 7 && currentScreenIndex <= 18) {
-        trialIndicator.textContent = videos[contador].indicator; // Usar el indicador del video
-    } else {
-        trialIndicator.textContent = '';
-    }
-    console.log('Updated trialIndicator:', trialIndicator.textContent); // Log para depuración
-
-    // Actualizar el contenido del span con id indicador
-    if (indicador) {
-        indicador.textContent = trialIndicator.textContent;
-    }
-};
-
-// Función para retrasar y mostrar videos después de 2 segundos
-const delayVideoStart = (videoElement) => {
-    if (videoElement) {
-        videoElement.style.display = 'none'; // Ocultar el video inicialmente
-        videoElement.pause(); // Pausar el video
-        videoElement.currentTime = 0; // Reiniciar el video al inicio
-        
-        setTimeout(() => {
-            videoElement.style.display = 'block'; // Mostrar el video después del retraso
-            videoElement.play(); // Reproducir el video
-        }, 2000); // Retraso de 2 segundos
-    } else {
-        console.error('El elemento de video no fue encontrado.');
-    }
-};
-
-// Mostrar pantalla específica y cargar sus elementos
-const showScreen = (index) => {
-    screens.forEach((screen, i) => {
-        if (screen) {
-            screen.style.display = i === index ? 'flex' : 'none';
+    // Función para actualizar el indicador de prueba
+    const updateTrialIndicator = () => {
+        if (currentScreenIndex === 4) {
+            trialIndicator.textContent = 'I1';
+        } else if (currentScreenIndex === 5) {
+            trialIndicator.textContent = 'P1';
+        } else if (currentScreenIndex === 6) {
+            trialIndicator.textContent = 'P2';
+        } else if (currentScreenIndex >= 7 && currentScreenIndex <= 18) {
+            trialIndicator.textContent = videos[contador].indicator; // Usar el indicador del video
         } else {
-            console.error(`Screen with index ${i} not found`);
+            trialIndicator.textContent = '';
         }
-    });
+        console.log('Updated trialIndicator:', trialIndicator.textContent); // Log para depuración
 
-    updateTrialIndicator();
+        // Actualizar el contenido del span con id indicador
+        if (indicador) {
+            indicador.textContent = trialIndicator.textContent;
+        }
+    };
 
-    // Configurar videos para los indicadores I1, P1 y P2
-    if (index === 4) { // I1
-        loadImageForCanvas(instructionCanvas, 0);
-        delayVideoStart(practiceVideo1); // Retrasar y mostrar video para I1
-    } else if (index === 5) { // P1
-        loadImageForCanvas(practiceCanvas1, 1);
-        delayVideoStart(practiceVideo2); // Retrasar y mostrar video para P1
-    } else if (index === 6) { // P2
-        loadImageForCanvas(practiceCanvas2, 2);
-        delayVideoStart(practiceVideo3); // Retrasar y mostrar video para P2
-    } else if (index >= 7 && index <= 18) { // E1 a E12
-        loadImageForCanvas(imageCanvas, index - 5); // Ajustar índice para E1 a E12
-    }
-};
+    // Función para retrasar y mostrar videos después de 2 segundos
+    const delayVideoStart = (videoElement) => {
+        if (videoElement) {
+            videoElement.style.display = 'none'; // Ocultar el video inicialmente
+            videoElement.pause(); // Pausar el video
+            videoElement.currentTime = 0; // Reiniciar el video al inicio
+
+            setTimeout(() => {
+                videoElement.style.display = 'block'; // Mostrar el video después del retraso
+                videoElement.play(); // Reproducir el video
+            }, 2000); // Retraso de 2 segundos
+        } else {
+            console.error('El elemento de video no fue encontrado.');
+        }
+    };
+
+    // Mostrar pantalla específica y cargar sus elementos
+    const showScreen = (index) => {
+        screens.forEach((screen, i) => {
+            if (screen) {
+                screen.style.display = i === index ? 'flex' : 'none';
+            } else {
+                console.error(`Screen with index ${i} not found`);
+            }
+        });
+
+        updateTrialIndicator();
+
+        // Configurar videos para los indicadores I1, P1 y P2
+        if (index === 4) { // I1
+            loadImageForCanvas(instructionCanvas, 0);
+            delayVideoStart(practiceVideo1); // Retrasar y mostrar video para I1
+        } else if (index === 5) { // P1
+            loadImageForCanvas(practiceCanvas1, 1);
+            delayVideoStart(practiceVideo2); // Retrasar y mostrar video para P1
+        } else if (index === 6) { // P2
+            loadImageForCanvas(practiceCanvas2, 2);
+            delayVideoStart(practiceVideo3); // Retrasar y mostrar video para P2
+        } else if (index >= 7 && index <= 18) { // E1 a E12
+            loadImageForCanvas(imageCanvas, index - 5); // Ajustar índice para E1 a E12
+        }
+    };
 
 
-// Incrementar el índice de la pantalla al hacer clic en "Next"
-const incrementScreenIndex = (event) => {
-    stopAllAudios();
-    hideQuestion();
-    console.log('Current Screen Index: ', currentScreenIndex);
-    if (currentScreenIndex < screens.length - 1) {
-        currentScreenIndex++;
-        showScreen(currentScreenIndex);
-        console.log('New Screen Index: ', currentScreenIndex);
-    } else {
-        console.log('End of screens reached');
-    }
-};
+    // Incrementar el índice de la pantalla al hacer clic en "Next"
+    const incrementScreenIndex = (event) => {
+        stopAllAudios();
+        hideQuestion();
+        console.log('Current Screen Index: ', currentScreenIndex);
+        if (currentScreenIndex < screens.length - 1) {
+            currentScreenIndex++;
+            showScreen(currentScreenIndex);
+            console.log('New Screen Index: ', currentScreenIndex);
+        } else {
+            console.log('End of screens reached');
+        }
+    };
 
 
     const goToPreTestInstruction = () => {
@@ -426,14 +426,14 @@ const incrementScreenIndex = (event) => {
     const handleClick = (e) => {
         const canvas = e.target;
         const rect = canvas.getBoundingClientRect();
-    
+
         // Obtener las coordenadas del clic relativas al canvas
         const x = (e.clientX - rect.left) * (canvas.width / rect.width);
         const y = (e.clientY - rect.top) * (canvas.height / rect.height);
-    
+
         // Guardar el clic ajustado
         const click = { x: x, y: y };
-    
+
         let videoIndex;
         if (canvas === instructionCanvas) {
             clicksByImage[0].push(click);
@@ -448,15 +448,15 @@ const incrementScreenIndex = (event) => {
             clicksByImage[contador].push(click);
             videoIndex = contador;
         }
-    
+
         // Registrar la respuesta con las coordenadas ajustadas
         const responseTime = Date.now() - clickStartTime;
         recordResponse(videoIndex, click, responseTime);
-    
+
         // Dibujar el círculo en las coordenadas del clic ajustado
         drawCircle(canvas, x, y, 'blue');
     };
-    
+
 
     const recordResponse = (videoIndex, click, responseTime) => {
         const videoData = videos[videoIndex];
@@ -612,12 +612,40 @@ const incrementScreenIndex = (event) => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
 
-    const generarTxt = (tiempoTotalSegundos, manoUtilizada) => {
-        const txtContent = `TotTime;Hand\n${tiempoTotalSegundos};${manoUtilizada}`;
+    const generarTxt = (tiempoTotalSegundos, manoUtilizada, inicialesExaminador) => {
+        const txtContent = `TotTime;Hand;Examinador\n${tiempoTotalSegundos};${manoUtilizada};${inicialesExaminador}`;
         return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
     };
+    
+
+    let userInfo;
+
+    fetch('/api/user-info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
 
     const downloadCSV = () => {
+        // Asegurarse de que userInfo esté disponible para obtener las iniciales
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return; // Salir si userInfo no está disponible
+        }
+
+        // Obtener las iniciales del examinador
+        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
+        // Mapear las respuestas
         const csvData = responses.map(response => ({
             Trial: response.ensayo,
             CorrResp: response.respuestaCorrecta,
@@ -628,61 +656,74 @@ const incrementScreenIndex = (event) => {
             RT: response.tiempoRespuesta,
             ExecTime: response.tiempoDedicado
         }));
-    
+
+        // Convertir los datos a formato CSV
         let csv = Papa.unparse(csvData, { delimiter: ';' });
+
+        // Calcular el tiempo total
         const tiempoTotalSegundos = (Date.now() - trialStartTime) / 1000;
-    
+
+        // Crear el blob para el archivo CSV
         const csvBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        const txtBlob = generarTxt(tiempoTotalSegundos, selectedHand);
-    
+
+        // Crear el archivo de texto con el tiempo total y las iniciales del examinador
+        const txtBlob = generarTxt(tiempoTotalSegundos, selectedHand, inicialesExaminador);
+
+        // Crear el objeto ZIP
         const zip = new JSZip();
-    
-        // Obtener la fecha actual en formato YYYYMMDD
+
+        // Obtener la fecha actual en formato DD_MM_YYYY
         const date = new Date();
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const formattedDate = `${day}_${month}_${year}`;
-        const csvFileName = `${idParticipante}_13_VIENNA_${formattedDate}.csv`;
-        const txtFileName = `${idParticipante}_13_VIENNA_Metricas_${formattedDate}.csv`;
-    
+
+        // Nombres de los archivos CSV y TXT con las iniciales del examinador
+        const csvFileName = `${idParticipante}_13_VIENNA_${inicialesExaminador}_${formattedDate}.csv`;
+        const txtFileName = `${idParticipante}_13_VIENNA_Metricas_${inicialesExaminador}_${formattedDate}.csv`;
+
+        // Agregar archivos al ZIP
         zip.file(csvFileName, csvBlob);
         zip.file(txtFileName, txtBlob);
-    
+
         // Crear una carpeta en el ZIP para las imágenes
         const imgFolder = zip.folder("imagenes");
+
+        // Agregar imágenes al ZIP
         images.forEach((dataURL, index) => {
             const imgBlob = dataURLtoBlob(dataURL);
             const imgFileName = `E${index + 1}.png`;
             imgFolder.file(imgFileName, imgBlob);
         });
-    
+
+        // Generar el archivo ZIP
         zip.generateAsync({ type: "blob" })
             .then(content => {
                 const link = document.createElement('a');
                 if (link.download !== undefined) {
                     const url = URL.createObjectURL(content);
-                    const zipFileName = `${idParticipante}_13_VIENNA_${formattedDate}.zip`;
-    
+                    const zipFileName = `${idParticipante}_13_VIENNA_${inicialesExaminador}_${formattedDate}.zip`;
+
                     link.setAttribute('href', url);
                     link.setAttribute('download', zipFileName);
                     link.style.visibility = 'hidden';
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-    
+
                     // Esperar 1 segundo antes de cerrar la ventana
                     setTimeout(() => {
                         window.close();
-                    }, 1000); // Esperar 1 segundo para asegurar que la descarga se inicie
+                    }, 3000); // Esperar 1 segundo para asegurar que la descarga se inicie
                 }
             })
             .catch(err => {
                 console.error("Error generando el archivo ZIP:", err);
             });
     };
-    
-    
+
+
 
     // Función para convertir dataURL a Blob
     function dataURLtoBlob(dataURL) {

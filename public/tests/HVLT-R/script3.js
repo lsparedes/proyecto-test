@@ -109,7 +109,24 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
-    
+
+    let userInfo;
+
+    fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
+    });
+
 
     function createCSV() {
         const total = Object.keys(correctAnswers).length;
@@ -138,29 +155,43 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function createCSV() {
-        const total = Object.keys(correctAnswers).length;
-        
-        // Contenido para el primer CSV
-        let mainCsvContent = 'Trial;Word;CorrResp;PartResp;Acc\n';
-        for (let i = 1; i <= total; i++) {
-            const word = words[i];
-            const correctAnswer = correctAnswers[i];
-            const participantAnswer = answers[i] || ''; // Dejar en blanco si no hay respuesta
-            const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
-    
-            mainCsvContent += `${i};${word};${correctAnswer};${participantAnswer};${isCorrect}\n`;
-        }
-    
-        // Obtener el valor de la mano seleccionada
-        let selectedHandElement = document.querySelector('input[name="hand"]:checked');
-        let selectedHand = selectedHandElement ? selectedHandElement.value : 'No seleccionado';
-        const endTime = new Date(); // Obtener la hora de finalización
-        const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
-        
-        let additionalCsvContent = `Hand;TotTime\n${selectedHand};${timeSpentInSeconds}\n`;
-    
-        return { mainCsvContent, additionalCsvContent };
+    // Asegurarse de que userInfo esté disponible para obtener las iniciales
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+        console.error("Error: userInfo no está definido correctamente.");
+        return; // Salir si userInfo no está disponible
     }
+
+    // Obtener las iniciales del participante
+    const inicialesParticipante = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+    const total = Object.keys(correctAnswers).length;
+    
+    // Contenido para el primer CSV (con las iniciales del participante)
+    let mainCsvContent = 'Trial;Word;CorrResp;PartResp;Acc;Iniciales\n'; // Agregar 'Iniciales' en el encabezado
+    for (let i = 1; i <= total; i++) {
+        const word = words[i];
+        const correctAnswer = correctAnswers[i];
+        const participantAnswer = answers[i] || ''; // Dejar en blanco si no hay respuesta
+        const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
+
+        // Agregar las iniciales en cada fila del CSV
+        mainCsvContent += `${i};${word};${correctAnswer};${participantAnswer};${isCorrect};${inicialesParticipante}\n`;
+    }
+
+    // Obtener el valor de la mano seleccionada
+    let selectedHandElement = document.querySelector('input[name="hand"]:checked');
+    let selectedHand = selectedHandElement ? selectedHandElement.value : 'No seleccionado';
+
+    // Incluir las iniciales y tiempo dedicado en el segundo CSV
+    const endTime = new Date(); // Obtener la hora de finalización
+    const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
+
+    let additionalCsvContent = `Hand;TotTime;Iniciales\n`;  // Agregar 'Iniciales' en el encabezado
+    additionalCsvContent += `${selectedHand};${timeSpentInSeconds};${inicialesParticipante}\n`;
+
+    return { mainCsvContent, additionalCsvContent };
+}
+
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
@@ -191,7 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
             a.click();
             document.body.removeChild(a);
 
-            window.close();
+            setTimeout(() => {
+                window.close();
+            }, 3000);
  
         });
 

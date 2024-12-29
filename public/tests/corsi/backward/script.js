@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
@@ -394,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("preEnd").style.display = 'block';
         selectHandContainer.style.display = "block";
     }
-    
+
     // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
     // En este caso fue mostrarFinalizacion()
     function confirmHandSelection() {
@@ -432,8 +432,36 @@ document.addEventListener('DOMContentLoaded', () => {
         return `${day}_${month}_${year}`;
     }
 
+    let userInfo;
+
+    fetch('/api/user-info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
+
+
     function generateCSV(results) {
-        const headers = ["Trial", "CorrResp", "PartResp", "Acc", "RT"];
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return {
+                content: "",
+                filename: ""
+            };
+        }
+
+        const headers = ["Trial", "CorrResp", "PartResp", "Acc", "RT", "Examinador"];
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+
         const rows = results.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
             const userResponseIncremented = data.userResponse.map(num => num + 1);
@@ -444,28 +472,59 @@ document.addEventListener('DOMContentLoaded', () => {
                 userResponseIncremented.join(""),
                 precision,
                 data.responseTime,
+                initials // Agregar las iniciales del examinador
             ];
         });
+
         const desiredRowCount = fixedSequences.length;
         const currentRowCount = rows.length;
         const rowsToFill = desiredRowCount - currentRowCount;
+
         for (let i = 0; i < rowsToFill; i++) {
-            rows.push([fixedTitles[currentRowCount + i], fixedSequences[currentRowCount + i].map(num => num + 1).join(""), "", 0, ""]);
+            rows.push([
+                fixedTitles[currentRowCount + i],
+                fixedSequences[currentRowCount + i].map(num => num + 1).join(""),
+                "",
+                0,
+                "",
+                initials // Agregar iniciales también en las filas faltantes
+            ]);
         }
+
         const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
+
         return {
             content: csvContent,
             filename: `${idParticipante}_corsi_inverso_${getCurrentDate()}.csv`
         };
     }
 
+
     function generateCSV2(startTimeTotal, selectedHand) {
-        const txtContent = [["TotTime","Hand"],[ (new Date() - startTimeTotal) / 1000, selectedHand]].map(e => e.join(";")).join("\n");
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return {
+                content: "",
+                filename: ""
+            };
+        }
+
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        const headers = ["TotTime", "Hand", "Examinador"];
+        const data = [
+            (new Date() - startTimeTotal) / 1000,
+            selectedHand,
+            initials
+        ];
+
+        const txtContent = [headers, data].map(row => row.join(";")).join("\n");
+
         return {
             content: txtContent,
             filename: `${idParticipante}_corsi_inverso_${getCurrentDate()}.csv`
         };
     }
+
 
     async function downloadZip(csvFile, txtFile) {
         const zip = new JSZip();
@@ -473,7 +532,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.file(txtFile.filename, txtFile.content);
         const videoBlob = await stopScreenRecording();
         zip.file(`${idParticipante}_corsi_inverso_${getCurrentDate()}.webm`, videoBlob);
-        
+
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
@@ -481,12 +540,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-    
+
         setTimeout(() => {
             window.close();
-        }, 100);
+        }, 3000);
     }
-    
+
     async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
         const csvFile = generateCSV(results);
         const txtFile = generateCSV2(startTimeTotal, selectedHand);

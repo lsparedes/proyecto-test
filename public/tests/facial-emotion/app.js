@@ -330,14 +330,41 @@ function getQueryParam(param) {
 
 // Obtener el id_participante de la URL
 const idParticipante = getQueryParam('id_participante');
+
+let userInfo;
+
+fetch('/api/user-info')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la información del usuario');
+        }
+        return response.json();
+    })
+    .then(data => {
+        userInfo = data; // Asignar los datos al objeto global
+        console.log("Usuario autenticado:", userInfo);
+    })
+    .catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
+    });
+
 function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
+    // Verificar si userInfo está disponible
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+        console.error("Error: userInfo no está definido correctamente.");
+        return; // Salir si userInfo no está disponible
+    }
+
+    // Obtener las iniciales del examinador
+    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT']];
+    const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT', 'Examinador']]; // Agregar columna Examinador
 
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;
@@ -346,20 +373,23 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
         const response = tiemposRespuesta[index];
         const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
 
-        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, response]);
+        // Agregar las iniciales del examinador a cada fila
+        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, response, inicialesExaminador]);
     });
 
     const csvContent = csvData.map(row => row.join(';')).join('\n');
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
-    // const txtContent = `TotTime: ${tiempoTranscurrido}\nHand: ${selectedHand}`;
+    // Generar el archivo de métricas (TotTime y Hand)
     const txtContent = [['TotTime', 'Hand'], [tiempoTranscurrido, selectedHand]].map(row => row.join(';')).join('\n');
     const txtBlob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
 
+    // Crear el archivo ZIP y agregar los archivos CSV
     const zip = new JSZip();
     zip.file(`${idParticipante}_12_Facial_Emotion_${fechaFormateada}.csv`, csvBlob);
     zip.file(`${idParticipante}_12_Facial_Emotion_Metricas_${fechaFormateada}.csv`, txtBlob);
 
+    // Generar y descargar el archivo ZIP
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const link = document.createElement('a');
@@ -372,13 +402,16 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                window.close();
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
             }
         })
         .catch(err => {
             console.error("Error generando el archivo ZIP:", err);
         });
 }
+
 
 function reiniciarTemporizador() {
     console.log('Reiniciando temporizador...');
@@ -441,17 +474,17 @@ function showHandSelection() {
 
 function validateInputs() {
     selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
-    
+
     if (selectedHand) {
         handButton.style.display = 'block';
-    } 
+    }
 }
 
 // onclick="confirmHandSelection()"
 document.getElementById('handButton').addEventListener('click', confirmHandSelection);
 
 function confirmHandSelection() {
-    console.log('holi holi holi'+selectedHand);
+    console.log('holi holi holi' + selectedHand);
     selectHandContainer.style.display = "none";
     handButton.style.display = "none";
     document.getElementById('next-button').style.display = 'block';
@@ -466,4 +499,4 @@ handInputs.forEach((input) => {
         validateInputs();
         selectedHand = e.target.value;
     });
-  });
+});
