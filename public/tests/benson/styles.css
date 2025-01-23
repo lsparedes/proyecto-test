@@ -148,6 +148,15 @@ button:active {
     padding-bottom: 100px;
 }
 
+#instruccionscreen2{
+    position: relative;
+    top: 70px; /* Ajusta la posición según sea necesario */
+    text-align: center;
+    padding-left: 100px;
+    padding-right: 100px;
+    padding-bottom: 100px;
+}
+
 #instruccion2{
     position: relative;
     top: 70px; /* Ajusta la posición según sea necesario */

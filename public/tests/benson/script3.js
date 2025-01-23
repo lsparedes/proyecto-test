@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let startTimeExecution = null; 
     let endTimeExecution = null; 
-    let correctAnswer = "figura2-3";
+    let correctAnswer = "3";
     let participantAnswer = "";
     let selectedFigure = null;
     let selectedHand = "";
@@ -139,10 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return ""; 
         }
 
-        let csvContent = "Activity;TotTime;RT;Hand;CorrResp;PartResp;Acc;Examinador\n";
+        let csvContent = "TotTime;RT;Hand;CorrResp;PartResp;Acc;Examinador\n"; //Activity
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000;
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-        csvContent += `FiguraIdentificada;${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`;
+        csvContent += `${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`; //FiguraIdentificada
 
         return csvContent;
     }

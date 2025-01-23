@@ -314,13 +314,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return "";  // Retornar vacío si falta información crítica
         }
 
-        // Validación de las variables de tiempo
         if (typeof startTimeExecution === 'undefined' || typeof endTimeExecution === 'undefined') {
             console.error("Error: las variables de tiempo de ejecución no están definidas.");
             return "";
         }
 
-        let csvContent = "Activity;TotTime;RT;Hand;Examinador\n";
+        let csvContent = "TotTime;Hand;Examinador\n"; //Activity;RT;
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
         let drawingTime = 0;
@@ -329,8 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawingTime = (endDrawingTime - startDrawingTime); // tiempo de dibujo en milisegundos
         }
 
-        // Aquí ya tienes la información del usuario y los tiempos calculados
-        csvContent += `CopiarFigura;${timeTotal};${drawingTime};${selectedHand};${initials}\n`;
+        csvContent += `${timeTotal};${selectedHand};${initials}\n`;//CopiarFigura;${drawingTime};
 
         return csvContent;
     }

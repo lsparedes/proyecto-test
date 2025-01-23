@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         // Inicialización del contenido del CSV
-        let csvContent = "Activity;TotTime;RT;Hand;Examinador\n";
+        let csvContent = "TotTime;Hand;Examinador\n"; //Activity;RT;
     
         // Cálculo del tiempo total en milisegundos
         let timeTotal = (endTimeExecution2 - startTimeExecution);
@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
     
         // Agregar datos al contenido del CSV
-        csvContent += `RecordarFigura;${timeTotal};${drawingTime};${selectedHand};${initials}\n`;
+        csvContent += `${timeTotal};${selectedHand};${initials}\n`; //RecordarFigura;${drawingTime};
     
         return csvContent;
     }
