@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(recordingInterval);
             startRecordingButton4.disabled = false;
             stopRecordingButton4.disabled = true;
-            DownloadButton.style.display = 'block';
+            
         }
     }
 
@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
         recordingControls4.style.display = 'none';
         finishScreen.style.display = 'block';
         startRecordingButton4.style.display = 'none';
+        DownloadButton.style.display = 'block';
         finishTime = new Date();
     });
 
@@ -72,15 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startFinishTimer();
     });
 
-    audio1_ej2.addEventListener('ended', () => {
-        stopAllMedia();
-        mainScreen2.style.display = 'none';
-        audio1_ej2.style.display = 'none';
-        mainScreen3.style.display = 'block';
-        fullscreenButton.style.display = 'none';
-        recordingControls4.style.display = 'block';
-        startRecording('HVLT-R Ensayo 1.wav');
-    });
 
     audio1_ej2.addEventListener('play', () => {
         const remainingTime = audio1_ej2.duration - audio1_ej2.currentTime;
@@ -100,9 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     stopRecordingButton4.addEventListener('click', () => {
         stopAllMedia();
-        recordingControls4.style.display = 'none';
-        finishScreen.style.display = 'block';
-        startRecordingButton4.style.display = 'none';
+        recordingControls4.style.display = 'block';
+        stopRecordingButton4.style.display = 'none';
+        startRecordingButton4.style.display = 'block';
         finishTime = new Date();
     });
 

@@ -179,8 +179,8 @@ button:active {
 }
 
 #instructionText {
-    font-size: 37px;
-    text-align: justify;
+    font-size: 30px;
+    text-align: center;
 }
 
 audio-container {

@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('endTimeExecution3', endTimeExecution3);
     });
 
-    NXButton6.addEventListener('click', () => {
+    DownloadButton.addEventListener('click', () => {
         downloadZip();
     });
 
