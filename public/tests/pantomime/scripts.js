@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let testStartTime;
     let selectedHand = "";
     const zip = new JSZip();
-    let audioPlayed = false; 
+    let audioPlayed = false;
 
 
     startBtn.addEventListener('click', () => {
@@ -101,9 +101,44 @@ document.addEventListener('DOMContentLoaded', () => {
         testAudio.play();
     });
 
+    // Selecciona el botón y crea elementos necesarios
+    const camaraButton = document.getElementById('camaraButton');
+    const videoElement = document.createElement('video');
+    document.body.appendChild(videoElement); // Agrega el elemento de video al cuerpo del documento
+
+    // Variables para manejar el estado de la cámara
+    let cameraStream = null;
+    let isCameraActive = false;
+
+    // Configura el botón para alternar la cámara
+    camaraButton.addEventListener('click', () => {
+        if (!isCameraActive) {
+            // Encender la cámara
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then((stream) => {
+                    cameraStream = stream; // Guarda el stream en la variable
+                    videoElement.srcObject = stream; // Asocia el stream con el elemento de video
+                    videoElement.style.transform = 'scaleX(-1)'; // Elimina el efecto espejo
+                    videoElement.play(); // Inicia la reproducción
+                    isCameraActive = true; // Cambia el estado a activo
+                })
+                .catch((error) => {
+                    console.error('Error al acceder a la cámara:', error);
+                });
+        } else {
+            // Apagar la cámara
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop()); // Detén todas las pistas
+                cameraStream = null; // Limpia la referencia al stream
+                videoElement.srcObject = null; // Limpia el elemento de video
+            }
+            isCameraActive = false; // Cambia el estado a inactivo
+        }
+    });
+
     testAudio.addEventListener('timeupdate', () => {
         const timeRemaining = testAudio.duration - testAudio.currentTime;
-        
+
         // Verifica si el tiempo restante es menor o igual a 0.5 segundos
         if (timeRemaining <= 2 && !audioPlayed) {
             audioPlayed = true; // Evita que la función se llame más de una vez
@@ -149,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    
+
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
@@ -182,7 +217,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 timerDisplay.classList.add('hidden');
                 stopTimer();
 
-                // Always proceed to the next image after stopping the recording
                 proceedToNextImage();
             };
         }
@@ -209,7 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoPreview.classList.add('hidden');
     }
 
-    function showHandSelection() { 
+    function showHandSelection() {
         testScreen.style.display = 'none';
         audioBtn.style.display = 'none';
         currentItem.style.display = 'none';
@@ -245,26 +279,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
     let userInfo;
 
     fetch('/api/user-info')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al obtener la información del usuario');
-        }
-        return response.json();
-    })
-    .then(data => {
-        userInfo = data; // Asignar los datos al objeto global
-        console.log("Usuario autenticado:", userInfo);
-    })
-    .catch(error => {
-        console.error('Error al obtener la información del usuario:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
 
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -277,25 +311,25 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error: userInfo no está definido correctamente.");
             return; // Salir si userInfo no está disponible
         }
-    
+
         // Obtener las iniciales del examinador
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-    
+
         // Formatear la fecha
         const filename = `${idParticipante}_17_Pantomima_del_uso_de_objetos_${fechaFormateada}.csv`;
-    
+
         // Definir el contenido del archivo CSV
         const txtContent = [["TotTime", "Hand", "Examinador"], [totalTestTime / 1000, selectedHand, inicialesExaminador]]
             .map(e => e.join(';'))
             .join('\n');
-        
+
         const blob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
-    
+
         // Agregar el archivo CSV al ZIP con el nombre dinámico
         zip.file(filename, blob);
     }
-    
-    
+
+
     function createZipAndDownload() {
         handButton.style.display = "none";
         selectHandContainer.style.display = "none";
@@ -303,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
             const zipname = `${idParticipante}_17_Pantomima_del_uso_de_objetos_${fechaFormateada}.zip`;
-    
+
             link.href = URL.createObjectURL(content);
             link.download = zipname;
             link.click();

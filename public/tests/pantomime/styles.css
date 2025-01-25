@@ -58,8 +58,7 @@ button:not(:disabled):active {
 #startButton,
 #handButton,
 #fullscreenButton,
-#start-test,
-#camarabutton {
+#start-test{
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -68,6 +67,18 @@ button:not(:disabled):active {
     padding: 0;
     width: 90px;
     height: 80px;
+    position: absolute;
+    
+}
+
+#camaraButton {
+    border: none;
+    background-color: transparent;
+    width: 90px;
+    height: 80px;
+    padding: 0;
+    top: 15px;
+    left: 15px;
     position: absolute;
     
 }
@@ -85,6 +96,7 @@ button:not(:disabled):active {
     visibility: visible !important;
     pointer-events: auto !important;
 }
+
 
 
 #start-test{
