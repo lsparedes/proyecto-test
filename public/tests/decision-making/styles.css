@@ -141,6 +141,10 @@ body {
   margin-bottom: 1rem;
 }
 
+#intermediateScreen {
+  font-size: 37px;
+  margin-bottom: 1rem;
+}
 /* SELECCION DE MANO CSS */
 
 #handButton,
