@@ -101,26 +101,26 @@ document.addEventListener('DOMContentLoaded', () => {
         testAudio.play();
     });
 
-    // Selecciona el botón y crea elementos necesarios
+   
     const camaraButton = document.getElementById('camaraButton');
     const videoElement = document.createElement('video');
-    document.body.appendChild(videoElement); // Agrega el elemento de video al cuerpo del documento
+    document.body.appendChild(videoElement);
 
-    // Variables para manejar el estado de la cámara
+
     let cameraStream = null;
     let isCameraActive = false;
 
-    // Configura el botón para alternar la cámara
+
     camaraButton.addEventListener('click', () => {
         if (!isCameraActive) {
             // Encender la cámara
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then((stream) => {
-                    cameraStream = stream; // Guarda el stream en la variable
-                    videoElement.srcObject = stream; // Asocia el stream con el elemento de video
-                    videoElement.style.transform = 'scaleX(-1)'; // Elimina el efecto espejo
-                    videoElement.play(); // Inicia la reproducción
-                    isCameraActive = true; // Cambia el estado a activo
+                    cameraStream = stream; 
+                    videoElement.srcObject = stream; 
+                    videoElement.style.transform = 'scaleX(-1)';
+                    videoElement.play(); 
+                    isCameraActive = true; 
                 })
                 .catch((error) => {
                     console.error('Error al acceder a la cámara:', error);
@@ -128,11 +128,11 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Apagar la cámara
             if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop()); // Detén todas las pistas
-                cameraStream = null; // Limpia la referencia al stream
-                videoElement.srcObject = null; // Limpia el elemento de video
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null; 
+                videoElement.srcObject = null; 
             }
-            isCameraActive = false; // Cambia el estado a inactivo
+            isCameraActive = false;
         }
     });
 
