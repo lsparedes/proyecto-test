@@ -678,7 +678,7 @@ fetch('/api/user-info')
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
     
         // Comienza con los encabezados, agregando la columna para el Examinador
-        let csvContent = "TotTime;NoCommErr;NoCorrLines;NoLiftPen;ExecLiftTime;ExecTime;Hand;Examinador\n";
+        let csvContent = "ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;TotTime;Hand;Examinador\n";
     
         // Agregar cada fila de datos, incluyendo las iniciales del examinador
         data.forEach(row => {
