@@ -468,7 +468,7 @@ document.addEventListener('DOMContentLoaded', () => {
             respuestaParticipante: `(${click.x.toFixed(2)}, ${click.y.toFixed(2)})`,
             precision: 0,
             tiempoRespuesta: responseTime, // En milisegundos
-            tiempoDedicado: (Date.now() - trialStartTime), // En milisegundos
+            // tiempoDedicado: (Date.now() - trialStartTime), // En milisegundos
             manoUtilizada: '' // Actualmente vacío
         };
 
@@ -654,7 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
             PartResp: response.respuestaParticipante,
             Acc: response.precision,
             RT: response.tiempoRespuesta,
-            ExecTime: response.tiempoDedicado
+            // ExecTime: response.tiempoDedicado
         }));
 
         // Convertir los datos a formato CSV
@@ -680,8 +680,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedDate = `${day}_${month}_${year}`;
 
         // Nombres de los archivos CSV y TXT con las iniciales del examinador
-        const csvFileName = `${idParticipante}_13_VIENNA_${inicialesExaminador}_${formattedDate}.csv`;
-        const txtFileName = `${idParticipante}_13_VIENNA_Metricas_${inicialesExaminador}_${formattedDate}.csv`;
+        const csvFileName = `${idParticipante}_VIENNA_13_${inicialesExaminador}_${formattedDate}.csv`;
+        const txtFileName = `${idParticipante}_VIENNA_13_Metricas_${inicialesExaminador}_${formattedDate}.csv`;
 
         // Agregar archivos al ZIP
         zip.file(csvFileName, csvBlob);
