@@ -1,18 +1,18 @@
 body {
-    font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 100vh;
     margin: 0;
-    background-color: white;
 }
 
-#container {
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     text-align: center;
-    background: white;
-    max-width: 1000px;
 }
 
 h1 {
@@ -32,9 +32,9 @@ h2 {
 }
 
 p {
-    font-size: 34px;
+    font-size: 37px;
     text-align: justify;
-    margin-top: 110px;
+    margin-bottom: 1rem;
 }
 
 button img {
@@ -51,7 +51,7 @@ button img {
 }
 
 button {
-    margin: 20px;
+
     padding: 15px 30px;
     border-radius: 5px;
     font-size: 20px;
@@ -62,13 +62,10 @@ button {
 }
 
 .button-container {
-    margin-top: 20px;
-    text-align: center;
+    display: flex;
+    gap: 10px;
 }
 
-.button-container button {
-    margin: 20px;
-}
 
 #stopRecordingButton1,
 #stopRecordingButton2,
@@ -141,7 +138,6 @@ button {
     background-image: url('flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
-    padding: 5px;
     width: 90px;
     height: 80px;
     vertical-align: middle;
@@ -151,7 +147,7 @@ button {
 }
 
 audio {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
 }
 
 .recording-message {
@@ -183,7 +179,7 @@ audio {
     background-image: url('flecha3.png');
     background-size: contain;
     background-repeat: no-repeat;
-    padding: 5px;
+    padding: 0;
     width: 90px;
     height: 80px;
     vertical-align: middle;

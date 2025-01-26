@@ -9,16 +9,16 @@
 </head>
 
 <body>
-    <div id="container">
-        <div id="instructions">
-            <p> El test se divide en 2 etapas: Prueba Fonológica y Fluidez de Categorías. En este test, deberá
+    
+        <div id="instructions" class="container">
+            <p id="instructionsText"> El test se divide en 2 etapas: Prueba Fonológica y Fluidez de Categorías. En este test, deberá
                 reproducir un audio con las instrucciones de cada ítem. Su tarea es
                 decir palabras que comiencen con la letra solicitada o palabras respecto a una categoría solicitada.
                 Sus respuestas serán grabadas, para esto deberá presionar el botón comenzar grabación, tendrá 60
                 segundos
                 para cada tarea. Cada grabación puede ser descargada</p>
 
-            <audio style="margin-top: 20px;" controls>
+            <audio id="instructionAudio1" controls>
                 <source src="verbal-fluency.mp3" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
@@ -114,9 +114,8 @@
         <!-- Mensaje de Finalización -->
         <div id="completionMessage" style="display: none;">
 
-        </div>
 
-        <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
