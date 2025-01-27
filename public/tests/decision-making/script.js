@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         skippedScreen.style.display = 'none';
         endScreen.style.display = 'none';
         resetSlotMachines();
-        randomizeSlotPositions(); // Llamada a la función para invertir aleatoriamente
+        
         practiceTrial.style.display = 'block';
 
         console.log(`Trial ${currentTrial + 1}: Left - ${trial.leftReward ? 'Win' : 'Lose'}, Right - ${trial.rightReward ? 'Win' : 'Lose'}`);
@@ -132,19 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let slotsInverted = false;
 
-    function randomizeSlotPositions() {
-        const leftImage = leftSlot.src;
-        const rightImage = rightSlot.src;
-
-        // Cambia las imágenes de manera aleatoria
-        if (Math.random() < 0.5) {
-            leftSlot.src = rightImage;
-            rightSlot.src = leftImage;
-            slotsInverted = true;  // Indica que las imágenes están invertidas
-        } else {
-            slotsInverted = false; // Las imágenes no están invertidas
-        }
-    }
+    
 
     function selectMachine(side) {
         const responseTime = Date.now() - startTime;
