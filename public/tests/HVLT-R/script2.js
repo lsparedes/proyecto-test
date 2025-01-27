@@ -69,19 +69,18 @@ document.addEventListener('DOMContentLoaded', () => {
         mainScreen2.style.display = 'none';
         mainScreen3.style.display = 'block';
         recordingControls4.style.display = 'block';
-        startRecording('HVLT-R Ensayo 1.wav');
+        startRecording('HVLT-R Ensayo 2.wav', false); // false para que no se reproduzca el beep
         startFinishTimer();
     });
-
-
+    
     audio1_ej2.addEventListener('play', () => {
         const remainingTime = audio1_ej2.duration - audio1_ej2.currentTime;
         if (remainingTime > 2) {
             setTimeout(() => {
-                startRecording('HVLT-R Ensayo 1.wav');
+                startRecording('HVLT-R Ensayo 2.wav');
             }, (remainingTime - 2) * 1000); 
         } else {
-            startRecording('HVLT-R Ensayo 1.wav');
+            startRecording('HVLT-R Ensayo 2.wav');
         }
     });
 
@@ -102,44 +101,43 @@ document.addEventListener('DOMContentLoaded', () => {
         generateZip();
     });
 
-    async function startRecording(fileName) {
+    async function startRecording(fileName, playBeep = true) {
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-
-        const audio = new Audio('audios/beep.wav');
-        audio.crossOrigin = "anonymous";
-        audio.play();
-
+    
+        if (playBeep) {
+            const audio = new Audio('audios/beep.wav');
+            audio.crossOrigin = "anonymous";
+            audio.play();
+        }
+    
         audioContext = new AudioContext();
         destination = audioContext.createMediaStreamDestination();
-
+    
         const micSource = audioContext.createMediaStreamSource(micStream);
         micSource.connect(destination);
-
-        const audioElementSource = audioContext.createMediaElementSource(audio);
-        audioElementSource.connect(audioContext.destination);
-        audioElementSource.connect(destination);
-
+    
         combinedStream = destination.stream;
-
+    
         audioChunks = [];
         mediaRecorder = new MediaRecorder(combinedStream);
         mediaRecorder.ondataavailable = event => {
             audioChunks.push(event.data);
         };
-
+    
         mediaRecorder.start();
         mediaRecorder.addEventListener('stop', () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
             audioFiles.push({ blob: audioBlob, fileName: fileName });
         });
-
+    
         recordingInterval = setInterval(() => {
             recordingSeconds++;
         }, 1000);
-
+    
         startRecordingButton4.disabled = true;
         stopRecordingButton4.disabled = false;
     }
+    
 
     function stopRecording() {
         clearInterval(recordingInterval);

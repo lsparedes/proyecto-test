@@ -8,10 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const NXButton = document.getElementById('nxbutton');
     const DownloadButton = document.getElementById('download');
     const selectHand = document.getElementById('selectHand')
+
     let answers = {};
     let currentAudioIndex = 0;
     let startTime = new Date();  // Guardar la hora de inicio automáticamente al cargar la página
     let finishTime;
+    let audioEndTimes = {};
     let fecha = new Date();
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
@@ -49,7 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
     });
 
-    
+    audioItems.forEach((audioItem, index) => {
+        const audioElement = audioItem.querySelector('audio');
+        audioElement.addEventListener('ended', () => {
+            audioEndTimes[index + 1] = new Date(); // Registrar el tiempo exacto al terminar
+            console.log(`Audio ${index + 1} terminó en: ${audioEndTimes[index + 1]}`);
+        });
+    });
 
     NXButton.addEventListener('click', () => {
         pauseAudios();
@@ -91,14 +99,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelectorAll('.option-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            pauseAudios();
-            // Obtener el índice del audio actual
             const audioIndex = parseInt(e.target.getAttribute('data-audio'));
             const answer = e.target.getAttribute('data-answer');
-            answers[audioIndex] = answer; // Usar audioIndex en lugar de audioItems
+            const responseTime = new Date(); // Momento en que se hace clic
 
-            
-            console.log("Audio", audioIndex, "respuesta", answer);
+            // Calcular RT si existe el tiempo de finalización del audio
+            let RT = audioEndTimes[audioIndex]
+                ? (responseTime - audioEndTimes[audioIndex]) / 1000
+                : null;
+
+            // Guardar la respuesta y RT
+            answers[audioIndex] = {
+                answer: answer,
+                RT: RT
+            };
+
+            console.log(`Audio ${audioIndex}, Respuesta: ${answer}, RT: ${RT} segundos`);
         });
     });
 
@@ -129,68 +145,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function createCSV() {
+        // Asegurarse de que userInfo esté disponible para obtener las iniciales
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return; // Salir si userInfo no está disponible
+        }
+    
+        // Obtener las iniciales del participante
+        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
         const total = Object.keys(correctAnswers).length;
-        let csvContent = 'Trial;palabra;CorrResp;PartResp;Acc\n';
-        
+    
+        // Generar el contenido del primer CSV (datos de ensayos)
+        let mainCsvContent = 'Trial;Word;CorrResp;PartResp;RT;Acc\n';
         for (let i = 1; i <= total; i++) {
             const word = words[i];
             const correctAnswer = correctAnswers[i];
-            const participantAnswer = answers[i] || ''; // Dejar en blanco si no hay respuesta
+            const participantAnswer = answers[i]?.answer || ''; // Respuesta del participante
+            const RT = answers[i]?.RT !== undefined ? answers[i].RT : ''; // Tiempo de respuesta
             const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
     
-            csvContent += `${i};${word};${correctAnswer};${participantAnswer};${isCorrect}\n`;
+            // Incluir las iniciales en cada fila del CSV principal
+            mainCsvContent += `${i};${word};${correctAnswer};${participantAnswer};${RT};${isCorrect}\n`;
         }
     
         // Obtener el valor de la mano seleccionada
         let selectedHandElement = document.querySelector('input[name="hand"]:checked');
         let selectedHand = selectedHandElement ? selectedHandElement.value : 'No seleccionado';
-        
-        csvContent += `\nMano seleccionada:;${selectedHand}\n`;
     
+        // Calcular el tiempo total dedicado
         const endTime = new Date(); // Obtener la hora de finalización
         const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
-        
-        csvContent += `\nTiempo dedicado a la tarea:;${timeSpentInSeconds}\n`;
-        return csvContent;
-    }
-
-    function createCSV() {
-    // Asegurarse de que userInfo esté disponible para obtener las iniciales
-    if (!userInfo || !userInfo.name || !userInfo.last_name) {
-        console.error("Error: userInfo no está definido correctamente.");
-        return; // Salir si userInfo no está disponible
-    }
-
-    // Obtener las iniciales del participante
-    const inicialesParticipante = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
     
-    const total = Object.keys(correctAnswers).length;
+        // Generar el contenido del segundo CSV (información adicional)
+        let additionalCsvContent = 'Hand;TotTime;Iniciales Examinador\n';
+        additionalCsvContent += `${selectedHand};${timeSpentInSeconds};${inicialesExaminador}\n`;
     
-    // Contenido para el primer CSV (con las iniciales del participante)
-    let mainCsvContent = 'Trial;Word;CorrResp;PartResp;Acc;Iniciales\n'; // Agregar 'Iniciales' en el encabezado
-    for (let i = 1; i <= total; i++) {
-        const word = words[i];
-        const correctAnswer = correctAnswers[i];
-        const participantAnswer = answers[i] || ''; // Dejar en blanco si no hay respuesta
-        const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
-
-        // Agregar las iniciales en cada fila del CSV
-        mainCsvContent += `${i};${word};${correctAnswer};${participantAnswer};${isCorrect};${inicialesParticipante}\n`;
+        // Retornar ambos contenidos como un objeto
+        return { mainCsvContent, additionalCsvContent };
     }
-
-    // Obtener el valor de la mano seleccionada
-    let selectedHandElement = document.querySelector('input[name="hand"]:checked');
-    let selectedHand = selectedHandElement ? selectedHandElement.value : 'No seleccionado';
-
-    // Incluir las iniciales y tiempo dedicado en el segundo CSV
-    const endTime = new Date(); // Obtener la hora de finalización
-    const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
-
-    let additionalCsvContent = `Hand;TotTime;Iniciales\n`;  // Agregar 'Iniciales' en el encabezado
-    additionalCsvContent += `${selectedHand};${timeSpentInSeconds};${inicialesParticipante}\n`;
-
-    return { mainCsvContent, additionalCsvContent };
-}
+    
 
 
     let diaStr = dia.toString().padStart(2, '0');
