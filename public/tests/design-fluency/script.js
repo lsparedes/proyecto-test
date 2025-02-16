@@ -92,10 +92,12 @@ window.onload = function () {
 
     Audio.addEventListener('ended', function () {
         startTime = Date.now();  // Guardar el tiempo cuando termina el audio
-        console.log("Tiempo de inicio (cuando termina el audio): ", startTime);
+        let formattedTime = new Date(startTime).toLocaleString(); // Convertir a fecha legible
+        console.log("Tiempo de inicio (cuando termina el audio): ", formattedTime);
         reiniciarTemporizador();
         startRecording('designCanvas');  // Iniciar grabación después de que el audio termine
     });
+    
 
     document.getElementById('finishButton').addEventListener('click', function () {
         stopAllAudios();
@@ -103,12 +105,18 @@ window.onload = function () {
         document.getElementById('instructionAudio').style.display = 'none';
         canvasContainer.style.display = 'none';
         showHandSelection();
-
-        // Asegúrate de que startTime esté definido antes de intentar calcular el tiempo
+    
         if (startTime) {
             let endTime = Date.now();
             let ExecTime = (endTime - startTime) / 1000; // Tiempo en segundos
             console.log(`Tiempo de ejecución: ${ExecTime} segundos`);
+    
+            // Guardar ExecTime en data
+            data.push({
+                taskTime: (endTime - beginingTime) / 1000, // Tiempo total de la tarea
+                ExecTime: ExecTime // Tiempo de ejecución desde el fin del audio
+            });
+    
         } else {
             console.log('startTime no está definido correctamente.');
         }
@@ -189,15 +197,15 @@ window.onload = function () {
 
     function getpracticeCanvasCoordinates(practiceCanvas, clientX, clientY) {
         const rectpractice = practiceCanvas.getBoundingClientRect();
-        const scaleX = practiceCanvas.width / rectpractice.width; // Relación entre el ancho real y el visual
-        const scaleY = practiceCanvas.height / rectpractice.height; // Relación entre el alto real y el visual
-        const px = (clientX - rectpractice.left) * scaleX;  // Correctamente ajusta la coordenada X
-        const py = (clientY - rectpractice.top) * scaleY;   // Correctamente ajusta la coordenada Y
+        const scaleX = practiceCanvas.width / rectpractice.width;
+        const scaleY = practiceCanvas.height / rectpractice.height;
+        const px = (clientX - rectpractice.left) * scaleX;
+        const py = (clientY - rectpractice.top) * scaleY;
         return { px, py };
     }
 
     practiceCanvas.addEventListener('touchstart', function (e) {
-        if (drawingCompletedpractice) return; // Evita dibujar si ya se completó
+        if (drawingCompletedpractice) return;
         const touch = e.touches[0];
         practiceDrawing = true;
         const { px, py } = getpracticeCanvasCoordinates(practiceCanvas, touch.clientX, touch.clientY);
@@ -300,24 +308,27 @@ window.onload = function () {
             console.error('Error al obtener la información del usuario:', error);
         });
 
-    function generateCSV(data) {
-        if (!userInfo || !userInfo.name || !userInfo.last_name) {
-            console.error("Error: userInfo no está definido correctamente.");
-            return new Blob([], { type: 'text/csv' });
+        function generateCSV(data) {
+            if (!userInfo || !userInfo.name || !userInfo.last_name) {
+                console.error("Error: userInfo no está definido correctamente.");
+                return new Blob([], { type: 'text/csv' });
+            }
+        
+            const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        
+            let csvContent = `TotTime;ExecTime;Hand;Examinador\n`;
+        
+            data.forEach(entry => {
+                const totTime = entry.taskTime ?? "";
+                const execTime = entry.ExecTime ?? "";
+                const hand = selectedHand ?? "";
+                const examiner = initials;
+                
+                csvContent += `${totTime};${execTime};${hand};${examiner}\n`;
+            });
+        
+            return new Blob([csvContent], { type: 'text/csv' });
         }
-
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-
-        let csvContent = `TotTime;ExecTime;Hand;Examinador\n`;
-
-        data.forEach(row => {
-            let ExecTime = row.ExecTime || 'No definido';  // Asegurándote de que ExecTime esté bien definido
-            let linea = `${row.taskTime};${ExecTime};${selectedHand};${initials}\n`;
-            csvContent += linea;
-        });
-
-        return new Blob([csvContent], { type: 'text/csv' });
-    }
 
 
     function getQueryParam(param) {
@@ -388,9 +399,6 @@ window.onload = function () {
         document.getElementById('endTestButton').style.display = 'none';
         const now = new Date();
         const taskTime = (now - beginingTime) / 1000;
-        data.push({
-            taskTime: taskTime
-        });
     });
 
     function validateInputs() {

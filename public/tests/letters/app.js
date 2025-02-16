@@ -527,7 +527,7 @@ clearButton.addEventListener('click', () => {
 
 function handleClick(e) {
     // Verifica que el evento provenga de un lápiz
-    if (e.pointerType !== 'pen') return;
+    if (e.pointerType !== 'touch') return;
 
     const rect = imageCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / imageCanvas.width);
@@ -536,7 +536,7 @@ function handleClick(e) {
     drawCircle(e.clientX - rect.left, e.clientY - rect.top, 'blue');
 }
 function handleClickPractice(e) {
-    if (e.pointerType !== 'pen') return;
+    if (e.pointerType !== 'touch') return;
 
     const rect = practiceCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / practiceCanvas.width);
@@ -677,7 +677,7 @@ function validateClicks() {
     endTime = new Date();
     const CoC = Math.sign(normalizedCenterX) === -1 ? -1 : 1;
     const testDuration = (endTime - startItemTime);
-    const totalDuration = (endTime - totalStartTime) / 1000;
+    const totalDuration = (endTime - totalStartTime);
     const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
     const testDurationFormatted = testDuration.toLocaleString('es-CL');
     const fechaActual = new Date();
@@ -690,34 +690,19 @@ function validateClicks() {
 
     let searchSpeed = (correctClicks / testDuration) * 1000;
 
-    let csvContent = 'variable;valor\n';
+    let csvContent = 'TotTime;ExecTime;Hand;NoTargets;NoOmiErr;NoCommErr;SSpeed;SDistance;CoC;Examinador\n';
 
-    // Obtener las iniciales del examinador
     if (!userInfo || !userInfo.name || !userInfo.last_name) {
         console.error("Error: userInfo no está definido correctamente.");
-        return; // Salir si userInfo no está disponible
+        return;
     }
 
     const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
-    csvContent += `TotTime;${totalDurationFormatted}\n`;
-    csvContent += `ExecTime;${testDurationFormatted}\n`;
-    csvContent += `Hand;${selectedHand}\n`;
-    csvContent += `NoTargets;${correctClicks}\n`;
-    csvContent += `NoOmiErr;${totalErrors}\n`;
-    csvContent += `NoCommErr;${erroresComision}\n`;
-    csvContent += `clics_izquierda;${leftClicks}\n`;
-    csvContent += `clics_derecha;${rightClicks}\n`;
-    csvContent += `clics_totales;${clicks.length}\n`;
-    csvContent += `SSpeed;${searchSpeed}\n`;
+    csvContent += `${totalDuration};${testDuration};${selectedHand};${correctClicks};${totalErrors};${erroresComision};${searchSpeed};${searchDistanceFormatted};${CoC};${inicialesExaminador}\n`;
 
-    csvContent += `SDistance;${searchDistanceFormatted} px\n`;
-    // csvContent += `center_of_cancelation_px;(${centerX.toFixed(2)}, ${centerY.toFixed(2)})\n`;
-    // csvContent += `center_of_cancelation_norm;(${normalizedCenterX.toFixed(2)}, ${normalizedCenterY.toFixed(2)})\n`;
-    //csvContent += `CoC;${Math.abs(normalizedCenterX.toFixed(2))}\n`;
-    csvContent += `CoC;${CoC}\n`;
-    // csvContent += `center_of_cancelation_side;${Math.sign(normalizedCenterX.toFixed(2)) === -1 ? `Izquierda` : `Derecha`}\n`
-    csvContent += `Examinador;${inicialesExaminador}\n`;
+    console.log(csvContent);
+
 
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
