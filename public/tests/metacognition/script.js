@@ -248,8 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fill();
     }
 
-    correctColor = numRedDots > numBlueDots ? 'red' : 'blue';
-    console.log(`Correct color is ${correctColor}. Red: ${numRedDots}, Blue: ${numBlueDots}, diferencia: ${diferenciaInicial}, puntos mayor: ${numPuntosMayor}, puntos menor: ${numPuntosMenor}`);
+    correctColor = numRedDots > numBlueDots ? 'Rojo' : 'Azul';
+    console.log(`Correct color is ${correctColor}. Rojo: ${numRedDots}, Azul: ${numBlueDots}, diferencia: ${diferenciaInicial}, puntos mayor: ${numPuntosMayor}, puntos menor: ${numPuntosMenor}`);
   }
 
   function recordAnswer(answer) {
@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
       instructionsText.style.fontSize = '24px';
       instructionsPhase++;
       fullscreenButton.style.display = 'none';
-      document.getElementById('startDemoButton').style.display = 'none';
+      document.getElementById('startDemoButton').style.display = 'block';
       sliderPractice.style.display = 'block';
       instructionsAudio.src = 'audios/2_femenino.wav'
       instructionsAudioB.src = 'audios/2_masculino.wav'
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
     questionScreen.style.display = 'none';
     confidenceScreen.style.display = 'block';
     if (blockType === 'practica' || blockType === 'test') {
-      lastColorAnswer = 'red';
+      lastColorAnswer = 'Rojo';
       timeColor = new Date() - startTime;
       startTime = new Date();
       document.getElementById('resetDemoButton').style.display = 'none';
@@ -376,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
     questionScreen.style.display = 'none';
     confidenceScreen.style.display = 'block';
     if (blockType === 'practica' || blockType === 'test') {
-      lastColorAnswer = 'blue';
+      lastColorAnswer = 'Azul';
       timeColor = new Date() - startTime;
       startTime = new Date();
       document.getElementById('resetDemoButton').style.display = 'none';

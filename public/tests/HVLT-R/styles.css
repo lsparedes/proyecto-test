@@ -255,7 +255,8 @@ audio-container {
 #startRecordingButton3,
 #stopRecordingButton3,
 #startRecordingButton4,
-#stopRecordingButton4 {
+#stopRecordingButton4,
+#finishRecordingbutton {
     background-size: cover;
     background-position: center;
     background-color: transparent;
@@ -265,6 +266,14 @@ audio-container {
     /* Ajusta el tamaño según sea necesario */
     border: none;
     cursor: pointer;
+}
+
+#finishRecordingbutton{
+    background-image: url('finish.png');
+    background-color: transparent;
+    background-repeat: no-repeat; 
+    border: none;
+    outline: none; 
 }
 
 #initRecordingButton1,

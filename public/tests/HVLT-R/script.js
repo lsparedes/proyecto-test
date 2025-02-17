@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const fullscreenButton = document.getElementById('fullscreenButton');
     const startButton = document.getElementById('startButton');
     const DownloadButton = document.getElementById('download');
+    const FinishRecordingImage = document.getElementById('FinishRecordingImage');
+
     // ENSAYO 1
     const wordsScreen = document.getElementById('words');
     const NXButton = document.getElementById('nxbutton');
@@ -95,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stopRecordingButton1.style.display = 'none';
             stopRecordingButton2.style.display = 'none';
             stopRecordingButton3.style.display = 'none';
+
         }
     }
 
@@ -109,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         wordsScreen.style.display = 'none';
         recordingControls1.style.display = 'none';
         Ensayo2Screen.style.display = 'flex';
+        document.getElementById('FinishRecordingImage').style.display = 'none';
     });
 
     NXButton2.addEventListener('click', () => {
@@ -122,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         wordsScreen2.style.display = 'none';
         recordingControls2.style.display = 'none';
         Ensayo3Screen.style.display = 'flex';
+        document.getElementById('FinishRecordingImage').style.display = 'none';
     });
 
     NXButton4.addEventListener('click', () => {
@@ -135,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         wordsScreen3.style.display = 'none';
         recordingControls3.style.display = 'none';
         endScreen.style.display = 'flex';
+        document.getElementById('FinishRecordingImage').style.display = 'none';
     });
 
     NXButton6.addEventListener('click', () => {
@@ -191,33 +197,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initRecordingButton1.addEventListener('click', () => {
         startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.wav');
+        FinishRecordingImage.style.display = 'block';
     });
 
     initRecordingButton2.addEventListener('click', () => {
         startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.wav');
+        FinishRecordingImage.style.display = 'block';
     });
 
     initRecordingButton3.addEventListener('click', () => {
         startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.wav');
+        FinishRecordingImage.style.display = 'block';
     });
-
+ 
     stopRecordingButton1.addEventListener('click', () => {
         stopRecording(initRecordingButton1, stopRecordingButton1);
         initRecordingButton1.style.display = 'none';
         stopRecordingButton1.style.display = 'none';
+        document.getElementById('FinishRecordingImage').style.display = 'block'; // Mostrar imagen
     });
-
+    
     stopRecordingButton2.addEventListener('click', () => {
         stopRecording(initRecordingButton2, stopRecordingButton2);
         initRecordingButton2.style.display = 'none';
         stopRecordingButton2.style.display = 'none';
+        document.getElementById('FinishRecordingImage').style.display = 'block'; // Mostrar imagen
     });
-
+    
     stopRecordingButton3.addEventListener('click', () => {
         stopRecording(initRecordingButton3, stopRecordingButton3);
         initRecordingButton3.style.display = 'none';
         stopRecordingButton3.style.display = 'none';
+        document.getElementById('FinishRecordingImage').style.display = 'block'; // Mostrar imagen
     });
+    
 
     async function startRecording(initButton, stopButton, fileName) {
         is_recording = true;

@@ -249,7 +249,7 @@ function iniciarPresentacion() {
     const startButton = document.getElementById('startButton');
     const fullscreenButton = document.getElementById('fullscreenButton');
     startTime = new Date(); // Registrar el tiempo de inicio del test
-    
+
     instructionText.style.display = 'none';
     instrucciones.style.display = 'none';
     startButton.style.display = 'none';
@@ -292,16 +292,16 @@ function mostrarImagenPrincipal() {
 }
 
 function handleContinueClick() {
-    cambiarImagen(); 
+    cambiarImagen();
 }
 
 
 function validateInputs() {
     selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
-    
+
     if (selectedHand) {
         handButton.style.display = 'block';
-    } 
+    }
 }
 
 
@@ -377,8 +377,8 @@ function verificarRespuesta(selectedOptionIndex) {
 
     const tiempoTranscurrido = Date.now() - tiempoInicio;
 
-    // Solo registrar la respuesta si no se ha registrado una para este ítem
-    if (!respuestaSeleccionada) {
+    // Ignorar la respuesta si el texto distintivo es "P1"
+    if (itemActual.textoDistintivo !== "P1" && !respuestaSeleccionada) {
         respuestasSeleccionadas.push({
             item: itemActual.textoDistintivo,
             opcionSeleccionada: letraSeleccionada,
@@ -393,7 +393,6 @@ function verificarRespuesta(selectedOptionIndex) {
         option.classList.remove('selected');
     });
     document.querySelectorAll('.option')[selectedOptionIndex].classList.add('selected');
-
 }
 
 function cambiarImagen(selectedOptionIndex) {
@@ -455,81 +454,83 @@ fetch('/api/user-info')
         console.error('Error al obtener la información del usuario:', error);
     });
 
-    function generarArchivoCSV() {
-        selectHandContainer.style.display = "none";
-        handButton.style.display = 'none';
-        
-        if (respuestasSeleccionadas.length === 0) {
-            console.log('No hay respuestas seleccionadas.');
-            return;
-        }
-    
-        let csvContent = "";
-        const endTime = new Date();
-        const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
-    
-        // Obtener las iniciales del examinador
-        if (!userInfo || !userInfo.name || !userInfo.last_name) {
-            console.error("Error: userInfo no está definido correctamente.");
-            return; // Salir si userInfo no está disponible
-        }
-    
-        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-    
-        // Encabezados del CSV, agregando "Examinador"
-        csvContent += "Trial;CorrResp;PartResp;Acc;RT;Examinador\n";
-    
-        let respuestasCorrectas = respuestasSeleccionadas.filter(respuesta =>
-            respuesta.opcionSeleccionada === respuesta.respuestaCorrecta
-        ).length;
-    
-        respuestasSeleccionadas.forEach(respuesta => {
-            const tiempoConComa = (respuesta.tiempo).toFixed(3).replace('.', ',');
-            const precision = respuesta.opcionSeleccionada === respuesta.respuestaCorrecta ? 1 : 0;
-    
-            // Agregar las iniciales del examinador en cada fila
-            csvContent += `${respuesta.item};${respuesta.opcionSeleccionada};${respuesta.respuestaCorrecta};${precision};${tiempoConComa};${inicialesExaminador}\n`;
-        });
-    
-        const csvBlob = new Blob([csvContent], { type: 'text/csv' });
-    
-        const txtContent = [["TotTime", "Hand"], [totalTestTime / 1000, selectedHand]].map(e => e.join(";")).join("\n");
-        const txtBlob = new Blob([txtContent], { type: 'text/csv' });
-    
-        // Obtener la fecha y la hora actuales
-        const fechaActual = new Date();
-        const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
-        const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-        const [day, month, year] = fechaHoraChilena.split('-');
-        const fechaFormateada = `${day}_${month}_${year}`;
-    
-        // Crear el archivo ZIP
-        const zip = new JSZip();
-        zip.file(`${idParticipante}_11_SET_${fechaFormateada}.csv`, csvBlob);
-        zip.file(`${idParticipante}_11_SET_Metricas_${fechaFormateada}.csv`, txtBlob);
-    
-        zip.generateAsync({ type: "blob" })
-            .then(content => {
-                const link = document.createElement('a');
-                if (link.download !== undefined) {
-                    const zipFilename = `${idParticipante}_11_SET_${fechaFormateada}.zip`;
-                    const url = URL.createObjectURL(content);
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', zipFilename);
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    setTimeout(() => {
-                        window.close();
-                    }, 3000);
-                }
-            })
-            .catch(err => {
-                console.error("Error generando el archivo ZIP:", err);
-            });
+function generarArchivoCSV() {
+    selectHandContainer.style.display = "none";
+    handButton.style.display = 'none';
+
+    if (respuestasSeleccionadas.length === 0) {
+        console.log('No hay respuestas seleccionadas.');
+        return;
     }
-    
+
+    let csvContent = "";
+    const endTime = new Date();
+    const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
+
+    // Obtener las iniciales del examinador
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+        console.error("Error: userInfo no está definido correctamente.");
+        return; // Salir si userInfo no está disponible
+    }
+
+    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
+    // Encabezados del CSV, agregando "Examinador"
+    csvContent += "Trial;CorrResp;PartResp;Acc;RT;Examinador\n";
+    // Filtrar las respuestas seleccionadas para eliminar la línea correspondiente a "P1"
+    respuestasSeleccionadas = respuestasSeleccionadas.filter(respuesta => respuesta.item !== "P1");
+
+    let respuestasCorrectas = respuestasSeleccionadas.filter(respuesta =>
+        respuesta.opcionSeleccionada === respuesta.respuestaCorrecta
+    ).length;
+
+    respuestasSeleccionadas.forEach(respuesta => {
+        const tiempoConComa = (respuesta.tiempo).toFixed(3).replace('.', ',');
+        const precision = respuesta.opcionSeleccionada === respuesta.respuestaCorrecta ? 1 : 0;
+
+        // Agregar las iniciales del examinador en cada fila
+        csvContent += `${respuesta.item};${respuesta.respuestaCorrecta};${respuesta.opcionSeleccionada};${precision};${tiempoConComa};${inicialesExaminador}\n`;
+    });
+
+    const csvBlob = new Blob([csvContent], { type: 'text/csv' });
+
+    const txtContent = [["TotTime", "Hand"], [totalTestTime / 1000, selectedHand]].map(e => e.join(";")).join("\n");
+    const txtBlob = new Blob([txtContent], { type: 'text/csv' });
+
+    // Obtener la fecha y la hora actuales
+    const fechaActual = new Date();
+    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
+    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
+
+    // Crear el archivo ZIP
+    const zip = new JSZip();
+    zip.file(`${idParticipante}_11_SET_${fechaFormateada}.csv`, csvBlob);
+    zip.file(`${idParticipante}_11_SET_Metricas_${fechaFormateada}.csv`, txtBlob);
+
+    zip.generateAsync({ type: "blob" })
+        .then(content => {
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const zipFilename = `${idParticipante}_11_SET_${fechaFormateada}.zip`;
+                const url = URL.createObjectURL(content);
+                link.setAttribute('href', url);
+                link.setAttribute('download', zipFilename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
+            }
+        })
+        .catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
+        });
+}
+
 
 function mostrarInstrucciones() {
     const imageContainer = document.getElementById('imageContainer');

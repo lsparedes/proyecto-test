@@ -1,21 +1,31 @@
+let startTime;
 window.onload = function () {
     const instructions = document.getElementById('instructions');
     const practiceContainer = document.getElementById('practiceContainer');
     const practiceCanvas = document.getElementById('practiceCanvas');
     const practiceCtx = practiceCanvas.getContext('2d');
+    practiceCtx.strokeStyle = "black"; // Color de la línea
+    practiceCtx.lineWidth = 2; // Grosor de la línea
+    practiceCtx.lineCap = "round"; // Suaviza el trazo
     const practiceImage = new Image();
     const practiceFinishScreen = document.getElementById('practiceFinishScreen');
 
     const canvasContainer = document.getElementById('canvasContainer');
     const canvas = document.getElementById('designCanvas');
     const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = "black"; // Color de la línea
+    ctx.lineWidth = 2; // Grosor de la línea
+    ctx.lineCap = "round"; // Suaviza el trazo
     const image = new Image();
     const finishScreen = document.getElementById('finishScreen');
     const endScreen = document.getElementById('endScreen');
     const data = [];
     const beginingTime = new Date();
+    const Audio = document.getElementById('AudioPrueba');
 
 
+    let drawingCompletedCanvas = false;
+    let drawingCompletedpractice = false;
     let drawing = false;
     let startX = 0;
     let startY = 0;
@@ -27,6 +37,7 @@ window.onload = function () {
     let practiceRecordedChunks = [];
     let recordedChunks = [];
     let temporizador = null;
+
 
     const points = [
         // Agregar las coordenadas de los puntos de cada cuadro
@@ -76,14 +87,17 @@ window.onload = function () {
         image.onload = function () {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         };
-        startRecording('designCanvas');
+        
     });
 
-    const instructionAudio = document.getElementById('instructionAudio');
-    instructionAudio.addEventListener('ended', function () {
+    Audio.addEventListener('ended', function () {
+        startTime = Date.now();  // Guardar el tiempo cuando termina el audio
+        let formattedTime = new Date(startTime).toLocaleString(); // Convertir a fecha legible
+        console.log("Tiempo de inicio (cuando termina el audio): ", formattedTime);
         reiniciarTemporizador();
-        startRecording('designCanvas');
+        startRecording('designCanvas');  // Iniciar grabación después de que el audio termine
     });
+    
 
     document.getElementById('finishButton').addEventListener('click', function () {
         stopAllAudios();
@@ -91,7 +105,21 @@ window.onload = function () {
         document.getElementById('instructionAudio').style.display = 'none';
         canvasContainer.style.display = 'none';
         showHandSelection();
-
+    
+        if (startTime) {
+            let endTime = Date.now();
+            let ExecTime = (endTime - startTime) / 1000; // Tiempo en segundos
+            console.log(`Tiempo de ejecución: ${ExecTime} segundos`);
+    
+            // Guardar ExecTime en data
+            data.push({
+                taskTime: (endTime - beginingTime) / 1000, // Tiempo total de la tarea
+                ExecTime: ExecTime // Tiempo de ejecución desde el fin del audio
+            });
+    
+        } else {
+            console.log('startTime no está definido correctamente.');
+        }
     });
 
     document.getElementById('finishButton').style.display = 'block';
@@ -153,12 +181,8 @@ window.onload = function () {
                 recordedChunks.push(event.data);
             }
         };
-
         mediaRecorder.start();
         console.log("grabando");
-
-
-
     }
 
     function stopRecording() {
@@ -171,34 +195,49 @@ window.onload = function () {
         };
     }
 
-    practiceCanvas.addEventListener('pointerdown', function (e) {
-        if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
+    function getpracticeCanvasCoordinates(practiceCanvas, clientX, clientY) {
+        const rectpractice = practiceCanvas.getBoundingClientRect();
+        const scaleX = practiceCanvas.width / rectpractice.width;
+        const scaleY = practiceCanvas.height / rectpractice.height;
+        const px = (clientX - rectpractice.left) * scaleX;
+        const py = (clientY - rectpractice.top) * scaleY;
+        return { px, py };
+    }
+
+    practiceCanvas.addEventListener('touchstart', function (e) {
+        if (drawingCompletedpractice) return;
+        const touch = e.touches[0];
         practiceDrawing = true;
-        practiceStartX = e.offsetX;
-        practiceStartY = e.offsetY;
+        const { px, py } = getpracticeCanvasCoordinates(practiceCanvas, touch.clientX, touch.clientY);
+        startX = px;
+        startY = py;
+        e.preventDefault(); // Evita el comportamiento predeterminado
     });
 
-    practiceCanvas.addEventListener('pointermove', function (e) {
-        if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
+    practiceCanvas.addEventListener('touchmove', function (e) {
+        if (drawingCompletedpractice || !practiceDrawing) return; // Solo si está dibujando
+        e.preventDefault(); // Evita el comportamiento predeterminado
+        const touch = e.touches[0];
+        const { px, py } = getpracticeCanvasCoordinates(practiceCanvas, touch.clientX, touch.clientY);
         practiceCtx.beginPath();
-        practiceCtx.moveTo(practiceStartX, practiceStartY);
-        practiceCtx.lineTo(e.offsetX, e.offsetY);
+        practiceCtx.moveTo(startX, startY);
+        practiceCtx.lineTo(px, py);
         practiceCtx.stroke();
-        practiceStartX = e.offsetX;
-        practiceStartY = e.offsetY;
+        startX = px;
+        startY = py;
     });
 
-    practiceCanvas.addEventListener('pointerup', function (e) {
-        if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
+    practiceCanvas.addEventListener('touchend', function (e) {
+        if (drawingCompletedpractice) return; // Evita dibujar si ya se completó
         practiceDrawing = false;
     });
 
-    practiceCanvas.addEventListener('pointerleave', function (e) {
-        if (drawingCompletedpractice || e.pointerType !== 'pen') return; // Solo acepta lápiz.
+    practiceCanvas.addEventListener('touchcancel', function (e) {
+        if (drawingCompletedpractice) return; // Evita dibujar si ya se completó
         practiceDrawing = false;
     });
 
-    // Obtén el rectángulo del lienzo y calcula el factor de escala
+
     function getCanvasCoordinates(canvas, clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width; // Relación entre el ancho real y el visual
@@ -206,21 +245,23 @@ window.onload = function () {
         const x = (clientX - rect.left) * scaleX;
         const y = (clientY - rect.top) * scaleY;
         return { x, y };
+
     }
 
-    canvas.addEventListener('pointerdown', function (e) {
-        if (drawingCompletedCanvas || e.pointerType !== 'pen') return; // Solo acepta lápiz.
+    canvas.addEventListener('touchstart', function (e) {
+        if (drawingCompletedCanvas) return;
         drawing = true;
-        const { x, y } = getCanvasCoordinates(canvas, e.clientX, e.clientY);
+        const touch = e.touches[0];
+        const { x, y } = getCanvasCoordinates(canvas, touch.clientX, touch.clientY);
         startX = x;
         startY = y;
     });
 
-    canvas.addEventListener('pointermove', function (e) {
-        if (drawingCompletedCanvas || e.pointerType !== 'pen') return; // Solo acepta lápiz.
-        if (!drawing) return;
-        const { x, y } = getCanvasCoordinates(canvas, e.clientX, e.clientY);
-
+    canvas.addEventListener('touchmove', function (e) {
+        if (drawingCompletedCanvas || !drawing) return;
+        e.preventDefault(); // Previene el desplazamiento de la página mientras se dibuja
+        const touch = e.touches[0];
+        const { x, y } = getCanvasCoordinates(canvas, touch.clientX, touch.clientY);
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(x, y);
@@ -230,28 +271,24 @@ window.onload = function () {
         startY = y;
     });
 
-    canvas.addEventListener('pointerup', function () {
-        if (drawingCompletedCanvas || e.pointerType !== 'pen') return; // Solo acepta lápiz.
+    canvas.addEventListener('touchend', function () {
+        if (drawingCompletedCanvas) return;
         drawing = false;
     });
 
-    canvas.addEventListener('pointerleave', function () {
-        if (drawingCompletedCanvas || e.pointerType !== 'pen') return; // Solo acepta lápiz.
+    canvas.addEventListener('touchcancel', function () {
+        if (drawingCompletedCanvas) return;
         drawing = false;
     });
-
-
 
     function reiniciarTemporizador() {
         clearTimeout(temporizador);
         temporizador = setTimeout(arrowToRed, 60000); // Cambia después de 60 segundos
-        // temporizador = setTimeout(arrowToRed, 3000); // Cambia después de 3 segundos
     }
 
     function arrowToRed() {
         const arrow = document.getElementById('finishButton');
         arrow.style.backgroundImage = "url('flecha4.png')";
-
     }
 
     let userInfo;
@@ -271,23 +308,28 @@ window.onload = function () {
             console.error('Error al obtener la información del usuario:', error);
         });
 
-    function generateCSV(data) {
-        if (!userInfo || !userInfo.name || !userInfo.last_name) {
-            console.error("Error: userInfo no está definido correctamente.");
-            return new Blob([], { type: 'text/csv' }); // Retornar un archivo vacío en caso de error
+        function generateCSV(data) {
+            if (!userInfo || !userInfo.name || !userInfo.last_name) {
+                console.error("Error: userInfo no está definido correctamente.");
+                return new Blob([], { type: 'text/csv' });
+            }
+        
+            const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        
+            let csvContent = `TotTime;ExecTime;Hand;Examinador\n`;
+        
+            data.forEach(entry => {
+                const totTime = entry.taskTime ?? "";
+                const execTime = entry.ExecTime ?? "";
+                const hand = selectedHand ?? "";
+                const examiner = initials;
+                
+                csvContent += `${totTime};${execTime};${hand};${examiner}\n`;
+            });
+        
+            return new Blob([csvContent], { type: 'text/csv' });
         }
 
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
-
-        let csvContent = `TotTime;Hand;Examinador\n`; // Añadir columna "Examinador"
-
-        data.forEach(row => {
-            let linea = `${row.taskTime};${selectedHand};${initials}\n`; // Incluir iniciales en cada fila
-            csvContent += linea;
-        });
-
-        return new Blob([csvContent], { type: 'text/csv' });
-    }
 
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
@@ -333,8 +375,6 @@ window.onload = function () {
         }, 1000);
     }
 
-
-
     // SELECCION DE MANO JS
 
     const selectHandContainer = document.getElementById("selectHand");
@@ -359,13 +399,7 @@ window.onload = function () {
         document.getElementById('endTestButton').style.display = 'none';
         const now = new Date();
         const taskTime = (now - beginingTime) / 1000;
-        data.push({
-            taskTime: taskTime
-        });
     });
-
-    // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
-    // En este caso fue mostrarFinalizacion()
 
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
@@ -376,7 +410,6 @@ window.onload = function () {
     }
 
     function confirmHandSelection() {
-        console.log('holi holi holi' + selectedHand);
         selectHandContainer.style.display = "none";
         handButton.style.display = "none";
         document.getElementById('fin').style.display = 'none';

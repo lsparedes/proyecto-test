@@ -19,8 +19,8 @@
 
             <p id="instructionText">A continuación, le voy a dar una lista de palabras. Por favor, escuche
                 atentamente e intente memorizar estas palabras.</p>
-            <audio id="audio1" controls>
-                <source src="audios/Inmediato_1.wav" type="audio/mpeg">
+            <audio id="audio1" controls preload="auto">
+                <source src="audios/Inmediato_1.wav" type="audio/wav">
                 Tu navegador no soporta el elemento de audio.
             </audio>
             <div class="button-container">
@@ -46,6 +46,10 @@
         <div id="recordingControls1" style="display: none;">
             <button id="initRecordingButton1"></button>
             <button id="stopRecordingButton1"></button>
+        </div>
+
+        <div id="FinishRecordingImage" style="display: none;">
+            <button id="finishRecordingbutton""></button>
         </div>
 
         <!-- Ensayo 2 -->
