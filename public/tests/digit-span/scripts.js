@@ -301,7 +301,7 @@ function updateTimerDisplay(displayElement, time) {
 const finalButton = document.getElementById('final-button');
 
 function mostrarFinalizacion(type) {
-    taskTime = (new Date() - taskTimeStart);
+    taskTime = (new Date() - taskTimeStart) / 1000;
     console.log("Mostrando mensaje de finalización...");
     const completionMessage = document.getElementById('completion-message');
     completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
@@ -342,17 +342,15 @@ fetch('/api/user-info')
     
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
     
-        let csvContent = `Examinador;${initials};Rol;${userInfo.role}\n`;
-        csvContent += "Trial;RT;BeepToStopTime\n";
+        let csvContent = "";
+        csvContent += "Trial;RT;BeepToStopTime;Examinador\n";
     
         downloadLinks.forEach(linkData => {
             if (linkData.title && linkData.duration && linkData.beepToStopTime !== undefined) {
-                const row = `${linkData.title};${linkData.duration};${linkData.beepToStopTime}`;
+                const row = `${linkData.title};${linkData.duration};${linkData.beepToStopTime};${initials};`;
                 csvContent += row + "\n";
             }
         });
-    
-        csvContent += `TotTime;${taskTime};\n`;
     
         return csvContent;
     }
@@ -410,7 +408,8 @@ function crearZip(type) {
     const fechaFormateada = `${day}_${month}_${year}`;
 
     zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}.csv`, csvBlob);
-    
+    zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}_TotTime.csv`, txtBlob); // Agregar CSV2
+
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
