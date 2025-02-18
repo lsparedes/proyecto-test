@@ -9,8 +9,6 @@ let taskTime;
 
 document.addEventListener('DOMContentLoaded', () => {
     requestMicrophonePermission();
-    taskTimeStart = new Date();
-    console.log('Fecha: ', taskTimeStart);
 });
 
 function requestMicrophonePermission() {
@@ -50,7 +48,7 @@ fullscreenButton.addEventListener('click', () => {
 });
 
 function startTest(type) {
-
+    taskTimeStart = new Date();
     const testItemsContainer = type === 'forward' ? document.getElementById('test-items-forward') : document.getElementById('test-items-backward');
     testItemsContainer.innerHTML = '';
 
@@ -77,7 +75,7 @@ function startTest(type) {
             if (remainingTime > 2) {
                 setTimeout(() => {
                     startRecording(itemDiv, titleElement, index + 1);
-                }, (remainingTime - 2) * 1000);
+                }, (remainingTime - 2) * 1000); 
             } else {
                 startRecording(itemDiv, titleElement, index + 1);
             }
@@ -87,16 +85,16 @@ function startTest(type) {
         audio.addEventListener('ended', () => {
             const beep = new Audio('audio/beep.wav');
             beep.play();
-
+        
             // Registrar el tiempo en que suena el beep
             const beepTime = Date.now();
             itemDiv.dataset.beepTime = beepTime; // Guardar en el dataset del elemento
-
+        
             setTimeout(() => {
                 playBeepAndShowButtons(itemDiv, titleElement, index + 1);
             }, 600); // Espera 600 milisegundos
         });
-
+        
 
         // Mostrar el botón "next-button" cuando el audio se cargue completamente
         audio.addEventListener('loadeddata', () => {
@@ -119,19 +117,13 @@ function startTest(type) {
         stopImg.addEventListener('click', () => {
             stopRecording(timerSpan, index + 1, itemDiv, type);
             stopAllAudios();
-        
-            // Ocultar el botón newButton
-            const existingNewButton = itemDiv.querySelector('.new-button');
-            if (existingNewButton) {
-                existingNewButton.style.display = 'none';
-            }
         });
 
         const nextButton = document.createElement('button');
         nextButton.textContent = '';
         nextButton.classList.add('hidden', 'next-button');
         nextButton.addEventListener('click', () => {
-            avanzarSinGrabar(itemDiv, type, index + 1);
+            avanzarSinGrabar(itemDiv, type, index + 1); 
         });
 
         itemDiv.appendChild(titleElement);
@@ -189,6 +181,9 @@ function startRecording(itemDiv, titleElement, index) {
         mediaRecorder.stop(); // Detenemos la grabación actual
     }
 
+    // Inicializar un nuevo array de chunks para la nueva grabación
+    let chunks = [];
+
     // Crear una nueva instancia de MediaRecorder
     mediaRecorder = new MediaRecorder(audioStream);
     mediaRecorder.ondataavailable = e => {
@@ -204,7 +199,7 @@ function startRecording(itemDiv, titleElement, index) {
             const recordingTime = new Date();
             const duration = recordingTime - recordingStartTime;
             downloadLinks.push({ url: audioURL, title: titleElement.textContent, index: index, blob: blob, duration: duration });
-
+           
             const nextButton = itemDiv.querySelector('.next-button');
             nextButton.classList.remove('hidden');
         } else {
@@ -220,6 +215,10 @@ function startRecording(itemDiv, titleElement, index) {
     mediaRecorder.start();
     recordingStartTime = new Date();
 
+
+    const stopImg = itemDiv.querySelector('.stop-img');
+    stopImg.classList.remove('hidden');
+
     // Crear y agregar el botón "new-button"
     const newButton = document.createElement('div');
     newButton.classList.add('img-button', 'new-button');
@@ -229,12 +228,13 @@ function startRecording(itemDiv, titleElement, index) {
     if (existingNewButton) {
         existingNewButton.parentNode.removeChild(existingNewButton);
     }
+    
 
-    const stopImg = itemDiv.querySelector('.stop-img');
-    stopImg.classList.remove('hidden');
     stopImg.parentNode.insertBefore(newButton, stopImg);
 
     // Mostrar el botón "next-button"
+    const nextButton = itemDiv.querySelector('.next-button');
+    nextButton.classList.remove('hidden');
 
     // Iniciar el temporizador
     startTimer(itemDiv.querySelector('.timer'));
@@ -270,6 +270,9 @@ function stopRecording(timerSpan, index, itemDiv, type) {
     }
 }
 
+
+
+
 function startTimer(displayElement) {
     let time = 0;
     displayElement.textContent = formatTime(time);
@@ -295,27 +298,21 @@ function updateTimerDisplay(displayElement, time) {
 const finalButton = document.getElementById('final-button');
 
 function mostrarFinalizacion(type) {
-    taskTime = Math.floor((new Date() - taskTimeStart) / 1000); // Convertir a segundos
-    console.log("Tiempo total:", taskTime, "segundos");
+    taskTime = (new Date() - taskTimeStart);
     console.log("Mostrando mensaje de finalización...");
     const completionMessage = document.getElementById('completion-message');
     completionMessage.classList.remove('hidden');  // Asegúrate de eliminar la clase 'hidden'
     const fin = document.getElementById('fin');
     fin.style.display = 'block';
     finalButton.style.display = 'block';
-
-    const finalCSV = generarCSV2(taskTime);
-    console.log("CSV final:", finalCSV);
-
     document.getElementById('final-button').addEventListener('click', () => {
 
         crearZip(type);
     });
 }
 
-let userInfo = null;  // Asegúrate de que userInfo esté definido fuera de la función fetch
+let userInfo;
 
-// Obtener la información del usuario
 fetch('/api/user-info')
     .then(response => {
         if (!response.ok) {
@@ -329,54 +326,46 @@ fetch('/api/user-info')
 
         // Una vez que userInfo está listo, habilitar el botón o acción que depende de él
         document.getElementById('final-button').addEventListener('click', () => {
-            const type = getQueryParam('type');  // Obtener 'type' de la URL
-            if (type) {
-                crearZip(type);  // Llamar a la función con el tipo correcto
-            } else {
-                console.error('No se pudo obtener el tipo de la URL.');
-            }
+            crearZip(`${type}`);
         });
-        
     })
     .catch(error => console.error('Error:', error));
 
-// Función para generar el CSV
-function generarCSV(trial) {
-    // Verifica que userInfo esté cargado antes de continuar
-    if (!userInfo || !userInfo.name || !userInfo.last_name) {
-        console.error("Error: userInfo no está definido correctamente.");
-        return "";
-    }
-
-    const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-
-    let csvContent = `Trial;RT;BeepToStopTime;Examinador\n`;
-
-    downloadLinks.forEach(linkData => {
-        if (linkData.title && linkData.duration && linkData.beepToStopTime) {
-            const row = `${linkData.title};${linkData.duration};${linkData.beepToStopTime};${initials}`;
-            csvContent += row + "\n";
+    function generarCSV(taskTime) {
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return "";
         }
-    });
-
-    return csvContent;
-}
-
+    
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    
+        let csvContent = `Examinador;${initials};Rol;${userInfo.role}\n`;
+        csvContent += "Trial;RT;BeepToStopTime\n";
+    
+        downloadLinks.forEach(linkData => {
+            if (linkData.title && linkData.duration && linkData.beepToStopTime !== undefined) {
+                const row = `${linkData.title};${linkData.duration};${linkData.beepToStopTime}`;
+                csvContent += row + "\n";
+            }
+        });
+    
+        csvContent += `TotTime;${taskTime};\n`;
+    
+        return csvContent;
+    }
 
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get(param);  
+    return urlParams.get(param);
 }
-
 
 // Obtener el id_participante de la URL
 const idParticipante = getQueryParam('id_participante');
 
 function generarCSV2(taskTime) {
-    const txtContent = [['TotTime'], [taskTime]].join('\n'); // Generar CSV con el tiempo total
+    const txtContent = [['TotTime'], [taskTime]].join('\n');
     return new Blob([txtContent], { type: 'text/csv;charset=utf-8' });
 }
-
 
 function crearZip(type) {
     document.getElementById('final-button').style.display = 'none';
@@ -404,7 +393,6 @@ function crearZip(type) {
     }
 
     const csvContent = generarCSV();
-    
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
 
     console.log("Contenido del CSV:", csvContent);
@@ -418,9 +406,9 @@ function crearZip(type) {
     const year = now.getFullYear();
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}_trial_data.csv`, csvBlob);
-    zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}_total_time.csv`, txtBlob);
+    zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}.csv`, csvBlob);
     
+
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const downloadLink = document.createElement('a');
