@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
     let año = fecha.getFullYear();
+    let audioEndedTime = null; // Marca de tiempo cuando el audio termina
+    let ExecTime = null;
+
     //Botones
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishDrawingFromMemoryButton = document.getElementById('finish-drawing-from-memory');
@@ -64,11 +67,33 @@ document.addEventListener('DOMContentLoaded', () => {
         endTimeExecution2 = new Date();
         console.log("Tiempo de Termino: ", endTimeExecution2);
         selectHandContainer.style.display = 'block';
-
+        if (audioEndedTime) {
+            const timeElapsedMs = endDrawingTime - audioEndedTime; // en milisegundos
+            execTime = Math.round(timeElapsedMs / 1000); // en segundos
+            console.log(`Tiempo transcurrido desde que terminó el audio hasta el botón: ${execTime} segundos`);
+        } else {
+            console.log("El audio no ha terminado antes de presionar el botón.");
+        }
         // Guardar en localStorage
         localStorage.setItem('endTimeExecution2', endTimeExecution2);
 
     });
+
+    const audioElement2 = document.getElementById('audio2');
+
+    if (audioElement2) {
+        audioElement2.addEventListener('ended', () => {
+            console.log("El audio ha terminado."); // Verificación de evento de audio
+            audioEndedTime = new Date();
+            console.log(`ExecTime: ${audioEndedTime}`);
+
+            setTimeout(() => {
+                clearInterval(intervalId);
+                console.log("Cronómetro detenido después de 4 minutos.");
+                finishdrawingwithfigure.classList.add('red-arrow');
+            }, 4 * 60 * 1000); // Detener cronómetro después de 4 minutos
+        });
+    }
 
     DownloadButton.addEventListener('click', async ()  => {
         validateInputs();
@@ -272,34 +297,29 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(error => console.error('Error:', error));
 
     function generateCSV() {
-        // Validación previa: asegurarse de que las variables necesarias estén definidas
         if (typeof userInfo === 'undefined' || !userInfo.name || !userInfo.last_name) {
             console.error("Error: userInfo no está definido correctamente.");
-            return "";  // Retorna vacío si falta información crítica
+            return ""; 
         }
     
         if (typeof startTimeExecution === 'undefined' || typeof endTimeExecution2 === 'undefined') {
             console.error("Error: las variables de tiempo de ejecución no están definidas.");
-            return "";  // Retorna vacío si los tiempos de ejecución no están definidos
+            return "";  
         }
+
+        let csvContent = "TotTime;ExecTime;Hand;Examinador\n"; //Activity;RT;
     
-        // Inicialización del contenido del CSV
-        let csvContent = "TotTime;Hand;Examinador\n"; //Activity;RT;
-    
-        // Cálculo del tiempo total en milisegundos
-        let timeTotal = (endTimeExecution2 - startTimeExecution);
-    
-        // Cálculo del tiempo de dibujo en milisegundos
+
+        let timeTotal = (endTimeExecution2 - startTimeExecution) / 1000;
+
         let drawingTime = 0;
         if (typeof startDrawingTime !== 'undefined' && typeof endDrawingTime !== 'undefined') {
             drawingTime = (endDrawingTime - startDrawingTime);
         }
     
-        // Obtener iniciales del usuario
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
     
-        // Agregar datos al contenido del CSV
-        csvContent += `${timeTotal};${selectedHand};${initials}\n`; //RecordarFigura;${drawingTime};
+        csvContent += `${timeTotal};${execTime};${selectedHand};${initials}\n`;
     
         return csvContent;
     }
