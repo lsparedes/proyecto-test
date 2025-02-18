@@ -263,15 +263,18 @@ function stopRecording(timerSpan, index, itemDiv, type) {
             nextButton.classList.remove('hidden');
         }
 
+        // Ocultar el botón stopImg al detener la grabación
+        const stopImg = itemDiv.querySelector('.stop-img');
+        if (stopImg) {
+            stopImg.classList.add('hidden');
+        }
+
         console.log(`Grabación del ítem ${index} detenida. Puedes avanzar manualmente.`);
         console.log("Contenido de downloadLinks:", downloadLinks);
     } else {
         console.log("No se está grabando en este momento.");
     }
 }
-
-
-
 
 function startTimer(displayElement) {
     let time = 0;
