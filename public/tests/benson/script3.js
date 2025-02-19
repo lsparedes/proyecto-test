@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let startTimeExecution = null; 
     let endTimeExecution = null; 
+    let audioEndTime = null; // Tiempo cuando termina el audio3
+    let selectionAnswer = null;
     let correctAnswer = "3";
     let participantAnswer = "";
     let selectedFigure = null;
@@ -37,6 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    audio3.addEventListener('ended', () => {
+        audioEndTime = new Date();
+        console.log("Audio finalizado en: ", audioEndTime);
+    });
+
     showinstruction.addEventListener('click', () => {
         if (instruccion.classList.contains('show')) {
             instruccion.classList.remove('show');
@@ -67,6 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedFigure.classList.add('selected');
             participantAnswer = selectedFigure.dataset.figure;
             console.log("Imagen Seleccionada: ", participantAnswer);
+
+            if (audioEndTime) {
+                responseTime = (new Date() - audioEndTime) / 1000; // RT en segundos
+                console.log("Reaction Time (RT):", responseTime, "segundos");
+            } else {
+                console.warn("No se registró el tiempo final del audio.");
+            }
         });
     });
 
@@ -142,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let csvContent = "TotTime;RT;Hand;CorrResp;PartResp;Acc;Examinador\n"; //Activity
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000;
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-        csvContent += `${timeTotal};${endTimeExecution - startTimeExecution};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`; //FiguraIdentificada
+        csvContent += `${timeTotal};${responseTime};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`; //FiguraIdentificada
 
         return csvContent;
     }
