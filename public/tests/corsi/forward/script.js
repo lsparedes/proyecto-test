@@ -247,8 +247,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     async function endGame() {
-        downloadResultsAsZip(testData, startTime, selectedHand)
+        console.log("Descargando ZIP...");
+        await downloadResultsAsZip(testData, startTime, selectedHand);
     }
+    
 
     function endPractice() {
         instructionsAudio.src = 'sonidos/Directo_2.wav';
@@ -517,22 +519,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const zip = new JSZip();
         zip.file(csvFile.filename, csvFile.content);
         zip.file(txtFile.filename, txtFile.content);
+        
         const videoBlob = await stopScreenRecording();
-        zip.file(`${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.webm`, videoBlob);
-
+        console.log("Video Blob:", videoBlob); // Verifica si el Blob del video se genera correctamente.
+    
+        if (!videoBlob || videoBlob.size === 0) {
+            console.error("Error: No se grabó el video o está vacío.");
+        } else {
+            zip.file(`${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.webm`, videoBlob);
+        }
+    
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
         link.setAttribute("download", `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.zip`);
         document.body.appendChild(link);
-
+    
         link.click();
         document.body.removeChild(link);
-
+    
         setTimeout(() => {
             window.close();
         }, 3000);
     }
+    
 
 
     async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
