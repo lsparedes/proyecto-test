@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
     let año = fecha.getFullYear();
-
+    let audioEndedTime = null; // Marca de tiempo cuando el audio termina
+    let ExecTime = null;
 
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishdrawingwithfigure = document.getElementById('finish-drawing-with-figure');
@@ -46,8 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Tiempo de inicio: ", startTimeExecution);
     }
 
-
-
     showinstruction.addEventListener('click', () => {
         if (instruccion.classList.contains('show')) {
             instruccion.classList.remove('show');
@@ -65,16 +64,25 @@ document.addEventListener('DOMContentLoaded', () => {
         container2.style.display = 'none';
         instruccionesDespues.style.display = 'flex';
         endDrawingTime = new Date();
-        console.log("Terminó de dibujar: ", endDrawingTime)
-
+        console.log("Terminó de dibujar: ", endDrawingTime);
+        if (audioEndedTime) {
+            const timeElapsedMs = endDrawingTime - audioEndedTime; // en milisegundos
+            execTime = Math.round(timeElapsedMs / 1000); // en segundos
+            console.log(`Tiempo transcurrido desde que terminó el audio hasta el botón: ${execTime} segundos`);
+        } else {
+            console.log("El audio no ha terminado antes de presionar el botón.");
+        }
     });
+    
 
     const audioElement1 = document.getElementById('audio1');
 
     if (audioElement1) {
         audioElement1.addEventListener('ended', () => {
-            console.log("El audio ha terminado."); // Verificación de evento de audio
 
+            console.log("El audio ha terminado."); // Verificación de evento de audio
+            audioEndedTime = new Date();
+            console.log(`ExecTime: ${audioEndedTime}`);
             let elapsedTime = 0; // Tiempo transcurrido en segundos
             let intervalId = setInterval(() => {
                 console.log(`Tiempo transcurrido: ${elapsedTime} segundos`);
@@ -278,30 +286,27 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch(error => console.error('Error:', error));
 
-    function generateCSV() {
-        if (!userInfo || !userInfo.name || !userInfo.last_name) {
-            console.error("Error: userInfo no está definido correctamente.");
-            return "";  // Retornar vacío si falta información crítica
+        function generateCSV() {
+            if (!userInfo || !userInfo.name || !userInfo.last_name) {
+                console.error("Error: userInfo no está definido correctamente.");
+                return "";  // Retornar vacío si falta información crítica
+            }
+        
+            if (typeof startTimeExecution === 'undefined' || typeof endTimeExecution === 'undefined') {
+                console.error("Error: las variables de tiempo de ejecución no están definidas.");
+                return "";
+            }
+        
+            // Se agrega la columna ExecTime al CSV
+            let csvContent = "TotTime;ExecTime;Hand;Examinador\n"; // Encabezados
+            const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+            let timeTotal = (endTimeExecution - startTimeExecution) / 1000; // tiempo total en segundos
+        
+            csvContent += `${timeTotal};${execTime};${selectedHand};${initials}\n`;
+        
+            return csvContent;
         }
-
-        if (typeof startTimeExecution === 'undefined' || typeof endTimeExecution === 'undefined') {
-            console.error("Error: las variables de tiempo de ejecución no están definidas.");
-            return "";
-        }
-
-        let csvContent = "TotTime;Hand;Examinador\n"; //Activity;RT;
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-        let timeTotal = (endTimeExecution - startTimeExecution) / 1000; //tiempo total en segundos
-        let drawingTime = 0;
-
-        if (typeof startDrawingTime !== 'undefined' && typeof endDrawingTime !== 'undefined') {
-            drawingTime = (endDrawingTime - startDrawingTime); // tiempo de dibujo en milisegundos
-        }
-
-        csvContent += `${timeTotal};${selectedHand};${initials}\n`;//CopiarFigura;${drawingTime};
-
-        return csvContent;
-    }
+        
 
 
     function formatDate(date) {

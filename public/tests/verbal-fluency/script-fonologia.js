@@ -100,14 +100,15 @@ async function startRecording(part) {
 }
 
 function stopRecording(part) {
-    mediaRecorder.stop();
-
-    audioContext.close();
-
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+    }
+    
+    // Verificar si audioContext está definido y no ha sido cerrado
+    if (audioContext && audioContext.state !== "closed") {
+        audioContext.close();
+    }
     document.getElementById('stopRecordingButton' + part).style.display = 'none';
-    document.getElementById('recButton' + part).style.display = 'none';
-    document.getElementById('instructionAudio' + part).style.display = 'none'; // Ocultar el reproductor de audio
-    nextSection(part);
 }
 
 function startTimer(part) {
@@ -123,8 +124,16 @@ function startTimer(part) {
 document.getElementById('stopRecordingButton1').addEventListener('click', () => stopRecording(1));
 document.getElementById('stopRecordingButton2').addEventListener('click', () => stopRecording(2));
 
-document.getElementById('nextButton1').addEventListener('click', () => stopRecording(1));
-document.getElementById('nextButton2').addEventListener('click', () => stopRecording(2));
+document.getElementById('nextButton1').addEventListener('click', () => {
+    stopRecording(1);
+    nextSection(1); // 🔹 Ahora cambia de pantalla después de grabar
+});
+
+document.getElementById('nextButton2').addEventListener('click', () => {
+    stopRecording(2); // Primero detenemos la grabación
+    nextSection(2);   // Luego pasamos a la siguiente pantalla
+});
+
 
 function nextSection(part) {
     if (part === 1) {
