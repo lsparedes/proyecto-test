@@ -527,7 +527,7 @@ clearButton.addEventListener('click', () => {
 
 function handleClick(e) {
     // Verifica que el evento provenga de un lápiz
-    if (e.pointerType !== 'touch') return;
+    if (e.pointerType !== 'pen') return;
 
     const rect = imageCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / imageCanvas.width);
@@ -536,7 +536,7 @@ function handleClick(e) {
     drawCircle(e.clientX - rect.left, e.clientY - rect.top, 'blue');
 }
 function handleClickPractice(e) {
-    if (e.pointerType !== 'touch') return;
+    if (e.pointerType !== 'pen') return;
 
     const rect = practiceCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / practiceCanvas.width);
