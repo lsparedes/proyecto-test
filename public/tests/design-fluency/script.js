@@ -169,32 +169,45 @@ window.onload = function () {
     }
 
     async function startRecording(canvasId) {
-        const canvas = document.getElementById(canvasId);
-        const stream = canvas.captureStream(30); // 30 FPS
-
-        mediaRecorder = new MediaRecorder(stream, {
-            mimeType: 'video/webm;codecs=vp9'
-        });
-
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-                recordedChunks.push(event.data);
+        try {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                console.error("Canvas no encontrado:", canvasId);
+                return;
             }
-        };
-        mediaRecorder.start();
-        console.log("grabando");
+            const stream = canvas.captureStream(30); // 30 FPS
+    
+            mediaRecorder = new MediaRecorder(stream, {
+                mimeType: 'video/webm;codecs=vp9'
+            });
+    
+            mediaRecorder.ondataavailable = (event) => {
+                if (event.data.size > 0) {
+                    recordedChunks.push(event.data);
+                }
+            };
+    
+            mediaRecorder.start();
+            console.log("grabando...");
+        } catch (error) {
+            console.error("Error al iniciar la grabación:", error);
+        }
     }
+    
 
     function stopRecording() {
-        mediaRecorder.stop();
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(recordedChunks, {
-                type: 'video/webm'
-
-            });
-        };
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+            mediaRecorder.stop();
+            mediaRecorder.onstop = () => {
+                const blob = new Blob(recordedChunks, {
+                    type: 'video/webm'
+                });
+            };
+        } else {
+            console.warn("mediaRecorder no está inicializado o ya ha sido detenido.");
+        }
     }
-
+    
     function getpracticeCanvasCoordinates(practiceCanvas, clientX, clientY) {
         const rectpractice = practiceCanvas.getBoundingClientRect();
         const scaleX = practiceCanvas.width / rectpractice.width;
