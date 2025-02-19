@@ -151,9 +151,9 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_1.mp4',
             items: {
-                correcto: [{ x: 390, y: 170 }],
-                error_rotacion: [{ x: 310, y: 170 }],
-                error_actualizacion: [{ x: 390, y: 235 }, { x: 390, y: 85 }],
+                correcto: [{ x: 280, y: 105 }],
+                error_rotacion: [{x: 200, y: 105}],
+                error_actualizacion: [{ x: 280, y: 170 }, { x: 280, y: 20 }],
             },
             indicator: 'E1',
             imageSrc: 'img/1.png'
@@ -161,9 +161,9 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_2.mp4',
             items: {
-                correcto: [{ x: 335, y: 70 }],
-                error_rotacion: [{ x: 404, y: 65 }],
-                error_actualizacion: [{ x: 335, y: 35 }, { x: 335, y: 99 }],
+                correcto: [{ x: 238, y: 62 }],
+                error_rotacion: [{ x: 307, y: 57 }],
+                error_actualizacion: [{ x: 238, y: 27 }, { x: 238, y: 91 }],
             },
             indicator: 'E2',
             imageSrc: 'img/2.png'
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_3.mp4',
             items: {
-                correcto: [{ x: 382, y: 69 }],
+                correcto: [{ x: 273, y: 43 }],
                 error_rotacion: [{ x: 316, y: 69 }],
                 error_actualizacion: [{ x: 382, y: 30 }, { x: 382, y: 109 }],
             },
@@ -181,8 +181,8 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_4.mp4',
             items: {
-                correcto: [{ x: 192, y: 122 }],
-                error_rotacion: [{ x: 508, y: 122 }],
+                correcto: [{ x: 144, y: 76 }],
+                error_rotacion: [{ x: 460, y: 122 }],
                 error_actualizacion: [],
             },
             indicator: 'E4',
@@ -191,8 +191,8 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_5.mp4',
             items: {
-                correcto: [{ x: 263, y: 108 }],
-                error_rotacion: [{ x: 263, y: 188 }],
+                correcto: [{ x: 192, y: 64 }],
+                error_rotacion: [{ x: 263, y: 144 }],
                 error_actualizacion: [{ x: 225, y: 108 }, { x: 309, y: 108 }],
             },
             indicator: 'E5',
@@ -201,9 +201,9 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_5a.mp4',
             items: {
-                correcto: [{ x: 461, y: 101 }],
+                correcto: [{ x: 324, y: 62 }],
                 error_rotacion: [{ x: 459, y: 15 }, { x: 232, y: 15 }],
-                error_actualizacion: [{ x: 408, y: 101 }, { x: 513, y: 101 }, { x: 461, y: 281 }],
+                error_actualizacion: [{ x: 408, y: 101 }, { x: 513, y: 101 }, { x: 324, y: 242 }],
             },
             indicator: 'E6',
             imageSrc: 'img/6.png'
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_6.mp4',
             items: {
-                correcto: [{ x: 583, y: 243 }],
+                correcto: [{ x: 402, y: 150 }],
                 error_rotacion: [{ x: 664, y: 243 }],
                 error_actualizacion: [{ x: 455, y: 243 }, { x: 609, y: 287 }],
             },
@@ -221,8 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_7.mp4',
             items: {
-                correcto: [{ x: 123, y: 117 }],
-                error_rotacion: [{ x: 123, y: 263 }, { x: 589, y: 263 }],
+                correcto: [{ x: 103, y: 74 }],
+                error_rotacion: [{ x: 123, y: 220 }, { x: 569, y: 220 }],
                 error_actualizacion: [{ x: 77, y: 143 }, { x: 312, y: 117 }],
             },
             indicator: 'E8',
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_7a.mp4',
             items: {
-                correcto: [{ x: 377, y: 217 }],
+                correcto: [{ x: 270, y: 137 }],
                 error_rotacion: [{ x: 445, y: 217 }, { x: 445, y: 50 }],
                 error_actualizacion: [{ x: 377, y: 181 }, { x: 250, y: 217 }],
             },
@@ -241,8 +241,8 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_8.mp4',
             items: {
-                correcto: [{ x: 273, y: 249 }],
-                error_rotacion: [{ x: 415, y: 246 }],
+                correcto: [{ x: 290, y: 152 }],
+                error_rotacion: [{ x: 435, y: 246 }],
                 error_actualizacion: [{ x: 273, y: 130 }],
             },
             indicator: 'E10',
@@ -251,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_9.mp4',
             items: {
-                correcto: [{ x: 226, y: 203 }],
+                correcto: [{ x: 170, y: 129 }],
                 error_rotacion: [{ x: 470, y: 203 }],
                 error_actualizacion: [{ x: 273, y: 146 }, { x: 273, y: 264 }],
             },
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_10.mp4',
             items: {
-                correcto: [{ x: 304, y: 173 }],
+                correcto: [{ x: 222, y: 108 }],
                 error_rotacion: [{ x: 399, y: 173 }],
                 error_actualizacion: [{ x: 304, y: 109 }, { x: 304, y: 234 }],
             },
@@ -467,9 +467,9 @@ document.addEventListener('DOMContentLoaded', () => {
             errorRotacion: '',
             respuestaParticipante: `(${click.x.toFixed(2)}, ${click.y.toFixed(2)})`,
             precision: 0,
-            tiempoRespuesta: responseTime, // En milisegundos
-            // tiempoDedicado: (Date.now() - trialStartTime), // En milisegundos
-            manoUtilizada: '' // Actualmente vacío
+            tiempoRespuesta: responseTime,
+            resp0puntos: 0, // Inicializa el contador de respuestas con 0 puntos
+            manoUtilizada: ''
         };
 
         videoData.items.error_actualizacion.forEach(item => {
@@ -500,8 +500,14 @@ document.addEventListener('DOMContentLoaded', () => {
             response.precision = 1;
         }
 
+        // Si precisión sigue siendo 0, se considera una respuesta con 0 puntos
+        if (response.precision === 0) {
+            response.resp0puntos = 1;
+        }
+
         responses.push(response);
     };
+
 
     const validateClicksForCanvas = (canvas, videoIndex, resultsDiv) => {
         const img = new Image();
@@ -612,11 +618,21 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
 
-    const generarTxt = (tiempoTotalSegundos, manoUtilizada, inicialesExaminador) => {
-        const txtContent = `TotTime;Hand;Examinador\n${tiempoTotalSegundos};${manoUtilizada};${inicialesExaminador}`;
-        return new Blob([txtContent], { type: 'text/plain;charset=utf-8' });
+    const generarTxt = (tiempoTotal, selectedHand, inicialesExaminador) => {
+        let txtContent = `Tiempo Total: ${tiempoTotal} segundos\n`;
+        txtContent += `Mano seleccionada: ${selectedHand}\n`;
+        txtContent += `Examinador: ${inicialesExaminador}\n`;
+
+        // Agregar detalles de errores y respuestas
+        responses.forEach((response, index) => {
+            txtContent += `Ensayo ${index + 1}:\n`;
+            txtContent += `  - NoUpdErr: ${response.errorActualizacion}\n`;
+            txtContent += `  - NoRotErr: ${response.errorRotacion}\n`;
+            txtContent += `  - No0Ans: ${response.resp0puntos}\n`;
+        });
+
+        return new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
     };
-    
 
     let userInfo;
 
@@ -636,68 +652,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     const downloadCSV = () => {
-        // Asegurarse de que userInfo esté disponible para obtener las iniciales
         if (!userInfo || !userInfo.name || !userInfo.last_name) {
             console.error("Error: userInfo no está definido correctamente.");
-            return; // Salir si userInfo no está disponible
+            return;
         }
 
-        // Obtener las iniciales del examinador
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
-        // Mapear las respuestas
         const csvData = responses.map(response => ({
             Trial: response.ensayo,
             CorrResp: response.respuestaCorrecta,
-            NoUpdErr: response.errorActualizacion,
-            NoRotErr: response.errorRotacion,
             PartResp: response.respuestaParticipante,
             Acc: response.precision,
             RT: response.tiempoRespuesta,
-            // ExecTime: response.tiempoDedicado
         }));
 
-        // Convertir los datos a formato CSV
         let csv = Papa.unparse(csvData, { delimiter: ';' });
 
-        // Calcular el tiempo total
         const tiempoTotalSegundos = (Date.now() - trialStartTime) / 1000;
-
-        // Crear el blob para el archivo CSV
         const csvBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 
-        // Crear el archivo de texto con el tiempo total y las iniciales del examinador
         const txtBlob = generarTxt(tiempoTotalSegundos, selectedHand, inicialesExaminador);
 
-        // Crear el objeto ZIP
         const zip = new JSZip();
-
-        // Obtener la fecha actual en formato DD_MM_YYYY
         const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${day}_${month}_${year}`;
+        const formattedDate = `${String(date.getDate()).padStart(2, '0')}_${String(date.getMonth() + 1).padStart(2, '0')}_${date.getFullYear()}`;
 
-        // Nombres de los archivos CSV y TXT con las iniciales del examinador
         const csvFileName = `${idParticipante}_VIENNA_13_${inicialesExaminador}_${formattedDate}.csv`;
         const txtFileName = `${idParticipante}_VIENNA_13_Metricas_${inicialesExaminador}_${formattedDate}.csv`;
 
-        // Agregar archivos al ZIP
         zip.file(csvFileName, csvBlob);
         zip.file(txtFileName, txtBlob);
 
-        // Crear una carpeta en el ZIP para las imágenes
         const imgFolder = zip.folder("imagenes");
 
-        // Agregar imágenes al ZIP
         images.forEach((dataURL, index) => {
             const imgBlob = dataURLtoBlob(dataURL);
             const imgFileName = `E${index + 1}.png`;
             imgFolder.file(imgFileName, imgBlob);
         });
 
-        // Generar el archivo ZIP
         zip.generateAsync({ type: "blob" })
             .then(content => {
                 const link = document.createElement('a');
@@ -712,19 +706,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     link.click();
                     document.body.removeChild(link);
 
-                    // Esperar 1 segundo antes de cerrar la ventana
                     setTimeout(() => {
                         window.close();
-                    }, 3000); // Esperar 1 segundo para asegurar que la descarga se inicie
+                    }, 3000);
                 }
             })
             .catch(err => {
                 console.error("Error generando el archivo ZIP:", err);
             });
     };
-
-
-
     // Función para convertir dataURL a Blob
     function dataURLtoBlob(dataURL) {
         const byteString = atob(dataURL.split(',')[1]);
