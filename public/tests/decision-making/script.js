@@ -1,20 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     let currentTrial = 0;
-    const cantidad_ensayos_prueba = 10; // Ajusta este valor según sea necesario
-    const cantidad_ensayos_bloque_1 = 20;
-    const cantidad_ensayos_bloque_2 = 20;
-    const cantidad_ensayos_bloque_3 = 20;
+    const cantidad_ensayos_prueba = 2;
+    const cantidad_ensayos_bloque_1 = 5;
+    const cantidad_ensayos_bloque_2 = 5;
+    const cantidad_ensayos_bloque_3 = 5;
     let trials = [];
     let startTime;
     let results = [];
     let practiceMode = true;
     let selectionMade = false;
-    let scoreBuffer = 0; // Buffer para el puntaje
-    let score = 0; // Puntaje inicializado
-    let currentBlock = 0; // Track the current block
+    let scoreBuffer = 0;
+    let score = 0;
+    let currentBlock = 0;
     let selectionTimeout;
-    let caseOption; // Variable to track which case (A or B) is selected
-    let totalStartTime; // To track total time from start to thank you screen
+    let totalStartTime = Date.now(); // Start the total time counter
+
+    let caseOption = Math.random() < 0.5 ? 'A' : 'B';
+    let caseImage = Math.random() < 0.5 ? 'C' : 'D';
+    console.log(`Casos definidos: Recompensa -> ${caseOption}, Imágenes -> ${caseImage}`);
+
 
     const trialIndicator = document.getElementById('trialIndicator');
     const practiceTrial = document.getElementById('practiceTrial');
@@ -31,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreAmount = document.getElementById('scoreAmount'); // Elemento del puntaje
 
     document.getElementById('startPracticeButton').addEventListener('click', () => {
-        totalStartTime = Date.now(); // Start the total time counter
+        
         startPractice();
         stopAllAudios();
     });
@@ -65,12 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
-
     document.getElementById('startBlock1Button').addEventListener('click', () => {
         intermediateScreen.style.display = 'none';
         currentBlock = 1;
         caseOption = Math.random() < 0.5 ? 'A' : 'B'; // Randomly assign case A or B
+        caseImage = Math.random() < 0.5 ? 'C' : 'D';
         console.log(`Caso seleccionado: ${caseOption}`); // Log the selected case
         startTestBlock();
         stopAllAudios();
@@ -80,8 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         practiceMode = true;
         currentTrial = 0;
         trials = generatePracticeTrials();
-        startTime = Date.now();
-        scoreAmount.style.display = 'none'; // Ocultar el puntaje en la práctica
+        scoreAmount.style.display = 'none';
         instructions.style.display = 'none';
         practiceTrial.style.display = 'block';
         showNextTrial();
@@ -96,47 +98,51 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreAmount.style.color = (score + scoreBuffer) < 0 ? 'red' : (score + scoreBuffer) === 0 ? 'black' : 'blue';
         scoreAmount.style.display = 'block'; // Mostrar el puntaje a partir del Bloque 1
         trials = generateTestTrials(currentBlock);
-        startTime = Date.now();
         practiceTrial.style.display = 'block';
         showNextTrial();
     }
 
     function showNextTrial() {
         selectionMade = false;
+        startTime = Date.now();
+    
         const trial = trials[currentTrial];
-        if (practiceMode) {
-            trialIndicator.innerText = `P${currentTrial + 1}`;
-        } else if (currentBlock === 1) {
-            trialIndicator.innerText = `E${currentTrial + 1}`;
-        } else if (currentBlock === 2) {
-            trialIndicator.innerText = `E${(currentTrial + 1) + (cantidad_ensayos_bloque_1)}`;
-        } else if (currentBlock === 3) {
-            trialIndicator.innerText = `E${(currentTrial + 1) + (cantidad_ensayos_bloque_1 + cantidad_ensayos_bloque_2)}`;
+        if (!trial) {
+            console.error("No trial data found at index:", currentTrial);
+            return;
         }
+
+        trialIndicator.innerText = practiceMode ? `P${currentTrial + 1}` : `E${currentTrial + 1}`;
+
+        // Asignar imágenes según el caso C o D
+        if (caseImage === 'C') {
+            leftSlot.src = 'img/slot-machine-left-up.png';
+            rightSlot.src = 'img/slot-machine-right-up.png';
+        } else {
+            leftSlot.src = 'img/slot-machine-right-up.png';
+            rightSlot.src = 'img/slot-machine-left-up.png';
+        }
+
         feedbackScreen.style.display = 'none';
-        skippedScreen.style.display = 'none';
-        endScreen.style.display = 'none';
-        resetSlotMachines();
-        
         practiceTrial.style.display = 'block';
 
-        console.log(`Trial ${currentTrial + 1}: Left - ${trial.leftReward ? 'Win' : 'Lose'}, Right - ${trial.rightReward ? 'Win' : 'Lose'}`);
+        console.log(`Trial ${currentTrial + 1}: StartTime registrado -> ${startTime}`);
+        console.log(`Trial ${currentTrial + 1}: Left - ${trial.leftReward ? 'Win' : 'Lose'}, Right - ${trial.rightReward ? 'Win' : 'Lose'}, Case: ${trial.caseOption}, Image Order: ${trial.caseImage}`);
 
         selectionTimeout = setTimeout(() => {
             if (!selectionMade) {
                 handleSkippedTrial();
             }
-        }, 5000); // 5 seconds
+        }, 5000);
     }
-
-
+    
     let slotsInverted = false;
 
     
 
     function selectMachine(side) {
         const responseTime = Date.now() - startTime;
-
+        console.log(`Trial ${currentTrial + 1}: Tiempo de respuesta -> ${responseTime} ms`);
         // Verificar qué imagen está en el lado izquierdo y derecho
         const leftImage = leftSlot.src; // Imagen actual del lado izquierdo
         const rightImage = rightSlot.src; // Imagen actual del lado derecho
@@ -190,10 +196,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         results.push([
-            practiceMode ? 'Práctica' : currentBlock,
+            practiceMode ? 'Practica' : currentBlock,
             currentTrial + 1,
-            trial.rightReward ? 'Ganancia' : 'Pérdida',
-            trial.leftReward ? 'Ganancia' : 'Pérdida',
+            trial.rightReward ? 'Ganancia' : 'Perdida',
+            trial.leftReward ? 'Ganancia' : 'Perdida',
             side,
             reward ? 1 : 0,
             responseTime,
@@ -215,31 +221,36 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleSkippedTrial() {
         practiceTrial.style.display = 'none';
         skippedScreen.style.display = 'block';
+    
+        // Registrar el ensayo omitido
         results.push([
-            practiceMode ? 'Práctica' : currentBlock,
+            practiceMode ? 'Practica' : currentBlock,
             currentTrial + 1,
-            trials[currentTrial].rightReward ? 'Ganancia' : 'Pérdida',
-            trials[currentTrial].leftReward ? 'Ganancia' : 'Pérdida',
-            '',
-            '',
+            trials[currentTrial].rightReward ? 'Ganancia' : 'Perdida',
+            trials[currentTrial].leftReward ? 'Ganancia' : 'Perdida',
+            'Omitido',
             '',
             ''
         ]);
-        currentTrial++;
-
+    
+        currentTrial++; // Avanzar al siguiente ensayo antes de mostrar el siguiente
+    
         setTimeout(() => {
+            skippedScreen.style.display = 'none'; // Ocultar "omitido" después de 1 segundo
             if (currentTrial < trials.length) {
                 showNextTrial();
             } else {
                 finishBlock();
             }
-        }, 1000); // Display "omitido" screen for 3 seconds
+        }, 1000);
     }
+    
 
     function finishBlock() {
         practiceTrial.style.display = 'none';
         feedbackScreen.style.display = 'none';
         skippedScreen.style.display = 'none';
+    
         if (practiceMode) {
             console.log("Práctica completada");
             intermediateScreen.style.display = 'block';
@@ -248,11 +259,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 case 1:
                     console.log("Bloque 1 completado");
                     currentBlock = 2;
+                    trials = generateTestTrials(currentBlock); // Asegurar la correcta generación del bloque
                     startTestBlock();
                     break;
                 case 2:
                     console.log("Bloque 2 completado");
                     currentBlock = 3;
+                    trials = generateTestTrials(currentBlock);
                     startTestBlock();
                     break;
                 case 3:
@@ -262,6 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
+    
 
     function endGame() {
         endScreen.style.display = 'block';
@@ -272,26 +286,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const practiceTrials = [];
         const halfTrials = Math.floor(cantidad_ensayos_prueba / 2);
 
-        // Generate half trials with left machine winning
         for (let i = 0; i < halfTrials; i++) {
             practiceTrials.push({
                 leftReward: true,
-                rightReward: false
+                rightReward: false,
+                caseOption: caseOption,
+                caseImage: caseImage
             });
         }
 
-        // Generate half trials with right machine winning
         for (let i = 0; i < halfTrials; i++) {
             practiceTrials.push({
                 leftReward: false,
-                rightReward: true
+                rightReward: true,
+                caseOption: caseOption,
+                caseImage: caseImage
             });
-        }
-
-        // Shuffle the trials to ensure randomness
-        for (let i = practiceTrials.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [practiceTrials[i], practiceTrials[j]] = [practiceTrials[j], practiceTrials[i]];
         }
 
         return practiceTrials;
@@ -301,93 +311,58 @@ document.addEventListener('DOMContentLoaded', () => {
         const testTrials = [];
         let blockTrialsCount;
         let leftRewardChance, rightRewardChance;
-
-        if (caseOption === 'A') {
-            switch (block) {
-                case 1:
-                    blockTrialsCount = cantidad_ensayos_bloque_1;
-                    leftRewardChance = 0.75;
-                    rightRewardChance = 0.25;
-                    break;
-                case 2:
-                    blockTrialsCount = cantidad_ensayos_bloque_2;
-                    leftRewardChance = 0.25;
-                    rightRewardChance = 0.75;
-                    break;
-                case 3:
-                    blockTrialsCount = cantidad_ensayos_bloque_3;
-                    leftRewardChance = 0.75;
-                    rightRewardChance = 0.25;
-                    break;
-                default:
-                    return [];
+    
+        if (block === 1) {
+            blockTrialsCount = cantidad_ensayos_bloque_1;
+            if (caseOption === 'A') {
+                leftRewardChance = 0.25;
+                rightRewardChance = 0.75;
+            } else {
+                leftRewardChance = 0.75;
+                rightRewardChance = 0.25;
+            }
+        } else if (block === 2) {
+            blockTrialsCount = cantidad_ensayos_bloque_2;
+            if (caseOption === 'A') {
+                leftRewardChance = 0.75;
+                rightRewardChance = 0.25;
+            } else {
+                leftRewardChance = 0.25;
+                rightRewardChance = 0.75;
+            }
+        } else if (block === 3) {
+            blockTrialsCount = cantidad_ensayos_bloque_3;
+            if (caseOption === 'A') {
+                leftRewardChance = 0.25;
+                rightRewardChance = 0.75;
+            } else {
+                leftRewardChance = 0.75;
+                rightRewardChance = 0.25;
             }
         } else {
-            switch (block) {
-                case 1:
-                    blockTrialsCount = cantidad_ensayos_bloque_1;
-                    leftRewardChance = 0.25;
-                    rightRewardChance = 0.75;
-                    break;
-                case 2:
-                    blockTrialsCount = cantidad_ensayos_bloque_2;
-                    leftRewardChance = 0.75;
-                    rightRewardChance = 0.25;
-                    break;
-                case 3:
-                    blockTrialsCount = cantidad_ensayos_bloque_3;
-                    leftRewardChance = 0.25;
-                    rightRewardChance = 0.75;
-                    break;
-                default:
-                    return [];
-            }
+            return [];
         }
-
+    
         for (let trial = 1; trial <= blockTrialsCount; trial++) {
-            let trialLeftRewardChance = leftRewardChance;
-            let trialRightRewardChance = rightRewardChance;
-
-            if (trial >= 21 && trial <= 41) {
-                // Swap probabilities between trials 21-41
-                trialLeftRewardChance = rightRewardChance;
-                trialRightRewardChance = leftRewardChance;
-            }
-
-            // Decide the winning machine based on probabilities
             const randomValue = Math.random();
-            let leftReward = false;
-            let rightReward = false;
-
-            if (randomValue < trialLeftRewardChance) {
-                leftReward = true;  // Left machine wins
-            } else if (randomValue < trialLeftRewardChance + trialRightRewardChance) {
-                rightReward = true; // Right machine wins
-            }
-
-            // If no machine is chosen as the winner, select one at random
-            if (!leftReward && !rightReward) {
-                if (Math.random() < 0.5) {
-                    leftReward = true;
-                } else {
-                    rightReward = true;
-                }
-            }
-
-            // Add trial to the testTrials array
+            let leftReward = randomValue < leftRewardChance;
+            let rightReward = !leftReward;
+    
             testTrials.push({
                 trialNumber: trial,
                 leftReward: leftReward,
                 rightReward: rightReward,
-                leftRewardChance: trialLeftRewardChance,
-                rightRewardChance: trialRightRewardChance,
+                leftRewardChance: leftRewardChance,
+                rightRewardChance: rightRewardChance,
+                caseOption: caseOption,
+                caseImage: caseImage
             });
         }
-
+    
         return testTrials;
     }
-
-
+    
+    
     function resetSlotMachines() {
         leftSlot.src = 'img/slot-machine-left-up.png';
         rightSlot.src = 'img/slot-machine-right-up.png';
@@ -410,55 +385,59 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Error al obtener la información del usuario:', error);
         });
 
-    async function downloadResults() {
-        if (typeof JSZip === 'undefined') {
-            console.error('JSZip is not loaded.');
-            return;
+        async function downloadResults() {
+            if (typeof JSZip === 'undefined') {
+                console.error('JSZip is not loaded.');
+                return;
+            }
+        
+            if (!userInfo || !userInfo.name || !userInfo.last_name) {
+                console.error("Error: userInfo no está definido correctamente.");
+                return;
+            }
+        
+            const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        
+            const zip = new JSZip();
+        
+            // Filtrar los resultados para excluir los ensayos de práctica
+            const filteredResults = results.filter(e => e[0] !== 'Practica');
+        
+            // Generar el contenido del primer archivo CSV sin los ensayos de práctica
+            let csvContent = "Block;Trial;ORSltMach;OLSltMach;PartResp;Acc;RT;Examinador\n"; 
+            csvContent += filteredResults.map(e => [...e, initials].join(";")).join("\n"); // Añadir iniciales en cada fila
+        
+            // Generar el contenido del archivo TXT
+            const totalTaskTime = (Date.now() - totalStartTime) / 1000;
+            let txtContent = [["TotTime", "Hand", "Examinador"], [totalTaskTime, selectedHand, initials]].map(e => e.join(";")).join("\n");
+        
+            // Obtener la fecha actual para el nombre del archivo
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const date = `${day}_${month}_${year}`;
+        
+            // Añadir archivos al ZIP
+            zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.csv`, csvContent);
+            zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_Metricas_${date}.csv`, txtContent);
+        
+            const fileName = `${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.zip`;
+        
+            // Generar y descargar el archivo ZIP
+            zip.generateAsync({ type: 'blob' }).then((content) => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(content);
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
+            });
         }
-
-        if (!userInfo || !userInfo.name || !userInfo.last_name) {
-            console.error("Error: userInfo no está definido correctamente.");
-            return;
-        }
-
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
-
-        const zip = new JSZip();
-
-        // Generar el contenido del primer archivo CSV
-        let csvContent = "Block;Trial;OLSlMach;ORSlMach;PartResp;Acc;RT;Examinador\n"; // Añadir encabezado "Examinador"
-        csvContent += results.map(e => [...e, initials].join(";")).join("\n"); // Añadir iniciales en cada fila
-
-        // Generar el contenido del archivo TXT
-        const totalTaskTime = (Date.now() - totalStartTime) / 1000;
-        let txtContent = [["TotTime", "Hand", "Examinador"], [totalTaskTime, selectedHand, initials]].map(e => e.join(";")).join("\n");
-
-        // Obtener la fecha actual para el nombre del archivo
-        const now = new Date();
-        const day = String(now.getDate()).padStart(2, '0');
-        const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-        const date = `${day}_${month}_${year}`;
-
-        // Añadir archivos al ZIP
-        zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.csv`, csvContent);
-        zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_Metricas_${date}.csv`, txtContent);
-
-        const fileName = `${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.zip`;
-
-        // Generar y descargar el archivo ZIP
-        zip.generateAsync({ type: 'blob' }).then((content) => {
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(content);
-            link.download = fileName;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            setTimeout(() => {
-                window.close();
-            }, 3000);
-        });
-    }
+        
 
 
     function stopAllAudios() {

@@ -169,21 +169,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     stopBtn.addEventListener('click', () => {
         stopAllAudios();
-        stopRecording(true);
+        stopRecording(); // Ahora no llamamos a proceedToNextImage aquí
+        stopBtn.style.display = 'none'; // Oculta el botón de stop al presionarlo
     });
 
     nextBtn.addEventListener('click', () => {
         stopAllAudios();
-        // Si el audio no se ha reproducido, no guardes el video, solo avanza a la siguiente imagen
-        if (audioPlayed) {
-            stopRecording(true); // Guarda el video y avanza a la siguiente imagen
-        } else {
-            proceedToNextImage(); // Simplemente avanza a la siguiente imagen
-        }
+        proceedToNextImage(); // Avanzamos solo con el botón Next
     });
-
-
-
 
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
@@ -193,31 +186,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function stopRecording(showNextButton) {
+    function stopRecording() {
         if (mediaRecorder) {
             mediaRecorder.stop();
             mediaRecorder.onstop = () => {
                 const blob = new Blob(chunks, { type: 'video/mp4' });
                 chunks = [];
                 const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
-
+    
                 zip.file(`grabaciones/pantomima_video_${dateTime}_${currentImageIndex + 1}.mp4`, blob);
-
+    
                 const stream = videoPreview.srcObject;
                 const tracks = stream.getTracks();
                 tracks.forEach(track => track.stop());
                 videoPreview.srcObject = null;
+    
                 RecordingBtn.disabled = true;
                 RecordingBtn.style.display = 'none';
                 stopBtn.disabled = true;
-                stopBtn.style.display = 'none';
+                stopBtn.style.display = 'none'; // Aseguramos que el botón se oculta
                 audioBtn.style.display = 'inline';
-                nextBtn.disabled = false; // Habilitar el botón Next después de la grabación
+                nextBtn.disabled = false; // Habilitamos el botón Next después de detener la grabación
                 nextBtn.style.display = 'inline-block';
                 timerDisplay.classList.add('hidden');
                 stopTimer();
-
-                proceedToNextImage();
             };
         }
     }
