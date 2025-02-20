@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let score = 0;
     let currentBlock = 0;
     let selectionTimeout;
-    let totalStartTime;
+    let totalStartTime = Date.now(); // Start the total time counter
 
     let caseOption = Math.random() < 0.5 ? 'A' : 'B';
     let caseImage = Math.random() < 0.5 ? 'C' : 'D';
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreAmount = document.getElementById('scoreAmount'); // Elemento del puntaje
 
     document.getElementById('startPracticeButton').addEventListener('click', () => {
-        totalStartTime = Date.now(); // Start the total time counter
+        
         startPractice();
         stopAllAudios();
     });
@@ -83,7 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
         practiceMode = true;
         currentTrial = 0;
         trials = generatePracticeTrials();
-        startTime = Date.now();
         scoreAmount.style.display = 'none';
         instructions.style.display = 'none';
         practiceTrial.style.display = 'block';
@@ -99,13 +98,14 @@ document.addEventListener('DOMContentLoaded', () => {
         scoreAmount.style.color = (score + scoreBuffer) < 0 ? 'red' : (score + scoreBuffer) === 0 ? 'black' : 'blue';
         scoreAmount.style.display = 'block'; // Mostrar el puntaje a partir del Bloque 1
         trials = generateTestTrials(currentBlock);
-        startTime = Date.now();
         practiceTrial.style.display = 'block';
         showNextTrial();
     }
 
     function showNextTrial() {
         selectionMade = false;
+        startTime = Date.now();
+    
         const trial = trials[currentTrial];
         if (!trial) {
             console.error("No trial data found at index:", currentTrial);
@@ -126,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
         feedbackScreen.style.display = 'none';
         practiceTrial.style.display = 'block';
 
+        console.log(`Trial ${currentTrial + 1}: StartTime registrado -> ${startTime}`);
         console.log(`Trial ${currentTrial + 1}: Left - ${trial.leftReward ? 'Win' : 'Lose'}, Right - ${trial.rightReward ? 'Win' : 'Lose'}, Case: ${trial.caseOption}, Image Order: ${trial.caseImage}`);
 
         selectionTimeout = setTimeout(() => {
@@ -141,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function selectMachine(side) {
         const responseTime = Date.now() - startTime;
-
+        console.log(`Trial ${currentTrial + 1}: Tiempo de respuesta -> ${responseTime} ms`);
         // Verificar qué imagen está en el lado izquierdo y derecho
         const leftImage = leftSlot.src; // Imagen actual del lado izquierdo
         const rightImage = rightSlot.src; // Imagen actual del lado derecho
