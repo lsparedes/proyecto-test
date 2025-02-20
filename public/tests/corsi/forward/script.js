@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let recordedChunks = [];
 
     const fixedPositions = [
-        { "top": 590, "left": 400 },
-        { "top": 548, "left": 825 },
+        { "top": 480, "left": 400 },
+        { "top": 490, "left": 825 },
         { "top": 440, "left": 188 },
         { "top": 397, "left": 656 },
         { "top": 312, "left": 358 },

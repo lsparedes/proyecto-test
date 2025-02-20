@@ -44,12 +44,12 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100vh;
+    width: 90vh;
 }
 
 
 #instructionText {
-    font-size: 30px;
+    font-size: 37px;
     text-align: justify;
     margin-bottom: 1rem;
 }
