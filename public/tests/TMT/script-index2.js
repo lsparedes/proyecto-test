@@ -34,14 +34,14 @@ const show1 = document.getElementById('show1');
 show1.style.display = 'none';
 
 const circleCoordinatesPartB = [
-    { x: 498 - 70, y: 497 },
-    { x: 630 - 70, y: 280 },
-    { x: 800 - 70, y: 494 },
-    { x: 650 - 70, y: 400 },
-    { x: 650 - 70, y: 600 },
-    { x: 300 - 70, y: 610 },
-    { x: 280 - 70, y: 280 },
-    { x: 433 - 70, y: 335 }
+    { x: 398 - 70, y: 297 },
+    { x: 530 - 70, y: 90 },
+    { x: 650 - 70, y: 340 },
+    { x: 550 - 70, y: 190 },
+    { x: 520 - 70, y: 400 },
+    { x: 200 - 70, y: 400 },
+    { x: 180 - 70, y: 80 },
+    { x: 360 - 70, y: 150 }
 ];
 
 const firstCircleLabelB = "Empezar";

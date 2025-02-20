@@ -129,14 +129,14 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesToCorrect.length = 0;
 
         const circleCoordinates = [
-            { x: 450 - 70, y: 460 },
-            { x: 570 - 70, y: 250 },
-            { x: 740 - 70, y: 470 },
-            { x: 600 - 70, y: 400 },
-            { x: 630 - 70, y: 520 },
-            { x: 260 - 70, y: 550 },
-            { x: 240 - 70, y: 340 },
-            { x: 400 - 70, y: 300 }
+            { x: 350 - 70, y: 310 },
+            { x: 470 - 70, y: 100 },
+            { x: 640 - 70, y: 320 },
+            { x: 500 - 70, y: 220 },
+            { x: 530 - 70, y: 370 },
+            { x: 160 - 70, y: 400 },
+            { x: 140 - 70, y: 190 },
+            { x: 300 - 70, y: 150 }
         ];
 
         circleCoordinates.forEach((coord, index) => {

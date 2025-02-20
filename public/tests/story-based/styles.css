@@ -107,7 +107,7 @@ audio {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    max-width: 80%;
+    max-width: 88%;
     margin: auto;
     margin-bottom: 5px;
 }
@@ -125,7 +125,7 @@ audio {
 }
 
 #storyImage {
-    max-width: 80%;
+    max-width: 88%;
     max-height: 50vh;
     object-fit: contain;
     display: block;
