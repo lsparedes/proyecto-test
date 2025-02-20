@@ -130,13 +130,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const circleCoordinates = [
             { x: 450 - 70, y: 460 },
-            { x: 600 - 70, y: 200 },
-            { x: 840 - 70, y: 470 },
-            { x: 650 - 70, y: 350 },
-            { x: 670 - 70, y: 580 },
-            { x: 180 - 70, y: 610 },
-            { x: 130 - 70, y: 320 },
-            { x: 400 - 70, y: 250 }
+            { x: 570 - 70, y: 250 },
+            { x: 740 - 70, y: 470 },
+            { x: 600 - 70, y: 400 },
+            { x: 630 - 70, y: 520 },
+            { x: 260 - 70, y: 550 },
+            { x: 240 - 70, y: 340 },
+            { x: 400 - 70, y: 300 }
         ];
 
         circleCoordinates.forEach((coord, index) => {

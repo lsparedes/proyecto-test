@@ -22,12 +22,22 @@ body {
 }
 
 #tmtCanvas,
-#tmtCanvasPartA,
-#tmtCanvasPartB,
-#tmtCanvasPartB2 {
+#tmtCanvasPartB {
   border: 1px solid black;
   display: none;
-  margin-bottom: 300px;
+  margin-bottom: 100px;
+}
+
+#tmtCanvasPartA {
+  border: 1px solid white;
+  display: none;
+  margin-bottom: 100px;
+}
+
+#tmtCanvasPartB2 {
+  border: 1px solid white;
+  display: none;
+  margin-bottom: 100px;
 }
 
 /* #instructionText, #instructionTextA, #instructionTextB1, #instructionTextB2, #instructionTextB2 {
