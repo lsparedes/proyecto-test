@@ -266,8 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startTestButton.style.display = 'inline-block';
         sequenceDisplaying = false;
         resetBlocks();
-        // Verificamos que mediaRecorder esté activo antes de detenerlo.
-
     }
 
     startTestButton.addEventListener('click', async () => {
