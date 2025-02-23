@@ -450,7 +450,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Registrar la respuesta con las coordenadas ajustadas
-        const responseTime = Date.now() - clickStartTime;
+        const responseTime = (Date.now() - clickStartTime) / 1000;
+
         recordResponse(videoIndex, click, responseTime);
 
         // Dibujar el círculo en las coordenadas del clic ajustado
@@ -781,6 +782,10 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             testVideo.play(); // Reproducir el video después de 2 segundos
         }, 2000); // 2000 milisegundos = 2 segundos
+        testVideo.addEventListener('ended', () => {
+            clickStartTime = Date.now(); // Inicia el conteo cuando el video termina
+            showQuestion(); // O cualquier otra acción que indique el fin del video
+        });
     };
 
     if (imageCanvas && testVideo) {
