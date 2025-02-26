@@ -713,7 +713,7 @@ function validateClicks() {
     // --- Generación del CSV ---
     endTime = new Date();
     const testDuration = endTime - startItemTime;
-    const totalDuration = endTime - totalStartTime;
+    const totalDuration = endTime - totalStartTime / 1000;
 
     // Calcular centro de las letras encontradas
     const centerX = sumX / correctClicks;

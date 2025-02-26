@@ -140,7 +140,7 @@ fetch('/api/user-info')
     function generateCSV() {
         document.getElementById('final-button').style.display = 'none';
         const endTime = new Date();
-        const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
+        const totalTestTime = (endTime - startTime) / 1000; // Tiempo total en milisegundos
     
         // Asegurarse de que userInfo esté disponible
         if (!userInfo || !userInfo.name || !userInfo.last_name) {
