@@ -275,11 +275,11 @@ fetch('/api/user-info')
         const zip = new JSZip();
         
         // Agregar el archivo CSV al ZIP
-        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.csv`, timeBlob);
+        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.csv`, timeBlob);
     
         // Crear y agregar el archivo de audio al ZIP
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.wav`, audioBlob);
+        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.wav`, audioBlob);
     
         // Generar el archivo ZIP
         zip.generateAsync({ type: 'blob' }).then(content => {
@@ -287,7 +287,7 @@ fetch('/api/user-info')
             zipLink.href = URL.createObjectURL(content);
     
             // Construir el nombre del archivo ZIP con las iniciales
-            const zipFilename = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.zip`;
+            const zipFilename = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${formattedDate}.zip`;
     
             zipLink.download = zipFilename;
             zipLink.click();
