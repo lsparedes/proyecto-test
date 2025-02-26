@@ -522,7 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: txtContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Inverso_TotTime_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_10_Span_Visuoespacial_Inverso_Unival_${getCurrentDate()}.csv`
         };
     }
 
