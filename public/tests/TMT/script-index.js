@@ -236,61 +236,47 @@ document.addEventListener('DOMContentLoaded', function () {
         isDrawing = false;
     }
 
-
-    // canvas.addEventListener('touchstart', function (event) {
-    //     if (drawingCompleted) return;
-    //     const touch = event.touches[0];
-    //     const rect = canvas.getBoundingClientRect();
-    //     startDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
-    //     const touchPos = getTouchPos(canvas, e);
-    //         x = touchPos.x;
-    //         y = touchPos.y;
-            
-    // });
-
-    // canvas.addEventListener('touchmove', function (event) {
-    //     if (drawingCompleted) return;
-    //     const touch = event.touches[0];
-    //     const rect = canvas.getBoundingClientRect();
-    //     drawMove(touch.clientX - rect.left, touch.clientY - rect.top);
-    // });
-
-    // canvas.addEventListener('touchend', function (event) {
-    //     if (drawingCompleted) return;
-    //     const touch = event.changedTouches[0];
-    //     const rect = canvas.getBoundingClientRect();
-    //     endDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
-    //     liftPenCount++;
-    //     airStartTime = new Date();
-    // });
-
-
-    canvas.addEventListener('pointerdown', function (event) {
-        if (drawingCompleted || event.pointerType !== 'pen') return; // Solo acepta lápiz.
-        event.preventDefault();
+    function getTouchPosRotated(canvas, touchEvent) {
         const rect = canvas.getBoundingClientRect();
-        startDrawing(event.clientX - rect.left, event.clientY - rect.top);
+        const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
+    
+        // Coordenadas originales respecto al canvas
+        const localX = touch.clientX - rect.left;
+        const localY = touch.clientY - rect.top;
+    
+        // Transformación para la rotación de -90°
+        const rotatedX = rect.height - localY;
+        const rotatedY = localX;
+    
+        return { x: rotatedX, y: rotatedY };
+    }
+    
+    // Evento touchstart
+    canvas.addEventListener('touchstart', function (event) {
+        event.preventDefault();
+        const { x, y } = getTouchPosRotated(canvas, event);
+        startDrawing(x, y);
     });
     
-    canvas.addEventListener('pointermove', function (event) {
-        if (drawingCompleted || event.pointerType !== 'pen') return; // Solo acepta lápiz.
-        if (event.pressure > 0) { // Asegúrate de que el lápiz esté presionando.
+    // Evento touchmove
+    canvas.addEventListener('touchmove', function (event) {
+        if (event.touches.length > 0) {
             event.preventDefault();
-            const rect = canvas.getBoundingClientRect();
-            drawMove(event.clientX - rect.left, event.clientY - rect.top);
+            const { x, y } = getTouchPosRotated(canvas, event);
+            drawMove(x, y);
         }
     });
     
-    canvas.addEventListener('pointerup', function (event) {
-        if (drawingCompleted || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+    // Evento touchend
+    canvas.addEventListener('touchend', function (event) {
         event.preventDefault();
-        const rect = canvas.getBoundingClientRect();
-        endDrawing(event.clientX - rect.left, event.clientY - rect.top);
+        const { x, y } = getTouchPosRotated(canvas, event);
+        endDrawing(x, y);
         liftPenCount++;
         airStartTime = new Date();
     });
     
-
+    
     function drawNextButton() {
         const nextButton = document.createElement('button');
         nextButton.id = 'endSequenceButton';
@@ -474,116 +460,48 @@ document.addEventListener('DOMContentLoaded', function () {
         isDrawingPartA = false;
     }
 
-    //MOUSE TOUCH
-    // canvasPartA.addEventListener('mousedown', function (event) {
-    //     if (drawingCompletedA) return;
-    //     startDrawingPartA(event.offsetX, event.offsetY);
-    //     if (airStartTime) {
-    //         console.log('empezo'+ airStartTime);
-    //         let airEndTime = new Date();
-    //         console.log('termino'+ airEndTime);
-    //         let airTime = (airEndTime - airStartTime) / 1000;
-    //         console.log('tiempo en el aire'+ airTime);
-    //         penAirTime += airTime;
-    //         airStartTime = null;
-    //     }
-
-    //     if (!isRecordingStarted) {
-    //         mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
-    //         isRecordingStarted = true; // Actualiza la variable de control
-    //         inicio = new Date();
-    //         reiniciarTemporizador();
-    //     }
-    // });
-
-    // canvasPartA.addEventListener('mousemove', function (event) {
-    //     if (!isDrawingPartA || drawingCompletedA) return;
-    //     drawMovePartA(event.offsetX, event.offsetY);
-    // });
-
-    // canvasPartA.addEventListener('mouseup', function (event) {
-    //     if (drawingCompletedA) return;
-    //     endDrawingPartA(event.offsetX, event.offsetY);
-    //     liftPenCount++;
-    //     airStartTime = new Date();
-    // });
-
-    // canvasPartA.addEventListener('touchstart', function (event) {
-    //     if (drawingCompletedA) return;
-    //     const touch = event.touches[0];
-    //     const rect = canvasPartA.getBoundingClientRect();
-    //     startDrawingPartA(touch.clientX - rect.left, touch.clientY - rect.top);
-    //     if (airStartTime) {
-    //         let airEndTime = new Date();
-    //         let airTime = (airEndTime - airStartTime) / 1000;
-    //         penAirTime += airTime;
-    //         airStartTime = null;
-    //     }
-
-    //     if (!isRecordingStarted) {
-    //         mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
-    //         isRecordingStarted = true; // Actualiza la variable de control
-    //         inicio = new Date();
-    //         reiniciarTemporizador();
-    //     }
-    // });
-
-    // canvasPartA.addEventListener('touchmove', function (event) {
-    //     if (drawingCompletedA) return;
-    //     const touch = event.touches[0];
-    //     const rect = canvasPartA.getBoundingClientRect();
-    //     drawMovePartA(touch.clientX - rect.left, touch.clientY - rect.top);
-    // });
-
-    // canvasPartA.addEventListener('touchend', function (event) {
-    //     if (drawingCompletedA) return;
-    //     const touch = event.changedTouches[0];
-    //     const rect = canvasPartA.getBoundingClientRect();
-    //     endDrawingPartA(touch.clientX - rect.left, touch.clientY - rect.top);
-    //     liftPenCount++;
-    //     airStartTime = new Date();
-    // });
-
-    canvasPartA.addEventListener('pointerdown', function (event) {
-        if (drawingCompletedA || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+    function getTouchPosRotatedPartA(canvas, touchEvent) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
+    
+        // Coordenadas originales respecto al canvas
+        const localX = touch.clientX - rect.left;
+        const localY = touch.clientY - rect.top;
+    
+        // Transformación para la rotación de -90°
+        const rotatedX = rect.height - localY;
+        const rotatedY = localX;
+    
+        return { x: rotatedX, y: rotatedY };
+    }
+    
+    // Evento touchstart
+    canvasPartA.addEventListener('touchstart', function (event) {
         event.preventDefault();
-        const rect = canvasPartA.getBoundingClientRect();
-        startDrawingPartA(event.clientX - rect.left, event.clientY - rect.top);
-    
-        if (airStartTime) {
-            let airEndTime = new Date();
-            let airTime = (airEndTime - airStartTime) / 1000;
-            penAirTime += airTime;
-            airStartTime = null;
-        }
-    
-        if (!isRecordingStarted) {
-            mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
-            isRecordingStarted = true; // Actualiza la variable de control
-            inicio = new Date();
-            reiniciarTemporizador();
-        }
+        const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
+        startDrawingPartA(x, y);
     });
     
-    canvasPartA.addEventListener('pointermove', function (event) {
-        if (drawingCompletedA || event.pointerType !== 'pen') return; // Solo acepta lápiz.
-        if (event.pressure > 0) { // Asegúrate de que el lápiz esté presionando.
+    // Evento touchmove
+    canvasPartA.addEventListener('touchmove', function (event) {
+        if (event.touches.length > 0) {
             event.preventDefault();
-            const rect = canvasPartA.getBoundingClientRect();
-            drawMovePartA(event.clientX - rect.left, event.clientY - rect.top);
+            const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
+            drawMovePartA(x, y);
         }
     });
     
-    canvasPartA.addEventListener('pointerup', function (event) {
-        if (drawingCompletedA || event.pointerType !== 'pen') return; // Solo acepta lápiz.
+    // Evento touchend
+    canvasPartA.addEventListener('touchend', function (event) {
         event.preventDefault();
-        const rect = canvasPartA.getBoundingClientRect();
-        endDrawingPartA(event.clientX - rect.left, event.clientY - rect.top);
+        const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
+        endDrawingPartA(x, y);
         liftPenCount++;
         airStartTime = new Date();
     });
     
 
+    
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
         nextButtonA.id = 'endSequenceButton';

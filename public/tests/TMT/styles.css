@@ -115,7 +115,7 @@ button {
 canvas {
   display: block;
   /* Eliminar cualquier espacio extra y alinear adecuadamente */
-  max-width: 90%;
+
   /* Asegura que el canvas no sea más grande que su contenedor */
   height: auto;
   /* Mantener la proporción de aspecto */
