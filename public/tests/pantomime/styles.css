@@ -56,7 +56,6 @@ button:not(:disabled):active {
 
 #next-btn,
 #startButton,
-#startTestb,
 #handButton,
 #fullscreenButton,
 #start-test{
@@ -98,13 +97,6 @@ button:not(:disabled):active {
     pointer-events: auto !important;
 }
 
-#startTestb {
-    background-image: url('flecha3.png');
-    right: 15px;
-    bottom: 15px;
-    visibility: visible !important;
-    pointer-events: auto !important;
-}
 
 
 #start-test{

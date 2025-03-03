@@ -22,13 +22,22 @@ body {
 }
 
 #tmtCanvas,
-#tmtCanvasPartA,
-#tmtCanvasPartB,
-#tmtCanvasPartB2 {
+#tmtCanvasPartB {
   border: 1px solid black;
   display: none;
-  margin-bottom: 300px;
-  
+  margin-bottom: 100px;
+}
+
+#tmtCanvasPartA {
+  border: 1px solid white;
+  display: none;
+  margin: none;
+}
+
+#tmtCanvasPartB2 {
+  border: 1px solid white;
+  display: none;
+  margin: none;
 }
 
 /* #instructionText, #instructionTextA, #instructionTextB1, #instructionTextB2, #instructionTextB2 {
@@ -106,7 +115,7 @@ button {
 canvas {
   display: block;
   /* Eliminar cualquier espacio extra y alinear adecuadamente */
-  max-width: 99%;
+  max-width: 90%;
   /* Asegura que el canvas no sea más grande que su contenedor */
   height: auto;
   /* Mantener la proporción de aspecto */
