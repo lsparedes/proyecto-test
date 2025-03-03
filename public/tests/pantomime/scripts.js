@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const camaraScreen = document.getElementById('camaraposition-screen');
     const startScreen = document.getElementById('start-screen');
     const testScreen = document.getElementById('test-screen');
     const completionScreen = document.getElementById('completion-screen');
@@ -6,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
     const startBtn = document.getElementById('startButton');
+    const startTest = document.getElementById('startTestb');
     const fullscreenButton = document.getElementById('fullscreenButton');
     const stopBtn = document.getElementById('stop-btn');
     const RecordingBtn = document.getElementById('recording-btn');
@@ -74,16 +76,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const zip = new JSZip();
     let audioPlayed = false;
 
+    camaraScreen.classList.add('active');
+    startScreen.classList.add('hidden');
+    testScreen.classList.add('hidden');
+    
+
+    startTest.addEventListener('click', () => {
+        camaraScreen.classList.remove('active');
+        camaraScreen.classList.add('hidden');
+    
+        // Detener la cámara si está activa
+        if (cameraStream) {
+            cameraStream.getTracks().forEach(track => track.stop());
+            cameraStream = null;
+        }
+        videoElement.srcObject = null;
+        isCameraActive = false;
+        
+        // Opcional: remover el video element del DOM
+        videoElement.remove();
+    
+        // Muestra la siguiente pantalla (por ejemplo, startScreen)
+        startScreen.classList.remove('hidden');
+        startScreen.classList.add('active');
+    });
+    
+    
+
 
     startBtn.addEventListener('click', () => {
         stopAllAudios();
         testStartTime = Date.now();
+    
+        // Oculta startScreen y muestra testScreen
         startScreen.classList.remove('active');
         startScreen.classList.add('hidden');
         testScreen.classList.remove('hidden');
         testScreen.classList.add('active');
+    
         loadNextImage();
     });
+    
 
     fullscreenButton.addEventListener('click', () => {
         if (document.fullscreenEnabled && !document.fullscreenElement) {
