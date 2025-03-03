@@ -140,7 +140,7 @@ fetch('/api/user-info')
     function generateCSV() {
         document.getElementById('final-button').style.display = 'none';
         const endTime = new Date();
-        const totalTestTime = (endTime - startTime) / 1000; // Tiempo total en milisegundos
+        const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
     
         // Asegurarse de que userInfo esté disponible
         if (!userInfo || !userInfo.name || !userInfo.last_name) {
@@ -177,7 +177,7 @@ fetch('/api/user-info')
         const fechaHoraFormateada = `${dia}_${mes}_${año}`;
     
         const csvFilename1 = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.csv`;
-        const csvFilename2 = `${idParticipante}_5_VOSP_Number_Location_Unival_${fechaHoraFormateada}.csv`;
+        const csvFilename2 = `${idParticipante}_5_VOSP_Number_Location_Metricas_${fechaHoraFormateada}.csv`;
     
         const csvBlob1 = new Blob([csvContent1], { type: 'text/csv;charset=utf-8;' });
         const csvBlob2 = new Blob([csvContent2], { type: 'text/csv;charset=utf-8;' });
