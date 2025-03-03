@@ -12,6 +12,7 @@ let lastCirclePartB = null;
 const correctPathsPartB = [];
 const incorrectPathsPartB = [];
 const incorrectPathsPartB2 = [];
+
 let drawingCompletedB = false;
 
 let circleRadius = 30;
@@ -158,6 +159,7 @@ function startDrawing(x, y) {
         }
     });
 }
+const incorrectNodes = new Set(); // Guarda nodos que fueron marcados como error
 
 function drawMove(x, y) {
     if (!isDrawingPartB) return;
@@ -168,23 +170,27 @@ function drawMove(x, y) {
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < circleRadius && circle.label != getNextLabel(currentCirclePartB) && circle.label != lastCirclePartB.label) {
-            highlightCircle(ctxPartB, circle, 'red', x, y);
-            incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
-            circlesToCorrectB.push({ x: circle.x, y: circle.y, number: circle.number });
-            isDrawingPartB = false;
-        } else if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB)) {
-            highlightCircle(ctxPartB, circle, 'black', x, y);
-            correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
-            currentCirclePartB = getNextLabel(currentCirclePartB);
-            lastCirclePartB = circle;
-            validDrop = true;
 
-            if (circlesToCorrectB.length > 0) {
-                circlesToCorrectB.forEach(circle => {
+        if (distance < circleRadius) {
+            if (circle.label !== getNextLabel(currentCirclePartB) && circle.label !== lastCirclePartB.label) {
+                // ❌ Si es un error, lo mantenemos rojo
+                highlightCircle(ctxPartB, circle, 'red', x, y);
+                incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
+                incorrectNodes.add(circle.label); // Guardamos que este nodo tiene un error
+                isDrawingPartB = false;
+            } else if (circle.label === getNextLabel(currentCirclePartB)) {
+                // ✔ Si es un trazo correcto
+                if (incorrectNodes.has(circle.label)) {
+                    // Si el nodo fue incorrecto antes, lo mantenemos rojo
+                    highlightCircle(ctxPartB, circle, 'red', x, y);
+                } else {
                     highlightCircle(ctxPartB, circle, 'black', x, y);
-                });
-                circlesToCorrectB.length = 0;
+                }
+                
+                correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
+                currentCirclePartB = getNextLabel(currentCirclePartB);
+                lastCirclePartB = circle;
+                validDrop = true;
             }
         }
     });
@@ -194,13 +200,21 @@ function drawMove(x, y) {
     }
 }
 
+
 function endDrawing(x, y) {
     let validDrop = false;
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < 50 && circle.label === getNextLabel(currentCirclePartB)) {
-            highlightCircle(ctxPartB, circle, 'black', x, y);
+
+        if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB)) {
+            if (incorrectNodes.has(circle.label)) {
+                // Si el nodo antes tenía error, sigue rojo
+                highlightCircle(ctxPartB, circle, 'red', x, y);
+            } else {
+                highlightCircle(ctxPartB, circle, 'black', x, y);
+            }
+
             correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB = getNextLabel(currentCirclePartB);
             lastCirclePartB = circle;
@@ -208,10 +222,9 @@ function endDrawing(x, y) {
         }
     });
 
-    const distance = Math.sqrt((x - lastCirclePartB.x) ** 2 + (y - lastCirclePartB.y) ** 2);
-
-    if (!validDrop && lastCirclePartB && distance > circleRadius) {
+    if (!validDrop) {
         incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
+        incorrectNodes.add(currentCirclePartB); // Guarda que este nodo tuvo un error
     }
 
     if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
@@ -220,6 +233,7 @@ function endDrawing(x, y) {
 
     isDrawingPartB = false;
 }
+
 
 
 function getTouchPosRotatedPartB(canvas, touchEvent) {
@@ -404,6 +418,8 @@ function startDrawingPartB2(x, y) {
     });
 }
 
+const incorrectNodesPartB2 = new Set(); // Guarda nodos con errores
+
 function drawMovePartB2(x, y) {
     if (!isDrawingPartB2) return;
     ctxPartB2.lineTo(x, y);
@@ -413,25 +429,41 @@ function drawMovePartB2(x, y) {
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < circleRadius && circle.label != getNextLabel(currentCirclePartB2) && circle.label != lastCirclePartB2.label) {
-            highlightCircle(ctxPartB2, circle, 'red', x, y);
-            erroresComision++;
-            circlesToCorrectB2.push({ x: circle.x, y: circle.y, number: circle.number });
-            incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
-            isDrawingPartB2 = false;
-        } else if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB2)) {
-            highlightCircle(ctxPartB2, circle, 'black', x, y);
-            correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
-            currentCirclePartB2 = getNextLabel(currentCirclePartB2);
-            lastCirclePartB2 = circle;
-            validDrop = true;
-            correctLines++;
-
-            if (circlesToCorrectB2.length > 0) {
-                circlesToCorrectB2.forEach(circle => {
+        
+        if (distance < circleRadius) {
+            if (circle.label !== getNextLabel(currentCirclePartB2) && circle.label !== lastCirclePartB2.label) {
+                // ❌ Si es un error, se mantiene en rojo
+                highlightCircle(ctxPartB2, circle, 'red', x, y);
+                incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
+                incorrectNodesPartB2.add(circle.label); // Guardar nodo con error
+                erroresComision++;
+                isDrawingPartB2 = false;
+            } else if (circle.label === getNextLabel(currentCirclePartB2)) {
+                // ✔ Si el trazo es correcto
+                if (incorrectNodesPartB2.has(circle.label)) {
+                    // Si el nodo fue incorrecto antes, se mantiene en rojo
+                    highlightCircle(ctxPartB2, circle, 'red', x, y);
+                } else {
                     highlightCircle(ctxPartB2, circle, 'black', x, y);
-                });
-                circlesToCorrectB2.length = 0;
+                }
+
+                correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
+                currentCirclePartB2 = getNextLabel(currentCirclePartB2);
+                lastCirclePartB2 = circle;
+                validDrop = true;
+                correctLines++;
+
+                // 🔴 Evitar que nodos incorrectos previos se vuelvan negros
+                if (circlesToCorrectB2.length > 0) {
+                    circlesToCorrectB2.forEach(circle => {
+                        if (incorrectNodesPartB2.has(circle.label)) {
+                            highlightCircle(ctxPartB2, circle, 'red', x, y);
+                        } else {
+                            highlightCircle(ctxPartB2, circle, 'black', x, y);
+                        }
+                    });
+                    circlesToCorrectB2.length = 0;
+                }
             }
         }
     });
@@ -441,13 +473,21 @@ function drawMovePartB2(x, y) {
     }
 }
 
+
 function endDrawingPartB2(x, y) {
     let validDrop = false;
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+
         if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB2)) {
-            highlightCircle(ctxPartB2, circle, 'black', x, y);
+            if (incorrectNodesPartB2.has(circle.label)) {
+                // Si el nodo fue erróneo antes, sigue en rojo
+                highlightCircle(ctxPartB2, circle, 'red', x, y);
+            } else {
+                highlightCircle(ctxPartB2, circle, 'black', x, y);
+            }
+
             correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB2 = getNextLabel(currentCirclePartB2);
             lastCirclePartB2 = circle;
@@ -455,14 +495,13 @@ function endDrawingPartB2(x, y) {
         }
     });
 
-    const distance = Math.sqrt((x - lastCirclePartB2.x) ** 2 + (y - lastCirclePartB2.y) ** 2);
-
-    if (!validDrop && lastCirclePartB2 && distance > circleRadius) {
-        incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
-    }
-
-    if (currentCirclePartB2 === 13) {
-        drawingCompletedB2 = true;
+    if (!validDrop) {
+        const distance = Math.sqrt((x - lastCirclePartB2.x) ** 2 + (y - lastCirclePartB2.y) ** 2);
+        if (distance > circleRadius) {
+            incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
+            incorrectNodesPartB2.add(currentCirclePartB2); // Guardar que este nodo tuvo un error
+            erroresComision++;
+        }
     }
 
     isDrawingPartB2 = false;
