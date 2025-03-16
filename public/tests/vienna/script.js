@@ -152,8 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_1.mp4',
             items: {
                 correcto: [{ x: 280, y: 105 }],
-                error_rotacion: [{x: 200, y: 105}],
-                error_actualizacion: [{ x: 280, y: 170 }, { x: 280, y: 20 }],
+
+
+                error_rotacion: [{ x: 220 , y: 105 }],
+                
+                error_actualizacion: [
+                    { x: 280, y: 105 - 50 }, 
+                    { x: 280, y: 105 + 50 }  
+                ],
             },
             indicator: 'E1',
             imageSrc: 'img/1.png'
@@ -162,8 +168,11 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_2.mp4',
             items: {
                 correcto: [{ x: 238, y: 62 }],
-                error_rotacion: [{ x: 307, y: 57 }],
-                error_actualizacion: [{ x: 238, y: 27 }, { x: 238, y: 91 }],
+                error_rotacion: [{ x: 288, y: 62 }],
+                error_actualizacion: [
+                    { x: 238, y: 62 - 50 },
+                    { x: 238, y: 62 + 50 }
+                ],
             },
             indicator: 'E2',
             imageSrc: 'img/2.png'
@@ -172,8 +181,11 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_3.mp4',
             items: {
                 correcto: [{ x: 273, y: 43 }],
-                error_rotacion: [{ x: 316, y: 69 }],
-                error_actualizacion: [{ x: 382, y: 30 }, { x: 382, y: 109 }],
+                error_rotacion: [{ x: 228, y: 38}],
+                error_actualizacion: [
+                    { x: 273, y: 43 - 26 },
+                    { x: 273, y: 43 + 24 }
+                ],
             },
             indicator: 'E3',
             imageSrc: 'img/3.png'
@@ -182,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_4.mp4',
             items: {
                 correcto: [{ x: 144, y: 76 }],
-                error_rotacion: [{ x: 460, y: 122 }],
+                error_rotacion: [{ x: 360, y:78 }],
                 error_actualizacion: [],
             },
             indicator: 'E4',
@@ -192,8 +204,11 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_5.mp4',
             items: {
                 correcto: [{ x: 192, y: 64 }],
-                error_rotacion: [{ x: 263, y: 144 }],
-                error_actualizacion: [{ x: 225, y: 108 }, { x: 309, y: 108 }],
+                error_rotacion: [{ x: 192, y: 115 }],
+                error_actualizacion: [
+                    { x: 192 - 30, y: 64 },
+                    { x: 192 + 30, y: 64 }
+                ],
             },
             indicator: 'E5',
             imageSrc: 'img/5.png'
@@ -202,8 +217,15 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_5a.mp4',
             items: {
                 correcto: [{ x: 324, y: 62 }],
-                error_rotacion: [{ x: 459, y: 15 }, { x: 232, y: 15 }],
-                error_actualizacion: [{ x: 408, y: 101 }, { x: 513, y: 101 }, { x: 324, y: 242 }],
+                error_rotacion: [
+                    { x: 168, y: 8 },
+                    { x: 324, y: 11 }
+                ],
+                error_actualizacion: [
+                    { x: 288, y: 63 },
+                    { x: 358, y: 63 },
+                    { x: 325, y: 174 }
+                ],
             },
             indicator: 'E6',
             imageSrc: 'img/6.png'
@@ -212,8 +234,11 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_6.mp4',
             items: {
                 correcto: [{ x: 402, y: 150 }],
-                error_rotacion: [{ x: 664, y: 243 }],
-                error_actualizacion: [{ x: 455, y: 243 }, { x: 609, y: 287 }],
+                error_rotacion: [{ x: 454, y: 150 }],
+                error_actualizacion: [
+                    { x: 419, y: 176 },
+                    { x: 318, y: 150 }
+                ],
             },
             indicator: 'E7',
             imageSrc: 'img/7.png'
@@ -222,8 +247,14 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_7.mp4',
             items: {
                 correcto: [{ x: 103, y: 74 }],
-                error_rotacion: [{ x: 123, y: 220 }, { x: 569, y: 220 }],
-                error_actualizacion: [{ x: 77, y: 143 }, { x: 312, y: 117 }],
+                error_rotacion: [
+                    { x: 103, y: 161 },
+                    { x: 402, y: 163 }
+                ],
+                error_actualizacion: [
+                    { x: 226, y: 73 },
+                    { x: 74, y: 89 }
+                ],
             },
             indicator: 'E8',
             imageSrc: 'img/8.png'
@@ -232,8 +263,14 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_7a.mp4',
             items: {
                 correcto: [{ x: 270, y: 137 }],
-                error_rotacion: [{ x: 445, y: 217 }, { x: 445, y: 50 }],
-                error_actualizacion: [{ x: 377, y: 181 }, { x: 250, y: 217 }],
+                error_rotacion: [
+                    { x: 310, y: 30 },
+                    { x: 310, y: 140}
+                ],
+                error_actualizacion: [
+                    { x: 267, y: 113 },
+                    { x: 187, y: 135 }
+                ],
             },
             indicator: 'E9',
             imageSrc: 'img/9.png'
@@ -241,9 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_8.mp4',
             items: {
-                correcto: [{ x: 290, y: 152 }],
-                error_rotacion: [{ x: 435, y: 246 }],
-                error_actualizacion: [{ x: 273, y: 130 }],
+                correcto: [{ x: 250, y: 152 }],
+                error_rotacion: [{ x: 290, y: 157}],
+                error_actualizacion: [{ x: 202, y: 86}],
             },
             indicator: 'E10',
             imageSrc: 'img/10.png'
@@ -252,8 +289,11 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_9.mp4',
             items: {
                 correcto: [{ x: 170, y: 129 }],
-                error_rotacion: [{ x: 470, y: 203 }],
-                error_actualizacion: [{ x: 273, y: 146 }, { x: 273, y: 264 }],
+                error_rotacion: [{ x: 328, y: 125 }],
+                error_actualizacion: [
+                    { x: 203, y: 90 },
+                    { x: 201, y: 164 }
+                ],
             },
             indicator: 'E11',
             imageSrc: 'img/11.png'
@@ -262,8 +302,11 @@ document.addEventListener('DOMContentLoaded', () => {
             src: 'videos/Test_10.mp4',
             items: {
                 correcto: [{ x: 222, y: 108 }],
-                error_rotacion: [{ x: 399, y: 173 }],
-                error_actualizacion: [{ x: 304, y: 109 }, { x: 304, y: 234 }],
+                error_rotacion: [{ x: 280, y: 105 }],
+                error_actualizacion: [
+                    { x: 221, y: 67 },
+                    { x: 221, y: 148 }
+                ],
             },
             indicator: 'E12',
             imageSrc: 'img/12.png'
@@ -476,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.error_actualizacion.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 20) {
+            if (Math.sqrt(dx * dx + dy * dy) < 5) {
                 response.errorActualizacion = `(${item.x}, ${item.y})`;
             }
         });
@@ -484,7 +527,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.error_rotacion.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 20) {
+            if (Math.sqrt(dx * dx + dy * dy) < 5) {
                 response.errorRotacion = `(${item.x}, ${item.y})`;
             }
         });
@@ -492,7 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.correcto.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 20) {
+            if (Math.sqrt(dx * dx + dy * dy) < 5) {
                 response.precision = 2;
             }
         });
@@ -530,7 +573,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.correcto.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                    if (Math.sqrt(dx * dx + dy * dy) < 5) {
                         isCorrect = true;
                         correctClicks++;
                     }
@@ -539,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.error_rotacion.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                    if (Math.sqrt(dx * dx + dy * dy) < 5) {
                         isRotationError = true;
                         rotationErrors++;
                     }
@@ -548,7 +591,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.error_actualizacion.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 20) {
+                    if (Math.sqrt(dx * dx + dy * dy) < 5) {
                         isUpdateError = true;
                         updateErrors++;
                     }
