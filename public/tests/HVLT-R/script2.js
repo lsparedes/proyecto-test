@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         // Calcular el tiempo total en segundos
         const timeSpent = (finishTime - startTime) / 1000;
-        const timeSpentFormatted = timeSpent;
+        const timeSpentFormatted = timeSpent.toFixed(3).replace('.', ','); 
     
         // Crear el contenido del archivo CSV con las iniciales del participante
         const csvContent = `TotTime;Iniciales\n${timeSpentFormatted};${inicialesParticipante}`;

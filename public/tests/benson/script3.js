@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let csvContent = "TotTime;RT;Hand;CorrResp;PartResp;Acc;Examinador\n"; //Activity
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000;
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-        csvContent += `${timeTotal};${responseTime};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`; //FiguraIdentificada
+        csvContent += `${timeTotal.toFixed(3).replace('.', ',')};${responseTime.toFixed(3).replace('.', ',')};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`; //FiguraIdentificada
 
         return csvContent;
     }

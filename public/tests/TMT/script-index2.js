@@ -696,7 +696,7 @@ fetch('/api/user-info')
     
         // Agregar cada fila de datos, incluyendo las iniciales del examinador
         data.forEach(row => {
-            let linea = `${row.executionTime};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime};${row.taskTime};${selectedHand};${inicialesExaminador}\n`;
+            let linea = `${row.executionTime.toFixed(3).replace('.', ',')};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime.toFixed(3).replace('.', ',')};${row.taskTime.toFixed(3).replace('.', ',')};${selectedHand};${inicialesExaminador}\n`;
             csvContent += linea;
         });
     

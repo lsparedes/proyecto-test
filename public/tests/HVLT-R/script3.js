@@ -145,45 +145,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function createCSV() {
-        // Asegurarse de que userInfo esté disponible para obtener las iniciales
         if (!userInfo || !userInfo.name || !userInfo.last_name) {
             console.error("Error: userInfo no está definido correctamente.");
-            return; // Salir si userInfo no está disponible
+            return;
         }
     
-        // Obtener las iniciales del participante
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-    
         const total = Object.keys(correctAnswers).length;
     
-        // Generar el contenido del primer CSV (datos de ensayos)
         let mainCsvContent = 'Trial;Word;CorrResp;PartResp;RT;Acc\n';
         for (let i = 1; i <= total; i++) {
             const word = words[i];
             const correctAnswer = correctAnswers[i];
-            const participantAnswer = answers[i]?.answer || ''; // Respuesta del participante
-            const RT = answers[i]?.RT !== undefined ? answers[i].RT : ''; // Tiempo de respuesta
-            const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
+            const participantAnswer = answers[i]?.answer || '';
     
-            // Incluir las iniciales en cada fila del CSV principal
+            let RT = '';
+            if (answers[i]?.RT !== undefined && answers[i]?.RT !== null) {
+                RT = answers[i].RT.toFixed(3).replace('.', ','); 
+            }
+    
+            const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
             mainCsvContent += `${i};${word};${correctAnswer};${participantAnswer};${RT};${isCorrect}\n`;
         }
     
-        // Obtener el valor de la mano seleccionada
         let selectedHandElement = document.querySelector('input[name="hand"]:checked');
         let selectedHand = selectedHandElement ? selectedHandElement.value : 'No seleccionado';
     
-        // Calcular el tiempo total dedicado
-        const endTime = new Date(); // Obtener la hora de finalización
-        const timeSpentInSeconds = (endTime - startTime) / 1000; // Calcular el tiempo en segundos
+        const endTime = new Date();
+        const timeSpentInSeconds = (endTime - startTime) / 1000;
+        const timeSpentFormatted = timeSpentInSeconds.toFixed(3).replace('.', ',');
     
-        // Generar el contenido del segundo CSV (información adicional)
         let additionalCsvContent = 'Hand;TotTime;Iniciales Examinador\n';
-        additionalCsvContent += `${selectedHand};${timeSpentInSeconds};${inicialesExaminador}\n`;
+        additionalCsvContent += `${selectedHand};${timeSpentFormatted};${inicialesExaminador}\n`;
     
-        // Retornar ambos contenidos como un objeto
         return { mainCsvContent, additionalCsvContent };
     }
+    
     
 
 

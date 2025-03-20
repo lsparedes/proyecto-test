@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mes = fecha.getMonth() + 1;
     let año = fecha.getFullYear();
     let audioEndedTime = null; // Marca de tiempo cuando el audio termina
-    let ExecTime = null;
+    let execTime = null;
 
     //Botones
     const fullscreenButton = document.getElementById('fullscreen-button');
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
     
-        csvContent += `${timeTotal};${execTime};${selectedHand};${initials}\n`;
+        csvContent += `${timeTotal.toFixed(3).replace('.', ',')};${execTime};${selectedHand};${initials}\n`;
     
         return csvContent;
     }

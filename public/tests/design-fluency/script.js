@@ -337,7 +337,7 @@ window.onload = function () {
                 const hand = selectedHand ?? "";
                 const examiner = initials;
                 
-                csvContent += `${totTime};${execTime};${hand};${examiner}\n`;
+                csvContent += `${totTime.toFixed(3).replace('.', ',')};${execTime.toFixed(3).replace('.', ',')};${hand};${examiner}\n`;
             });
         
             return new Blob([csvContent], { type: 'text/csv' });

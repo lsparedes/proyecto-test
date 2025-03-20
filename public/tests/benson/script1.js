@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let mes = fecha.getMonth() + 1;
     let año = fecha.getFullYear();
     let audioEndedTime = null; // Marca de tiempo cuando el audio termina
-    let ExecTime = null;
+    let execTime = null;
 
     const fullscreenButton = document.getElementById('fullscreen-button');
     const finishdrawingwithfigure = document.getElementById('finish-drawing-with-figure');
@@ -278,9 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Una vez que userInfo está listo, habilitar el botón o acción que depende de él
             document.getElementById('finalize-button').addEventListener('click', () => {
-                const csvContent = generateCSV();  // Generar el CSV antes de crear el ZIP
+                const csvContent = generateCSV();  
                 if (csvContent) {
-                    crearZip(csvContent);  // Pasar el contenido del CSV al crearZip
+                    crearZip(csvContent);  
                 }
             });
         })
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
             let timeTotal = (endTimeExecution - startTimeExecution) / 1000; // tiempo total en segundos
         
-            csvContent += `${timeTotal};${execTime};${selectedHand};${initials}\n`;
+            csvContent += `${timeTotal.toFixed(3).replace('.', ',')};${execTime};${selectedHand};${initials}\n`;
         
             return csvContent;
         }

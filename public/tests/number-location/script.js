@@ -154,7 +154,7 @@ fetch('/api/user-info')
         // Contenido del primer CSV
         let csvContent1 = "Trial;CorrResp;PartResp;Acc;RT;Examinador\n";
         answers.forEach(answer => {
-            csvContent1 += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken * 1000).toFixed(3).replace('.', ',')};${inicialesExaminador}\n`;
+            csvContent1 += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken).toFixed(3).replace('.', ',')};${inicialesExaminador}\n`;
         });
     
         // Calcular el tiempo dedicado en segundos

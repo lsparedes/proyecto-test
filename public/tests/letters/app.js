@@ -712,43 +712,41 @@ function validateClicks() {
 
     // --- Generación del CSV ---
     endTime = new Date();
-    const testDuration = endTime - startItemTime;
-    const totalDuration = endTime - totalStartTime / 1000;
-
+    const testDuration = (endTime - startItemTime) / 1000; 
+    const totalDuration = (endTime - totalStartTime) / 1000; 
+    
     // Calcular centro de las letras encontradas
     const centerX = sumX / correctClicks;
     const centerY = sumY / correctClicks;
     const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
     const CoC = Math.sign(normalizedCenterX) === -1 ? -1 : 1;
-
+    
     // Calcular velocidad de búsqueda
-    let searchSpeed = (correctClicks / testDuration) * 1000;
-    let searchDistanceFormatted = (searchDistance / promedio.length)
-        .toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
+    let searchSpeed = (correctClicks / (testDuration * 1000)) * 1000; 
+    
+    let searchDistanceFormatted = (searchDistance / promedio.length).toFixed(2).replace('.', ',');
+    
     // Formatear duración total y de ejecución
-    const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
-    const testDurationFormatted = testDuration.toLocaleString('es-CL');
-
+    const totalDurationFormatted = totalDuration.toFixed(3).replace('.', ',');
+    const testDurationFormatted = testDuration.toFixed(3).replace('.', ',');
+    
     // Obtener fecha formateada para el nombre del archivo
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
-    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+    const fechaHoraChilena = fechaActual.toLocaleDateString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     const baseFileName = `4_Cancelación_Letras_A_${fechaFormateada}`;
-
+    
     // Preparar CSV con las nuevas variables:
-    // Header: TotTime;ExecTime;Hand;NoTargets;NoOmiErrL;NoOmiErrR;NoCommErr;SSpeed;SDistance;SStrategy;CoC;Examinador
     let csvContent = 'TotTime;ExecTime;Hand;NoTargets;NoOmiErrL;NoOmiErrR;NoCommErr;SSpeed;SDistance;SStrategy;CoC;Examinador\n';
-
-    // Suponiendo que userInfo y selectedHand ya están definidos
+    
     const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-
-    csvContent += `${totalDurationFormatted};${testDurationFormatted};${selectedHand};${correctClicks};${NoOmiErrL};${NoOmiErrR};${erroresComision};${searchSpeed.toFixed(2)};${searchDistanceFormatted};${SStrategy !== null ? SStrategy.toFixed(2) : 'NA'};${CoC};${inicialesExaminador}\n`;
-
+    
+    csvContent += `${totalDurationFormatted};${testDurationFormatted};${selectedHand};${correctClicks};${NoOmiErrL};${NoOmiErrR};${erroresComision};${searchSpeed.toFixed(3).replace('.', ',')};${searchDistanceFormatted};${SStrategy !== null ? SStrategy.toFixed(3).replace('.', ',') : 'NA'};${CoC};${inicialesExaminador}\n`;
+    
     console.log(csvContent);
-
+    
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
