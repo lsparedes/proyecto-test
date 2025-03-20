@@ -14,20 +14,6 @@
 
 <body>
     <div id="container">
-
-        <div id="camaraposition-screen" class="container">
-            <button id="camaraButton">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="80" class="bi bi-camera-video"
-                        viewBox="0 0 16 16">
-                        <path fill-rule="evenodd"
-                            d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z" />
-                    </svg>
-            <div class="button-container">
-                <button id="startTestb"></button>
-            </div>
-        </div>
-
-        
         <div id="start-screen" class="container">
             <p id="instructionText">A continuación, usted verá algunas imágenes de objetos en la pantalla, una por una.
                 Por favor, imagine que sostiene cada objeto en su mano porque su tarea consistirá en mostra como se usa.
@@ -41,6 +27,13 @@
             <div class="button-container">
                 <button id="startButton"></button>
                 <button id="fullscreenButton"></button>
+                <button id="camaraButton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="90" height="80" class="bi bi-camera-video"
+                        viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M0 5a2 2 0 0 1 2-2h7.5a2 2 0 0 1 1.983 1.738l3.11-1.382A1 1 0 0 1 16 4.269v7.462a1 1 0 0 1-1.406.913l-3.111-1.382A2 2 0 0 1 9.5 13H2a2 2 0 0 1-2-2zm11.5 5.175 3.5 1.556V4.269l-3.5 1.556zM2 4a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h7.5a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1z" />
+                    </svg>
+                </button>
             </div>
         </div>
 
@@ -52,7 +45,7 @@
                 <source id="audio-source" src="" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
-            <video id="video-preview" autoplay muted style="transform: scaleX(-1);"></video>
+            <video id="video-preview" autoplay muted></video>
 
             <div class="controls">
                 

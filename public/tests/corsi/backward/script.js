@@ -40,11 +40,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Posiciones fijas de los cuadrados
     const fixedPositions = [
-        { "top": 590, "left": 400 },
-        { "top": 548, "left": 825 },
+        { "top": 460, "left": 400 },
+        { "top": 450, "left": 850 },
         { "top": 440, "left": 188 },
-        { "top": 397, "left": 656 },
-        { "top": 312, "left": 358 },
+        { "top": 330, "left": 656 },
+        { "top": 280, "left": 358 },
         { "top": 185, "left": 125 },
         { "top": 145, "left": 890 },
         { "top": 20, "left": 632 },
@@ -266,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
         startTestButton.display = 'inline-block';
         sequenceDisplaying = false;
         resetBlocks();
-
     }
 
     startTestButton.addEventListener('click', async () => {
@@ -496,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: csvContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Inverso_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_corsi_inverso_${getCurrentDate()}.csv`
         };
     }
 
@@ -522,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: txtContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Inverso_Unival_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_corsi_inverso_${getCurrentDate()}.csv`
         };
     }
 
@@ -532,12 +531,12 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.file(csvFile.filename, csvFile.content);
         zip.file(txtFile.filename, txtFile.content);
         const videoBlob = await stopScreenRecording();
-        zip.file(`${idParticipante}_10_Span_Visuoespacial_Inverso_${getCurrentDate()}.webm`, videoBlob);
+        zip.file(`${idParticipante}_corsi_inverso_${getCurrentDate()}.webm`, videoBlob);
 
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
-        link.setAttribute("download", `${idParticipante}_10_Span_Visuoespacial_Inverso_${getCurrentDate()}.zip`);
+        link.setAttribute("download", `${idParticipante}_corsi_inverso_${getCurrentDate()}.zip`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

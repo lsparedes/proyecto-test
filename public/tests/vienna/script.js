@@ -493,8 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Registrar la respuesta con las coordenadas ajustadas
-        const responseTime = (Date.now() - clickStartTime) / 1000;
-
+        const responseTime = Date.now() - clickStartTime;
         recordResponse(videoIndex, click, responseTime);
 
         // Dibujar el círculo en las coordenadas del clic ajustado
@@ -722,8 +721,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const date = new Date();
         const formattedDate = `${String(date.getDate()).padStart(2, '0')}_${String(date.getMonth() + 1).padStart(2, '0')}_${date.getFullYear()}`;
 
-        const csvFileName = `${idParticipante}_VIENNA_13_${formattedDate}.csv`;
-        const txtFileName = `${idParticipante}_VIENNA_13_Unival_${formattedDate}.csv`;
+        const csvFileName = `${idParticipante}_VIENNA_13_${inicialesExaminador}_${formattedDate}.csv`;
+        const txtFileName = `${idParticipante}_VIENNA_13_Metricas_${inicialesExaminador}_${formattedDate}.csv`;
 
         zip.file(csvFileName, csvBlob);
         zip.file(txtFileName, txtBlob);
@@ -741,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const link = document.createElement('a');
                 if (link.download !== undefined) {
                     const url = URL.createObjectURL(content);
-                    const zipFileName = `${idParticipante}_13_VIENNA_${formattedDate}.zip`;
+                    const zipFileName = `${idParticipante}_13_VIENNA_${inicialesExaminador}_${formattedDate}.zip`;
 
                     link.setAttribute('href', url);
                     link.setAttribute('download', zipFileName);
@@ -825,10 +824,6 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             testVideo.play(); // Reproducir el video después de 2 segundos
         }, 2000); // 2000 milisegundos = 2 segundos
-        testVideo.addEventListener('ended', () => {
-            clickStartTime = Date.now(); // Inicia el conteo cuando el video termina
-            showQuestion(); // O cualquier otra acción que indique el fin del video
-        });
     };
 
     if (imageCanvas && testVideo) {
