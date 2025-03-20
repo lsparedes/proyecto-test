@@ -17,9 +17,7 @@ let clicks = [];
 let recorder;
 let chunks = [];
 let practiceClicks = [];
-let startItemTime, endTime;
-let totalStartTime = new Date();
-
+let startItemTime, endTime, totalStartTime;
 let originalCanvasSize = { width: 2105, height: 1489 };
 
 // Coordenadas de las letras "A" en la resolución de la imagen
@@ -489,6 +487,7 @@ startButton.addEventListener('click', () => {
     instructionsScreenP.style.display = 'none';
     mainScreenP.style.display = 'block';
     testButton.style.display = 'block';  // Asegura que el botón 'next' esté visible
+    totalStartTime = new Date(); // Registro del tiempo de inicio total
 });
 
 nextButtonP.addEventListener('click', () => {
@@ -528,7 +527,7 @@ clearButton.addEventListener('click', () => {
 
 function handleClick(e) {
     // Verifica que el evento provenga de un lápiz
-    if (e.pointerType !== 'touch') return;
+    if (e.pointerType !== 'pen') return;
 
     const rect = imageCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / imageCanvas.width);
@@ -537,7 +536,7 @@ function handleClick(e) {
     drawCircle(e.clientX - rect.left, e.clientY - rect.top, 'blue');
 }
 function handleClickPractice(e) {
-    if (e.pointerType !== 'touch') return;
+    if (e.pointerType !== 'pen') return;
 
     const rect = practiceCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / practiceCanvas.width);
@@ -602,22 +601,20 @@ function validateClicks() {
     let leftClicks = 0;
     let rightClicks = 0;
     let erroresComision = 0;
-    let searchDistance = 0;  // Distancia total entre clics correctos
+    let searchDistance = 0;  // Variable para almacenar la distancia total
 
     const imageWidth = 2105; // Ancho de la imagen original
     const halfWidth = imageWidth / 2; // Punto de referencia para dividir la imagen
     const results = [];
     ctx.drawImage(image, 0, 0, imageCanvas.width, imageCanvas.height);
 
-    let lastCorrectClick = null;  // Último clic correcto registrado
+    let lastCorrectClick = null;  // Variable para almacenar el último clic correcto
     let sumX = 0;
     let sumY = 0;
 
-    // Procesar cada clic
     clicks.forEach((click, index) => {
         let isCorrect = false;
 
-        // Verificar si el clic está cerca de alguna letra "A"
         letrasA.forEach(letra => {
             const dx = click.x - letra.x;
             const dy = click.y - letra.y;
@@ -628,19 +625,17 @@ function validateClicks() {
                 sumX += click.x;
                 sumY += click.y;
 
-                // Calcular distancia entre clics correctos consecutivos
+                // Si hay un clic correcto anterior, calcular la distancia y sumarla
                 if (lastCorrectClick) {
-                    const distance = Math.sqrt(
-                        Math.pow(click.x - lastCorrectClick.x, 2) +
-                        Math.pow(click.y - lastCorrectClick.y, 2)
-                    );
+                    const distance = Math.sqrt(Math.pow(click.x - lastCorrectClick.x, 2) + Math.pow(click.y - lastCorrectClick.y, 2));
                     searchDistance += distance;
                 }
+
+                // Actualizar el último clic correcto
                 lastCorrectClick = { x: click.x, y: click.y };
             }
         });
 
-        // Verificar errores de comisión (clics sobre otras letras)
         otrasLetras.forEach(letra => {
             const dx = click.x - letra.x;
             const dy = click.y - letra.y;
@@ -649,13 +644,11 @@ function validateClicks() {
             }
         });
 
-        // Dibujar el círculo del clic (verde si es correcto, rojo en caso contrario)
         drawCircle(
             click.x * (imageCanvas.width / 2105),
             click.y * (imageCanvas.height / 1489),
             isCorrect ? 'green' : 'red'
         );
-
         results.push({ orden: index + 1, x: click.x, y: click.y, correcto: isCorrect ? 'Si' : 'No' });
         if (!isCorrect) {
             totalErrors++;
@@ -674,79 +667,43 @@ function validateClicks() {
             );
         }
     });
-
-    // --- Cálculo de las omisiones ---
-    // Se marca para cada letra "A" si se encontró algún clic cercano
-    let foundLetters = new Array(letrasA.length).fill(false);
-    clicks.forEach((click) => {
-        letrasA.forEach((letter, idx) => {
-            const dx = click.x - letter.x;
-            const dy = click.y - letter.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 20) {
-                foundLetters[idx] = true;
-            }
-        });
-    });
-
-    let omissionsLeft = 0;
-    let omissionsRight = 0;
-    letrasA.forEach((letter, idx) => {
-        if (!foundLetters[idx]) {
-            if (letter.x < halfWidth) {
-                omissionsLeft++;
-            } else {
-                omissionsRight++;
-            }
-        }
-    });
-
-    const NoOmiErrL = omissionsLeft;
-    const NoOmiErrR = omissionsRight;
-    console.log("Omisiones Izquierda:", NoOmiErrL);
-    console.log("Omisiones Derecha:", NoOmiErrR);
-
-    // --- Cálculo de la Estrategia de Búsqueda ---
-    // Se utiliza el array "promedio" que contiene los clics correctos
-    const SStrategy = computeSearchStrategy(promedio);
-    console.log("Estrategia de búsqueda (proporción horizontal):", SStrategy);
-
-    // --- Generación del CSV ---
-    endTime = new Date();
-    const testDuration = (endTime - startItemTime) / 1000; 
-    const totalDuration = (endTime - totalStartTime) / 1000; 
-    
-    // Calcular centro de las letras encontradas
     const centerX = sumX / correctClicks;
     const centerY = sumY / correctClicks;
+
     const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
+    const normalizedCenterY = (centerY - (1489 / 2)) / (1489 / 2);
+
+    console.log(sumX, sumY, correctClicks);
+    endTime = new Date();
     const CoC = Math.sign(normalizedCenterX) === -1 ? -1 : 1;
-    
-    // Calcular velocidad de búsqueda
-    let searchSpeed = (correctClicks / (testDuration * 1000)) * 1000; 
-    
-    let searchDistanceFormatted = (searchDistance / promedio.length).toFixed(2).replace('.', ',');
-    
-    // Formatear duración total y de ejecución
-    const totalDurationFormatted = totalDuration.toFixed(3).replace('.', ',');
-    const testDurationFormatted = testDuration.toFixed(3).replace('.', ',');
-    
-    // Obtener fecha formateada para el nombre del archivo
+    const testDuration = (endTime - startItemTime);
+    const totalDuration = (endTime - totalStartTime);
+    const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
+    const testDurationFormatted = testDuration.toLocaleString('es-CL');
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
-    const fechaHoraChilena = fechaActual.toLocaleDateString('es-CL', options);
+    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
     const baseFileName = `4_Cancelación_Letras_A_${fechaFormateada}`;
-    
-    // Preparar CSV con las nuevas variables:
-    let csvContent = 'TotTime;ExecTime;Hand;NoTargets;NoOmiErrL;NoOmiErrR;NoCommErr;SSpeed;SDistance;SStrategy;CoC;Examinador\n';
-    
+    const searchDistanceFormatted = (searchDistance / promedio.length).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    let searchSpeed = (correctClicks / testDuration) * 1000;
+
+    let csvContent = 'TotTime;ExecTime;Hand;NoTargets;NoOmiErr;NoCommErr;SSpeed;SDistance;CoC;Examinador\n';
+
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+        console.error("Error: userInfo no está definido correctamente.");
+        return;
+    }
+
     const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-    
-    csvContent += `${totalDurationFormatted};${testDurationFormatted};${selectedHand};${correctClicks};${NoOmiErrL};${NoOmiErrR};${erroresComision};${searchSpeed.toFixed(3).replace('.', ',')};${searchDistanceFormatted};${SStrategy !== null ? SStrategy.toFixed(3).replace('.', ',') : 'NA'};${CoC};${inicialesExaminador}\n`;
-    
+
+    csvContent += `${totalDuration};${testDuration};${selectedHand};${correctClicks};${totalErrors};${erroresComision};${searchSpeed};${searchDistanceFormatted};${CoC};${inicialesExaminador}\n`;
+
     console.log(csvContent);
-    
+
+
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
@@ -755,6 +712,7 @@ function validateClicks() {
             zip.file(`${idParticipante}_${baseFileName}.png`, canvasBlob);
             zip.file(`${idParticipante}_${baseFileName}.mp4`, videoBlob);
             zip.generateAsync({ type: 'blob' }).then(content => {
+                // Define la fecha actual y la formateas
                 const url = URL.createObjectURL(content);
                 const link = document.createElement('a');
                 link.href = url;
@@ -767,32 +725,13 @@ function validateClicks() {
                     window.close();
                 }, 3000);
             });
+
         });
     });
 
-    // Reiniciar arrays y variables para la próxima ejecución
     clicks = [];
     chunks = [];
-
-    // Función que calcula la estrategia de búsqueda basada en transiciones horizontales
-    function computeSearchStrategy(correctClicks) {
-        if (correctClicks.length < 2) return null; // No se puede calcular con un solo clic
-
-        let horizontalTransitions = 0;
-        const totalTransitions = correctClicks.length - 1;
-
-        for (let i = 1; i < correctClicks.length; i++) {
-            const dx = Math.abs(correctClicks[i].x - correctClicks[i - 1].x);
-            const dy = Math.abs(correctClicks[i].y - correctClicks[i - 1].y);
-            if (dx >= dy) {
-                horizontalTransitions++;
-            }
-        }
-        return horizontalTransitions / totalTransitions;
-    }
 }
-
-
 let stream;
 
 let userInfo;

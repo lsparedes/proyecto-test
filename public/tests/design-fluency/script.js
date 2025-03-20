@@ -377,7 +377,7 @@ window.onload = function () {
 
                     // Generar el archivo ZIP y descargarlo
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `${idParticipante}_3_Design_Fluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
+                        saveAs(content, `${idParticipante}_3_Design_Fluency_Metricas_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
 
                         setTimeout(() => {
                             window.close();

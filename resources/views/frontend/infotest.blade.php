@@ -28,7 +28,7 @@
                                         <span id="fuenteContainer" class="fuente-container">
                                             <span id="fuenteText" class="fuente-text">{{ $test->tipoTest->fuente }}</span>
                                             @if (!empty($test->tipoTest->link_fuente))
-                                                <i class="fas fa-chevron-down" id="fuenteArrow"></i>
+                                                
                                             @endif
                                         </span>
                                         @if (!empty($test->tipoTest->link_fuente))

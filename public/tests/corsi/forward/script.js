@@ -39,8 +39,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let recordedChunks = [];
 
     const fixedPositions = [
-        { "top": 590, "left": 400 },
-        { "top": 548, "left": 825 },
+        { "top": 480, "left": 400 },
+        { "top": 490, "left": 825 },
         { "top": 440, "left": 188 },
         { "top": 397, "left": 656 },
         { "top": 312, "left": 358 },
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Descargando ZIP...");
         await downloadResultsAsZip(testData, startTime, selectedHand);
     }
-
+    
 
     function endPractice() {
         instructionsAudio.src = 'sonidos/Directo_2.wav';
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 userResponseIncremented.join(""),
                 precision,
                 data.responseTime,
-                initials // Iniciales del examinador
+                initials // Agregar iniciales
             ];
         });
 
@@ -509,7 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: txtContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_Unival_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.csv`
         };
     }
 
@@ -519,30 +519,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const zip = new JSZip();
         zip.file(csvFile.filename, csvFile.content);
         zip.file(txtFile.filename, txtFile.content);
-
+        
         const videoBlob = await stopScreenRecording();
         console.log("Video Blob:", videoBlob); // Verifica si el Blob del video se genera correctamente.
-
+    
         if (!videoBlob || videoBlob.size === 0) {
             console.error("Error: No se grabó el video o está vacío.");
         } else {
             zip.file(`${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.webm`, videoBlob);
         }
-
+    
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
         link.setAttribute("download", `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.zip`);
         document.body.appendChild(link);
-
+    
         link.click();
         document.body.removeChild(link);
-
+    
         setTimeout(() => {
             window.close();
         }, 3000);
     }
-
+    
 
 
     async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
