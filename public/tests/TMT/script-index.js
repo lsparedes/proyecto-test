@@ -129,14 +129,14 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesToCorrect.length = 0;
 
         const circleCoordinates = [
-            { x: 350 - 70, y: 310 },
-            { x: 470 - 70, y: 100 },
-            { x: 640 - 70, y: 320 },
-            { x: 500 - 70, y: 220 },
-            { x: 530 - 70, y: 370 },
-            { x: 160 - 70, y: 400 },
-            { x: 140 - 70, y: 190 },
-            { x: 300 - 70, y: 150 }
+            { x: 450 - 70, y: 460 },
+            { x: 600 - 70, y: 200 },
+            { x: 840 - 70, y: 470 },
+            { x: 650 - 70, y: 350 },
+            { x: 670 - 70, y: 580 },
+            { x: 180 - 70, y: 610 },
+            { x: 130 - 70, y: 320 },
+            { x: 400 - 70, y: 250 }
         ];
 
         circleCoordinates.forEach((coord, index) => {
@@ -236,47 +236,51 @@ document.addEventListener('DOMContentLoaded', function () {
         isDrawing = false;
     }
 
-    function getTouchPosRotated(canvas, touchEvent) {
-        const rect = canvas.getBoundingClientRect();
-        const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-    
-        // Coordenadas originales respecto al canvas
-        const localX = touch.clientX - rect.left;
-        const localY = touch.clientY - rect.top;
-    
-        // Transformación para la rotación de -90°
-        const rotatedX = rect.height - localY;
-        const rotatedY = localX;
-    
-        return { x: rotatedX, y: rotatedY };
-    }
-    
-    // Evento touchstart
     canvas.addEventListener('touchstart', function (event) {
         event.preventDefault();
-        const { x, y } = getTouchPosRotated(canvas, event);
-        startDrawing(x, y);
+        const rect = canvas.getBoundingClientRect();
+        // Usamos el primer toque
+        const touch = event.touches[0];
+        const relativeX = touch.clientX - rect.left;
+        const relativeY = touch.clientY - rect.top;
+        // Transformación para -90°
+        const rotatedX = rect.height - relativeY;
+        const rotatedY = relativeX;
+        
+        startDrawing(rotatedX, rotatedY);
     });
     
-    // Evento touchmove
     canvas.addEventListener('touchmove', function (event) {
-        if (event.touches.length > 0) {
+        // Verifica que haya al menos un toque activo y que tenga presión
+        if (event.touches.length > 0 && event.touches[0].force > 0) {
             event.preventDefault();
-            const { x, y } = getTouchPosRotated(canvas, event);
-            drawMove(x, y);
+            const rect = canvas.getBoundingClientRect();
+            const touch = event.touches[0];
+            const relativeX = touch.clientX - rect.left;
+            const relativeY = touch.clientY - rect.top;
+            const rotatedX = rect.height - relativeY;
+            const rotatedY = relativeX;
+            
+            drawMove(rotatedX, rotatedY);
         }
     });
     
-    // Evento touchend
     canvas.addEventListener('touchend', function (event) {
         event.preventDefault();
-        const { x, y } = getTouchPosRotated(canvas, event);
-        endDrawing(x, y);
+        const rect = canvas.getBoundingClientRect();
+        // En touchend usamos changedTouches para obtener la posición final
+        const touch = event.changedTouches[0];
+        const relativeX = touch.clientX - rect.left;
+        const relativeY = touch.clientY - rect.top;
+        const rotatedX = rect.height - relativeY;
+        const rotatedY = relativeX;
+        
+        endDrawing(rotatedX, rotatedY);
         liftPenCount++;
         airStartTime = new Date();
     });
     
-    
+
     function drawNextButton() {
         const nextButton = document.createElement('button');
         nextButton.id = 'endSequenceButton';
@@ -343,31 +347,31 @@ document.addEventListener('DOMContentLoaded', function () {
         circleRadius = 30; // Cambiado de const a let para permitir reasignación
 
         const circleCoordinatesPartA = [
-            { x: 580, y: 700 },
-            { x: 400, y: 837 },
-            { x: 654, y: 881 },
-            { x: 621, y: 490 },
-            { x: 367, y: 526 },
-            { x: 490, y: 617 },
-            { x: 343, y: 711 },
-            { x: 204, y: 879 },
-            { x: 258, y: 999 },
-            { x: 321, y: 875 },
-            { x: 537, y: 1037 },
-            { x: 130, y: 1086 },
-            { x: 200, y: 604 },
-            { x: 104, y: 741 },
-            { x: 112, y: 200 },
-            { x: 202, y: 365 },
-            { x: 435, y: 166 },
-            { x: 409, y: 395 },
-            { x: 667, y: 255 },
-            { x: 519, y: 247 },
-            { x: 744, y: 148 },
-            { x: 734, y: 464 },
-            { x: 761, y: 1060 },
-            { x: 711, y: 666 },
-            { x: 670, y: 1023 }
+            { x: 610, y: 700 },
+            { x: 431, y: 837 },
+            { x: 684, y: 881 },
+            { x: 651, y: 490 },
+            { x: 397, y: 526 },
+            { x: 518, y: 617 },
+            { x: 373, y: 711 },
+            { x: 234, y: 879 },
+            { x: 288, y: 999 },
+            { x: 351, y: 875 },
+            { x: 567, y: 1037 },
+            { x: 160, y: 1086 },
+            { x: 230, y: 604 },
+            { x: 134, y: 741 },
+            { x: 142, y: 200 },
+            { x: 232, y: 365 },
+            { x: 465, y: 166 },
+            { x: 439, y: 395 },
+            { x: 697, y: 255 },
+            { x: 549, y: 247 },
+            { x: 774, y: 148 },
+            { x: 764, y: 464 },
+            { x: 791, y: 1060 },
+            { x: 741, y: 666 },
+            { x: 702, y: 1023 }
         ];
 
         circleCoordinatesPartA.forEach((coord, index) => {
@@ -460,48 +464,67 @@ document.addEventListener('DOMContentLoaded', function () {
         isDrawingPartA = false;
     }
 
-    function getTouchPosRotatedPartA(canvas, touchEvent) {
-        const rect = canvas.getBoundingClientRect();
-        const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-    
-        // Coordenadas originales respecto al canvas
-        const localX = touch.clientX - rect.left;
-        const localY = touch.clientY - rect.top;
-    
-        // Transformación para la rotación de -90°
-        const rotatedX = rect.height - localY;
-        const rotatedY = localX;
-    
-        return { x: rotatedX, y: rotatedY };
-    }
-    
-    // Evento touchstart
+
+
     canvasPartA.addEventListener('touchstart', function (event) {
         event.preventDefault();
-        const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
-        startDrawingPartA(x, y);
-    });
-    
-    // Evento touchmove
-    canvasPartA.addEventListener('touchmove', function (event) {
-        if (event.touches.length > 0) {
-            event.preventDefault();
-            const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
-            drawMovePartA(x, y);
+        const rect = canvasPartA.getBoundingClientRect();
+        // Obtenemos el primer toque
+        const touch = event.touches[0];
+        const relativeX = touch.clientX - rect.left;
+        const relativeY = touch.clientY - rect.top;
+        // Transformación para -90°
+        const rotatedX = rect.height - relativeY;
+        const rotatedY = relativeX;
+        
+        startDrawingPartA(rotatedX, rotatedY);
+        
+        if (airStartTime) {
+            let airEndTime = new Date();
+            let airTime = (airEndTime - airStartTime) / 1000;
+            penAirTime += airTime;
+            airStartTime = null;
+        }
+        
+        if (!isRecordingStarted) {
+            mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
+            isRecordingStarted = true;
+            inicio = new Date();
+            reiniciarTemporizador();
         }
     });
     
-    // Evento touchend
-    canvasPartA.addEventListener('touchend', function (event) {
-        event.preventDefault();
-        const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
-        endDrawingPartA(x, y);
-        liftPenCount++;
-        airStartTime = new Date();
+    canvasPartA.addEventListener('touchmove', function (event) {
+        // Verificamos que exista al menos un toque activo y que tenga presión (force)
+        if (event.touches.length > 0 && event.touches[0].force > 0) {
+            event.preventDefault();
+            const rect = canvasPartA.getBoundingClientRect();
+            const touch = event.touches[0];
+            const relativeX = touch.clientX - rect.left;
+            const relativeY = touch.clientY - rect.top;
+            const rotatedX = rect.height - relativeY;
+            const rotatedY = relativeX;
+            
+            drawMovePartA(rotatedX, rotatedY);
+        }
     });
     
-
+    canvasPartA.addEventListener('touchend', function (event) {
+        event.preventDefault();
+        const rect = canvasPartA.getBoundingClientRect();
+        // En touchend se utiliza changedTouches para obtener la posición del último toque
+        const touch = event.changedTouches[0];
+        const relativeX = touch.clientX - rect.left;
+        const relativeY = touch.clientY - rect.top;
+        const rotatedX = rect.height - relativeY;
+        const rotatedY = relativeX;
+        
+        endDrawingPartA(rotatedX, rotatedY);
+        liftPenCount++;
+        airStartTime = new Date();
+    });    
     
+
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
         nextButtonA.id = 'endSequenceButton';

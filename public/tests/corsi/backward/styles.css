@@ -32,7 +32,8 @@ body {
 #blocks {
     position: relative;
     width: 1100px;
-    height: 600px;
+    height: 750px;
+    margin: 10px auto;
     border: 1px solid #ccc;
     background-color: #fff;
 }

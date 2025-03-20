@@ -55,9 +55,9 @@
         <!-- Ensayo 2 -->
         <div class="container-fluid justify-content-center">
             <div class="row justify-content-center">
-                <div id="ensayo2" class="screen col-12" style="display: none;">
-                    <p id="instructionText">Ahora vamos a hacer lo mismo otra vez, así que escuche la lista de palabras que le voy a decir atentamente.</p>
-                    <audio id="audio4" controls preload="auto">
+                <div id="ensayo2" style="display: none;" class="col-12">
+                    <p class="instructionText">Ahora vamos a hacer lo mismo otra vez, así que escuche la lista de palabras que le voy a decir atentamente.</p>
+                    <audio id="audio4" controls class="justify-content-center">
                         <source src="audios/Inmediato_2.wav" type="audio/mpeg">
                         Tu navegador no soporta el elemento de audio.
                     </audio>
@@ -65,6 +65,7 @@
                         <button id="nxbutton2"></button>
                     </div>
                 </div>
+
             </div>
         </div>
 
@@ -89,9 +90,10 @@
         <!-- Ensayo 3 -->
         <div class="container-fluid justify-content-center">
             <div class="row justify-content-center">
-                <div id="ensayo3" class="screen col-12" style="display: none;">
-                    <p id="instructionText">Ahora vamos a hacer lo mismo una última vez, así que escuche la lista de palabras que le voy a decir atentamente.</p>
-                    <audio id="audio5" controls preload="auto">
+                <div id="ensayo3" style="display: none;" class="col-12 flex-column align-items-center">
+                    <p class="instructionText">Ahora vamos a hacer lo mismo una última vez, así que escuche la lista de palabras que le voy a decir atentamente.
+                    </p>
+                    <audio id="audio5" controls>
                         <source src="audios/Inmediato_3.wav" type="audio/mpeg">
                         Tu navegador no soporta el elemento de audio.
                     </audio>
@@ -101,9 +103,6 @@
                 </div>
             </div>
         </div>
-        
-        
-        
 
         <!-- Palabras Ensayo 3 -->
         <div id="words3" style="display: none;">
@@ -122,12 +121,13 @@
             <button id="initRecordingButton3"></button>
             <button id="stopRecordingButton3"></button>
         </div>
-        
         <div class="container-fluid justify-content-center">
             <div class="row justify-content-center">
-                <div id="finish" class="screen col-12" style="display: none;">
-                    <p id="instructionText">Es posible que se le pida recordar la lista de palabras nuevamente más adelante.</p>
-                    <audio id="audio7" controls preload="auto">
+                <div id="finish" style="display: none;" class="col-12 flex-column align-items-center">
+                    <p class="instructionText">Es posible que se le pida recordar la lista de palabras nuevamente más
+                        adelante.
+                    </p>
+                    <audio id="audio7" controls>
                         <source src="audios/Inmediato_4.wav" type="audio/mpeg">
                         Tu navegador no soporta el elemento de audio.
                     </audio>
@@ -135,9 +135,9 @@
                         <button id="nxbutton6"></button>
                     </div>
                 </div>
+
             </div>
         </div>
-        
 
         <!-- Pantalla Final -->
 

@@ -652,7 +652,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Retornar el archivo de métricas con el nombre adecuado
       return {
           content: txtContent,
-          filename: `${idParticipante}_15_Discriminacion_Perceptua_Metricas_${getCurrentDate()}.csv`
+          filename: `${idParticipante}_15_Discriminacion_Perceptua_Unival_${getCurrentDate()}.csv`
       };
   }
   

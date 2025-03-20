@@ -12,7 +12,6 @@ let lastCirclePartB = null;
 const correctPathsPartB = [];
 const incorrectPathsPartB = [];
 const incorrectPathsPartB2 = [];
-
 let drawingCompletedB = false;
 
 let circleRadius = 30;
@@ -35,14 +34,14 @@ const show1 = document.getElementById('show1');
 show1.style.display = 'none';
 
 const circleCoordinatesPartB = [
-    { x: 398 - 70, y: 297 },
-    { x: 530 - 70, y: 90 },
-    { x: 650 - 70, y: 340 },
-    { x: 550 - 70, y: 190 },
-    { x: 520 - 70, y: 400 },
-    { x: 200 - 70, y: 400 },
-    { x: 180 - 70, y: 80 },
-    { x: 360 - 70, y: 150 }
+    { x: 498 - 70, y: 497 },
+    { x: 653 - 70, y: 237 },
+    { x: 847 - 70, y: 494 },
+    { x: 671 - 70, y: 364 },
+    { x: 670 - 70, y: 619 },
+    { x: 272 - 70, y: 621 },
+    { x: 209 - 70, y: 253 },
+    { x: 433 - 70, y: 335 }
 ];
 
 const firstCircleLabelB = "Empezar";
@@ -159,7 +158,6 @@ function startDrawing(x, y) {
         }
     });
 }
-const incorrectNodes = new Set(); // Guarda nodos que fueron marcados como error
 
 function drawMove(x, y) {
     if (!isDrawingPartB) return;
@@ -170,27 +168,23 @@ function drawMove(x, y) {
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+        if (distance < circleRadius && circle.label != getNextLabel(currentCirclePartB) && circle.label != lastCirclePartB.label) {
+            highlightCircle(ctxPartB, circle, 'red', x, y);
+            incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
+            circlesToCorrectB.push({ x: circle.x, y: circle.y, number: circle.number });
+            isDrawingPartB = false;
+        } else if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB)) {
+            highlightCircle(ctxPartB, circle, 'black', x, y);
+            correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
+            currentCirclePartB = getNextLabel(currentCirclePartB);
+            lastCirclePartB = circle;
+            validDrop = true;
 
-        if (distance < circleRadius) {
-            if (circle.label !== getNextLabel(currentCirclePartB) && circle.label !== lastCirclePartB.label) {
-                // ❌ Si es un error, lo mantenemos rojo
-                highlightCircle(ctxPartB, circle, 'red', x, y);
-                incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
-                incorrectNodes.add(circle.label); // Guardamos que este nodo tiene un error
-                isDrawingPartB = false;
-            } else if (circle.label === getNextLabel(currentCirclePartB)) {
-                // ✔ Si es un trazo correcto
-                if (incorrectNodes.has(circle.label)) {
-                    // Si el nodo fue incorrecto antes, lo mantenemos rojo
-                    highlightCircle(ctxPartB, circle, 'red', x, y);
-                } else {
+            if (circlesToCorrectB.length > 0) {
+                circlesToCorrectB.forEach(circle => {
                     highlightCircle(ctxPartB, circle, 'black', x, y);
-                }
-                
-                correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
-                currentCirclePartB = getNextLabel(currentCirclePartB);
-                lastCirclePartB = circle;
-                validDrop = true;
+                });
+                circlesToCorrectB.length = 0;
             }
         }
     });
@@ -200,21 +194,13 @@ function drawMove(x, y) {
     }
 }
 
-
 function endDrawing(x, y) {
     let validDrop = false;
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-
-        if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB)) {
-            if (incorrectNodes.has(circle.label)) {
-                // Si el nodo antes tenía error, sigue rojo
-                highlightCircle(ctxPartB, circle, 'red', x, y);
-            } else {
-                highlightCircle(ctxPartB, circle, 'black', x, y);
-            }
-
+        if (distance < 50 && circle.label === getNextLabel(currentCirclePartB)) {
+            highlightCircle(ctxPartB, circle, 'black', x, y);
             correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB = getNextLabel(currentCirclePartB);
             lastCirclePartB = circle;
@@ -222,9 +208,10 @@ function endDrawing(x, y) {
         }
     });
 
-    if (!validDrop) {
+    const distance = Math.sqrt((x - lastCirclePartB.x) ** 2 + (y - lastCirclePartB.y) ** 2);
+
+    if (!validDrop && lastCirclePartB && distance > circleRadius) {
         incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
-        incorrectNodes.add(currentCirclePartB); // Guarda que este nodo tuvo un error
     }
 
     if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
@@ -234,46 +221,47 @@ function endDrawing(x, y) {
     isDrawingPartB = false;
 }
 
-
-
-function getTouchPosRotatedPartB(canvas, touchEvent) {
-    const rect = canvas.getBoundingClientRect();
-    const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-
-    // Coordenadas originales respecto al canvas
-    const localX = touch.clientX - rect.left;
-    const localY = touch.clientY - rect.top;
-
-    // Transformación para la rotación de -90°
-    const rotatedX = rect.height - localY;
-    const rotatedY = localX;
-
-    return { x: rotatedX, y: rotatedY };
-}
-
-// Evento touchstart (inicia el dibujo)
 canvasPartB.addEventListener('touchstart', function (event) {
     event.preventDefault();
-    const { x, y } = getTouchPosRotatedPartB(canvasPartB, event);
-    startDrawing(x, y);
+    const rect = canvasPartB.getBoundingClientRect();
+    // Usamos el primer touch
+    const touch = event.touches[0];
+    const relativeX = touch.clientX - rect.left;
+    const relativeY = touch.clientY - rect.top;
+    // Transformación para -90°
+    const rotatedX = rect.height - relativeY;
+    const rotatedY = relativeX;
+    
+    startDrawing(rotatedX, rotatedY);
 });
 
-// Evento touchmove (dibuja mientras se mueve el dedo)
 canvasPartB.addEventListener('touchmove', function (event) {
-    if (event.touches.length > 0) {
+    // Se puede validar que haya presión o que el touch esté activo
+    if (event.touches.length > 0 && event.touches[0].force > 0) {
         event.preventDefault();
-        const { x, y } = getTouchPosRotatedPartB(canvasPartB, event);
-        drawMove(x, y);
+        const rect = canvasPartB.getBoundingClientRect();
+        const touch = event.touches[0];
+        const relativeX = touch.clientX - rect.left;
+        const relativeY = touch.clientY - rect.top;
+        const rotatedX = rect.height - relativeY;
+        const rotatedY = relativeX;
+        
+        drawMove(rotatedX, rotatedY);
     }
 });
 
-// Evento touchend (finaliza el trazo)
 canvasPartB.addEventListener('touchend', function (event) {
     event.preventDefault();
-    const { x, y } = getTouchPosRotatedPartB(canvasPartB, event);
-    endDrawing(x, y);
+    const rect = canvasPartB.getBoundingClientRect();
+    // En touchend se usa changedTouches para obtener el último punto de contacto
+    const touch = event.changedTouches[0];
+    const relativeX = touch.clientX - rect.left;
+    const relativeY = touch.clientY - rect.top;
+    const rotatedX = rect.height - relativeY;
+    const rotatedY = relativeX;
+    
+    endDrawing(rotatedX, rotatedY);
 });
-
 
 
 function drawInvalidLine(ctx, startX, startY, endX, endY) {
@@ -323,31 +311,31 @@ const recordedChunksCanvasPartB2 = [];
 let mediaRecorderCanvasPartB2;
 
 const circleCoordinatesPartB2 = [
-    { x: 422, y: 480 },
-    { x: 590, y: 750 },
-    { x: 251, y: 853 },
-    { x: 364, y: 216 },
-    { x: 383, y: 364 },
-    { x: 560, y: 597 },
-    { x: 461, y: 185 },
-    { x: 667, y: 147 },
-    { x: 664, y: 509 },
-    { x: 690, y: 909 },
-    { x: 380, y: 862 },
-    { x: 180, y: 941 },
-    { x: 269, y: 474 },
-    { x: 180, y: 678 },
-    { x: 146, y: 201 },
-    { x: 180, y: 560 },
-    { x: 265, y: 149 },
-    { x: 546, y: 139 },
-    { x: 763, y: 86 },
-    { x: 705, y: 761 },
-    { x: 756, y: 980 },
-    { x: 94, y: 993 },
-    { x: 101, y: 648 },
-    { x: 143, y: 874 },
-    { x: 101, y: 97 }
+    { x: 452, y: 480 },
+    { x: 619, y: 750 },
+    { x: 281, y: 853 },
+    { x: 394, y: 216 },
+    { x: 413, y: 364 },
+    { x: 590, y: 597 },
+    { x: 491, y: 185 },
+    { x: 697, y: 147 },
+    { x: 694, y: 509 },
+    { x: 724, y: 909 },
+    { x: 404, y: 862 },
+    { x: 213, y: 941 },
+    { x: 299, y: 474 },
+    { x: 210, y: 678 },
+    { x: 176, y: 201 },
+    { x: 209, y: 560 },
+    { x: 295, y: 149 },
+    { x: 576, y: 139 },
+    { x: 793, y: 86 },
+    { x: 735, y: 761 },
+    { x: 786, y: 980 },
+    { x: 124, y: 993 },
+    { x: 131, y: 648 },
+    { x: 173, y: 874 },
+    { x: 141, y: 97 }
 ];
 
 const firstCircleLabelB2 = "Empezar";
@@ -418,8 +406,6 @@ function startDrawingPartB2(x, y) {
     });
 }
 
-const incorrectNodesPartB2 = new Set(); // Guarda nodos con errores
-
 function drawMovePartB2(x, y) {
     if (!isDrawingPartB2) return;
     ctxPartB2.lineTo(x, y);
@@ -429,41 +415,25 @@ function drawMovePartB2(x, y) {
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        
-        if (distance < circleRadius) {
-            if (circle.label !== getNextLabel(currentCirclePartB2) && circle.label !== lastCirclePartB2.label) {
-                // ❌ Si es un error, se mantiene en rojo
-                highlightCircle(ctxPartB2, circle, 'red', x, y);
-                incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
-                incorrectNodesPartB2.add(circle.label); // Guardar nodo con error
-                erroresComision++;
-                isDrawingPartB2 = false;
-            } else if (circle.label === getNextLabel(currentCirclePartB2)) {
-                // ✔ Si el trazo es correcto
-                if (incorrectNodesPartB2.has(circle.label)) {
-                    // Si el nodo fue incorrecto antes, se mantiene en rojo
-                    highlightCircle(ctxPartB2, circle, 'red', x, y);
-                } else {
+        if (distance < circleRadius && circle.label != getNextLabel(currentCirclePartB2) && circle.label != lastCirclePartB2.label) {
+            highlightCircle(ctxPartB2, circle, 'red', x, y);
+            erroresComision++;
+            circlesToCorrectB2.push({ x: circle.x, y: circle.y, number: circle.number });
+            incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
+            isDrawingPartB2 = false;
+        } else if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB2)) {
+            highlightCircle(ctxPartB2, circle, 'black', x, y);
+            correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
+            currentCirclePartB2 = getNextLabel(currentCirclePartB2);
+            lastCirclePartB2 = circle;
+            validDrop = true;
+            correctLines++;
+
+            if (circlesToCorrectB2.length > 0) {
+                circlesToCorrectB2.forEach(circle => {
                     highlightCircle(ctxPartB2, circle, 'black', x, y);
-                }
-
-                correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
-                currentCirclePartB2 = getNextLabel(currentCirclePartB2);
-                lastCirclePartB2 = circle;
-                validDrop = true;
-                correctLines++;
-
-                // 🔴 Evitar que nodos incorrectos previos se vuelvan negros
-                if (circlesToCorrectB2.length > 0) {
-                    circlesToCorrectB2.forEach(circle => {
-                        if (incorrectNodesPartB2.has(circle.label)) {
-                            highlightCircle(ctxPartB2, circle, 'red', x, y);
-                        } else {
-                            highlightCircle(ctxPartB2, circle, 'black', x, y);
-                        }
-                    });
-                    circlesToCorrectB2.length = 0;
-                }
+                });
+                circlesToCorrectB2.length = 0;
             }
         }
     });
@@ -473,21 +443,16 @@ function drawMovePartB2(x, y) {
     }
 }
 
-
 function endDrawingPartB2(x, y) {
+    // Verifica si se inició el trazo en un círculo válido
+    if (!lastCirclePartB2) return;
+
     let validDrop = false;
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-
         if (distance < circleRadius && circle.label === getNextLabel(currentCirclePartB2)) {
-            if (incorrectNodesPartB2.has(circle.label)) {
-                // Si el nodo fue erróneo antes, sigue en rojo
-                highlightCircle(ctxPartB2, circle, 'red', x, y);
-            } else {
-                highlightCircle(ctxPartB2, circle, 'black', x, y);
-            }
-
+            highlightCircle(ctxPartB2, circle, 'black', x, y);
             correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
             currentCirclePartB2 = getNextLabel(currentCirclePartB2);
             lastCirclePartB2 = circle;
@@ -495,71 +460,86 @@ function endDrawingPartB2(x, y) {
         }
     });
 
-    if (!validDrop) {
+    // Solo se calcula la distancia si lastCirclePartB2 sigue definido
+    if (lastCirclePartB2) {
         const distance = Math.sqrt((x - lastCirclePartB2.x) ** 2 + (y - lastCirclePartB2.y) ** 2);
-        if (distance > circleRadius) {
+        if (!validDrop && distance > circleRadius) {
             incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
-            incorrectNodesPartB2.add(currentCirclePartB2); // Guardar que este nodo tuvo un error
-            erroresComision++;
         }
+    }
+
+    if (currentCirclePartB2 === 13) {
+        drawingCompletedB2 = true;
     }
 
     isDrawingPartB2 = false;
 }
 
-
-function getTouchPosRotatedPartB2(canvas, touchEvent) {
-    const rect = canvas.getBoundingClientRect();
-    const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-
-    // Coordenadas originales respecto al canvas
-    const localX = touch.clientX - rect.left;
-    const localY = touch.clientY - rect.top;
-
-    // Transformación para la rotación de -90°
-    const rotatedX = rect.height - localY;
-    const rotatedY = localX;
-
-    return { x: rotatedX, y: rotatedY };
-}
-
-// Evento touchstart (inicia el dibujo)
-canvasPartB2.addEventListener('touchstart', function (event) {
+canvasPartB2.addEventListener('touchstart', function(event) {
     event.preventDefault();
-    const { x, y } = getTouchPosRotatedPartB2(canvasPartB2, event);
-    startDrawingPartB2(x, y);
-
+    if (drawingCompletedB2) return;
+    
+    const rect = canvasPartB2.getBoundingClientRect();
+    // Usamos el primer touch
+    const touch = event.touches[0];
+    const relativeX = touch.clientX - rect.left;
+    const relativeY = touch.clientY - rect.top;
+    // Transformación para -90°
+    const rotatedX = rect.height - relativeY;
+    const rotatedY = relativeX;
+    
+    console.log("Comenzó a dibujar (touch) en:", rotatedX, rotatedY);
+    startDrawingPartB2(rotatedX, rotatedY);
+    
     if (airStartTime) {
         let airEndTime = new Date();
         let airTime = (airEndTime - airStartTime) / 1000;
         penAirTime += airTime;
         airStartTime = null;
     }
-
+    
     if (!isRecordingStarted) {
         mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
-        isRecordingStarted = true; // Actualiza la variable de control.
+        isRecordingStarted = true;
         inicio = new Date();
         reiniciarTemporizador();
     }
 });
 
-// Evento touchmove (dibuja mientras se mueve el dedo)
-canvasPartB2.addEventListener('touchmove', function (event) {
-    if (event.touches.length > 0) {
-        event.preventDefault();
-        const { x, y } = getTouchPosRotatedPartB2(canvasPartB2, event);
-        drawMovePartB2(x, y);
-    }
+canvasPartB2.addEventListener('touchmove', function(event) {
+    event.preventDefault();
+    if (drawingCompletedB2) return;
+    
+    const rect = canvasPartB2.getBoundingClientRect();
+    const touch = event.touches[0];
+    const relativeX = touch.clientX - rect.left;
+    const relativeY = touch.clientY - rect.top;
+    const rotatedX = rect.height - relativeY;
+    const rotatedY = relativeX;
+    
+    drawMovePartB2(rotatedX, rotatedY);
 });
 
-// Evento touchend (finaliza el trazo)
+let airTimerInterval = null;
+let secondsCounter = 0;
+
 canvasPartB2.addEventListener('touchend', function (event) {
     event.preventDefault();
-    const { x, y } = getTouchPosRotatedPartB2(canvasPartB2, event);
-    endDrawingPartB2(x, y);
+    if (drawingCompletedB2) return;
+    
+    const rect = canvasPartB2.getBoundingClientRect();
+    // En touchend usamos changedTouches para obtener el último punto de contacto
+    const touch = event.changedTouches[0];
+    const relativeX = touch.clientX - rect.left;
+    const relativeY = touch.clientY - rect.top;
+    const rotatedX = rect.height - relativeY;
+    const rotatedY = relativeX;
+    
+    endDrawingPartB2(rotatedX, rotatedY);
     liftPenCount++;
+    // Guardamos el instante en que se levanta el touch
     airStartTime = new Date();
+    console.log("Touch levantado, tiempo inicial registrado: ", airStartTime);
 });
 
 
