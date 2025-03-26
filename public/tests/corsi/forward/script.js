@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     exerciseTitle: fixedTitles[sequenceCount],
                     correctAnswer: sequence,
                     userResponse: playerSequence,
-                    responseTime: milliseconds,
+                    responseTime: milliseconds / 1000,
                 };
                 testData.push(exerciseData);
             }
@@ -499,8 +499,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
         const headers = ["TotTime", "Hand", "Examinador"];
+        const totalTimeSeconds = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+
         const data = [
-            (new Date() - startTimeTotal) / 1000,
+            totalTimeSeconds,
             selectedHand,
             initials
         ];
@@ -509,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: txtContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_Unival_${getCurrentDate()}.csv`
         };
     }
 

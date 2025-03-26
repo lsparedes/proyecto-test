@@ -293,11 +293,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     exerciseTitle: fixedTitles[sequenceCount],
                     correctAnswer: sequence,
                     userResponse: playerSequence,
-                    responseTime: milliseconds,
+                    responseTime: milliseconds / 1000,
                 };
                 testData.push(exerciseData);
             }
-            checkSequence(); // Llamar a checkSequence cuando se presione "Terminar"
+            checkSequence(); 
         } else if (sequenceDisplaying) {
             sequenceDisplaying = false;
             continueTest = false;
@@ -495,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: csvContent,
-            filename: `${idParticipante}_corsi_inverso_${getCurrentDate()}.csv`
+            filename: `${idParticipante}10_Span_Visuoespacial_Inverso_${getCurrentDate()}.csv`
         };
     }
 
@@ -525,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: txtContent,
-            filename: `${idParticipante}_corsi_inverso_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_10_Span_Visuoespacial_Inverso_Unival_${getCurrentDate()}.csv`
         };
     }
 
