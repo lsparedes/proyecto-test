@@ -243,7 +243,7 @@ function generateCSV(results) {
         const esIgual = response.isSame ? 'Misma' : 'Diferentes';
         const respuestaUsuario = response.response === '' ? '' : (response.response === 'same' ? 'Misma' : 'Diferentes');
         const precision = response.isSame === (response.response === 'same') ? 1 : 0;
-        const tiempoRespuesta = response.responseTime;
+        const tiempoRespuesta = (response.responseTime / 1000).toFixed(3).replace('.', ',');
 
         // Agregar las iniciales del examinador a cada fila
         csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta, inicialesExaminador]);
@@ -265,8 +265,12 @@ function generateCSV2(startTimeTotal, selectedHand) {
 
     const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
-    const txtContent = [["TotTime", "Hand", "Examinador"], [(new Date() - startTimeTotal) / 1000, selectedHand, inicialesExaminador]]
-        .map(row => row.join(';')).join('\n');
+    const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+
+    const txtContent = [
+        ["TotTime", "Hand", "Examinador"],
+        [totalTime, selectedHand, inicialesExaminador]
+    ].map(row => row.join(';')).join('\n');
 
     return {
         content: txtContent,

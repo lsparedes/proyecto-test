@@ -436,43 +436,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     fetch('/api/user-info')
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al obtener la información del usuario');
-            }
+            if (!response.ok) throw new Error('Error al obtener la información del usuario');
             return response.json();
         })
         .then(data => {
-            userInfo = data; // Asignar los datos al objeto global
-            console.log("Usuario autenticado:", userInfo);
+            userInfo = data;
+            initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
+            // Habilitar botón una vez userInfo listo
+            document.getElementById('fin').addEventListener('click', () => {
+                crearZip(); // Aquí puedes estar seguro de que userInfo ya está disponible
+            });
         })
-        .catch(error => {
-            console.error('Error al obtener la información del usuario:', error);
-        });
+        .catch(error => console.error('Error:', error));
 
 
     function generateCSV(results) {
         if (!userInfo || !userInfo.name || !userInfo.last_name) {
             console.error("Error: userInfo no está definido correctamente.");
-            return {
-                content: "",
-                filename: ""
-            };
+            return { content: "", filename: "" };
         }
 
         const headers = ["Trial", "CorrResp", "PartResp", "Acc", "RT", "Examinador"];
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
         const rows = results.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
             const userResponseIncremented = data.userResponse.map(num => num + 1);
-            const precision = data.correctAnswer.reverse().join("") === data.userResponse.join("") ? 1 : 0;
+
+            const isCorrect = [...data.correctAnswer].reverse().join("") === data.userResponse.join("") ? 1 : 0;
+
             return [
                 data.exerciseTitle,
                 correctAnswerIncremented.reverse().join(""),
                 userResponseIncremented.join(""),
-                precision,
-                data.responseTime,
-                initials // Agregar las iniciales del examinador
+                isCorrect,
+                parseFloat(data.responseTime).toFixed(3).replace('.', ','),
+                initials
             ];
         });
 
@@ -483,11 +483,11 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < rowsToFill; i++) {
             rows.push([
                 fixedTitles[currentRowCount + i],
-                fixedSequences[currentRowCount + i].map(num => num + 1).join(""),
+                fixedSequences[currentRowCount + i].map(num => num + 1).reverse().join(""),
                 "",
                 0,
                 "",
-                initials // Agregar iniciales también en las filas faltantes
+                initials
             ]);
         }
 
@@ -499,7 +499,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-
     function generateCSV2(startTimeTotal, selectedHand) {
         if (!userInfo || !userInfo.name || !userInfo.last_name) {
             console.error("Error: userInfo no está definido correctamente.");
@@ -509,13 +508,18 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Iniciales
         const headers = ["TotTime", "Hand", "Examinador"];
+
+        // Calcula tiempo total en segundos, con 3 decimales y coma como separador
+        const totalTimeSeconds = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+
         const data = [
-            (new Date() - startTimeTotal) / 1000,
+            totalTimeSeconds,
             selectedHand,
             initials
         ];
+
 
         const txtContent = [headers, data].map(row => row.join(";")).join("\n");
 
@@ -528,12 +532,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function downloadZip(csvFile, txtFile) {
         const zip = new JSZip();
-        zip.file(csvFile.filename, csvFile.content);
-        zip.file(txtFile.filename, txtFile.content);
+
+        if (csvFile.filename && csvFile.content) {
+            zip.file(csvFile.filename, csvFile.content);
+        } else {
+            console.error("CSV principal no generado correctamente");
+        }
+
+        if (txtFile.filename && txtFile.content) {
+            zip.file(txtFile.filename, txtFile.content);
+        } else {
+            console.error("CSV secundario no generado correctamente");
+        }
+
+
         const videoBlob = await stopScreenRecording();
         zip.file(`${idParticipante}_corsi_inverso_${getCurrentDate()}.webm`, videoBlob);
 
         const zipContent = await zip.generateAsync({ type: "blob" });
+
+
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
         link.setAttribute("download", `${idParticipante}_corsi_inverso_${getCurrentDate()}.zip`);

@@ -493,7 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Registrar la respuesta con las coordenadas ajustadas
-        const responseTime = Date.now() - clickStartTime;
+        const responseTime = (Date.now() - clickStartTime) / 1000;
         recordResponse(videoIndex, click, responseTime);
 
         // Dibujar el círculo en las coordenadas del clic ajustado
@@ -707,7 +707,7 @@ document.addEventListener('DOMContentLoaded', () => {
             CorrResp: response.respuestaCorrecta,
             PartResp: response.respuestaParticipante,
             Acc: response.precision,
-            RT: response.tiempoRespuesta,
+            RT: Number(response.tiempoRespuesta).toFixed(3).replace('.', ','),
         }));
 
         let csv = Papa.unparse(csvData, { delimiter: ';' });
@@ -715,7 +715,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tiempoTotalSegundos = (Date.now() - trialStartTime) / 1000;
         const csvBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
 
-        const txtBlob = generarTxt(tiempoTotalSegundos, selectedHand, inicialesExaminador);
+        const txtBlob = generarTxt(tiempoTotalSegundos.toFixed(3).replace('.', ','), selectedHand, inicialesExaminador);
 
         const zip = new JSZip();
         const date = new Date();

@@ -311,7 +311,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const filename = `${idParticipante}_17_Pantomima_del_uso_de_objetos_${fechaFormateada}.csv`;
 
         // Definir el contenido del archivo CSV
-        const txtContent = [["TotTime", "Hand", "Examinador"], [totalTestTime / 1000, selectedHand, inicialesExaminador]]
+
+        const totalTime = ((new Date() - totalTestTime) / 1000).toFixed(3).replace('.', ',');
+
+        const txtContent = [["TotTime", "Hand", "Examinador"], [totalTime, selectedHand, inicialesExaminador]]
             .map(e => e.join(';'))
             .join('\n');
 

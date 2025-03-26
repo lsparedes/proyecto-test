@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 20;
-  let maxBlocks = 3;
+  let maxTrials = 2;
+  let maxBlocks = 2;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
   let trialInTimeout = false;
@@ -255,7 +255,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function recordAnswer(answer) {
     const isCorrect = answer === correctColor;
     const confidence = confidenceSlider.value;
-    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: diferenciaInicial, timeCol: timeColor, timeConf: timeConfidence, timeP: 'N/A' });
+    const timeColFormatted = (timeColor / 1000).toFixed(3).replace('.', ',');
+    const timeConfFormatted = (timeConfidence / 1000).toFixed(3).replace('.', ',');
+    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: diferenciaInicial, timeCol: timeColFormatted, timeConf: timeConfFormatted, timeP: 'N/A' });
     ajustarDificultad(isCorrect);
   }
 
@@ -647,7 +649,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
   
       // Crear el contenido del archivo de métricas
-      const txtContent = [["TotTime", "Hand", "Examinador"], [(new Date() - startTimeTotal) / 1000, selectedHand, inicialesExaminador]].map(row => row.join(';')).join('\n');
+      const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+
+      const txtContent = [
+          ["TotTime", "Hand", "Examinador"],
+          [totalTime, selectedHand, inicialesExaminador]
+      ].map(row => row.join(';')).join('\n');
   
       // Retornar el archivo de métricas con el nombre adecuado
       return {

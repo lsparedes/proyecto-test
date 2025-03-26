@@ -212,7 +212,7 @@ audio {
     /* Elimina el relleno para alinear el icono verticalmente */
     width: 90px;
     /* Ajusta el ancho fijo */
-    height: 80;
+    height: 80px;
     /* Ajusta la altura fija */
     vertical-align: middle;
     /* Alineado verticalmente con el contenido */

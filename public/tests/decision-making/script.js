@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
 
     function selectMachine(side) {
-        const responseTime = Date.now() - startTime;
+        const responseTime = (Date.now() - startTime) / 1000;
         console.log(`Trial ${currentTrial + 1}: Tiempo de respuesta -> ${responseTime} ms`);
         // Verificar qué imagen está en el lado izquierdo y derecho
         const leftImage = leftSlot.src; // Imagen actual del lado izquierdo
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
             trial.leftReward ? 'Ganancia' : 'Perdida',
             side,
             reward ? 1 : 0,
-            responseTime,
+            responseTime.toFixed(3).replace('.',','),
         ]);
 
         practiceTrial.style.display = 'none';
@@ -408,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
             csvContent += filteredResults.map(e => [...e, initials].join(";")).join("\n"); // Añadir iniciales en cada fila
         
             // Generar el contenido del archivo TXT
-            const totalTaskTime = (Date.now() - totalStartTime) / 1000;
+            const totalTaskTime = ((Date.now() - totalStartTime) / 1000).toFixed(3).replace('.', ',');
             let txtContent = [["TotTime", "Hand", "Examinador"], [totalTaskTime, selectedHand, initials]].map(e => e.join(";")).join("\n");
         
             // Obtener la fecha actual para el nombre del archivo

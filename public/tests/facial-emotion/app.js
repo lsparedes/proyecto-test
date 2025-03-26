@@ -365,12 +365,14 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const fechaFormateada = `${day}_${month}_${year}`;
 
     const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT', 'Examinador']]; // Agregar columna Examinador
+    
+
 
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;
         const emocionCorrecta = img.emocionCorrecta;
         const emocionSeleccionada = emocionesSeleccionadas[index];
-        const response = tiemposRespuesta[index];
+        const response = tiemposRespuesta[index] ? (tiemposRespuesta[index] / 1000).toFixed(3).replace('.', ',') : '';
         const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
 
         // Agregar las iniciales del examinador a cada fila
@@ -381,7 +383,8 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
     // Generar el archivo de métricas (TotTime y Hand)
-    const txtContent = [['TotTime', 'Hand'], [tiempoTranscurrido, selectedHand]].map(row => row.join(';')).join('\n');
+    const totalTime = tiempoTranscurrido.toFixed(3).replace('.', ',')
+    const txtContent = [['TotTime', 'Hand'], [totalTime, selectedHand]].map(row => row.join(';')).join('\n');
     const txtBlob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
 
     // Crear el archivo ZIP y agregar los archivos CSV

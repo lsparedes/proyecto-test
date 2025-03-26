@@ -574,14 +574,13 @@ function verificarRespuesta(event) {
 // Al hacer clic en "Next", avanzar a la siguiente imagen
 nextButton.addEventListener('click', function () {
     if (respuestaSeleccionada) {
-        endTimeE = new Date(); // Registrar la hora de finalización
-        respuesta['tiempoDedicado'] = endTimeE - startTimeE;
+        endTimeE = new Date();
+        respuesta['tiempoDedicado'] = (endTimeE - startTimeE) / 1000;
         respuestasSeleccionadas.push(respuesta);
-        startTimeE = new Date(); // Registrar la hora de inicio
-        cambioHabilitado = true; // Permitir cambiar de imagen
+        startTimeE = new Date();
         cambiarImagen();
     } else {
-        endTimeE = new Date(); // Registrar la hora de finalización
+        endTimeE = new Date();
         respuesta = {
             textoDistintivo: imagenes[indiceActual].textoDistintivo,
             imagen: imagenes[indiceActual].item,
@@ -589,12 +588,12 @@ nextButton.addEventListener('click', function () {
             respuestaSeleccion: "",
             esCorrecta: 0,
         };
-        respuesta['tiempoDedicado'] = endTimeE - startTimeE;
+        respuesta['tiempoDedicado'] = (endTimeE - startTimeE) / 1000;
         respuestasSeleccionadas.push(respuesta);
-        startTimeE = new Date(); // Registrar la hora de inicio
-        cambioHabilitado = true; // Permitir cambiar de imagen
+        startTimeE = new Date();
         cambiarImagen();
     }
+    
 });
 
 // Agregar evento click a todas las opciones
@@ -716,7 +715,10 @@ function generateCSV(results) {
     results.forEach(respuesta => {
         if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
             // Construir una línea del CSV con los datos de la respuesta
-            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado};${initials}\n`;
+            const tiempoDedicadoFormatted = respuesta.tiempoDedicado.toFixed(3).replace('.', ',');
+
+            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado.toFixed(3).replace('.', ',')};${initials}\n`;
+
             // Agregar la línea al contenido del CSV
             csvContent += lineaCSV;
         }
@@ -730,8 +732,9 @@ function generateCSV(results) {
 
 
 function generateTxt(startTimeTotal, selectedHand) {
-    const txtContent = "TotTime;Hand\n" + (new Date() - startTimeTotal) / 1000 + ";"
-        + selectedHand + "\n";
+    const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+
+    const txtContent = `TotTime;Hand\n${totalTime};${selectedHand}\n`;
     return {
         content: txtContent,
         filename: `${idParticipante}_7_mCCT_Metricas_${getCurrentDate()}.csv`

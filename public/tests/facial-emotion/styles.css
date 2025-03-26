@@ -148,7 +148,6 @@ button {
     background-color: transparent;
     border: none;
     cursor: pointer;
-
     background-image: url('imagenes/full-screen.png');
     background-size: contain;
     background-repeat: no-repeat;

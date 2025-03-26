@@ -241,7 +241,7 @@ fetch('/api/user-info')
     
         const totalTime = Date.now() - startTime;
         const totalTimeMs = totalTime;
-        const totalTimeSecs = (totalTime / 1000).toFixed(2);
+        const totalTimeSecs = (totalTime / 1000).toFixed(3).replace('.', ',');
     
         // Modificar el contenido CSV para incluir el tiempo total y las iniciales del examinador
         const txtContent = `TotTime;Examinador\n${totalTimeSecs};${inicialesExaminador}`;

@@ -264,7 +264,7 @@ fetch('/api/user-info')
     
         // Calcular el tiempo total en milisegundos
         const totalTime = Date.now() - startTime;
-        const totalTimeSecs = (totalTime / 1000).toFixed(2);
+        const totalTimeSecs = (totalTime / 1000).toFixed(3).replace('.', ',');
     
         // Crear el contenido del archivo .csv con el tiempo total y las iniciales del examinador
         const txtContent = `TotTime;Examinador\n${totalTimeSecs};${inicialesExaminador}`;

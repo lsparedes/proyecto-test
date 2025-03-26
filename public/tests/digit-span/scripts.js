@@ -315,6 +315,7 @@ function mostrarFinalizacion(type) {
 }
 
 let userInfo;
+let initials = "";
 
 fetch('/api/user-info')
     .then(response => {
@@ -324,14 +325,16 @@ fetch('/api/user-info')
         return response.json();
     })
     .then(data => {
-        userInfo = data; // Asignar los datos al objeto global
+        userInfo = data;
+        initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
         console.log("Usuario autenticado:", userInfo);
 
-        // Una vez que userInfo está listo, habilitar el botón o acción que depende de él
         document.getElementById('final-button').addEventListener('click', () => {
             crearZip(`${type}`);
         });
     })
+
     .catch(error => console.error('Error:', error));
 
     function generarCSV(taskTime) {
@@ -364,9 +367,11 @@ function getQueryParam(param) {
 const idParticipante = getQueryParam('id_participante');
 
 function generarCSV2(taskTime) {
-    const txtContent = [['TotTime'], [taskTime]].join('\n');
+    const txtContent = `TotTime;Examinador\n${taskTime.toFixed(3).replace('.', ',')};${initials}\n`;
+    
     return new Blob([txtContent], { type: 'text/csv;charset=utf-8' });
 }
+
 
 function crearZip(type) {
     document.getElementById('final-button').style.display = 'none';
