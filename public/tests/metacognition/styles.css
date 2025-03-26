@@ -20,7 +20,7 @@ body {
   }
   
   canvas {
-    border: 2px solid #fffdfd;
+    border: 1px solid #000000;
     cursor: crosshair;
   }
   
