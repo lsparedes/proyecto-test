@@ -527,22 +527,32 @@ clearButton.addEventListener('click', () => {
 
 function handleClick(e) {
     // Verifica que el evento provenga de un lápiz
-    if (e.pointerType !== 'pen') return;
+    if (e.pointerType !== 'touch') return;
 
     const rect = imageCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / imageCanvas.width);
     const y = (e.clientY - rect.top) * (1489 / imageCanvas.height);
     clicks.push({ x, y });
-    drawCircle(e.clientX - rect.left, e.clientY - rect.top, 'blue');
+    drawCircle(
+        x * (imageCanvas.width / originalCanvasSize.width),
+        y * (imageCanvas.height / originalCanvasSize.height),
+        'blue'
+      );
+      
 }
 function handleClickPractice(e) {
-    if (e.pointerType !== 'pen') return;
+    if (e.pointerType !== 'touch') return;
 
     const rect = practiceCanvas.getBoundingClientRect();
     const x = (e.clientX - rect.left) * (2105 / practiceCanvas.width);
     const y = (e.clientY - rect.top) * (1489 / practiceCanvas.height);
     practiceClicks.push({ x, y });
-    drawCirclePractice(e.clientX - rect.left, e.clientY - rect.top, 'blue');
+    drawCirclePractice(
+        x * (practiceCanvas.width / originalCanvasSize.width),
+        y * (practiceCanvas.height / originalCanvasSize.height),
+        'blue'
+      );
+      
 }
 
 
@@ -669,6 +679,85 @@ function validateClicks() {
     });
     const centerX = sumX / correctClicks;
     const centerY = sumY / correctClicks;
+    
+    let strategy = detectarEstrategia(promedio);
+    console.log("Estrategia detectada:", strategy);
+    
+    function detectarEstrategia(clicks) {
+        if (clicks.length < 2) return "No suficiente información";
+    
+        let xDiffs = [];
+        let yDiffs = [];
+    
+        for (let i = 1; i < clicks.length; i++) {
+            xDiffs.push(clicks[i].x - clicks[i - 1].x);
+            yDiffs.push(clicks[i].y - clicks[i - 1].y);
+        }
+    
+        const meanAbs = arr => arr.reduce((sum, val) => sum + Math.abs(val), 0) / arr.length;
+        const meanSigned = arr => arr.reduce((sum, val) => sum + val, 0) / arr.length;
+    
+        const meanX = meanAbs(xDiffs);
+        const meanY = meanAbs(yDiffs);
+        const signedX = meanSigned(xDiffs);
+        const signedY = meanSigned(yDiffs);
+    
+        // ¿La búsqueda es más horizontal o vertical?
+        const isHorizontal = meanX > meanY;
+    
+        // ¿Se cambia constantemente de dirección?
+        const cambiosDeSigno = arr => {
+            let cambios = 0;
+            for (let i = 1; i < arr.length; i++) {
+                if (arr[i] * arr[i - 1] < 0) cambios++;
+            }
+            return cambios;
+        };
+    
+        const zigzagX = cambiosDeSigno(xDiffs) > xDiffs.length / 3;
+        const zigzagY = cambiosDeSigno(yDiffs) > yDiffs.length / 3;
+    
+        if (isHorizontal) {
+            return zigzagX ? "B. Zigzag Horizontal (fila a fila alternando)" : "A. Horizontal (fila a fila izquierda a derecha)";
+        } else {
+            return zigzagY ? "D. Zigzag Vertical (columna a columna alternando)" : "C. Vertical (columna a columna de arriba a abajo)";
+        }
+    }
+
+    let omisionesDerecha = 0;
+    let omisionesIzquierda = 0;
+
+    const umbral = 20; // mismo radio que usas para considerar un clic como válido
+
+    letrasA.forEach(letra => {
+        const fueSeleccionada = clicks.some(click => {
+            const dx = click.x - letra.x;
+            const dy = click.y - letra.y;
+            return Math.sqrt(dx * dx + dy * dy) < umbral;
+        });
+
+        if (!fueSeleccionada) {
+            if (letra.x >= halfWidth) {
+                omisionesDerecha++;
+            } else {
+                omisionesIzquierda++;
+            }
+        }
+    });
+
+    endTime = new Date(); 
+
+    const rawTestDuration = (endTime - startItemTime) / 1000;
+
+    
+    const testDuration = rawTestDuration.toFixed(3).replace('.', ','); // ← solo para mostrar/exportar
+    let searchSpeed = (correctClicks / rawTestDuration) * 1000;
+    const searchSpeedFormatted = searchSpeed.toLocaleString('es-CL', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      
+    
 
     const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
     const normalizedCenterY = (centerY - (1489 / 2)) / (1489 / 2);
@@ -676,8 +765,7 @@ function validateClicks() {
     console.log(sumX, sumY, correctClicks);
     endTime = new Date();
     const CoC = Math.sign(normalizedCenterX) === -1 ? -1 : 1;
-    const testDuration = (endTime - startItemTime);
-    const totalDuration = (endTime - totalStartTime);
+    const totalDuration = ((endTime - totalStartTime) / 1000).toFixed(3).replace('.', ',');
     const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
     const testDurationFormatted = testDuration.toLocaleString('es-CL');
     const fechaActual = new Date();
@@ -685,12 +773,9 @@ function validateClicks() {
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
-    const baseFileName = `4_Cancelación_Letras_A_${fechaFormateada}`;
     const searchDistanceFormatted = (searchDistance / promedio.length).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-    let searchSpeed = (correctClicks / testDuration) * 1000;
-
-    let csvContent = 'TotTime;ExecTime;Hand;NoTargets;NoOmiErr;NoCommErr;SSpeed;SDistance;CoC;Examinador\n';
+    let csvContent = 'ExecTime;NoTargets;NoCommErr;NoOmiErrR;NoOmiErrL;CoC;SSpeed;SDistance;SStrategy;Examinador\n';
 
     if (!userInfo || !userInfo.name || !userInfo.last_name) {
         console.error("Error: userInfo no está definido correctamente.");
@@ -699,24 +784,28 @@ function validateClicks() {
 
     const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
-    csvContent += `${totalDuration};${testDuration};${selectedHand};${correctClicks};${totalErrors};${erroresComision};${searchSpeed};${searchDistanceFormatted};${CoC};${inicialesExaminador}\n`;
+    csvContent += `${testDuration};${correctClicks};${erroresComision};${omisionesDerecha};${omisionesIzquierda};${CoC};${searchSpeedFormatted};${searchDistanceFormatted};${strategy};${inicialesExaminador}\n`;
 
     console.log(csvContent);
 
+    let csv2 = 'TotTime;Hand;Examinador\n';
+    csv2 += `${totalDuration};${selectedHand};${inicialesExaminador}\n`;
+    const csvunival = downloadCSV(csv2);
 
     const csvBlob = downloadCSV(csvContent);
     downloadCanvas(canvasBlob => {
         downloadVideo(videoBlob => {
             const zip = new JSZip();
-            zip.file(`${idParticipante}_${baseFileName}.csv`, csvBlob);
-            zip.file(`${idParticipante}_${baseFileName}.png`, canvasBlob);
-            zip.file(`${idParticipante}_${baseFileName}.mp4`, videoBlob);
+            zip.file(`${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}.csv`, csvBlob);
+            zip.file(`${idParticipante}_4_Cancelación_Letras_A_Unival_${fechaFormateada}.csv`, csvunival);
+            zip.file(`${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}.png`, canvasBlob);
+            zip.file(`${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}.mp4`, videoBlob);
             zip.generateAsync({ type: 'blob' }).then(content => {
                 // Define la fecha actual y la formateas
                 const url = URL.createObjectURL(content);
                 const link = document.createElement('a');
                 link.href = url;
-                link.download = `${idParticipante}_${baseFileName}.zip`;
+                link.download = `${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

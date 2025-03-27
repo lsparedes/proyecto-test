@@ -34,8 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let trialCount = 0;
   let blockCount = 1;
-  let maxTrials = 2;
-  let maxBlocks = 2;
+  let maxTrials = 20;
+  let maxBlocks = 3;
   let maxTime = 180; // 3 minutes for practice block, 3.5 minutes for test blocks
   let trialTimeout;
   let trialInTimeout = false;
