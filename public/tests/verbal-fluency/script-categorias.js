@@ -95,6 +95,7 @@ async function startRecording(part) {
 
     document.getElementById('stopRecordingButton' + part).style.display = 'inline-block';
     document.getElementById('recButton' + part).style.display = 'inline-block';
+
     startTimer(part); // Start the timer
 }
 
@@ -102,15 +103,28 @@ function stopRecording(part) {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.stop();
     }
-    
-    // Verificar si audioContext está definido y no ha sido cerrado
+
     if (audioContext && audioContext.state !== "closed") {
         audioContext.close();
     }
 
-    // Ocultar solo el botón de detener grabación sin afectar otros elementos
+    // Ocultar botón de stop (opcional)
     document.getElementById('stopRecordingButton' + part).style.display = 'none';
+
+    // Cambiar imagen del botón de grabación
+    const recImg = document.getElementById('recButton' + part);
+    if (recImg) {
+        recImg.src = 'boton-recnegro.png';
+    }
+
+    // Cambiar imagen del botón de stop (si es un botón con fondo como imagen)
+    const stopButton = document.getElementById('stopRecordingButton' + part);
+    if (stopButton) {
+        stopButton.style.backgroundImage = "url('detenerr1rojo.png')";
+        stopButton.style.display = 'inline-block'; // Si quieres que siga visible
+    }
 }
+
 
 function startTimer(part) {
     let timeLeft = 60;
@@ -148,17 +162,29 @@ function loadAudio(part) {
     const letterDisplay = document.getElementById('letterDisplay' + part);
 
     if (part === 2) {
-        audio.src = 'audios/Semantica_2.wav';
+        // Selección aleatoria entre animales y prendas de vestir
+        const categorias = ['animales', 'prendas'];
+        const seleccion = categorias[Math.floor(Math.random() * categorias.length)];
+        audio.dataset.categoria = seleccion; // Guardar la categoría seleccionada por si la necesitas después
+
+        // Cambiar el audio y el texto en pantalla según la categoría
+        if (seleccion === 'animales') {
+            audio.src = 'audios/animales.mp3';
+            letterDisplay.textContent = 'Animales';
+        } else {
+            audio.src = 'audios/prendas-de-vestir.mp3';
+            letterDisplay.textContent = 'Prendas de vestir';
+        }
     }
 
     audio.addEventListener('loadedmetadata', () => {
-        let recordingStarted = false; // Bandera para evitar múltiples ejecuciones de startRecording
+        let recordingStarted = false;
         const checkTimeRemaining = () => {
             const timeRemaining = (audio.duration - audio.currentTime) / audio.playbackRate;
 
             if (!recordingStarted && timeRemaining <= 1) {
                 startRecording(part);
-                recordingStarted = true; // Actualizar la bandera para evitar múltiples ejecuciones
+                recordingStarted = true;
             }
 
             if (timeRemaining <= 3 && timeRemaining > 0) {
@@ -166,29 +192,16 @@ function loadAudio(part) {
             }
         };
 
-        const intervalId = setInterval(() => {
+        setInterval(() => {
             checkTimeRemaining();
-
-            // Detener el setInterval una vez que la grabación ha comenzado y el tiempo restante es menor a 3 segundos.
-            // if (recordingStarted && timeRemaining <= 3) {
-            //     clearInterval(intervalId);
-            // }
         }, 100);
     });
 
     audio.addEventListener('ended', () => {
         letterDisplay.style.display = 'none';
-        document.getElementById('startRecButton' + part).style.display = 'inline-block'; // Mostrar botón para comenzar grabación
-        document.getElementById('nextButton' + part).style.display = 'inline-block'; // Mostrar la flecha
-        document.getElementById('startRecButton' + part).click(); // Iniciar grabación automáticamente
+        document.getElementById('nextButton' + part).style.display = 'inline-block';
     });
 }
-
-document.getElementById('startRecButton2').addEventListener('click', () => {
-    // startRecording(2);
-    document.getElementById('startRecButton2').style.display = 'none'; // Ocultar botón después de hacer clic
-    document.getElementById('recButton2').style.display = 'inline-block'; // Mostrar imagen de grabando
-});
 
 function showRecordingCreatedMessage(part) {
     const messageElement = document.getElementById('recordingCreatedMessage' + part);

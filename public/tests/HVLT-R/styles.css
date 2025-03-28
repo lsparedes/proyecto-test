@@ -274,7 +274,8 @@ audio-container {
 #stopRecordingButton3,
 #startRecordingButton4,
 #stopRecordingButton4,
-#finishRecordingbutton {
+#initRecordingButtonBlack1,
+#stopRecordingButtonRed1 {
     background-size: cover;
     background-position: center;
     background-color: transparent;
@@ -306,6 +307,11 @@ audio-container {
    
 }
 
+#initRecordingButtonBlack1 {
+    background-image: url('boton-recnegro.png');
+}
+
+
 #startRecordingButton1,
 #startRecordingButton2,
 #startRecordingButton3 {
@@ -322,6 +328,10 @@ audio-container {
 #stopRecordingButton3,
 #stopRecordingButton4 {
     background-image: url('detenerr1.png');
+}
+
+#stopRecordingButtonRed1 {
+    background-image: url('detenerr1rojo.png');
 }
 
 /* #enterID {

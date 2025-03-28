@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const DownloadButton = document.getElementById('download');
     const NXButton21 = document.getElementById('nxbutton21');
     const mainScreen3 = document.getElementById('main-screen2-1');
+    const FinishRecordingImage = document.getElementById('FinishRecordingImage');
 
     let recordingInterval;
     let recordingSeconds = 0;
@@ -91,9 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     stopRecordingButton4.addEventListener('click', () => {
         stopAllMedia();
-        recordingControls4.style.display = 'block';
+        recordingControls4.style.display = 'none';
         stopRecordingButton4.style.display = 'none';
-        startRecordingButton4.style.display = 'block';
+        FinishRecordingImage.style.display = 'block';
         finishTime = new Date();
     });
 

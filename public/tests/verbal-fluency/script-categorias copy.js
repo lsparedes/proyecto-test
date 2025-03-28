@@ -4,8 +4,8 @@ document.getElementById('startTestButton').addEventListener('click', () => {
     document.getElementById('mainInstructionAudio').pause();
     startTime = Date.now();
     document.getElementById('instructions').style.display = 'none';
-    document.getElementById('testSection1').style.display = 'block';
-    loadAudio(1); // Cargar el primer audio
+    document.getElementById('categoryFluency2').style.display = 'block';
+    loadAudio(2); // Cargar el segundo audio
 });
 
 const fullscreenButton = document.getElementById('fullscreenButton');
@@ -21,10 +21,9 @@ fullscreenButton.addEventListener('click', () => {
     }
 });
 
-
-let mediaRecorder1, mediaRecorder2;
-let audioChunks1 = [], audioChunks2 = [];
-let mediaRecorders = [null, mediaRecorder1, mediaRecorder2];
+let mediaRecorder2;
+let audioChunks2 = [];
+let mediaRecorders = [null, null, mediaRecorder2];
 let timers = [null, null, null];
 
 let audioStream = null; // Guardar el stream de audio
@@ -71,7 +70,7 @@ async function startRecording(part) {
     micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
     const audio = new Audio('beep.wav');
-    audio.crossOrigin = "anonymous";
+    audio.crossOrigin = "anonymous"; 
     audio.play();
 
     audioContext = new AudioContext();
@@ -96,6 +95,7 @@ async function startRecording(part) {
 
     document.getElementById('stopRecordingButton' + part).style.display = 'inline-block';
     document.getElementById('recButton' + part).style.display = 'inline-block';
+
     startTimer(part); // Start the timer
 }
 
@@ -103,30 +103,16 @@ function stopRecording(part) {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.stop();
     }
-
+    
+    // Verificar si audioContext está definido y no ha sido cerrado
     if (audioContext && audioContext.state !== "closed") {
         audioContext.close();
     }
 
-    // Cambiar imagen del botón de grabación a negro
-    const recImg = document.getElementById('recButton' + part);
-    if (recImg) {
-        recImg.src = 'boton-recnegro.png';
-    }
-
-    // Cambiar imagen del botón de stop a rojo
-    const stopBtn = document.getElementById('stopRecordingButton' + part);
-    if (stopBtn) {
-        stopBtn.style.backgroundImage = "url('detenerr1rojo.png')";
-        stopBtn.style.display = 'inline-block'; // Mostrar el botón si lo ocultabas antes
-        stopBtn.style.width = '100px';  // Asegúrate de darle tamaño si usas backgroundImage
-        stopBtn.style.height = '100px';
-        stopBtn.style.backgroundSize = 'contain';
-        stopBtn.style.backgroundRepeat = 'no-repeat';
-        stopBtn.style.border = 'none';
-    }
+    // Ocultar solo el botón de detener grabación sin afectar otros elementos
+    document.getElementById('stopRecordingButton' + part).style.display = 'none';
+    document.getElementById('startRecButton2' + part).style.display = 'none';
 }
-
 
 function startTimer(part) {
     let timeLeft = 60;
@@ -138,14 +124,7 @@ function startTimer(part) {
     }, 1000);
 }
 
-document.getElementById('stopRecordingButton1').addEventListener('click', () => stopRecording(1));
 document.getElementById('stopRecordingButton2').addEventListener('click', () => stopRecording(2));
-
-document.getElementById('nextButton1').addEventListener('click', () => {
-    stopRecording(1);
-    nextSection(1); // 🔹 Ahora cambia de pantalla después de grabar
-});
-
 document.getElementById('nextButton2').addEventListener('click', () => {
     stopRecording(2); // Primero detenemos la grabación
     nextSection(2);   // Luego pasamos a la siguiente pantalla
@@ -153,16 +132,11 @@ document.getElementById('nextButton2').addEventListener('click', () => {
 
 
 function nextSection(part) {
-    if (part === 1) {
-        document.getElementById('testSection1').style.display = 'none';
-        document.getElementById('instructionAudio1').pause();
-        showHandSelection();
-
-    } else if (part === 2) {
-        document.getElementById('testSection2').style.display = 'none';
+    if (part === 2) {
+        document.getElementById('categoryFluency2').style.display = 'none';
         document.getElementById('instructionAudio2').pause();
+        handButton.style.display = 'block';
         showHandSelection();
-
     }
 }
 
@@ -175,13 +149,21 @@ function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
 
-    // Elegir aleatoriamente entre Fonologica_2 y Fonologica_3
-    const opciones = ['Fonologica_2', 'Fonologica_3'];
-    const seleccion = opciones[Math.floor(Math.random() * opciones.length)];
-    const extension = seleccion === 'Fonologica_2' ? 'wav' : 'mp3'; // Asegúrate del formato real
+    if (part === 2) {
+        // Selección aleatoria entre animales y prendas de vestir
+        const categorias = ['animales', 'prendas'];
+        const seleccion = categorias[Math.floor(Math.random() * categorias.length)];
+        audio.dataset.categoria = seleccion; // Guardar la categoría seleccionada por si la necesitas después
 
-    audio.src = `audios/${seleccion}.${extension}`;
-    audio.dataset.audioSeleccionado = seleccion;
+        // Cambiar el audio y el texto en pantalla según la categoría
+        if (seleccion === 'animales') {
+            audio.src = 'audios/animales.mp3';
+            letterDisplay.textContent = 'Animales';
+        } else {
+            audio.src = 'audios/prendas-de-vestir.mp3';
+            letterDisplay.textContent = 'Prendas de vestir';
+        }
+    }
 
     audio.addEventListener('loadedmetadata', () => {
         let recordingStarted = false;
@@ -205,10 +187,18 @@ function loadAudio(part) {
 
     audio.addEventListener('ended', () => {
         letterDisplay.style.display = 'none';
+        document.getElementById('startRecButton' + part).style.display = 'inline-block';
         document.getElementById('nextButton' + part).style.display = 'inline-block';
+        document.getElementById('startRecButton' + part).click();
     });
 }
 
+
+document.getElementById('startRecButton2').addEventListener('click', () => {
+    // startRecording(2);
+    document.getElementById('startRecButton2').style.display = 'none'; // Ocultar botón después de hacer clic
+    document.getElementById('recButton2').style.display = 'inline-block'; // Mostrar imagen de grabando
+});
 
 function showRecordingCreatedMessage(part) {
     const messageElement = document.getElementById('recordingCreatedMessage' + part);
@@ -217,6 +207,7 @@ function showRecordingCreatedMessage(part) {
     }
     messageElement.style.display = 'block';
 }
+
 function getQueryParam(param) {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
@@ -242,7 +233,6 @@ fetch('/api/user-info')
         console.error('Error al obtener la información del usuario:', error);
     });
 
-
     function downloadRecordingAndTime() {
         // Asegurarse de que userInfo esté disponible para obtener las iniciales
         if (!userInfo || !userInfo.name || !userInfo.last_name) {
@@ -253,41 +243,42 @@ fetch('/api/user-info')
         // Obtener las iniciales del examinador
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
     
-        // Obtener la fecha actual en formato DD_MM_YYYY
         const date = new Date();
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         const formattedDate = `${day}_${month}_${year}`;
     
-        // Calcular el tiempo total en milisegundos
         const totalTime = Date.now() - startTime;
+        const totalTimeMs = totalTime;
         const totalTimeSecs = (totalTime / 1000).toFixed(3).replace('.', ',');
     
-        // Crear el contenido del archivo .csv con el tiempo total y las iniciales del examinador
+        // Modificar el contenido CSV para incluir el tiempo total y las iniciales del examinador
         const txtContent = `TotTime;Examinador\n${totalTimeSecs};${inicialesExaminador}`;
+    
+        // Crear los blobs para los archivos
         const timeBlob = new Blob([txtContent], { type: 'text/csv' });
         const timeUrl = URL.createObjectURL(timeBlob);
     
-        // Crear un objeto JSZip para agregar archivos
+        // Crear un enlace para descargar los archivos
         const zip = new JSZip();
         
         // Agregar el archivo CSV al ZIP
-        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.csv`, timeBlob);
+        zip.file(`${idParticipante}_8_Fluidez_Verbal_Semantica_${inicialesExaminador}_${formattedDate}.csv`, timeBlob);
     
-        // Crear y agregar el archivo de audio al ZIP
+        // Agregar el archivo de audio al ZIP
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.wav`, audioBlob);
+        zip.file(`${idParticipante}_8_Fluidez_Verbal_Semantica_${inicialesExaminador}_${formattedDate}.wav`, audioBlob);
     
         // Generar el archivo ZIP
         zip.generateAsync({ type: 'blob' }).then(content => {
             const zipLink = document.createElement('a');
             zipLink.href = URL.createObjectURL(content);
     
-            // Construir el nombre del archivo ZIP con las iniciales
-            const zipFilename = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.zip`;
+            // Nombre del archivo ZIP
+            const fileName = `${idParticipante}_8_Fluidez_Verbal_Semantica_${inicialesExaminador}_${formattedDate}.zip`;
     
-            zipLink.download = zipFilename;
+            zipLink.download = fileName;
             zipLink.click();
             
             // Cerrar la ventana después de un breve retraso
@@ -302,24 +293,14 @@ fetch('/api/user-info')
 
 // SELECCION DE MANO JS
 const handButton = document.getElementById("handButton");
-const handInputs = document.getElementsByName('hand');
 
-// Variable con la mano seleccionada
-
-// Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
     document.getElementById("preEnd").style.display = 'block';
-    handButton.style.display = 'block';
-
 }
 
-// Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
-// En este caso fue mostrarFinalizacion()
 function confirmHandSelection() {
     document.getElementById("preEnd").style.display = 'none';
-
     endGame();
 }
 
 document.getElementById('handButton').addEventListener('click', confirmHandSelection);
-
