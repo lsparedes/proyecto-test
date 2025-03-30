@@ -606,63 +606,98 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    function generateCSV(results) {
-      // Asegurarse de que userInfo esté disponible
-      if (!userInfo || !userInfo.name || !userInfo.last_name) {
-          console.error("Error: userInfo no está definido correctamente.");
-          return; // Salir si userInfo no está disponible
-      }
-  
-      // Obtener las iniciales del examinador
-      const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-  
-      // Definir los encabezados del CSV
-      const csvData = [["Block", "Trial", "CorrResp", "PartResp", "ConfRa", "Acc", "DiffLvl", "RTDecision", "RTConfRa", "PauseTime", "RedDotSide", "Examinador"]]; // Agregar columna Examinador
-  
-      // Recorrer los resultados y agregar los datos junto con las iniciales del examinador
-      results.forEach((e) => {
-          const isCorrect = e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0');
-          const redDotSide = e.RedDotSide || ''; // Asegúrate de que la variable esté correctamente definida si es necesario
-  
-          // Agregar los datos de la prueba junto con las iniciales del examinador
-          csvData.push([e.block, e.trial, e.correctColor, e.answer, e.confidence, isCorrect, e.diferencia, e.timeCol, e.timeConf, e.timeP, redDotSide, inicialesExaminador]);
-      });
-  
-      // Crear el contenido del CSV
-      const csvContent = csvData.map(row => row.join(';')).join('\n');
-  
-      // Retornar el archivo CSV con el nombre adecuado
-      return {
-          content: csvContent,
-          filename: `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.csv`
-      };
-  }
-  
-  function generateCSV2(startTimeTotal, selectedHand) {
-      // Asegurarse de que userInfo esté disponible
-      if (!userInfo || !userInfo.name || !userInfo.last_name) {
-          console.error("Error: userInfo no está definido correctamente.");
-          return; // Salir si userInfo no está disponible
-      }
-  
-      // Obtener las iniciales del examinador
-      const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-  
-      // Crear el contenido del archivo de métricas
-      const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+  function generateCSV(results) {
+    // Asegurarse de que userInfo esté disponible
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+      console.error("Error: userInfo no está definido correctamente.");
+      return; // Salir si userInfo no está disponible
+    }
 
-      const txtContent = [
-          ["TotTime", "Hand", "Examinador"],
-          [totalTime, selectedHand, inicialesExaminador]
-      ].map(row => row.join(';')).join('\n');
-  
-      // Retornar el archivo de métricas con el nombre adecuado
-      return {
-          content: txtContent,
-          filename: `${idParticipante}_15_Discriminacion_Perceptua_Metricas_${getCurrentDate()}.csv`
-      };
+    // Obtener las iniciales del examinador
+    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
+    // Definir los encabezados del CSV
+    const csvData = [["Block", "Trial", "CorrResp", "PartResp", "ConfRa", "Acc", "DiffLvl", "RTDecision", "RTConfRa", "PauseTime", "RedDotSide", "Examinador"]]; // Agregar columna Examinador
+
+    // Recorrer los resultados y agregar los datos junto con las iniciales del examinador
+    results.forEach((e) => {
+      const isCorrect = e.isCorrect === 'N/A' ? 'N/A' : (e.isCorrect ? '1' : '0');
+      const redDotSide = e.RedDotSide || ''; // Asegúrate de que la variable esté correctamente definida si es necesario
+
+      // Agregar los datos de la prueba junto con las iniciales del examinador
+      csvData.push([e.block, e.trial, e.correctColor, e.answer, e.confidence, isCorrect, e.diferencia, e.timeCol, e.timeConf, e.timeP, redDotSide, inicialesExaminador]);
+    });
+
+    // Crear el contenido del CSV
+    const csvContent = csvData.map(row => row.join(';')).join('\n');
+
+    // Retornar el archivo CSV con el nombre adecuado
+    return {
+      content: csvContent,
+      filename: `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.csv`
+    };
   }
+
+  function generateCSV2(startTimeTotal, selectedHand) {
+    // Asegurarse de que userInfo esté disponible
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+      console.error("Error: userInfo no está definido correctamente.");
+      return; // Salir si userInfo no está disponible
+    }
+
+    // Obtener las iniciales del examinador
+    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
+    // Crear el contenido del archivo de métricas
+    const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+
+    const txtContent = [
+      ["TotTime", "Hand", "Examinador"],
+      [totalTime, selectedHand, inicialesExaminador]
+    ].map(row => row.join(';')).join('\n');
+
+    // Retornar el archivo de métricas con el nombre adecuado
+    return {
+      content: txtContent,
+      filename: `${idParticipante}_15_Discriminacion_Perceptua_Metricas_${getCurrentDate()}.csv`
+    };
+  }
+
+  setTimeout(() => {
+    if (!finished) {
+      // Oculta todo lo relacionado al test
+      practiceContainer.style.display = 'none';
+      testContainer.style.display = 'none';
+      questionScreen.style.display = 'none';
+      confidenceScreen.style.display = 'none';
+      feedbackScreen.style.display = 'none';
+      blockFinishScreen.style.display = 'none';
+      practiceFinishScreen.style.display = 'none';
+      demoFinishScreen.style.display = 'none';
+      endScreen.style.display = 'none';
+      instructions.style.display = 'none';
   
+      // Mostrar selección de mano
+      showHandSelection();
+  
+      // Asignar una mano por defecto si no se ha seleccionado
+      if (!selectedHand) selectedHand = "no seleccionada";
+  
+      // Descargar resultados
+      downloadResultsAsZip(results, startTimeTotal, selectedHand);
+    }
+  }, 600000); // 10 minutos en milisegundos
+  
+  
+  let finished = false;
+
+  function endGame() {
+    if (finished) return; // Evita múltiples llamadas
+    finished = true;
+    endScreen.style.display = 'block';
+    document.getElementById('downloadResultsButton').click();
+  }
+
 
   async function downloadZip(csvFile, txtFile) {
     const zip = new JSZip();
@@ -677,7 +712,7 @@ document.addEventListener('DOMContentLoaded', () => {
     link.click();
     setTimeout(() => {
       window.close();
-  }, 3000);
+    }, 3000);
   }
 
   async function downloadResultsAsZip(results, startTimeTotal, selectedHand) {
