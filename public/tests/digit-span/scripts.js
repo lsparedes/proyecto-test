@@ -117,7 +117,15 @@ function startTest(type) {
         stopImg.addEventListener('click', () => {
             stopRecording(timerSpan, index + 1, itemDiv, type);
             stopAllAudios();
+        
+            stopImg.src = 'img/detenerr1rojo.png';
+        
+            const newButton = itemDiv.querySelector('.new-button');
+            if (newButton) {
+                newButton.style.backgroundImage = "url('img/boton-recnegro.png')";
+            }
         });
+        
 
         const nextButton = document.createElement('button');
         nextButton.textContent = '';
@@ -266,7 +274,7 @@ function stopRecording(timerSpan, index, itemDiv, type) {
         // Ocultar el botón stopImg al detener la grabación
         const stopImg = itemDiv.querySelector('.stop-img');
         if (stopImg) {
-            stopImg.classList.add('hidden');
+            stopImg.src = 'img/detenerr1rojo.png';
         }
 
         console.log(`Grabación del ítem ${index} detenida. Puedes avanzar manualmente.`);
