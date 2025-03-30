@@ -17,6 +17,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const videoPreview = document.getElementById('video-preview');
     const currentItem = document.getElementById('current-item');
     const timerDisplay = document.createElement('div');
+    const nextscreen = document.getElementById('nextscreen');
+    const camera = document.getElementById('camera-open');
     let currentImageIndex = 0;
     const images = [
         'img-jpg/1.jpg',
@@ -63,6 +65,19 @@ document.addEventListener('DOMContentLoaded', () => {
         'audio/21_Serrucho.wav'
     ];
 
+    async function iniciarCamara() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            videoPreview.srcObject = stream;
+            videoPreview.play();
+        } catch (error) {
+            console.error('No se pudo acceder a la cámara:', error);
+            alert('Por favor permite el acceso a la cámara para continuar.');
+        }
+    }
+    
+    iniciarCamara(); // Llama la función automáticamente al cargar
+    
 
     let mediaRecorder;
     let chunks = [];
@@ -73,6 +88,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let selectedHand = "";
     const zip = new JSZip();
     let audioPlayed = false;
+
+    nextscreen.addEventListener('click', () => {
+        camera.classList.remove('active')
+        camera.classList.add('hidden');
+        startScreen.classList.remove('hidden');
+        startScreen.classList.add('active');
+    });
 
 
     startBtn.addEventListener('click', () => {
@@ -101,40 +123,35 @@ document.addEventListener('DOMContentLoaded', () => {
         testAudio.play();
     });
 
-   
-    const camaraButton = document.getElementById('camaraButton');
-    const videoElement = document.createElement('video');
-    document.body.appendChild(videoElement);
-
 
     let cameraStream = null;
     let isCameraActive = false;
 
 
-    camaraButton.addEventListener('click', () => {
-        if (!isCameraActive) {
-            // Encender la cámara
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then((stream) => {
-                    cameraStream = stream; 
-                    videoElement.srcObject = stream; 
-                    videoElement.style.transform = 'scaleX(-1)';
-                    videoElement.play(); 
-                    isCameraActive = true; 
-                })
-                .catch((error) => {
-                    console.error('Error al acceder a la cámara:', error);
-                });
-        } else {
-            // Apagar la cámara
-            if (cameraStream) {
-                cameraStream.getTracks().forEach(track => track.stop());
-                cameraStream = null; 
-                videoElement.srcObject = null; 
-            }
-            isCameraActive = false;
-        }
-    });
+    // camaraButton.addEventListener('click', () => {
+    //     if (!isCameraActive) {
+    //         // Encender la cámara
+    //         navigator.mediaDevices.getUserMedia({ video: true })
+    //             .then((stream) => {
+    //                 cameraStream = stream; 
+    //                 videoElement.srcObject = stream; 
+    //                 videoElement.style.transform = 'scaleX(-1)';
+    //                 videoElement.play(); 
+    //                 isCameraActive = true; 
+    //             })
+    //             .catch((error) => {
+    //                 console.error('Error al acceder a la cámara:', error);
+    //             });
+    //     } else {
+    //         // Apagar la cámara
+    //         if (cameraStream) {
+    //             cameraStream.getTracks().forEach(track => track.stop());
+    //             cameraStream = null; 
+    //             videoElement.srcObject = null; 
+    //         }
+    //         isCameraActive = false;
+    //     }
+    // });
 
     testAudio.addEventListener('timeupdate', () => {
         const timeRemaining = testAudio.duration - testAudio.currentTime;

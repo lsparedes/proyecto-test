@@ -54,11 +54,17 @@ button:not(:disabled):active {
     transform: scale(0.98);
 }
 
+#video-preview {
+    display: block !important;
+    transform: scaleX(-1);
+}
+
 #next-btn,
 #startButton,
 #handButton,
 #fullscreenButton,
-#start-test{
+#start-test,
+#nextscreen {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -71,16 +77,10 @@ button:not(:disabled):active {
     
 }
 
-#camaraButton {
-    border: none;
-    background-color: transparent;
-    width: 90px;
-    height: 80px;
-    padding: 0;
-    top: 15px;
-    left: 15px;
-    position: absolute;
-    
+#nextscreen {
+    background-image: url('flecha3.png');
+    right: 15px;
+    bottom: 15px;
 }
 
 #next-btn {
@@ -235,7 +235,7 @@ button:not(:disabled):active {
     #video-preview {
         width: 800px;
         margin: 20px;
-        margin-top: 20%;
+        
     }
 }
 
