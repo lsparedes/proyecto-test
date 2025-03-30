@@ -508,7 +508,7 @@ function generarArchivoCSV() {
     // Crear el archivo ZIP
     const zip = new JSZip();
     zip.file(`${idParticipante}_11_SET_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_11_SET_Unival_${fechaFormateada}.csv`, txtBlob);
+    zip.file(`${idParticipante}_11_SET_Metricas_${fechaFormateada}.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
