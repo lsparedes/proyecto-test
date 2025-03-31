@@ -59,7 +59,7 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
     ctx.stroke();
 
     ctx.fillStyle = 'black';
-    ctx.font = 'bold 32px Arial';
+    ctx.font ='bold 36px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(label, x, y);
@@ -71,6 +71,7 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
 
     circlesArray.push({ x, y, label });
 }
+
 
 function startRecording(canvas, recordedChunks) {
     const stream = canvas.captureStream(30); // 30 FPS
@@ -101,7 +102,9 @@ function startPartB() {
     circleCoordinatesPartB.forEach((coord, index) => {
         const label = index % 2 === 0 ? (index / 2) + 1 : String.fromCharCode(65 + (index - 1) / 2);
         const name = index === 0 ? firstCircleLabelB : (index === circleCoordinatesPartB.length - 1 ? lastCircleLabelB : "");
-        drawCircleWithLabel(ctxPartB, coord.x, coord.y, label, circlesPartB, name, circleRadius);
+        circlesPartB.push({ x: coord.x, y: coord.y, label, name });
+        drawCircleWithLabel(ctxPartB, coord.x, coord.y, label, [], name, circleRadius);
+
     });
     drawNextButtonB();
 }
@@ -156,50 +159,63 @@ function startDrawing(x, y) {
             lastCirclePartB = circle;
             ctxPartB.beginPath();
             ctxPartB.moveTo(circle.x, circle.y);
+
+            currentPathPoints = [{ x: circle.x, y: circle.y }];
         }
     });
 }
+
 const incorrectNodes = new Set(); // Guarda nodos que fueron marcados como error
+let currentPathPoints = [];
+const correctNodesPartB = new Set();
 
 function drawMove(x, y) {
     if (!isDrawingPartB) return;
     ctxPartB.lineTo(x, y);
     ctxPartB.stroke();
 
-    let validDrop = false;
+    currentPathPoints.push({ x, y });
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
 
         if (distance < circleRadius) {
-            if (circle.label !== getNextLabel(currentCirclePartB) && circle.label !== lastCirclePartB.label) {
-                // ❌ Si es un error, lo mantenemos rojo
+            const expectedLabel = getNextLabel(currentCirclePartB);
+
+            if (circle.label !== expectedLabel && circle.label !== lastCirclePartB.label) {
+                // ERROR → trazo incorrecto
                 highlightCircle(ctxPartB, circle, 'red', x, y);
-                incorrectPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]);
-                incorrectNodes.add(circle.label); // Guardamos que este nodo tiene un error
+                incorrectNodes.add(circle.label);
+                incorrectPathsPartB.push({
+                    from: lastCirclePartB.label,
+                    to: circle.label,
+                    points: [{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]
+                });
                 isDrawingPartB = false;
-            } else if (circle.label === getNextLabel(currentCirclePartB)) {
-                // ✔ Si es un trazo correcto
-                if (incorrectNodes.has(circle.label)) {
-                    // Si el nodo fue incorrecto antes, lo mantenemos rojo
-                    highlightCircle(ctxPartB, circle, 'red', x, y);
-                } else {
-                    highlightCircle(ctxPartB, circle, 'black', x, y);
-                }
-                
-                correctPathsPartB.push([{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x: circle.x, y: circle.y }]);
+            } else if (circle.label === expectedLabel) {
+                // CORRECTO → trazo válido
+                correctPathsPartB.push([...currentPathPoints]);
+
                 currentCirclePartB = getNextLabel(currentCirclePartB);
                 lastCirclePartB = circle;
-                validDrop = true;
+
+                // Redibujar todo (borra trazos incorrectos y círculos en rojo)
+                currentPathPoints = [];
+                // Redibujar círculos
+                circlesPartB.forEach(c => {
+                    drawCircleWithLabel(ctxPartB, c.x, c.y, c.label, [], c.name || "", circleRadius);
+                });
+
+                // Redibujar líneas correctas
+                redrawCircle(ctxPartB, circle);
+
+                // NO redibujamos trazos incorrectos (ya que fueron corregidos)
+                incorrectPathsPartB.length = 0;
+                incorrectNodes.clear();
             }
         }
     });
-
-    if (typeof currentCirclePartB === 'string' && currentCirclePartB === 'D') {
-        drawingCompletedB = true;
-    }
 }
-
 
 function endDrawing(x, y) {
     let validDrop = false;
@@ -234,6 +250,21 @@ function endDrawing(x, y) {
     isDrawingPartB = false;
 }
 
+function redrawCircle(ctx, circle) {
+    ctx.beginPath();
+    ctx.arc(circle.x, circle.y, circleRadius, 0, Math.PI * 2, true);
+    ctx.fillStyle = 'white';
+    ctx.fill();
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'black';
+    ctx.stroke();
+
+    ctx.fillStyle = 'black';
+    ctx.font = 'bold 32px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(circle.label, circle.x, circle.y);
+}
 
 
 function getTouchPosRotatedPartB(canvas, touchEvent) {
@@ -316,6 +347,8 @@ let lastCirclePartB2 = null;
 const correctPathsPartB2 = [];
 let drawingCompletedB2 = false;
 let temporizador = null;
+let currentPathPointsPartB2 = [];
+
 
 const circlesToCorrectB2 = [];
 
@@ -352,6 +385,8 @@ const circleCoordinatesPartB2 = [
 
 const firstCircleLabelB2 = "Empezar";
 const lastCircleLabelB2 = "Terminar";
+
+
 
 function reiniciarTemporizador() {
     clearTimeout(temporizador);
@@ -414,9 +449,12 @@ function startDrawingPartB2(x, y) {
             lastCirclePartB2 = circle;
             ctxPartB2.beginPath();
             ctxPartB2.moveTo(circle.x, circle.y);
+
+            currentPathPointsPartB2 = [{ x: circle.x, y: circle.y }];
         }
     });
 }
+
 
 const incorrectNodesPartB2 = new Set(); // Guarda nodos con errores
 
@@ -425,54 +463,58 @@ function drawMovePartB2(x, y) {
     ctxPartB2.lineTo(x, y);
     ctxPartB2.stroke();
 
-    let validDrop = false;
+    currentPathPointsPartB2.push({ x, y });
 
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        
-        if (distance < circleRadius) {
-            if (circle.label !== getNextLabel(currentCirclePartB2) && circle.label !== lastCirclePartB2.label) {
-                // ❌ Si es un error, se mantiene en rojo
-                highlightCircle(ctxPartB2, circle, 'red', x, y);
-                incorrectPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x, y }]);
-                incorrectNodesPartB2.add(circle.label); // Guardar nodo con error
-                erroresComision++;
-                isDrawingPartB2 = false;
-            } else if (circle.label === getNextLabel(currentCirclePartB2)) {
-                // ✔ Si el trazo es correcto
-                if (incorrectNodesPartB2.has(circle.label)) {
-                    // Si el nodo fue incorrecto antes, se mantiene en rojo
-                    highlightCircle(ctxPartB2, circle, 'red', x, y);
-                } else {
-                    highlightCircle(ctxPartB2, circle, 'black', x, y);
-                }
+        const expectedLabel = getNextLabel(currentCirclePartB2);
 
-                correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
+        if (distance < circleRadius) {
+            if (circle.label !== expectedLabel && circle.label !== lastCirclePartB2.label) {
+                highlightCircle(ctxPartB2, circle, 'red', x, y);
+                incorrectNodesPartB2.add(circle.label);
+                incorrectPathsPartB2.push({
+                    from: lastCirclePartB2.label,
+                    to: circle.label,
+                    points: [...currentPathPointsPartB2]
+                });
+                isDrawingPartB2 = false;
+            } else if (circle.label === expectedLabel) {
+                correctPathsPartB2.push([...currentPathPointsPartB2]);
+                correctLines++;
                 currentCirclePartB2 = getNextLabel(currentCirclePartB2);
                 lastCirclePartB2 = circle;
-                validDrop = true;
-                correctLines++;
 
-                // 🔴 Evitar que nodos incorrectos previos se vuelvan negros
-                if (circlesToCorrectB2.length > 0) {
-                    circlesToCorrectB2.forEach(circle => {
-                        if (incorrectNodesPartB2.has(circle.label)) {
-                            highlightCircle(ctxPartB2, circle, 'red', x, y);
-                        } else {
-                            highlightCircle(ctxPartB2, circle, 'black', x, y);
-                        }
-                    });
-                    circlesToCorrectB2.length = 0;
-                }
+                currentPathPointsPartB2 = [];
+
+
+                circlesPartB2.forEach(c => {
+                    drawCircleWithLabel(ctxPartB2, c.x, c.y, c.label, [], c.name || "", circleRadius);
+                });
+
+                redrawCircle(ctxPartB2, circle);
+
+                // Redibuja los trazos correctos como se hicieron
+                correctPathsPartB2.forEach(path => {
+                    ctxPartB2.beginPath();
+                    ctxPartB2.moveTo(path[0].x, path[0].y);
+                    for (let i = 1; i < path.length; i++) {
+                        ctxPartB2.lineTo(path[i].x, path[i].y);
+                    }
+                    ctxPartB2.strokeStyle = 'black';
+                    ctxPartB2.lineWidth = 2;
+                    ctxPartB2.stroke();
+                });
+
+                incorrectNodesPartB2.clear();
             }
         }
     });
 
-    if (currentCirclePartB2 === 13) {
+    if (typeof currentCirclePartB2 === 'string' && currentCirclePartB2 === 'D') {
         drawingCompletedB2 = true;
     }
 }
-
 
 function endDrawingPartB2(x, y) {
     let validDrop = false;
@@ -489,6 +531,7 @@ function endDrawingPartB2(x, y) {
             }
 
             correctPathsPartB2.push([{ x: lastCirclePartB2.x, y: lastCirclePartB2.y }, { x: circle.x, y: circle.y }]);
+            correctLines++;
             currentCirclePartB2 = getNextLabel(currentCirclePartB2);
             lastCirclePartB2 = circle;
             validDrop = true;
@@ -701,29 +744,29 @@ fetch('/api/user-info')
     });
 
 
-    function generateCSV(data) {
-        // Asegúrate de que userInfo esté disponible
-        if (!userInfo || !userInfo.name || !userInfo.last_name) {
-            console.error("Error: userInfo no está definido correctamente.");
-            return; // Salir si userInfo no está disponible
-        }
-    
-        // Obtener las iniciales del examinador
-        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-    
-        // Comienza con los encabezados, agregando la columna para el Examinador
-        let csvContent = "ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;TotTime;Hand;Examinador\n";
-    
-        // Agregar cada fila de datos, incluyendo las iniciales del examinador
-        data.forEach(row => {
-            let linea = `${row.executionTime.toFixed(3).replace('.', ',')};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime.toFixed(3).replace('.', ',')};${row.taskTime.toFixed(3).replace('.', ',')};${selectedHand};${inicialesExaminador}\n`;
-            csvContent += linea;
-        });
-    
-        // Crear el Blob con el contenido CSV
-        return new Blob([csvContent], { type: 'text/csv' });
+function generateCSV(data) {
+    // Asegúrate de que userInfo esté disponible
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+        console.error("Error: userInfo no está definido correctamente.");
+        return; // Salir si userInfo no está disponible
     }
-    
+
+    // Obtener las iniciales del examinador
+    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
+    // Comienza con los encabezados, agregando la columna para el Examinador
+    let csvContent = "ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;TotTime;Hand;Examinador\n";
+
+    // Agregar cada fila de datos, incluyendo las iniciales del examinador
+    data.forEach(row => {
+        let linea = `${row.executionTime.toFixed(3).replace('.', ',')};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime.toFixed(3).replace('.', ',')};${row.taskTime.toFixed(3).replace('.', ',')};${selectedHand};${inicialesExaminador}\n`;
+        csvContent += linea;
+    });
+
+    // Crear el Blob con el contenido CSV
+    return new Blob([csvContent], { type: 'text/csv' });
+}
+
 
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
