@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function startDrawing(x, y) {
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-            console.log('distancia: '+distance);
+            console.log('distancia: ' + distance);
             if (distance < circleRadius && circle.number === currentCircle) {
                 isDrawing = true;
                 lastCircle = circle;
@@ -172,20 +172,17 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!isDrawing) return;
         ctx.lineTo(x, y);
         ctx.stroke();
-    
+
         let validDrop = false;
-    
+
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance <= circleRadius && circle.number != currentCircle + 1 && lastCircle.number != circle.number) {
                 highlightCircle(ctx, circle, 'red', x, y);
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
-    
+
                 // Añadir el círculo a una lista de círculos incorrectos para mantener el color rojo
-                if (!circlesToCorrect.some(c => c.number === circle.number)) {
-                    circlesToCorrect.push({ x: circle.x, y: circle.y, number: circle.number });
-                }
-    
+
                 isDrawing = false;
             } else if (distance < circleRadius && circle.number === currentCircle + 1) {
                 highlightCircle(ctx, circle, 'black', x, y);
@@ -194,20 +191,47 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCircle = circle;
                 validDrop = true;
                 correctLines++;
-    
-                // Mantener círculos incorrectos en rojo
+
                 if (circlesToCorrect.length > 0) {
-                    circlesToCorrect.forEach(circle => {
-                        highlightCircle(ctx, circle, 'red', x, y);
-                    });
+                    resetIncorrectCircles(ctx, circlesToCorrect, circleRadius);
                 }
             }
         });
-    
+
         if (currentCircle === 8) {
             drawingCompleted = true;
         }
     }
+
+    function resetIncorrectCircles(ctx, circlesToReset, radius) {
+    const padding = 6;
+    circlesToReset.forEach(circle => {
+        ctx.clearRect(
+            circle.x - radius - padding,
+            circle.y - radius - padding,
+            (radius + padding) * 2,
+            (radius + padding) * 2
+        );
+
+        ctx.fillStyle = 'white';
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, radius, 0, Math.PI * 2, true);
+        ctx.fill();
+
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'black';
+        ctx.stroke();
+
+        ctx.fillStyle = 'black';
+        ctx.font = 'bold 32px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(circle.number, circle.x, circle.y);
+    });
+
+    circlesToReset.length = 0;
+}
+
     
 
     function endDrawing(x, y) {
@@ -239,25 +263,25 @@ document.addEventListener('DOMContentLoaded', function () {
     function getTouchPosRotated(canvas, touchEvent) {
         const rect = canvas.getBoundingClientRect();
         const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-    
+
         // Coordenadas originales respecto al canvas
         const localX = touch.clientX - rect.left;
         const localY = touch.clientY - rect.top;
-    
+
         // Transformación para la rotación de -90°
         const rotatedX = rect.height - localY;
         const rotatedY = localX;
-    
+
         return { x: rotatedX, y: rotatedY };
     }
-    
+
     // Evento touchstart
     canvas.addEventListener('touchstart', function (event) {
         event.preventDefault();
         const { x, y } = getTouchPosRotated(canvas, event);
         startDrawing(x, y);
     });
-    
+
     // Evento touchmove
     canvas.addEventListener('touchmove', function (event) {
         if (event.touches.length > 0) {
@@ -266,7 +290,7 @@ document.addEventListener('DOMContentLoaded', function () {
             drawMove(x, y);
         }
     });
-    
+
     // Evento touchend
     canvas.addEventListener('touchend', function (event) {
         event.preventDefault();
@@ -275,8 +299,8 @@ document.addEventListener('DOMContentLoaded', function () {
         liftPenCount++;
         airStartTime = new Date();
     });
-    
-    
+
+
     function drawNextButton() {
         const nextButton = document.createElement('button');
         nextButton.id = 'endSequenceButton';
@@ -302,6 +326,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function reiniciarTemporizador() {
         clearTimeout(temporizador);
         temporizador = setTimeout(arrowToRed, 150000);
+
     }
 
     function arrowToRed() {
@@ -311,15 +336,15 @@ document.addEventListener('DOMContentLoaded', function () {
         arrow.style.backgroundImage = "url('imagenes/flecha4.png')";
     }
 
-    const instructionAudio = document.getElementById('instructionAudio');    
+    const instructionAudio = document.getElementById('instructionAudio');
     let isRecordingStarted = false;
 
     instructionAudio.addEventListener('ended', function () {
         playBeep();
         if (!isRecordingStarted) {
             mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
-            isRecordingStarted = true; 
-        }   
+            isRecordingStarted = true;
+        }
     });
 
     let inicio = null;
@@ -375,7 +400,7 @@ document.addEventListener('DOMContentLoaded', function () {
             drawCircle(ctxPartA, coord.x, coord.y, index + 1, circlesPartA, name, circleRadius);
         });
         drawNextButtonA();
-        
+
     }
 
     let drawingCompletedA = false;
@@ -396,22 +421,23 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!isDrawingPartA) return;
         ctxPartA.lineTo(x, y);
         ctxPartA.stroke();
-    
+
         let validDrop = false;
-    
+
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance <= circleRadius && circle.number != currentCirclePartA + 1 && lastCirclePartA.number != circle.number) {
                 highlightCircle(ctxPartA, circle, 'red', x, y);
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
-    
-                // Añadir el círculo a una lista de círculos incorrectos para mantener el color rojo
+            
                 if (!circlesToCorrectA.some(c => c.number === circle.number)) {
                     circlesToCorrectA.push({ x: circle.x, y: circle.y, number: circle.number });
                 }
-    
+            
                 isDrawingPartA = false;
                 erroresComision++;
+            
+                ctxPartA.beginPath();
             } else if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
                 highlightCircle(ctxPartA, circle, 'black', x, y);
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
@@ -419,16 +445,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCirclePartA = circle;
                 validDrop = true;
                 correctLines++;
-    
-                // Mantener círculos incorrectos en rojo
+            
                 if (circlesToCorrectA.length > 0) {
-                    circlesToCorrectA.forEach(circle => {
-                        highlightCircle(ctxPartA, circle, 'red', x, y);
-                    });
+                    resetIncorrectCircles(ctxPartA, circlesToCorrectA, circleRadius);
                 }
+            
+                ctxPartA.beginPath();
+                ctxPartA.moveTo(circle.x, circle.y);
             }
+            
         });
-    
+
         if (currentCirclePartA === 25) {
             drawingCompletedA = true;
         }
@@ -463,25 +490,30 @@ document.addEventListener('DOMContentLoaded', function () {
     function getTouchPosRotatedPartA(canvas, touchEvent) {
         const rect = canvas.getBoundingClientRect();
         const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-    
+
         // Coordenadas originales respecto al canvas
         const localX = touch.clientX - rect.left;
         const localY = touch.clientY - rect.top;
-    
+
         // Transformación para la rotación de -90°
         const rotatedX = rect.height - localY;
         const rotatedY = localX;
-    
+
         return { x: rotatedX, y: rotatedY };
     }
-    
+
     // Evento touchstart
     canvasPartA.addEventListener('touchstart', function (event) {
         event.preventDefault();
         const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
         startDrawingPartA(x, y);
+        if (airStartTime) {
+            const airEndTime = new Date();
+            penAirTime += (airEndTime - airStartTime) / 1000; // acumula en segundos
+            airStartTime = null;
+        }
     });
-    
+
     // Evento touchmove
     canvasPartA.addEventListener('touchmove', function (event) {
         if (event.touches.length > 0) {
@@ -490,7 +522,7 @@ document.addEventListener('DOMContentLoaded', function () {
             drawMovePartA(x, y);
         }
     });
-    
+
     // Evento touchend
     canvasPartA.addEventListener('touchend', function (event) {
         event.preventDefault();
@@ -499,9 +531,9 @@ document.addEventListener('DOMContentLoaded', function () {
         liftPenCount++;
         airStartTime = new Date();
     });
-    
 
-    
+
+
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
         nextButtonA.id = 'endSequenceButton';
@@ -540,10 +572,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
-    
+
     function testFinalizado() {
         const fechaActual = new Date();
         const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -552,9 +584,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const fechaFormateada = `${day}_${month}_${year}`;
 
         // mediaRecorderCanvas.stop();
-        if(isRecordingStarted){
+        if (isRecordingStarted) {
             mediaRecorderCanvasPartA.stop();
-            
+
             mediaRecorderCanvasPartA.onstop = () => {
                 const blob = new Blob(recordedChunksCanvasPartA, { type: 'video/webm' });
                 const url = URL.createObjectURL(blob);
@@ -563,7 +595,7 @@ document.addEventListener('DOMContentLoaded', function () {
             };
         }
 
-        
+
 
 
         setTimeout(() => {
@@ -596,19 +628,19 @@ document.addEventListener('DOMContentLoaded', function () {
     let userInfo;
 
     fetch('/api/user-info')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al obtener la información del usuario');
-        }
-        return response.json();
-    })
-    .then(data => {
-        userInfo = data; // Asignar los datos al objeto global
-        console.log("Usuario autenticado:", userInfo);
-    })
-    .catch(error => {
-        console.error('Error al obtener la información del usuario:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
 
 
     function generateCSV(data) {
@@ -617,22 +649,22 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error("Error: userInfo no está definido correctamente.");
             return; // Salir si userInfo no está disponible
         }
-    
+
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-    
+
         // Comienza con los encabezados, agregando la columna para el Examinador
         let csvContent = "ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;TotTime;Hand;Examinador\n";
-    
+
         // Agregar cada fila de datos, incluyendo las iniciales del examinador
         data.forEach(row => {
             let linea = `${row.executionTime.toFixed(3).replace('.', ',')};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime.toFixed(3).replace('.', ',')};${row.taskTime.toFixed(3).replace('.', ',')};${selectedHand};${inicialesExaminador}\n`;
             csvContent += linea;
         });
-    
+
         // Crear el Blob con el contenido CSV
         return new Blob([csvContent], { type: 'text/csv' });
     }
-    
+
 
     const selectHandContainer = document.getElementById("selectHand");
     const handButton = document.getElementById("handButton");
@@ -648,7 +680,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     handButton.addEventListener('click', confirmHandSelection);
 
-   
+
 
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
