@@ -737,7 +737,7 @@ function generateTxt(startTimeTotal, selectedHand) {
     const txtContent = `TotTime;Hand\n${totalTime};${selectedHand}\n`;
     return {
         content: txtContent,
-        filename: `${idParticipante}_7_mCCT_Metricas_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_7_mCCT_Unival_${getCurrentDate()}.csv`
     };
 }
 

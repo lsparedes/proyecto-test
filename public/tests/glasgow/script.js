@@ -274,7 +274,7 @@ function generateCSV2(startTimeTotal, selectedHand) {
 
     return {
         content: txtContent,
-        filename: `${idParticipante}_14_GFMT2_Low_Metricas_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_14_GFMT2_Low_Unival_${getCurrentDate()}.csv`
     };
 }
 

@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const { mainCsvContent, additionalCsvContent } = createCSV();
         // Agregar los archivos CSV al ZIP
         zip.file("1_HVLT-R_Reconocimiento.csv", mainCsvContent);
-        zip.file("1_HVLT-R_Reconocimiento_Metricas.csv", additionalCsvContent);
+        zip.file("1_HVLT-R_Reconocimiento_Unival.csv", additionalCsvContent);
         // // Agregar el archivo CSV al zip
         // const csvContent = createCSV();
         // zip.file('HVLT-R_Reconocimiento_.csv', csvContent);

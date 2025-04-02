@@ -511,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: txtContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_Unival_${getCurrentDate()}.csv`
         };
     }
 

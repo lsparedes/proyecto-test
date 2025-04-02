@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Instructions.mp4',
             items: {
-                correcto: [{ x: 303, y: 138 }],
+                correcto: [{ x: 221, y: 73 }],
                 error_rotacion: [],
                 error_actualizacion: [],
             },
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Practice_1.mp4',
             items: {
-                correcto: [{ x: 315, y: 187 }],
+                correcto: [{ x: 227, y: 116 }],
                 error_rotacion: [],
                 error_actualizacion: [],
             },
@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Practice_2.mp4',
             items: {
-                correcto: [{ x: 399, y: 232 }],
+                correcto: [{ x: 228, y: 145 }],
                 error_rotacion: [],
                 error_actualizacion: [],
             },
@@ -805,7 +805,7 @@ document.addEventListener('DOMContentLoaded', () => {
             resizeCanvas(imageCanvas);
             drawImageScaled(imageCanvas, img);
         };
-
+        
         // Configurar los eventos para controlar la visibilidad del video
         testVideo.addEventListener('pause', () => {
             testVideo.style.display = 'none'; // Ocultar el video al pausar
@@ -816,14 +816,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Pausar el video y configurarlo para la reproducción después de 2 segundos
-        testVideo.style.display = 'none'; // Asegurarse de que esté oculto al cargar
-        testVideo.pause(); // Pausar el video inicialmente
+        testVideo.style.display = 'none';
+        testVideo.pause();
         console.log(`Mostrando video: ${videos[contador].src}`);
-        clickStartTime = Date.now(); // Reiniciar el tiempo de inicio para calcular el tiempo de respuesta
+        clickStartTime = Date.now(); 
 
         setTimeout(() => {
-            testVideo.play(); // Reproducir el video después de 2 segundos
-        }, 2000); // 2000 milisegundos = 2 segundos
+            testVideo.play(); 
+        }, 2000); 
     };
 
     if (imageCanvas && testVideo) {
@@ -848,12 +848,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if (showUpdateErrors) drawUpdateErrorsOnCanvas(imageCanvas, contador);
         });
 
-        const showQuestion = () => {
-            document.getElementById('questionContainer').style.display = 'block';
-        };
+        
 
+        const hideQuestion = () => {
+            const question = document.getElementById('questionContainer');
+            if (question) question.style.display = 'none';
+        };
+        
+        const showQuestion = () => {
+            const question = document.getElementById('questionContainer');
+            if (question) question.style.display = 'block';
+        };
+        
         [testVideo, practiceVideo1, practiceVideo2, practiceVideo3].forEach(video => {
-            video.addEventListener('ended', showQuestion);
+            video.addEventListener('play', hideQuestion);   
+            video.addEventListener('ended', showQuestion);  
         });
 
         nextButtonTest.addEventListener('click', () => {
