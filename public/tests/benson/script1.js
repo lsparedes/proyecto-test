@@ -324,11 +324,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return date.toLocaleString('en-US', options).replace(',', '');
     }
 
-    function startFinishTimer() {
-        setTimeout(() => {
-            playBeepSound();
-        }, 20 * 60 * 1000); // 20 minutos en milisegundos
-    }
+
 
     function playBeepSound() {
         const beep = new Audio('beep.wav');

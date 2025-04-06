@@ -16,7 +16,7 @@
     <div id="container">
         <div id="camera-open" class="container"> 
 
-        <video id="video-preview" autoplay muted></video>
+        <video id="video-preview-initial" autoplay muted ></video>
 
 
         <div class="button-container">
@@ -48,13 +48,16 @@
                 <source id="audio-source" src="" type="audio/mpeg">
                 Tu navegador no soporta el elemento de audio.
             </audio>
-           
+            <video id="video-preview-test" autoplay muted></video>
 
             <div class="controls">
-                
                 <button id="audio-btn"></button>
                 <button id="recording-btn" disabled></button>
                 <button id="stop-btn" disabled></button>
+            </div>
+            <div id="FinishRecordingImage" style="display: none;">
+                <button id="initRecordingButtonBlack1"></button>
+                <button id="stopRecordingButtonRed1"></button>
             </div>
             <button id="next-btn"></button>
         </div>

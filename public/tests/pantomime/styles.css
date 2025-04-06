@@ -54,9 +54,28 @@ button:not(:disabled):active {
     transform: scale(0.98);
 }
 
-#video-preview {
+#initRecordingButtonBlack1 {
+    background-image: url('boton-recnegro.png');
+}
+
+
+#stopRecordingButtonRed1 {
+    background-image: url('detenerr1rojo.png');
+}
+
+#video-preview-initial,
+#video-preview-test {
     display: block !important;
     transform: scaleX(-1);
+}
+
+#video-preview-initial{
+    width: 1000px;
+    height: 1000px;
+}
+
+#FinishRecordingImage{
+    
 }
 
 #next-btn,
@@ -151,7 +170,9 @@ button:not(:disabled):active {
 }
 
 #stop-btn,
-#recording-btn {
+#recording-btn,
+#initRecordingButtonBlack1,
+#stopRecordingButtonRed1 {
     background-color: transparent;
     border: none;
     cursor: pointer;

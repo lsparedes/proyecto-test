@@ -359,11 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function startFinishTimer() {
-        setTimeout(() => {
-            playBeepSound();
-        }, 20 * 60 * 1000);
-    }
 
     function playBeepSound() {
         const beep = new Audio('audios/beep.wav');
