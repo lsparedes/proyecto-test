@@ -58,9 +58,9 @@ canvas {
 }
 
 #instructionText {
-    font-size: 35px;
+    font-size: 37px;
     text-align: justify;
-    margin-bottom: 20px;
+    margin-bottom: 1rem;
 }
 
 #initialScreen, #instructionScreen1, #instructionScreen2, #instructionScreen3, #instructionScreen4, #preTestInstructionScreen {
@@ -75,10 +75,6 @@ canvas {
 .button-container {
     margin-top: 20px;
     text-align: center;
-}
-
-.button-container button {
-    margin: 20px;
 }
 
 #validateButton, #showButton, #hideButton, #prevButton, #downloadCSVButton,#showRotationErrorButton, #hideRotationErrorButton,#showUpdateErrorButton,#hideUpdateErrorButton {

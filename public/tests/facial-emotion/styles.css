@@ -180,11 +180,6 @@ button {
     /* Asegura que el contenedor ocupe el ancho completo */
 }
 
-.button-container button {
-    margin: 5px;
-    /*  Ajusta este margen según lo necesites */
-}
-
 audio {
     margin-bottom: 20px;
 }
