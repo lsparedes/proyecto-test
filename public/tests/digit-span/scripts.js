@@ -421,7 +421,7 @@ function crearZip(type) {
     const fechaFormateada = `${day}_${month}_${year}`;
 
     // zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_9_Span_Verbal_totTime_${type}_${fechaFormateada}.csv`, txtBlob); 
+    zip.file(`${idParticipante}_9_Span_Verbal_Unival_${type}_${fechaFormateada}.csv`, txtBlob); 
 
 
     zip.generateAsync({ type: "blob" })

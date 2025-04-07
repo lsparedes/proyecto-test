@@ -3,7 +3,7 @@ document.getElementById('next-button').addEventListener('click', cambiarImagen);
 const imagenes = [
     {
         src: "Emociones/Alegria/alegria1.png",
-        emocionCorrecta: "Alegria",
+        emocionCorrecta: "Alegría",
         numero: 'E1'
     },
     {
@@ -390,7 +390,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     // Crear el archivo ZIP y agregar los archivos CSV
     const zip = new JSZip();
     zip.file(`${idParticipante}_12_Facial_Emotion_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_12_Facial_Emotion_Metricas_${fechaFormateada}.csv`, txtBlob);
+    zip.file(`${idParticipante}_12_Facial_Emotion_Unival_${fechaFormateada}.csv`, txtBlob);
 
     // Generar y descargar el archivo ZIP
     zip.generateAsync({ type: "blob" })
