@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("El audio ha terminado."); // Verificación de evento de audio
             setTimeout(() => {
                 finishDrawingWithFigureButton.classList.add('red-arrow');
-            }, 4 * 60 * 1000); // 10 segundos
+            }, 4 * 60 * 1000); // 4 minutos
             startTime1 = new Date();
             console.log("Tiempo de inicio Tarea: ", formatDate(startTime1));
         });
@@ -127,10 +127,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    function enterFinishScreen() {
-        finishScreen.style.display = 'block';
-        startCountdown(10 * 60 * 1000); // 10 minutos en milisegundos
-    }
 
     function finishScreenReached() {
         endTimeExecution = new Date();
