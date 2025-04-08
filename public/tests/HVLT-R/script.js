@@ -157,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     audioE1.addEventListener('timeupdate', () => {
-        if (audioE1.currentTime >= audioE1.duration - 2) {
+        if (audioE1.currentTime >= audioE1.duration ) {
             if (!is_recording) {
                 startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.wav');
             }
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     audioE2.addEventListener('timeupdate', () => {
-        if (audioE2.currentTime >= audioE2.duration - 2) {
+        if (audioE2.currentTime >= audioE2.duration ) {
             if (!is_recording) {
                 startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.wav');
             }
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     audioE3.addEventListener('timeupdate', () => {
-        if (audioE3.currentTime >= audioE3.duration - 2) {
+        if (audioE3.currentTime >= audioE3.duration ) {
             if (!is_recording) {
                 startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.wav');
             }
