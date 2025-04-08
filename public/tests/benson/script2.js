@@ -401,10 +401,4 @@ document.addEventListener('DOMContentLoaded', () => {
         return date.toLocaleString('en-US', options).replace(',', '');
     }
 
-
-    function playBeepSound() {
-        const beep = new Audio('beep.wav');
-        beep.play();
-    }
-
 });

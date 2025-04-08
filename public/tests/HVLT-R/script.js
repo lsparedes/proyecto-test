@@ -359,12 +359,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
-    function playBeepSound() {
-        const beep = new Audio('audios/beep.wav');
-        beep.play();
-    }
-
     function pauseAudios() {
         document.getElementById('audio1').pause();
         document.getElementById('audio4').pause();

@@ -150,13 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         stopRecordingButton4.disabled = true;
         DownloadButton.style.display = 'block';
     }
-
-
-    function playBeepSound() {
-        const beep = new Audio('audios/beep.wav');
-        beep.play();
-    }
-
+    
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
