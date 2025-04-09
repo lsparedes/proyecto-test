@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = index === 0 ? "Empezar" : (index === circleCoordinates.length - 1 ? "Terminar" : "");
             drawCircle(ctx, coord.x, coord.y, index + 1, circles, name, circleRadius);
         });
+        
         drawNextButton();
         show.style.display = 'block';
         show1.style.display = 'none';
@@ -164,7 +165,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCircle = circle;
                 ctx.beginPath();
                 ctx.moveTo(circle.x, circle.y);
+            
+                // Aplicar negrita visual con borde negro al presionar el 1
+                if (circle.number === 1) {
+                    highlightCircle(ctx, circle, 'black', circle.x, circle.y);
+                }
             }
+            
         });
     }
 
@@ -204,35 +211,35 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function resetIncorrectCircles(ctx, circlesToReset, radius) {
-    const padding = 6;
-    circlesToReset.forEach(circle => {
-        ctx.clearRect(
-            circle.x - radius - padding,
-            circle.y - radius - padding,
-            (radius + padding) * 2,
-            (radius + padding) * 2
-        );
+        const padding = 6;
+        circlesToReset.forEach(circle => {
+            ctx.clearRect(
+                circle.x - radius - padding,
+                circle.y - radius - padding,
+                (radius + padding) * 2,
+                (radius + padding) * 2
+            );
 
-        ctx.fillStyle = 'white';
-        ctx.beginPath();
-        ctx.arc(circle.x, circle.y, radius, 0, Math.PI * 2, true);
-        ctx.fill();
+            ctx.fillStyle = 'white';
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, radius, 0, Math.PI * 2, true);
+            ctx.fill();
 
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = 'black';
-        ctx.stroke();
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
 
-        ctx.fillStyle = 'black';
-        ctx.font = 'bold 32px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText(circle.number, circle.x, circle.y);
-    });
+            ctx.fillStyle = 'black';
+            ctx.font = '32px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(circle.number, circle.x, circle.y);
+        });
 
-    circlesToReset.length = 0;
-}
+        circlesToReset.length = 0;
+    }
 
-    
+
 
     function endDrawing(x, y) {
         let validDrop = false;
@@ -413,6 +420,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCirclePartA = circle;
                 ctxPartA.beginPath();
                 ctxPartA.moveTo(circle.x, circle.y);
+            
+                if (circle.number === 1) {
+                    highlightCircle(ctxPartA, circle, 'black', circle.x, circle.y);
+                }
             }
         });
     }
@@ -429,14 +440,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (distance <= circleRadius && circle.number != currentCirclePartA + 1 && lastCirclePartA.number != circle.number) {
                 highlightCircle(ctxPartA, circle, 'red', x, y);
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
-            
+
                 if (!circlesToCorrectA.some(c => c.number === circle.number)) {
                     circlesToCorrectA.push({ x: circle.x, y: circle.y, number: circle.number });
                 }
-            
+
                 isDrawingPartA = false;
                 erroresComision++;
-            
+
                 ctxPartA.beginPath();
             } else if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
                 highlightCircle(ctxPartA, circle, 'black', x, y);
@@ -445,15 +456,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCirclePartA = circle;
                 validDrop = true;
                 correctLines++;
-            
+
                 if (circlesToCorrectA.length > 0) {
                     resetIncorrectCircles(ctxPartA, circlesToCorrectA, circleRadius);
                 }
-            
+
                 ctxPartA.beginPath();
                 ctxPartA.moveTo(circle.x, circle.y);
             }
-            
+
         });
 
         if (currentCirclePartA === 25) {

@@ -48,7 +48,7 @@ const circleCoordinatesPartB = [
 const firstCircleLabelB = "Empezar";
 const lastCircleLabelB = "Terminar";
 
-function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRadius) {
+function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRadius, bold = false) {
     ctx.fillStyle = 'white';
     ctx.beginPath();
     ctx.arc(x, y, circleRadius, 0, Math.PI * 2, true);
@@ -59,18 +59,19 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
     ctx.stroke();
 
     ctx.fillStyle = 'black';
-    ctx.font ='bold 36px Arial';
+    ctx.font = (bold ? 'bold ' : '') + '36px Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(label, x, y);
 
     if (name) {
-        ctx.font = 'bold 19px Arial';
+        ctx.font = 'bold 18px Arial';
         ctx.fillText(name, x, y - circleRadius - 20);
     }
 
     circlesArray.push({ x, y, label });
 }
+
 
 
 function startRecording(canvas, recordedChunks) {
@@ -103,7 +104,9 @@ function startPartB() {
         const label = index % 2 === 0 ? (index / 2) + 1 : String.fromCharCode(65 + (index - 1) / 2);
         const name = index === 0 ? firstCircleLabelB : (index === circleCoordinatesPartB.length - 1 ? lastCircleLabelB : "");
         circlesPartB.push({ x: coord.x, y: coord.y, label, name });
-        drawCircleWithLabel(ctxPartB, coord.x, coord.y, label, [], name, circleRadius);
+        const isFirst = index === 0;
+        drawCircleWithLabel(ctxPartB, coord.x, coord.y, label, [], name, circleRadius, isFirst);
+
 
     });
     drawNextButtonB();
@@ -158,7 +161,9 @@ function startDrawing(x, y) {
             isDrawingPartB = true;
             lastCirclePartB = circle;
             ctxPartB.beginPath();
-            ctxPartB.moveTo(circle.x, circle.y);
+            const edgeStart = getEdgePoint(circle, { x, y }, circleRadius);
+            ctxPartB.moveTo(edgeStart.x, edgeStart.y);
+            currentPathPoints = [{ x: edgeStart.x, y: edgeStart.y }];
 
             currentPathPoints = [{ x: circle.x, y: circle.y }];
         }
@@ -171,51 +176,63 @@ const correctNodesPartB = new Set();
 
 function drawMove(x, y) {
     if (!isDrawingPartB) return;
+
     ctxPartB.lineTo(x, y);
     ctxPartB.stroke();
-
     currentPathPoints.push({ x, y });
 
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+        const expectedLabel = getNextLabel(currentCirclePartB);
 
         if (distance < circleRadius) {
-            const expectedLabel = getNextLabel(currentCirclePartB);
-
             if (circle.label !== expectedLabel && circle.label !== lastCirclePartB.label) {
-                // ERROR → trazo incorrecto
                 highlightCircle(ctxPartB, circle, 'red', x, y);
                 incorrectNodes.add(circle.label);
                 incorrectPathsPartB.push({
                     from: lastCirclePartB.label,
                     to: circle.label,
-                    points: [{ x: lastCirclePartB.x, y: lastCirclePartB.y }, { x, y }]
+                    points: [...currentPathPoints]
                 });
                 isDrawingPartB = false;
             } else if (circle.label === expectedLabel) {
-                // CORRECTO → trazo válido
+
                 correctPathsPartB.push([...currentPathPoints]);
 
                 currentCirclePartB = getNextLabel(currentCirclePartB);
                 lastCirclePartB = circle;
 
-                // Redibujar todo (borra trazos incorrectos y círculos en rojo)
-                currentPathPoints = [];
-                // Redibujar círculos
+                ctxPartB.clearRect(0, 0, canvasPartB.width, canvasPartB.height);
+                ctxPartB.fillStyle = 'white';
+                ctxPartB.fillRect(0, 0, canvasPartB.width, canvasPartB.height);
+
                 circlesPartB.forEach(c => {
-                    drawCircleWithLabel(ctxPartB, c.x, c.y, c.label, [], c.name || "", circleRadius);
+                    const isCurrent = c.label === currentCirclePartB;
+                    drawCircleWithLabel(ctxPartB, c.x, c.y, c.label, [], c.name || "", circleRadius, isCurrent);
+                });
+                
+
+                correctPathsPartB.forEach(path => {
+                    ctxPartB.beginPath();
+                    ctxPartB.moveTo(path[0].x, path[0].y);
+                    for (let i = 1; i < path.length; i++) {
+                        ctxPartB.lineTo(path[i].x, path[i].y);
+                    }
+                    ctxPartB.strokeStyle = 'black';
+                    ctxPartB.lineWidth = 2;
+                    ctxPartB.stroke();
                 });
 
-                // Redibujar líneas correctas
                 redrawCircle(ctxPartB, circle);
 
-                // NO redibujamos trazos incorrectos (ya que fueron corregidos)
+                currentPathPoints = [];
                 incorrectPathsPartB.length = 0;
                 incorrectNodes.clear();
             }
         }
     });
 }
+
 
 function endDrawing(x, y) {
     let validDrop = false;
@@ -249,6 +266,14 @@ function endDrawing(x, y) {
 
     isDrawingPartB = false;
 }
+function getEdgePoint(from, to, radius) {
+    const angle = Math.atan2(to.y - from.y, to.x - from.x);
+    return {
+        x: from.x + radius * Math.cos(angle),
+        y: from.y + radius * Math.sin(angle)
+    };
+}
+
 
 function redrawCircle(ctx, circle) {
     ctx.beginPath();
