@@ -213,10 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     nextBtn.addEventListener('click', () => {
         stopAllAudios();
-        proceedToNextImage(); // Avanzamos solo con el botón Next
-        document.getElementById('FinishRecordingImage').style.display = 'none'; // Mostrar imagen
+        stopRecording(); // ← Detenemos la grabación como lo hace el botón "stop"
+        proceedToNextImage(); // ← Luego avanzamos
+        document.getElementById('FinishRecordingImage').style.display = 'none';
         audioBtn.style.display = 'inline-block';
     });
+    
 
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
