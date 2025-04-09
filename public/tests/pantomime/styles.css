@@ -65,7 +65,7 @@ button:not(:disabled):active {
 
 #video-preview-initial,
 #video-preview-test {
-    display: block !important;
+
     transform: scaleX(-1);
 }
 
