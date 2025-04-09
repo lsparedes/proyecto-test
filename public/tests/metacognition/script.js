@@ -48,9 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
   let blockType = 'demo';
   let RedDotSide = "izquierda";
 
-  let diferenciaInicial = 15;
+  let DotDiff = 15; // Diferencia inicial entre cantidades de colores
+
+
   let ajusteDificultad = 1;
-  let diferenciaAjustada = 0;
   let correctStreak = 0; // Variable global para contar respuestas correctas consecutivas
   let startTimeTotal = new Date();
   let startTime;
@@ -170,46 +171,34 @@ document.addEventListener('DOMContentLoaded', () => {
   function ajustarDificultad(respuesta) {
     if (respuesta === true) { // Respuesta correcta
       correctStreak++;
-      if (correctStreak >= 2) { // Aumenta la dificultad si hay 2 respuestas correctas consecutivas
-        if (diferenciaAjustada < 7) {
-          diferenciaAjustada += 1;
-          diferenciaInicial -= 2;
-        }
-        correctStreak = 0; // Reinicia el contador después de aumentar la dificultad
+      if (correctStreak === 2) {
+        if (DotDiff > 1) DotDiff--; // Aumenta dificultad
+        correctStreak = 0;
       }
-    } else { // Respuesta incorrecta
-      if (diferenciaAjustada > -24) {
-        diferenciaAjustada -= 1;
-        diferenciaInicial += 2;
-      }
-      correctStreak = 0; // Reinicia el contador
+    } else {
+      DotDiff++; // Disminuye dificultad
+      correctStreak = 0;
     }
   }
+  
 
   function generateDots(ctx) {
     const totalDots = 65;
-    let numPuntosMayor = 40 - diferenciaAjustada;
+    const colorMayor = Math.random() < 0.5 ? 'red' : 'blue';
+  
+    let numPuntosMayor = Math.ceil((totalDots + DotDiff) / 2);
     let numPuntosMenor = totalDots - numPuntosMayor;
+  
     const colors = [];
-    let colorMayor = Math.random() < 0.5 ? 'red' : 'blue';
-
-
+  
     if (colorMayor === 'red') {
-      RedDotSide = "izquierda"; // Rojo a la izquierda
-      for (let i = 0; i < numPuntosMayor; i++) {
-        colors.push('red');
-      }
-      for (let i = 0; i < numPuntosMenor; i++) {
-        colors.push('blue');
-      }
+      RedDotSide = "izquierda";
+      for (let i = 0; i < numPuntosMayor; i++) colors.push('red');
+      for (let i = 0; i < numPuntosMenor; i++) colors.push('blue');
     } else {
-      RedDotSide = "derecha"; // Rojo a la derecha
-      for (let i = 0; i < numPuntosMayor; i++) {
-        colors.push('blue');
-      }
-      for (let i = 0; i < numPuntosMenor; i++) {
-        colors.push('red');
-      }
+      RedDotSide = "derecha";
+      for (let i = 0; i < numPuntosMayor; i++) colors.push('blue');
+      for (let i = 0; i < numPuntosMenor; i++) colors.push('red');
     }
 
     let numRedDots = 0;
@@ -248,8 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fill();
     }
 
-    correctColor = numRedDots > numBlueDots ? 'Rojo' : 'Azul';
-    console.log(`Correct color is ${correctColor}. Rojo: ${numRedDots}, Azul: ${numBlueDots}, diferencia: ${diferenciaInicial}, puntos mayor: ${numPuntosMayor}, puntos menor: ${numPuntosMenor}`);
+    correctColor = numPuntosMayor > numPuntosMenor ? (colorMayor === 'red' ? 'Rojo' : 'Azul') : (colorMayor === 'blue' ? 'Rojo' : 'Azul');
+
+    console.log(`Correct color is ${correctColor}. DotDiff: ${DotDiff}`);
   }
 
   function recordAnswer(answer) {
@@ -257,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confidence = confidenceSlider.value;
     const timeColFormatted = (timeColor / 1000).toFixed(3).replace('.', ',');
     const timeConfFormatted = (timeConfidence / 1000).toFixed(3).replace('.', ',');
-    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: diferenciaInicial, timeCol: timeColFormatted, timeConf: timeConfFormatted, timeP: 'N/A' });
+    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: DotDiff, timeCol: timeColFormatted, timeConf: timeConfFormatted, timeP: 'N/A' });
     ajustarDificultad(isCorrect);
   }
 
