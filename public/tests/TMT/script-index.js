@@ -143,7 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const name = index === 0 ? "Empezar" : (index === circleCoordinates.length - 1 ? "Terminar" : "");
             drawCircle(ctx, coord.x, coord.y, index + 1, circles, name, circleRadius);
         });
-        
+
         drawNextButton();
         show.style.display = 'block';
         show1.style.display = 'none';
@@ -165,13 +165,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCircle = circle;
                 ctx.beginPath();
                 ctx.moveTo(circle.x, circle.y);
-            
+
                 // Aplicar negrita visual con borde negro al presionar el 1
                 if (circle.number === 1) {
                     highlightCircle(ctx, circle, 'black', circle.x, circle.y);
                 }
             }
-            
+
         });
     }
 
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const instructionAudio = document.getElementById('instructionAudio');
-    let isRecordingStarted = false;
+    
 
     instructionAudio.addEventListener('ended', function () {
         playBeep();
@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCirclePartA = circle;
                 ctxPartA.beginPath();
                 ctxPartA.moveTo(circle.x, circle.y);
-            
+
                 if (circle.number === 1) {
                     highlightCircle(ctxPartA, circle, 'black', circle.x, circle.y);
                 }
@@ -514,16 +514,28 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Evento touchstart
+    let isRecordingStarted = false;
+
     canvasPartA.addEventListener('touchstart', function (event) {
         event.preventDefault();
+
+        // Iniciar grabación si aún no ha empezado
+        if (!isRecordingStarted) {
+            mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
+            isRecordingStarted = true;
+            console.log('Grabación iniciada al tocar el canvas');
+        }
+
         const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
         startDrawingPartA(x, y);
+
         if (airStartTime) {
             const airEndTime = new Date();
-            penAirTime += (airEndTime - airStartTime) / 1000; // acumula en segundos
+            penAirTime += (airEndTime - airStartTime) / 1000;
             airStartTime = null;
         }
     });
+
 
     // Evento touchmove
     canvasPartA.addEventListener('touchmove', function (event) {
