@@ -473,9 +473,7 @@ practiceCanvas.addEventListener('', (e) => {
     drawCirclePractice(e.clientX - practiceCanvas.getBoundingClientRect().left, e.clientY - practiceCanvas.getBoundingClientRect().top, 'blue');
 });
 function showHandSelection() {
-    fin.style.display = 'block';
-    selectHandContainer.style.display = "block";
-    mainScreen.style.display = 'none';
+
     handButton.addEventListener('click', function () {
         stopRecording();
         validateClicks();
@@ -486,14 +484,14 @@ startButton.addEventListener('click', () => {
     document.getElementById('instructionAudio1').pause();
     instructionsScreenP.style.display = 'none';
     mainScreenP.style.display = 'block';
-    testButton.style.display = 'block';  // Asegura que el botón 'next' esté visible
+    testButton.style.display = 'block'; 
     totalStartTime = new Date(); // Registro del tiempo de inicio total
 });
 
 nextButtonP.addEventListener('click', () => {
     mainScreenP.style.display = 'none';
     instructionsScreen.style.display = 'flex';
-    nextButtonP.style.display = 'block';  // Asegura que el botón 'next' esté visible
+    nextButtonP.style.display = 'block'; 
 
 });
 
@@ -504,6 +502,13 @@ testButton.addEventListener('click', () => {
     nextButton.style.display = 'block';  // Asegura que el botón 'next' esté visible
     startRecording();
     startItemTime = new Date();
+});
+
+nextButton.addEventListener('click', () => {
+    fin.style.display = 'block';
+    selectHandContainer.style.display = "block";
+    mainScreen.style.display = 'none';
+    showHandSelection();
 });
 
 fullscreenButton.addEventListener('click', () => {
@@ -874,9 +879,7 @@ const handInputs = document.getElementsByName('hand');
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
-    fin.style.display = 'block';
-    selectHandContainer.style.display = "block";
-    mainScreen.style.display = 'none';
+    
     handButton.addEventListener('click', function () {
         stopRecording();
         validateClicks();
@@ -923,6 +926,3 @@ window.confirmHandSelection = confirmHandSelection;
 
 window.addEventListener('load', prepareRecording);
 
-nextButton.addEventListener('click', () => {
-    showHandSelection();
-});
