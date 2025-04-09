@@ -492,7 +492,7 @@ startButton.addEventListener('click', () => {
 
 nextButtonP.addEventListener('click', () => {
     mainScreenP.style.display = 'none';
-    instructionsScreen.style.display = 'block';
+    instructionsScreen.style.display = 'flex';
     nextButtonP.style.display = 'block';  // Asegura que el botón 'next' esté visible
 
 });

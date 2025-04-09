@@ -70,8 +70,8 @@ button:not(:disabled):active {
 }
 
 #video-preview-initial{
-    width: 1000px;
-    height: 1000px;
+    width: 750px;
+    height: 750px;
 }
 
 #FinishRecordingImage{
