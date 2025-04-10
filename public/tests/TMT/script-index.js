@@ -29,6 +29,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let liftPenCount = 0;
     let penAirTime = 0;
     let airStartTime = null;
+    let correctLinesPartA = 0;
+    let errorRegistradoPartA = false;
     const show = document.getElementById('show');
     const show1 = document.getElementById('show1');
     const endSequenceButton = document.createElement('button');
@@ -211,14 +213,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function resetIncorrectCircles(ctx, circlesToReset, radius) {
-        const padding = 6;
+        const padding = 2;
         circlesToReset.forEach(circle => {
-            ctx.clearRect(
-                circle.x - radius - padding,
-                circle.y - radius - padding,
-                (radius + padding) * 2,
-                (radius + padding) * 2
-            );
+
 
             ctx.fillStyle = 'white';
             ctx.beginPath();
@@ -303,8 +300,6 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const { x, y } = getTouchPosRotated(canvas, event);
         endDrawing(x, y);
-        liftPenCount++;
-        airStartTime = new Date();
     });
 
 
@@ -344,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const instructionAudio = document.getElementById('instructionAudio');
-    
+
 
     instructionAudio.addEventListener('ended', function () {
         playBeep();
@@ -430,14 +425,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function drawMovePartA(x, y) {
         if (!isDrawingPartA) return;
-        ctxPartA.lineTo(x, y);
-        ctxPartA.stroke();
+        if (!errorRegistradoPartA) {
+            ctxPartA.lineTo(x, y);
+            ctxPartA.stroke();
+        }
 
         let validDrop = false;
 
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance <= circleRadius && circle.number != currentCirclePartA + 1 && lastCirclePartA.number != circle.number) {
+                
                 highlightCircle(ctxPartA, circle, 'red', x, y);
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
 
@@ -445,17 +443,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     circlesToCorrectA.push({ x: circle.x, y: circle.y, number: circle.number });
                 }
 
+                if (!errorRegistradoPartA) {
+                    erroresComision++; // 
+                    errorRegistradoPartA = true;
+                }
                 isDrawingPartA = false;
-                erroresComision++;
-
                 ctxPartA.beginPath();
-            } else if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
+            } else if (
+                distance < circleRadius &&
+                circle.number === currentCirclePartA + 1 &&
+                lastCirclePartA.number === currentCirclePartA
+            ) {
                 highlightCircle(ctxPartA, circle, 'black', x, y);
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
                 currentCirclePartA++;
                 lastCirclePartA = circle;
                 validDrop = true;
-                correctLines++;
+                correctLinesPartA++;
 
                 if (circlesToCorrectA.length > 0) {
                     resetIncorrectCircles(ctxPartA, circlesToCorrectA, circleRadius);
@@ -534,6 +538,7 @@ document.addEventListener('DOMContentLoaded', function () {
             penAirTime += (airEndTime - airStartTime) / 1000;
             airStartTime = null;
         }
+        errorRegistradoPartA = false;
     });
 
 
@@ -551,9 +556,15 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
         endDrawingPartA(x, y);
-        liftPenCount++;
-        airStartTime = new Date();
+
+        if (isDrawingPartA) {
+            liftPenCount++;
+            airStartTime = new Date();
+        }
+
+        isDrawingPartA = false;
     });
+
 
 
 
@@ -578,7 +589,7 @@ document.addEventListener('DOMContentLoaded', function () {
             data.push({
                 executionTime: executionTime,
                 commissionErrors: erroresComision,
-                correctLines: correctLines,
+                correctLines: correctLinesPartA,
                 liftPenCount: liftPenCount,
                 penAirTime: penAirTime,
                 taskTime: taskTime

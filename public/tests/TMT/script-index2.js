@@ -626,7 +626,7 @@ canvasPartB2.addEventListener('touchend', function (event) {
     event.preventDefault();
     const { x, y } = getTouchPosRotatedPartB2(canvasPartB2, event);
     endDrawingPartB2(x, y);
-    liftPenCount++;
+    
     airStartTime = new Date();
 });
 
