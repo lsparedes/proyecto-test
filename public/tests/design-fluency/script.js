@@ -50,19 +50,26 @@ window.onload = function () {
 
     startButton.addEventListener('click', function () {
         stopAllAudios();
-        // instructions.style.display = 'none';
         practiceContainer.style.display = 'block';
-        practiceImage.src = 'image.png';
+        practiceImage.src = 'image2.png';
         practiceImage.onload = function () {
             practiceCtx.save();
             practiceCtx.translate(practiceCanvas.width / 2, practiceCanvas.height / 2);
-            practiceCtx.rotate(-Math.PI / 2);
-            practiceCtx.drawImage(practiceImage, -practiceCanvas.height / 2, -practiceCanvas.width / 2, practiceCanvas.height, practiceCanvas.width);
+            practiceCtx.rotate(Math.PI / 2); // rotar 90 grados hacia la derecha
+            practiceCtx.drawImage(
+                practiceImage,
+                -practiceCanvas.height / 2, // como rotamos, invertimos height y width
+                -practiceCanvas.width / 2,
+                practiceCanvas.height,
+                practiceCanvas.width
+            );
             practiceCtx.restore();
         };
         startPracticeRecording('practiceCanvas');
         document.getElementById('practiceNextButton').style.display = 'block';
     });
+    
+    // Fuerza el clic para iniciar inmediatamente
     startButton.click();
 
     const practiceNextButton = document.getElementById('practiceNextButton');
