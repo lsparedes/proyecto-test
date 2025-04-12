@@ -40,15 +40,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Posiciones fijas de los cuadrados
     const fixedPositions = [
-        { "top": 460, "left": 400 },
-        { "top": 450, "left": 850 },
-        { "top": 440, "left": 188 },
-        { "top": 330, "left": 656 },
-        { "top": 280, "left": 358 },
-        { "top": 185, "left": 125 },
-        { "top": 145, "left": 890 },
-        { "top": 20, "left": 632 },
-        { "top": 58, "left": 380 }
+        { "top": 540, "left": 320 },
+        { "top": 490, "left": 700 },
+        { "top": 400, "left": 130 },
+        { "top": 360, "left": 560 },
+        { "top": 280, "left": 280 },
+        { "top": 170, "left": 80 },
+        { "top": 160, "left": 730 },
+        { "top": 50, "left": 540 },
+        { "top": 70, "left": 300 }
     ];
 
     const practiceSequences = [
