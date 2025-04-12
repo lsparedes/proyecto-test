@@ -46,7 +46,22 @@ document.addEventListener('DOMContentLoaded', () => {
   let pauseStartTime;
   let instructionsPhase = 0;
   let blockType = 'demo';
-  let RedDotSide = "izquierda";
+
+  let RedDotSide;
+  let LeftColor;
+  let RightColor;
+
+  RedDotSide = Math.random() < 0.5 ? "izquierda" : "derecha";
+
+  // Asignar colores según lado
+  if (RedDotSide === 'izquierda') {
+    LeftColor = 'red';
+    RightColor = 'blue';
+  } else {
+    LeftColor = 'blue';
+    RightColor = 'red';
+  }
+
 
   let DotDiff = 15; // Diferencia inicial entre cantidades de colores
 
@@ -89,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function startTestBlock() {
-    trialCount = 0;
+
     blockCount++;
     maxTime = 210;
     blockType = 'test';
@@ -144,11 +159,13 @@ document.addEventListener('DOMContentLoaded', () => {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     generateDots(ctx);
     updateTrialIndicator(type);
+
     if (type === 'practica') {
       practiceContainer.style.display = 'block';
     } else {
       testContainer.style.display = 'block';
     }
+
     trialTimeout = setTimeout(() => {
       startTime = new Date();
       if (type === 'practica') {
@@ -156,9 +173,23 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         testContainer.style.display = 'none';
       }
+
+      // Mostrar pregunta
       questionScreen.style.display = 'block';
+
+      // INTERCAMBIAR POSICIÓN DE LOS CONTENEDORES SEGÚN RedDotSide
+      const redContainer = document.getElementById('redContainer').parentNode;
+      const blueContainer = document.getElementById('blueContainer').parentNode;
+      const colorButtons = document.getElementById('colorButtons');
+
+      if (RedDotSide === 'derecha') {
+        colorButtons.appendChild(redContainer); // rojo va segundo
+      } else {
+        colorButtons.insertBefore(redContainer, blueContainer); // rojo va primero
+      }
     }, 3000);
   }
+
 
   function updateTrialIndicator(type) {
     if (type === 'practica') {
@@ -180,37 +211,20 @@ document.addEventListener('DOMContentLoaded', () => {
       correctStreak = 0;
     }
   }
-  
+
 
   function generateDots(ctx) {
     const totalDots = 65;
-    const colorMayor = Math.random() < 0.5 ? 'red' : 'blue';
-  
+    const colorMayor = Math.random() < 0.5 ? LeftColor : RightColor;
+    const colorMenor = colorMayor === LeftColor ? RightColor : LeftColor;
+
     let numPuntosMayor = Math.ceil((totalDots + DotDiff) / 2);
     let numPuntosMenor = totalDots - numPuntosMayor;
-  
+
     const colors = [];
-  
-    if (colorMayor === 'red') {
-      RedDotSide = "izquierda";
-      for (let i = 0; i < numPuntosMayor; i++) colors.push('red');
-      for (let i = 0; i < numPuntosMenor; i++) colors.push('blue');
-    } else {
-      RedDotSide = "derecha";
-      for (let i = 0; i < numPuntosMayor; i++) colors.push('blue');
-      for (let i = 0; i < numPuntosMenor; i++) colors.push('red');
-    }
-
-    let numRedDots = 0;
-    let numBlueDots = 0;
-
-    if (colorMayor === 'red') {
-      numRedDots = numPuntosMayor;
-      numBlueDots = numPuntosMenor;
-    } else {
-      numRedDots = numPuntosMenor;
-      numBlueDots = numPuntosMayor;
-    }
+    for (let i = 0; i < numPuntosMayor; i++) colors.push(colorMayor);
+    for (let i = 0; i < numPuntosMenor; i++) colors.push(colorMenor);
+    colors.sort(() => Math.random() - 0.5); // Shuffle
 
     const dots = [];
     const dotRadius = 5;
@@ -237,17 +251,19 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.fill();
     }
 
-    correctColor = numPuntosMayor > numPuntosMenor ? (colorMayor === 'red' ? 'Rojo' : 'Azul') : (colorMayor === 'blue' ? 'Rojo' : 'Azul');
+    correctColor = colorMayor === 'red' ? 'Rojo' : 'Azul';
 
-    console.log(`Correct color is ${correctColor}. DotDiff: ${DotDiff}`);
+    console.log(`Correct color is ${correctColor}. DotDiff: ${DotDiff}. RedDotSide: ${RedDotSide}`);
   }
+
+
 
   function recordAnswer(answer) {
     const isCorrect = answer === correctColor;
     const confidence = confidenceSlider.value;
-    const timeColFormatted = (timeColor / 1000).toFixed(3).replace('.', ',');
-    const timeConfFormatted = (timeConfidence / 1000).toFixed(3).replace('.', ',');
-    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: DotDiff, timeCol: timeColFormatted, timeConf: timeConfFormatted, timeP: 'N/A' });
+    const timeColFormatted = timeColor;
+    const timeConfFormatted = timeConfidence;
+    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: DotDiff, timeCol: timeColFormatted, timeConf: timeConfFormatted, timeP: 'N/A', RedDotSide: RedDotSide });
     ajustarDificultad(isCorrect);
   }
 
@@ -258,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
     feedbackScreen.style.display = 'block';
     setTimeout(() => {
       feedbackScreen.style.display = 'none';
-      if (trialCount < maxTrials && !trialInTimeout) {
+      if ((trialCount - 1) % maxTrials < maxTrials - 1 && !trialInTimeout) {
         if (blockType === 'practica') {
           startTrial(practiceCtx, 'practica');
         } else {
@@ -493,6 +509,9 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadResultsAsZip(results, startTimeTotal, selectedHand);
   });
 
+
+
+
   fullscreenButton.addEventListener('click', () => {
     if (document.fullscreenEnabled && !document.fullscreenElement) {
       fullscreenButton.style.backgroundImage = "url('minimize.png')"; // Cambiar la imagen del botón a 'minimize'
@@ -504,6 +523,18 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('El modo de pantalla completa no es soportado por tu navegador.');
     }
   });
+
+  const redCol = document.getElementById('redContainer').parentNode;
+  const blueCol = document.getElementById('blueContainer').parentNode;
+  const colorButtons = document.getElementById('colorButtons');
+
+  if (RedDotSide === 'derecha') {
+    colorButtons.appendChild(redCol);
+  } else {
+    colorButtons.insertBefore(redCol, blueCol);
+  }
+
+
   pauseButtonP.addEventListener('click', () => {
     reiniciarCronometro();
     iniciarCronometro();
@@ -666,19 +697,19 @@ document.addEventListener('DOMContentLoaded', () => {
       demoFinishScreen.style.display = 'none';
       endScreen.style.display = 'none';
       instructions.style.display = 'none';
-  
+
       // Mostrar selección de mano
       showHandSelection();
-  
+
       // Asignar una mano por defecto si no se ha seleccionado
       if (!selectedHand) selectedHand = "no seleccionada";
-  
+
       // Descargar resultados
       downloadResultsAsZip(results, startTimeTotal, selectedHand);
     }
   }, 600000); // 10 minutos en milisegundos
-  
-  
+
+
   let finished = false;
 
   function endGame() {
