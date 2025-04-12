@@ -11,6 +11,8 @@ document.getElementById('next-button').addEventListener('click', () => {
     showNextImage();
 });
 
+let firstKeypressTime = null;
+
 const images = [
     { src: "img/P1.png", title: 'P1', answer: '1' },
     { src: "img/P2.png", title: 'P2', answer: '5' },
@@ -41,6 +43,7 @@ function showNextImage() {
     currentImageIndex++;
     if (currentImageIndex < images.length) {
         itemStartTime = new Date(); // Iniciar el temporizador para este ítem
+        firstKeypressTime = null;
         const imageInfo = images[currentImageIndex];
         document.getElementById('test-image').src = imageInfo.src;
         document.getElementById('item-indicator').textContent = imageInfo.title;
@@ -64,8 +67,21 @@ function showNextImage() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    const numberInput = document.getElementById('number-input');
+
+    numberInput.addEventListener('input', () => {
+        if (firstKeypressTime === null) {
+            firstKeypressTime = new Date();
+        }
+    });
+});
+
 function submitAnswer() {
     const numberInput = document.getElementById('number-input');
+    if (firstKeypressTime === null) {
+        firstKeypressTime = new Date();
+    }
     let userAnswer = numberInput.value.trim();
     if (userAnswer === '') {
         userAnswer = '';
@@ -75,12 +91,14 @@ function submitAnswer() {
     const timeTaken = (itemEndTime - itemStartTime) / 1000;
     const precision = userAnswer === correctAnswer ? 1 : 0;
 
+    const rt = firstKeypressTime ? ((firstKeypressTime - itemStartTime) / 1000) : 0;
+
     answers.push({
         title: images[currentImageIndex].title,
         userAnswer: userAnswer,
         correctAnswer: correctAnswer,
         precision: precision,
-        timeTaken: timeTaken
+        timeTaken: rt // Tiempo desde que aparece el ítem hasta que se empieza a escribir
     });
 
     if (currentImageIndex < 2) { // Si es uno de los ítems de práctica
@@ -137,78 +155,78 @@ fetch('/api/user-info')
     });
 
 
-    function generateCSV() {
-        document.getElementById('final-button').style.display = 'none';
-        const endTime = new Date();
-        const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
-    
-        // Asegurarse de que userInfo esté disponible
-        if (!userInfo || !userInfo.name || !userInfo.last_name) {
-            console.error("Error: userInfo no está definido correctamente.");
-            return; // Salir si userInfo no está disponible
-        }
-    
-        // Obtener las iniciales del examinador
-        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-    
-        // Contenido del primer CSV
-        let csvContent1 = "Trial;CorrResp;PartResp;Acc;RT;Examinador\n";
-        answers.forEach(answer => {
-            csvContent1 += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken).toFixed(3).replace('.', ',')};${inicialesExaminador}\n`;
-        });
-    
-        // Calcular el tiempo dedicado en segundos
-        const tiempoDedicadoSegundos = (totalTestTime / 1000).toFixed(3).replace('.', ',');
-    
-        // Contenido del segundo CSV
-        let csvContent2 = `TotTime;Examinador\n${tiempoDedicadoSegundos};${inicialesExaminador}\n`;
-    
-        const options = { timeZone: 'America/Santiago' };
-        const fechaActual = new Date(); // Obtener la fecha actual
-        const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-        const [day, month, year] = fechaHoraChilena.split('-');
-        const fechaFormateada = `${day}_${month}_${year}`;
-    
-        // Obtener la fecha y la hora actuales
-        const año = fechaActual.getFullYear();
-        const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
-        const dia = String(fechaActual.getDate()).padStart(2, '0');
-        // Formatear la fecha y la hora
-        const fechaHoraFormateada = `${dia}_${mes}_${año}`;
-    
-        const csvFilename1 = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.csv`;
-        const csvFilename2 = `${idParticipante}_5_VOSP_Number_Location_Unival_${fechaHoraFormateada}.csv`;
-    
-        const csvBlob1 = new Blob([csvContent1], { type: 'text/csv;charset=utf-8;' });
-        const csvBlob2 = new Blob([csvContent2], { type: 'text/csv;charset=utf-8;' });
-    
-        const zip = new JSZip();
-        zip.file(csvFilename1, csvBlob1);
-        zip.file(csvFilename2, csvBlob2);
-    
-        zip.generateAsync({ type: "blob" })
-            .then(content => {
-                const link = document.createElement('a');
-                if (link.download !== undefined) {
-                    const url = URL.createObjectURL(content);
-                    const zipFilename = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.zip`;
-    
-                    link.setAttribute('href', url);
-                    link.setAttribute('download', zipFilename);
-                    link.style.visibility = 'hidden';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    setTimeout(() => {
-                        window.close();
-                    }, 3000);
-                }
-            })
-            .catch(err => {
-                console.error("Error generando el archivo ZIP:", err);
-            });
+function generateCSV() {
+    document.getElementById('final-button').style.display = 'none';
+    const endTime = new Date();
+    const totalTestTime = (endTime - startTime); // Tiempo total en milisegundos
+
+    // Asegurarse de que userInfo esté disponible
+    if (!userInfo || !userInfo.name || !userInfo.last_name) {
+        console.error("Error: userInfo no está definido correctamente.");
+        return; // Salir si userInfo no está disponible
     }
-    
+
+    // Obtener las iniciales del examinador
+    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
+    // Contenido del primer CSV
+    let csvContent1 = "Trial;CorrResp;PartResp;Acc;RT;Examinador\n";
+    answers.forEach(answer => {
+        csvContent1 += `${answer.title};${answer.correctAnswer};${answer.userAnswer};${answer.precision};${(answer.timeTaken).toFixed(3).replace('.', ',')};${inicialesExaminador}\n`;
+    });
+
+    // Calcular el tiempo dedicado en segundos
+    const tiempoDedicadoSegundos = (totalTestTime / 1000).toFixed(3).replace('.', ',');
+
+    // Contenido del segundo CSV
+    let csvContent2 = `TotTime;Examinador\n${tiempoDedicadoSegundos};${inicialesExaminador}\n`;
+
+    const options = { timeZone: 'America/Santiago' };
+    const fechaActual = new Date(); // Obtener la fecha actual
+    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+    const [day, month, year] = fechaHoraChilena.split('-');
+    const fechaFormateada = `${day}_${month}_${year}`;
+
+    // Obtener la fecha y la hora actuales
+    const año = fechaActual.getFullYear();
+    const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
+    const dia = String(fechaActual.getDate()).padStart(2, '0');
+    // Formatear la fecha y la hora
+    const fechaHoraFormateada = `${dia}_${mes}_${año}`;
+
+    const csvFilename1 = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.csv`;
+    const csvFilename2 = `${idParticipante}_5_VOSP_Number_Location_Unival_${fechaHoraFormateada}.csv`;
+
+    const csvBlob1 = new Blob([csvContent1], { type: 'text/csv;charset=utf-8;' });
+    const csvBlob2 = new Blob([csvContent2], { type: 'text/csv;charset=utf-8;' });
+
+    const zip = new JSZip();
+    zip.file(csvFilename1, csvBlob1);
+    zip.file(csvFilename2, csvBlob2);
+
+    zip.generateAsync({ type: "blob" })
+        .then(content => {
+            const link = document.createElement('a');
+            if (link.download !== undefined) {
+                const url = URL.createObjectURL(content);
+                const zipFilename = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.zip`;
+
+                link.setAttribute('href', url);
+                link.setAttribute('download', zipFilename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => {
+                    window.close();
+                }, 3000);
+            }
+        })
+        .catch(err => {
+            console.error("Error generando el archivo ZIP:", err);
+        });
+}
+
 
 
 function validateInput(input) {

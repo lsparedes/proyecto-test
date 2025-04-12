@@ -85,6 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    audio1_ej2.addEventListener('ended', () => {
+        mainScreen2.style.display = 'none';
+        mainScreen3.style.display = 'block';
+        recordingControls4.style.display = 'block';
+    });
+
     startRecordingButton4.addEventListener('click', () => {
         stopAllMedia();
         startRecording();
