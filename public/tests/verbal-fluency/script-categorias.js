@@ -162,20 +162,13 @@ function loadAudio(part) {
     const letterDisplay = document.getElementById('letterDisplay' + part);
 
     if (part === 2) {
-        // Selección aleatoria entre animales y prendas de vestir
-        const categorias = ['animales', 'prendas'];
-        const seleccion = categorias[Math.floor(Math.random() * categorias.length)];
-        audio.dataset.categoria = seleccion; // Guardar la categoría seleccionada por si la necesitas después
-
-        // Cambiar el audio y el texto en pantalla según la categoría
-        if (seleccion === 'animales') {
-            audio.src = 'audios/animales.mp3';
-            letterDisplay.textContent = 'Animales';
-        } else {
-            audio.src = 'audios/prendas-de-vestir.mp3';
-            letterDisplay.textContent = 'Prendas de vestir';
-        }
+        const seleccion = 'animales';
+        audio.dataset.categoria = seleccion;
+    
+        audio.src = 'audios/Semantica_2.wav';
+        letterDisplay.textContent = 'Animales';
     }
+    
 
     audio.addEventListener('loadedmetadata', () => {
         let recordingStarted = false;

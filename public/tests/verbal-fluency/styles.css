@@ -190,12 +190,13 @@ audio {
 }
 
 .letter-display {
-    font-size: 40px;
-    font-weight: bold;
-    color: black;
-    margin-bottom: 20px;
-    display: none;
+    font-size: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    text-align: center;
 }
+
 
 /* SELECCION DE MANO CSS */
 

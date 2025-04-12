@@ -158,12 +158,7 @@ function nextSection(part) {
         document.getElementById('instructionAudio1').pause();
         showHandSelection();
 
-    } else if (part === 2) {
-        document.getElementById('testSection2').style.display = 'none';
-        document.getElementById('instructionAudio2').pause();
-        showHandSelection();
-
-    }
+    } 
 }
 
 function endGame() {
@@ -176,12 +171,9 @@ function loadAudio(part) {
     const letterDisplay = document.getElementById('letterDisplay' + part);
 
     // Elegir aleatoriamente entre Fonologica_2 y Fonologica_3
-    const opciones = ['Fonologica_2', 'Fonologica_3'];
-    const seleccion = opciones[Math.floor(Math.random() * opciones.length)];
-    const extension = seleccion === 'Fonologica_2' ? 'wav' : 'mp3'; // Asegúrate del formato real
+    const opciones = ['Fonologica_2'];
 
-    audio.src = `audios/${seleccion}.${extension}`;
-    audio.dataset.audioSeleccionado = seleccion;
+    audio.src = `audios/Fonologica_2.wav`;
 
     audio.addEventListener('loadedmetadata', () => {
         let recordingStarted = false;

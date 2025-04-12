@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     NXButton.addEventListener('click', () => {
+        stopRecordingAndFinalizeUI(initRecordingButton1, stopRecordingButton1);
         stopAllMedia();
         wordsScreen.style.display = 'none';
         recordingControls1.style.display = 'none';
@@ -122,11 +123,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     NXButton3.addEventListener('click', () => {
+        stopRecordingAndFinalizeUI(initRecordingButton2, stopRecordingButton2);
         stopAllMedia();
         wordsScreen2.style.display = 'none';
         recordingControls2.style.display = 'none';
         Ensayo3Screen.style.display = 'flex';
         document.getElementById('FinishRecordingImage').style.display = 'none';
+        
     });
 
     NXButton4.addEventListener('click', () => {
@@ -136,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     NXButton5.addEventListener('click', () => {
+        stopRecordingAndFinalizeUI(initRecordingButton3, stopRecordingButton3);
         stopAllMedia();
         wordsScreen3.style.display = 'none';
         recordingControls3.style.display = 'none';
@@ -210,25 +214,23 @@ document.addEventListener('DOMContentLoaded', () => {
         FinishRecordingImage.style.display = 'block';
     });
  
+    function stopRecordingAndFinalizeUI(initButton, stopButton) {
+        stopRecording(initButton, stopButton);
+        if (initButton) initButton.style.display = 'none';
+        if (stopButton) stopButton.style.display = 'none';
+        FinishRecordingImage.style.display = 'block';
+    }
+
     stopRecordingButton1.addEventListener('click', () => {
-        stopRecording(initRecordingButton1, stopRecordingButton1);
-        initRecordingButton1.style.display = 'none';
-        stopRecordingButton1.style.display = 'none';
-        document.getElementById('FinishRecordingImage').style.display = 'block'; // Mostrar imagen
+        stopRecordingAndFinalizeUI(initRecordingButton1, stopRecordingButton1);
     });
     
     stopRecordingButton2.addEventListener('click', () => {
-        stopRecording(initRecordingButton2, stopRecordingButton2);
-        initRecordingButton2.style.display = 'none';
-        stopRecordingButton2.style.display = 'none';
-        document.getElementById('FinishRecordingImage').style.display = 'block'; // Mostrar imagen
+        stopRecordingAndFinalizeUI(initRecordingButton2, stopRecordingButton2);
     });
     
     stopRecordingButton3.addEventListener('click', () => {
-        stopRecording(initRecordingButton3, stopRecordingButton3);
-        initRecordingButton3.style.display = 'none';
-        stopRecordingButton3.style.display = 'none';
-        document.getElementById('FinishRecordingImage').style.display = 'block'; // Mostrar imagen
+        stopRecordingAndFinalizeUI(initRecordingButton3, stopRecordingButton3);
     });
     
 
