@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let circleRadius = 30; // Cambiado de const a let para permitir reasignación
 
-
     fullscreenButton.addEventListener('click', () => {
         if (document.fullscreenEnabled && !document.fullscreenElement) {
             fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')";
@@ -51,7 +50,6 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log('El modo de pantalla completa no es soportado por tu navegador.');
         }
     });
-
 
     function drawCircle(ctx, x, y, number, circlesArray, name = "", circleRadius) {
         ctx.fillStyle = 'white';
@@ -129,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
         correctPaths.length = 0;
         incorrectPaths.length = 0;
         circlesToCorrect.length = 0;
-
         const circleCoordinates = [
             { x: 350 - 70, y: 310 },
             { x: 470 - 70, y: 100 },
@@ -140,12 +137,10 @@ document.addEventListener('DOMContentLoaded', function () {
             { x: 140 - 70, y: 190 },
             { x: 300 - 70, y: 150 }
         ];
-
         circleCoordinates.forEach((coord, index) => {
             const name = index === 0 ? "Empezar" : (index === circleCoordinates.length - 1 ? "Terminar" : "");
             drawCircle(ctx, coord.x, coord.y, index + 1, circles, name, circleRadius);
         });
-
         drawNextButton();
         show.style.display = 'block';
         show1.style.display = 'none';
@@ -167,8 +162,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCircle = circle;
                 ctx.beginPath();
                 ctx.moveTo(circle.x, circle.y);
-
-                // Aplicar negrita visual con borde negro al presionar el 1
                 if (circle.number === 1) {
                     highlightCircle(ctx, circle, 'black', circle.x, circle.y);
                 }
@@ -189,9 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (distance <= circleRadius && circle.number != currentCircle + 1 && lastCircle.number != circle.number) {
                 highlightCircle(ctx, circle, 'red', x, y);
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
-
-                // Añadir el círculo a una lista de círculos incorrectos para mantener el color rojo
-
                 isDrawing = false;
             } else if (distance < circleRadius && circle.number === currentCircle + 1) {
                 highlightCircle(ctx, circle, 'black', x, y);
@@ -200,32 +190,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCircle = circle;
                 validDrop = true;
                 correctLines++;
-
                 if (circlesToCorrect.length > 0) {
                     resetIncorrectCircles(ctx, circlesToCorrect, circleRadius);
                 }
             }
         });
-
         if (currentCircle === 8) {
             drawingCompleted = true;
         }
     }
-
     function resetIncorrectCircles(ctx, circlesToReset, radius) {
-        const padding = 2;
         circlesToReset.forEach(circle => {
-
-
             ctx.fillStyle = 'white';
             ctx.beginPath();
             ctx.arc(circle.x, circle.y, radius, 0, Math.PI * 2, true);
             ctx.fill();
-
             ctx.lineWidth = 1;
             ctx.strokeStyle = 'black';
             ctx.stroke();
-
             ctx.fillStyle = 'black';
             ctx.font = '32px Arial';
             ctx.textAlign = 'center';
@@ -236,11 +218,8 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesToReset.length = 0;
     }
 
-
-
     function endDrawing(x, y) {
         let validDrop = false;
-
         circles.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCircle + 1) {
@@ -252,40 +231,32 @@ document.addEventListener('DOMContentLoaded', function () {
                 validDrop = true;
             }
         });
-
         if (!validDrop) {
             const distance = Math.sqrt((x - lastCircle.x) ** 2 + (y - lastCircle.y) ** 2);
             if (distance > circleRadius) {
                 incorrectPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x, y }]);
-                // erroresComision++;
             }
         }
-
         isDrawing = false;
     }
 
     function getTouchPosRotated(canvas, touchEvent) {
         const rect = canvas.getBoundingClientRect();
         const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-
         // Coordenadas originales respecto al canvas
         const localX = touch.clientX - rect.left;
         const localY = touch.clientY - rect.top;
-
         // Transformación para la rotación de -90°
         const rotatedX = rect.height - localY;
         const rotatedY = localX;
-
         return { x: rotatedX, y: rotatedY };
     }
-
     // Evento touchstart
     canvas.addEventListener('touchstart', function (event) {
         event.preventDefault();
         const { x, y } = getTouchPosRotated(canvas, event);
         startDrawing(x, y);
     });
-
     // Evento touchmove
     canvas.addEventListener('touchmove', function (event) {
         if (event.touches.length > 0) {
@@ -294,7 +265,6 @@ document.addEventListener('DOMContentLoaded', function () {
             drawMove(x, y);
         }
     });
-
     // Evento touchend
     canvas.addEventListener('touchend', function (event) {
         event.preventDefault();
@@ -302,12 +272,10 @@ document.addEventListener('DOMContentLoaded', function () {
         endDrawing(x, y);
     });
 
-
     function drawNextButton() {
         const nextButton = document.createElement('button');
         nextButton.id = 'endSequenceButton';
         nextButton.style.display = 'inline-block';
-
         nextButton.addEventListener('click', () => {
             document.getElementById('instructionAudio1').pause();
             document.getElementById('show').style.display = 'none';
@@ -339,7 +307,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const instructionAudio = document.getElementById('instructionAudio');
-
 
     instructionAudio.addEventListener('ended', function () {
         playBeep();
@@ -460,17 +427,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCirclePartA = circle;
                 validDrop = true;
                 correctLinesPartA++;
-
                 if (circlesToCorrectA.length > 0) {
                     resetIncorrectCircles(ctxPartA, circlesToCorrectA, circleRadius);
                 }
-
                 ctxPartA.beginPath();
                 ctxPartA.moveTo(circle.x, circle.y);
             }
-
         });
-
         if (currentCirclePartA === 25) {
             drawingCompletedA = true;
         }
@@ -478,7 +441,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function endDrawingPartA(x, y) {
         let validDrop = false;
-
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCirclePartA + 1) {
@@ -490,33 +452,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 validDrop = true;
             }
         });
-
         if (!validDrop) {
             const distance = Math.sqrt((x - lastCirclePartA.x) ** 2 + (y - lastCirclePartA.y) ** 2);
             if (distance > circleRadius) {
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
-                // erroresComision++;
             }
         }
-
         isDrawingPartA = false;
     }
 
     function getTouchPosRotatedPartA(canvas, touchEvent) {
         const rect = canvas.getBoundingClientRect();
         const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
-
         // Coordenadas originales respecto al canvas
         const localX = touch.clientX - rect.left;
         const localY = touch.clientY - rect.top;
-
         // Transformación para la rotación de -90°
         const rotatedX = rect.height - localY;
         const rotatedY = localX;
-
         return { x: rotatedX, y: rotatedY };
     }
-
     // Evento touchstart
     let isRecordingStarted = false;
 
@@ -529,7 +484,6 @@ document.addEventListener('DOMContentLoaded', function () {
             isRecordingStarted = true;
             console.log('Grabación iniciada al tocar el canvas');
         }
-
         const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
         startDrawingPartA(x, y);
 
@@ -540,8 +494,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         errorRegistradoPartA = false;
     });
-
-
     // Evento touchmove
     canvasPartA.addEventListener('touchmove', function (event) {
         if (event.touches.length > 0) {
@@ -550,7 +502,6 @@ document.addEventListener('DOMContentLoaded', function () {
             drawMovePartA(x, y);
         }
     });
-
     // Evento touchend
     canvasPartA.addEventListener('touchend', function (event) {
         event.preventDefault();
@@ -564,9 +515,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         isDrawingPartA = false;
     });
-
-
-
 
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
@@ -601,12 +549,10 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.appendChild(nextButtonA);
     }
 
-
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
@@ -628,9 +574,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 link.href = url;
             };
         }
-
-
-
 
         setTimeout(() => {
             const zip = new JSZip();
@@ -654,8 +597,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 });
             });
-
-
         }, 1000);
     }
 
@@ -675,7 +616,6 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => {
             console.error('Error al obtener la información del usuario:', error);
         });
-
 
     function generateCSV(data) {
         // Obtener las iniciales del examinador
@@ -698,8 +638,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Crear el Blob con el contenido CSV
         return new Blob([csvContent], { type: 'text/csv' });
     }
-
-
     const selectHandContainer = document.getElementById("selectHand");
     const handButton = document.getElementById("handButton");
     const handInputs = document.getElementsByName('hand');
@@ -714,8 +652,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     handButton.addEventListener('click', confirmHandSelection);
 
-
-
     function validateInputs() {
         selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
 
@@ -723,16 +659,12 @@ document.addEventListener('DOMContentLoaded', function () {
             handButton.style.display = 'block';
         }
     }
-
-    // document.getElementById('handButton').addEventListener('click', confirmHandSelection);
-
     function confirmHandSelection() {
         document.getElementById('preEnd').style.display = 'none';
         selectHandContainer.style.display = "none";
         handButton.style.display = "none";
         testFinalizado();
     }
-
     handInputs.forEach((input) => {
         input.addEventListener('change', (e) => {
             validateInputs();
