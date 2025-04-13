@@ -31,6 +31,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let airStartTime = null;
     let correctLinesPartA = 0;
     let errorRegistradoPartA = false;
+    let currentPathPointsPartA = [];
+    let currentPathPoints = [];
+
     const show = document.getElementById('show');
     const show1 = document.getElementById('show1');
     const endSequenceButton = document.createElement('button');
@@ -51,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    function drawCircle(ctx, x, y, number, circlesArray, name = "", circleRadius) {
+    function drawCircle(ctx, x, y, number, circlesArray, name = "", circleRadius, bold = false) {
         ctx.fillStyle = 'white';
         ctx.beginPath();
         ctx.arc(x, y, circleRadius, 0, Math.PI * 2, true);
@@ -62,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
 
         ctx.fillStyle = 'black';
-        ctx.font = 'bold 32px Arial';
+        ctx.font = (bold ? 'bold ' : '') + '32px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(number, x, y);
@@ -72,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.fillText(name, x, y - circleRadius - 20);
         }
 
-        circlesArray.push({ x, y, number });
+        circlesArray.push({ x, y, number, name });
     }
 
     function getTouchPos(canvasDom, touchEvent) {
@@ -139,7 +142,8 @@ document.addEventListener('DOMContentLoaded', function () {
         ];
         circleCoordinates.forEach((coord, index) => {
             const name = index === 0 ? "Empezar" : (index === circleCoordinates.length - 1 ? "Terminar" : "");
-            drawCircle(ctx, coord.x, coord.y, index + 1, circles, name, circleRadius);
+            const isCurrent = (index + 1 === currentCircle);
+            drawCircle(ctx, coord.x, coord.y, index + 1, circles, name, circleRadius, isCurrent);
         });
         drawNextButton();
         show.style.display = 'block';
@@ -162,6 +166,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCircle = circle;
                 ctx.beginPath();
                 ctx.moveTo(circle.x, circle.y);
+                currentPathPoints = [{ x: circle.x, y: circle.y }];
                 if (circle.number === 1) {
                     highlightCircle(ctx, circle, 'black', circle.x, circle.y);
                 }
@@ -174,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!isDrawing) return;
         ctx.lineTo(x, y);
         ctx.stroke();
-
+        currentPathPoints.push({ x, y });
         let validDrop = false;
 
         circles.forEach(circle => {
@@ -185,20 +190,54 @@ document.addEventListener('DOMContentLoaded', function () {
                 isDrawing = false;
             } else if (distance < circleRadius && circle.number === currentCircle + 1) {
                 highlightCircle(ctx, circle, 'black', x, y);
-                correctPaths.push([{ x: lastCircle.x, y: lastCircle.y }, { x: circle.x, y: circle.y }]);
+                correctPaths.push([...currentPathPoints]);
+                circles.find(c => c.number === currentCircle).bold = true; // ← marcar como visitado
                 currentCircle++;
                 lastCircle = circle;
                 validDrop = true;
                 correctLines++;
-                if (circlesToCorrect.length > 0) {
-                    resetIncorrectCircles(ctx, circlesToCorrect, circleRadius);
-                }
+
+                // Limpia el canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Redibuja los círculos
+                circles.forEach(c => {
+                    const isCurrent = c.number === currentCircle;
+                    drawAllCircles(ctx, circles, currentCircle, circleRadius);
+                });
+
+                // Redibuja los trazos correctos
+                correctPaths.forEach(path => {
+                    ctx.beginPath();
+                    ctx.moveTo(path[0].x, path[0].y);
+                    for (let i = 1; i < path.length; i++) {
+                        ctx.lineTo(path[i].x, path[i].y);
+                    }
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                });
+
+                // Limpia errores anteriores
+                circlesToCorrect.length = 0;
+
             }
         });
         if (currentCircle === 8) {
             drawingCompleted = true;
         }
     }
+
+    function drawAllCircles(ctx, circlesArray, currentCircle, circleRadius) {
+        circlesArray.forEach(circle => {
+            const isBold = circle.bold || circle.number === currentCircle;
+            drawCircle(ctx, circle.x, circle.y, circle.number, [], circle.name || "", circleRadius, isBold);
+        });
+    }
+
+
     function resetIncorrectCircles(ctx, circlesToReset, radius) {
         circlesToReset.forEach(circle => {
             ctx.fillStyle = 'white';
@@ -375,6 +414,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let drawingCompletedA = false;
 
     function startDrawingPartA(x, y) {
+        currentPathPointsPartA = [{ x, y }];
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance < circleRadius && circle.number === currentCirclePartA) {
@@ -395,6 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!errorRegistradoPartA) {
             ctxPartA.lineTo(x, y);
             ctxPartA.stroke();
+            currentPathPointsPartA.push({ x, y });
         }
 
         let validDrop = false;
@@ -402,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function () {
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
             if (distance <= circleRadius && circle.number != currentCirclePartA + 1 && lastCirclePartA.number != circle.number) {
-                
+
                 highlightCircle(ctxPartA, circle, 'red', x, y);
                 incorrectPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x, y }]);
 
@@ -422,14 +463,38 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastCirclePartA.number === currentCirclePartA
             ) {
                 highlightCircle(ctxPartA, circle, 'black', x, y);
-                correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
+                correctPathsPartA.push([...currentPathPointsPartA]);
                 currentCirclePartA++;
                 lastCirclePartA = circle;
                 validDrop = true;
                 correctLinesPartA++;
-                if (circlesToCorrectA.length > 0) {
-                    resetIncorrectCircles(ctxPartA, circlesToCorrectA, circleRadius);
-                }
+                // Limpieza visual como en Parte B
+                ctxPartA.clearRect(0, 0, canvasPartA.width, canvasPartA.height);
+                ctxPartA.fillStyle = 'white';
+                ctxPartA.fillRect(0, 0, canvasPartA.width, canvasPartA.height);
+
+                // Redibuja todos los círculos
+                circlesPartA.forEach(c => {
+                    const isCurrent = c.number === currentCirclePartA;
+                    drawCircle(ctxPartA, c.x, c.y, c.number, [], c.name || "", circleRadius, isCurrent);
+                });
+
+
+                // Redibuja todas las líneas correctas
+                correctPathsPartA.forEach(path => {
+                    ctxPartA.beginPath();
+                    ctxPartA.moveTo(path[0].x, path[0].y);
+                    for (let i = 1; i < path.length; i++) {
+                        ctxPartA.lineTo(path[i].x, path[i].y);
+                    }
+                    ctxPartA.strokeStyle = 'black';
+                    ctxPartA.lineWidth = 2;
+                    ctxPartA.stroke();
+                });
+
+                // Limpia errores registrados
+                circlesToCorrectA.length = 0;
+
                 ctxPartA.beginPath();
                 ctxPartA.moveTo(circle.x, circle.y);
             }
@@ -447,6 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 // drawLineToCircleEdge(ctxPartA, lastCirclePartA.x, lastCirclePartA.y, circle.x, circle.y);
                 highlightCircle(ctxPartA, circle, 'black', x, y);
                 correctPathsPartA.push([{ x: lastCirclePartA.x, y: lastCirclePartA.y }, { x: circle.x, y: circle.y }]);
+                circlesPartA.find(c => c.number === currentCirclePartA).bold = true;
                 currentCirclePartA++;
                 lastCirclePartA = circle;
                 validDrop = true;
@@ -460,6 +526,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         isDrawingPartA = false;
     }
+
+    function drawAllCirclesPartA(ctx, circlesArray, currentCircle, circleRadius) {
+        circlesArray.forEach(circle => {
+            const isBold = circle.bold || circle.number === currentCircle;
+            drawCircle(ctx, circle.x, circle.y, circle.number, circlesArray, circle.name || "", circleRadius, isBold);
+        });
+    }
+
 
     function getTouchPosRotatedPartA(canvas, touchEvent) {
         const rect = canvas.getBoundingClientRect();
@@ -477,23 +551,27 @@ document.addEventListener('DOMContentLoaded', function () {
 
     canvasPartA.addEventListener('touchstart', function (event) {
         event.preventDefault();
-
-        // Iniciar grabación si aún no ha empezado
+    
         if (!isRecordingStarted) {
             mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
             isRecordingStarted = true;
             console.log('Grabación iniciada al tocar el canvas');
         }
+    
         const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
-        startDrawingPartA(x, y);
-
+        
         if (airStartTime) {
             const airEndTime = new Date();
-            penAirTime += (airEndTime - airStartTime) / 1000;
+            const delta = (airEndTime - airStartTime) / 1000;
+            penAirTime += delta;
+            console.log("Tiempo en aire:", delta.toFixed(3), "s (acumulado:", penAirTime.toFixed(3), ")");
             airStartTime = null;
         }
+    
+        startDrawingPartA(x, y);
         errorRegistradoPartA = false;
     });
+    
     // Evento touchmove
     canvasPartA.addEventListener('touchmove', function (event) {
         if (event.touches.length > 0) {
@@ -507,14 +585,14 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
         endDrawingPartA(x, y);
-
-        if (isDrawingPartA) {
-            liftPenCount++;
-            airStartTime = new Date();
-        }
-
+    
+        liftPenCount++; // ✅ Siempre que se levanta el lápiz
+        airStartTime = new Date(); // ✅ Empieza a contar tiempo en aire
+    
         isDrawingPartA = false;
     });
+    
+
 
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
@@ -530,7 +608,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const fin = new Date();
             let executionTime = 0;
             if (inicio) {
-                executionTime = (fin - inicio) / 1000; // Tiempo de ejecución de la tarea en milisegundos
+                executionTime = (fin - inicio);
             }
             const taskTime = (fin - begining) / 1000; // Tiempo total de la tarea en segundos
             console.log('Tiempo de ejecución de la tarea:', executionTime, 'segundos');
@@ -627,11 +705,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
         // Comienza con los encabezados, agregando la columna para el Examinador
-        let csvContent = "ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;TotTime;Hand;Examinador\n";
+        let csvContent = "ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;TotTime;Hand\n";
 
         // Agregar cada fila de datos, incluyendo las iniciales del examinador
         data.forEach(row => {
-            let linea = `${row.executionTime.toFixed(3).replace('.', ',')};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime.toFixed(3).replace('.', ',')};${row.taskTime.toFixed(3).replace('.', ',')};${selectedHand};${inicialesExaminador}\n`;
+            let linea = `${row.executionTime.toFixed(3).replace('.', ',')};${row.commissionErrors};${row.correctLines};${row.liftPenCount};${row.penAirTime.toFixed(3).replace('.', ',')};${row.taskTime.toFixed(3).replace('.', ',')};${selectedHand}\n`;
             csvContent += linea;
         });
 
