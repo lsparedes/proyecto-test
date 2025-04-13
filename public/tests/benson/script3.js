@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("Imagen Seleccionada: ", participantAnswer);
 
             if (audioEndTime) {
-                responseTime = (new Date() - audioEndTime) / 1000; // RT en segundos
+                responseTime = (new Date() - audioEndTime); // RT en segundos
                 console.log("Reaction Time (RT):", responseTime, "segundos");
             } else {
                 console.warn("No se registró el tiempo final del audio.");

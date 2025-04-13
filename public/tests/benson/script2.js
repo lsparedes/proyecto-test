@@ -48,13 +48,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     showinstruction.addEventListener('click', () => {
-        if (instruccion.classList.contains('show')) {
-            instruccion.classList.remove('show');
+        const isVisible = finishDrawingFromMemoryButton.style.display === 'block';
+    
+        if (isVisible) {
+            finishDrawingFromMemoryButton.style.display = 'none';
             showinstruction.style.backgroundImage = "url('noeye.png')";
         } else {
-            instruccion.classList.add('show');
+            finishDrawingFromMemoryButton.style.display = 'block';
             showinstruction.style.backgroundImage = "url('eye.png')";
         }
+        
     });
 
     finishDrawingFromMemoryButton.addEventListener('click', () => {
@@ -83,15 +86,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (audioElement2) {
         audioElement2.addEventListener('ended', () => {
-            console.log("El audio ha terminado."); // Verificación de evento de audio
+            console.log("El audio ha terminado.");
             audioEndedTime = new Date();
             console.log(`ExecTime: ${audioEndedTime}`);
-
+    
+            let elapsedTime = 0;
+            let intervalId = setInterval(() => {
+                console.log(`Tiempo transcurrido: ${elapsedTime} segundos`);
+                elapsedTime++;
+            }, 1000);
+    
             setTimeout(() => {
                 clearInterval(intervalId);
                 console.log("Cronómetro detenido después de 4 minutos.");
-                finishdrawingwithfigure.classList.add('red-arrow');
-            }, 4 * 60 * 1000); // Detener cronómetro después de 4 minutos
+    
+                // Cambiar la imagen del ojo a la versión roja según su estado actual
+                const isVisible = finishDrawingFromMemoryButton.style.display === 'block';
+    
+                if (isVisible) {
+                    showinstruction.style.backgroundImage = "url('eye-red.png')";
+                } else {
+                    showinstruction.style.backgroundImage = "url('noeye-red.png')";
+                }
+    
+                // Opcional: también podrías marcar la flecha de algún modo si quieres
+                finishDrawingFromMemoryButton.classList.add('red-arrow');
+            }, 4 * 60 * 1000); // 4 minutos
         });
     }
 

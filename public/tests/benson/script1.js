@@ -48,15 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     showinstruction.addEventListener('click', () => {
-        if (instruccion.classList.contains('show')) {
-            instruccion.classList.remove('show');
+        const isVisible = finishdrawingwithfigure.style.display === 'block';
+    
+        if (isVisible) {
+            finishdrawingwithfigure.style.display = 'none';
             showinstruction.style.backgroundImage = "url('noeye.png')";
         } else {
-            instruccion.classList.add('show');
+            finishdrawingwithfigure.style.display = 'block';
             showinstruction.style.backgroundImage = "url('eye.png')";
         }
+        
     });
-
 
     finishdrawingwithfigure.addEventListener('click', () => {
         document.getElementById('audio1').pause();
@@ -73,30 +75,39 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log("El audio no ha terminado antes de presionar el botón.");
         }
     });
-    
 
     const audioElement1 = document.getElementById('audio1');
 
     if (audioElement1) {
         audioElement1.addEventListener('ended', () => {
-
-            console.log("El audio ha terminado."); // Verificación de evento de audio
+            console.log("El audio ha terminado.");
             audioEndedTime = new Date();
             console.log(`ExecTime: ${audioEndedTime}`);
-            let elapsedTime = 0; // Tiempo transcurrido en segundos
+    
+            let elapsedTime = 0;
             let intervalId = setInterval(() => {
                 console.log(`Tiempo transcurrido: ${elapsedTime} segundos`);
                 elapsedTime++;
-            }, 1000); // Actualiza cada segundo
-
+            }, 1000);
+    
             setTimeout(() => {
                 clearInterval(intervalId);
                 console.log("Cronómetro detenido después de 4 minutos.");
+    
+                // Cambiar la imagen del ojo a la versión roja según su estado actual
+                const isVisible = finishdrawingwithfigure.style.display === 'block';
+    
+                if (isVisible) {
+                    showinstruction.style.backgroundImage = "url('eye-red.png')";
+                } else {
+                    showinstruction.style.backgroundImage = "url('noeye-red.png')";
+                }
+    
+                // Opcional: también podrías marcar la flecha de algún modo si quieres
                 finishdrawingwithfigure.classList.add('red-arrow');
-            }, 4 * 60 * 1000); // Detener cronómetro después de 4 minutos
+            }, 4 * 60 * 1000); // 4 minutos
         });
     }
-
 
     finishRememberingFigureButton.addEventListener('click', () => {
         document.getElementById('audio1').pause();
@@ -113,8 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         startFinishTimer();
     });
-
-
 
     DownloadButton.addEventListener('click', async () => {
         selectHandContainer.style.display = 'none';
