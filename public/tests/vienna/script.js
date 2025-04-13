@@ -74,6 +74,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let showRotationErrors = false;
     let showUpdateErrors = false;
     let images = [];
+    let clickRTcanvas;
+    let clickStartTime;
 
     const resetVideoI1 = () => {
         practiceVideo1.currentTime = 0; // Reiniciar el tiempo del video al inicio
@@ -278,9 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_8.mp4',
             items: {
-                correcto: [{ x: 250, y: 152 }],
-                error_rotacion: [{ x: 290, y: 157}],
-                error_actualizacion: [{ x: 202, y: 86}],
+                correcto: [{ x: 200, y: 150 }],
+                error_rotacion: [{ x: 290, y: 150}],
+                error_actualizacion: [{ x: 200, y: 85}],
             },
             indicator: 'E10',
             imageSrc: 'img/10.png'
@@ -288,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             src: 'videos/Test_9.mp4',
             items: {
-                correcto: [{ x: 170, y: 129 }],
+                correcto: [{ x: 175, y: 125 }],
                 error_rotacion: [{ x: 328, y: 125 }],
                 error_actualizacion: [
                     { x: 203, y: 90 },
@@ -464,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const responses = []; // Array para almacenar las respuestas de los ensayos
     let trialStartTime = Date.now(); // Tiempo de inicio de la prueba
-    let clickStartTime = 0; // Tiempo de inicio para calcular el tiempo de respuesta
+
 
     const handleClick = (e) => {
         const canvas = e.target;
@@ -492,13 +494,12 @@ document.addEventListener('DOMContentLoaded', () => {
             videoIndex = contador;
         }
 
-        // Registrar la respuesta con las coordenadas ajustadas
-        const responseTime = (Date.now() - clickStartTime) / 1000;
+        clickRTcanvas = Date.now();
+        const responseTime = (clickRTcanvas - clickStartTime);
         recordResponse(videoIndex, click, responseTime);
-
-        // Dibujar el círculo en las coordenadas del clic ajustado
         drawCircle(canvas, x, y, 'blue');
     };
+
 
 
     const recordResponse = (videoIndex, click, responseTime) => {
@@ -511,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
             respuestaParticipante: `(${click.x.toFixed(2)}, ${click.y.toFixed(2)})`,
             precision: 0,
             tiempoRespuesta: responseTime,
-            resp0puntos: 0, // Inicializa el contador de respuestas con 0 puntos
+            resp0puntos: 0,
             manoUtilizada: ''
         };
 
@@ -543,7 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
             response.precision = 1;
         }
 
-        // Si precisión sigue siendo 0, se considera una respuesta con 0 puntos
+       
         if (response.precision === 0) {
             response.resp0puntos = 1;
         }
@@ -554,7 +555,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const validateClicksForCanvas = (canvas, videoIndex, resultsDiv) => {
         const img = new Image();
-        img.src = videos[videoIndex].imageSrc; // Obtener la imagen directamente del objeto videos
+        img.src = videos[videoIndex].imageSrc;
 
         img.onload = function () {
             resizeCanvas(canvas);
@@ -666,7 +667,6 @@ document.addEventListener('DOMContentLoaded', () => {
         txtContent += `Mano seleccionada: ${selectedHand}\n`;
         txtContent += `Examinador: ${inicialesExaminador}\n`;
 
-        // Agregar detalles de errores y respuestas
         responses.forEach((response, index) => {
             txtContent += `Ensayo ${index + 1}:\n`;
             txtContent += `  - NoUpdErr: ${response.errorActualizacion}\n`;
@@ -687,7 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return response.json();
         })
         .then(data => {
-            userInfo = data; // Asignar los datos al objeto global
+            userInfo = data; 
             console.log("Usuario autenticado:", userInfo);
         })
         .catch(error => {
@@ -758,7 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.error("Error generando el archivo ZIP:", err);
             });
     };
-    // Función para convertir dataURL a Blob
+
     function dataURLtoBlob(dataURL) {
         const byteString = atob(dataURL.split(',')[1]);
         const mimeString = dataURL.split(',')[0].split(':')[1].split(';')[0];
@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return urlParams.get(param);
     }
 
-    // Obtener el id_participante de la URL
+
     const idParticipante = getQueryParam('id_participante');
 
     const showCompletionScreen = () => {
@@ -790,42 +790,55 @@ document.addEventListener('DOMContentLoaded', () => {
         if (completionScreen) {
             completionScreen.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-            downloadCSV(); // Descargar automáticamente el CSV al mostrar la pantalla de finalización
+            downloadCSV();
         } else {
             console.error('completionScreen element not found');
         }
     };
 
+    const hideQuestion = () => {
+        const question = document.getElementById('questionContainer');
+        if (question) question.style.display = 'none';
+    };
+    
+    const showQuestion = () => {
+        const question = document.getElementById('questionContainer');
+        if (question) {
+            question.style.display = 'block';
+            clickStartTime = Date.now();
+            console.log("RT started at", clickStartTime);
+        }
+    };
+    
     const loadCurrentVideo = (contador) => {
         testVideo.src = videos[contador].src;
+    
         const img = new Image();
-        img.src = videos[contador].imageSrc; // Obtener la imagen directamente del objeto videos
-
+        img.src = videos[contador].imageSrc;
+    
         img.onload = function () {
             resizeCanvas(imageCanvas);
             drawImageScaled(imageCanvas, img);
         };
-        
-        // Configurar los eventos para controlar la visibilidad del video
-        testVideo.addEventListener('pause', () => {
-            testVideo.style.display = 'none'; // Ocultar el video al pausar
-        });
-
-        testVideo.addEventListener('play', () => {
-            testVideo.style.display = 'block'; // Mostrar el video al reproducir
-        });
-
-        // Pausar el video y configurarlo para la reproducción después de 2 segundos
+    
         testVideo.style.display = 'none';
         testVideo.pause();
+        testVideo.currentTime = 0;
+    
+        testVideo.onended = null;
+    
         console.log(`Mostrando video: ${videos[contador].src}`);
-        clickStartTime = Date.now(); 
-
+    
+        // Reproduce después de 2 segundos
         setTimeout(() => {
-            testVideo.play(); 
-        }, 2000); 
+            testVideo.style.display = 'block';
+            testVideo.play();
+            testVideo.onended = () => {
+                showQuestion(); 
+            };
+        }, 2000);
     };
-
+    
     if (imageCanvas && testVideo) {
         fullScreenButton.addEventListener('click', () => {
             if (document.fullscreenEnabled && !document.fullscreenElement) {
@@ -839,7 +852,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-
         window.addEventListener('resize', () => {
             resizeCanvas(imageCanvas);
             drawImageScaled(imageCanvas, videos[contador].imageSrc);
@@ -850,19 +862,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         
 
-        const hideQuestion = () => {
-            const question = document.getElementById('questionContainer');
-            if (question) question.style.display = 'none';
-        };
+
         
-        const showQuestion = () => {
-            const question = document.getElementById('questionContainer');
-            if (question) question.style.display = 'block';
-        };
         
         [testVideo, practiceVideo1, practiceVideo2, practiceVideo3].forEach(video => {
             video.addEventListener('play', hideQuestion);   
-            video.addEventListener('ended', showQuestion);  
+            // video.addEventListener('ended', showQuestion);  
         });
 
         nextButtonTest.addEventListener('click', () => {
@@ -1024,11 +1029,7 @@ document.addEventListener('DOMContentLoaded', () => {
             handButton.style.display = 'block';
         }
     }
-    // Inicializar la primera carga de video e imagen
-    showScreen(currentScreenIndex);
 
-    function hideQuestion() {
-        document.getElementById('questionContainer').style.display = 'none';
-    };
+    showScreen(currentScreenIndex);
 });
 
