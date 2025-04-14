@@ -33,12 +33,8 @@ document.addEventListener('DOMContentLoaded', function () {
     let errorRegistradoPartA = false;
     let currentPathPointsPartA = [];
     let currentPathPoints = [];
-
     const show = document.getElementById('show');
     const show1 = document.getElementById('show1');
-    const endSequenceButton = document.createElement('button');
-    endSequenceButton.id = 'endSequenceButton';
-    document.body.appendChild(endSequenceButton);
 
     let circleRadius = 30; // Cambiado de const a let para permitir reasignación
 
@@ -330,7 +326,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         document.body.appendChild(nextButton);
+        nextButton.style.display = 'none';
     }
+
 
     function reiniciarTemporizador() {
         clearTimeout(temporizador);
@@ -340,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function arrowToRed() {
         console.log('Cambio de flecha a rojo');
-        const arrow = document.getElementById('endSequenceButton');
+        const arrow = document.getElementById('endSequenceButtonPartA');
         arrow.style.display = 'block';
         arrow.style.backgroundImage = "url('imagenes/flecha4.png')";
     }
@@ -505,6 +503,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function endDrawingPartA(x, y) {
+        if (!lastCirclePartA) return;
         let validDrop = false;
         circlesPartA.forEach(circle => {
             const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
@@ -551,15 +550,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
     canvasPartA.addEventListener('touchstart', function (event) {
         event.preventDefault();
-    
+
         if (!isRecordingStarted) {
             mediaRecorderCanvasPartA = startRecording(canvasPartA, recordedChunksCanvasPartA);
             isRecordingStarted = true;
             console.log('Grabación iniciada al tocar el canvas');
         }
-    
+
         const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
-        
+
         if (airStartTime) {
             const airEndTime = new Date();
             const delta = (airEndTime - airStartTime) / 1000;
@@ -567,11 +566,11 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("Tiempo en aire:", delta.toFixed(3), "s (acumulado:", penAirTime.toFixed(3), ")");
             airStartTime = null;
         }
-    
+
         startDrawingPartA(x, y);
         errorRegistradoPartA = false;
     });
-    
+
     // Evento touchmove
     canvasPartA.addEventListener('touchmove', function (event) {
         if (event.touches.length > 0) {
@@ -585,18 +584,18 @@ document.addEventListener('DOMContentLoaded', function () {
         event.preventDefault();
         const { x, y } = getTouchPosRotatedPartA(canvasPartA, event);
         endDrawingPartA(x, y);
-    
-        liftPenCount++; // ✅ Siempre que se levanta el lápiz
-        airStartTime = new Date(); // ✅ Empieza a contar tiempo en aire
-    
+
+        liftPenCount++;
+        airStartTime = new Date();
+
         isDrawingPartA = false;
     });
-    
+
 
 
     function drawNextButtonA() {
         const nextButtonA = document.createElement('button');
-        nextButtonA.id = 'endSequenceButton';
+        nextButtonA.id = 'endSequenceButtonPartA';
         nextButtonA.style.display = 'inline-block';
 
         nextButtonA.addEventListener('click', () => {
@@ -749,4 +748,42 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedHand = e.target.value;
         });
     });
+
+    // Timer para cambiar el ojo a rojo después del audio
+    let show1Timer = null;
+
+    // Alternar visibilidad de la flecha con los botones
+    document.getElementById('show').addEventListener('click', () => {
+        const arrow = document.getElementById('endSequenceButton');
+        if (arrow) {
+            arrow.style.display = (arrow.style.display === 'none' || arrow.style.display === '') ? 'inline-block' : 'none';
+        }
+    });
+
+    document.getElementById('show1').addEventListener('click', () => {
+        const arrow = document.getElementById('endSequenceButtonPartA');
+
+        if (arrow) {
+            arrow.style.display = (arrow.style.display === 'none' || arrow.style.display === '') ? 'inline-block' : 'none';
+        }
+    });
+
+    // Cuando termina el audio, iniciar conteo para cambiar ojo
+    instructionAudio.addEventListener('ended', () => {
+        console.log("Audio terminado. Inicia conteo de 5 minutos para cambiar ojo.");
+
+        // Asegura que la imagen vuelva a ser el ojo normal
+        show1.style.backgroundImage = "url('imagenes/eye.png')";
+
+        // Limpia temporizador previo si había
+        clearTimeout(show1Timer);
+
+        // Inicia temporizador de 5 minutos
+        show1Timer = setTimeout(() => {
+            show1.style.backgroundImage = "url('imagenes/eye-red.png')";
+            console.log("Ojo cambiado a rojo después de 5 minutos.");
+        }, 300000); // 5 minutos en milisegundos
+    });
+
+
 });

@@ -126,7 +126,8 @@ audio {
 }
 
 
-#endSequenceButton {
+#endSequenceButton,
+#endSequenceButtonPartA {
   display: none;
   background-color: transparent;
   border: none;

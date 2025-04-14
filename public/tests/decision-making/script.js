@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     function selectMachine(side) {
-        const responseTime = (Date.now() - startTime) / 1000;
+        const responseTime = (Date.now() - startTime);
         console.log(`Trial ${currentTrial + 1}: Tiempo de respuesta -> ${responseTime} ms`);
         // Verificar qué imagen está en el lado izquierdo y derecho
         const leftImage = leftSlot.src; // Imagen actual del lado izquierdo

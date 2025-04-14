@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     exerciseTitle: fixedTitles[sequenceCount],
                     correctAnswer: sequence,
                     userResponse: playerSequence,
-                    responseTime: milliseconds / 1000,
+                    responseTime: milliseconds,
                 };
                 testData.push(exerciseData);
             }

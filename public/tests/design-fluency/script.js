@@ -115,7 +115,7 @@ window.onload = function () {
     
         if (startTime) {
             let endTime = Date.now();
-            let ExecTime = (endTime - startTime) / 1000; // Tiempo en segundos
+            let ExecTime = (endTime - startTime); // Tiempo en segundos
             console.log(`Tiempo de ejecución: ${ExecTime} segundos`);
     
             // Guardar ExecTime en data

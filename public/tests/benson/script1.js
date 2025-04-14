@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Terminó de dibujar: ", endDrawingTime);
         if (audioEndedTime) {
             const timeElapsedMs = endDrawingTime - audioEndedTime; // en milisegundos
-            execTime = Math.round(timeElapsedMs / 1000); // en segundos
+            execTime = Math.round(timeElapsedMs); // en segundos
             console.log(`Tiempo transcurrido desde que terminó el audio hasta el botón: ${execTime} segundos`);
         } else {
             console.log("El audio no ha terminado antes de presionar el botón.");

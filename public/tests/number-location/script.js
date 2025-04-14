@@ -88,7 +88,7 @@ function submitAnswer() {
     }
     const correctAnswer = images[currentImageIndex].answer;
     const itemEndTime = new Date();
-    const timeTaken = (itemEndTime - itemStartTime) / 1000;
+    const timeTaken = (itemEndTime - itemStartTime);
     const precision = userAnswer === correctAnswer ? 1 : 0;
 
     const rt = firstKeypressTime ? ((firstKeypressTime - itemStartTime) / 1000) : 0;

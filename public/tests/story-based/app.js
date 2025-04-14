@@ -485,7 +485,7 @@ function generarArchivoCSV() {
     ).length;
 
     respuestasSeleccionadas.forEach(respuesta => {
-        const tiempoConComa = (respuesta.tiempo / 1000).toFixed(3).replace('.', ',');
+        const tiempoConComa = (respuesta.tiempo).toFixed(3).replace('.', ',');
         const precision = respuesta.opcionSeleccionada === respuesta.respuestaCorrecta ? 1 : 0;
 
         // Agregar las iniciales del examinador en cada fila

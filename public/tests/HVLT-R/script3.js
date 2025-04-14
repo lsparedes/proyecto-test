@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Calcular RT si existe el tiempo de finalización del audio
             let RT = audioEndTimes[audioIndex]
-                ? (responseTime - audioEndTimes[audioIndex]) / 1000
+                ? (responseTime - audioEndTimes[audioIndex])
                 : null;
 
             // Guardar la respuesta y RT

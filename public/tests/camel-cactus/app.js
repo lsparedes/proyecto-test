@@ -575,7 +575,7 @@ function verificarRespuesta(event) {
 nextButton.addEventListener('click', function () {
     if (respuestaSeleccionada) {
         endTimeE = new Date();
-        respuesta['tiempoDedicado'] = (endTimeE - startTimeE) / 1000;
+        respuesta['tiempoDedicado'] = (endTimeE - startTimeE);
         respuestasSeleccionadas.push(respuesta);
         startTimeE = new Date();
         cambiarImagen();
@@ -588,7 +588,7 @@ nextButton.addEventListener('click', function () {
             respuestaSeleccion: "",
             esCorrecta: 0,
         };
-        respuesta['tiempoDedicado'] = (endTimeE - startTimeE) / 1000;
+        respuesta['tiempoDedicado'] = (endTimeE - startTimeE);
         respuestasSeleccionadas.push(respuesta);
         startTimeE = new Date();
         cambiarImagen();
@@ -717,7 +717,7 @@ function generateCSV(results) {
             // Construir una línea del CSV con los datos de la respuesta
             const tiempoDedicadoFormatted = respuesta.tiempoDedicado.toFixed(3).replace('.', ',');
 
-            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado.toFixed(3).replace('.', ',')};${initials}\n`;
+            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado};${initials}\n`;
 
             // Agregar la línea al contenido del CSV
             csvContent += lineaCSV;

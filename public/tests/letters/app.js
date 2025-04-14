@@ -752,7 +752,7 @@ function validateClicks() {
 
     endTime = new Date(); 
 
-    const rawTestDuration = (endTime - startItemTime) / 1000;
+    const rawTestDuration = (endTime - startItemTime);
 
     
     const testDuration = rawTestDuration.toFixed(3).replace('.', ','); // ← solo para mostrar/exportar

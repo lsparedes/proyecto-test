@@ -12,6 +12,7 @@ let lastCirclePartB = null;
 const correctPathsPartB = [];
 const incorrectPathsPartB = [];
 const incorrectPathsPartB2 = [];
+let lastIncorrectCircleB2 = null;
 
 let drawingCompletedB = false;
 
@@ -20,7 +21,7 @@ const circlesToCorrectB = [];
 const recordedChunksCanvasB = [];
 
 let mediaRecorderCanvas;
-
+let lastIncorrectCircle = null;
 const data = [];
 let erroresComision = 0;
 let correctLines = 0;
@@ -54,8 +55,11 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
     ctx.arc(x, y, circleRadius, 0, Math.PI * 2, true);
     ctx.fill();
 
-    ctx.lineWidth = 1;
-    ctx.strokeStyle = 'black';
+    const circle = circlesArray.find(c => c.label === label);
+    const isError = circle?.isError || false;
+
+    ctx.lineWidth = isError ? 3 : 1;
+    ctx.strokeStyle = isError ? 'red' : 'black';
     ctx.stroke();
 
     ctx.fillStyle = 'black';
@@ -69,8 +73,11 @@ function drawCircleWithLabel(ctx, x, y, label, circlesArray, name = "", circleRa
         ctx.fillText(name, x, y - circleRadius - 20);
     }
 
-    circlesArray.push({ x, y, label });
+    if (!circlesArray.some(c => c.label === label)) {
+        circlesArray.push({ x, y, label, isError });
+    }
 }
+
 
 
 
@@ -157,18 +164,64 @@ let drawingCompleted = false;
 function startDrawing(x, y) {
     circlesPartB.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < circleRadius && circle.label === currentCirclePartB) {
-            isDrawingPartB = true;
-            lastCirclePartB = circle;
-            ctxPartB.beginPath();
-            const edgeStart = getEdgePoint(circle, { x, y }, circleRadius);
-            ctxPartB.moveTo(edgeStart.x, edgeStart.y);
-            currentPathPoints = [{ x: edgeStart.x, y: edgeStart.y }];
 
-            currentPathPoints = [{ x: circle.x, y: circle.y }];
+        if (distance < circleRadius) {
+            // Caso 1: empezar desde el círculo correcto
+            if (circle.label === currentCirclePartB) {
+                isDrawingPartB = true;
+                lastCirclePartB = circle;
+                ctxPartB.beginPath();
+                const edgeStart = getEdgePoint(circle, { x, y }, circleRadius);
+                ctxPartB.moveTo(edgeStart.x, edgeStart.y);
+                currentPathPoints = [{ x: edgeStart.x, y: edgeStart.y }];
+            }
+
+            
+            if (lastIncorrectCircle && circle.label === lastCirclePartB.label) {
+                
+                incorrectPathsPartB.pop();
+                incorrectNodes.delete(lastIncorrectCircle.label);
+                lastIncorrectCircle = null;
+
+                
+                ctxPartB.clearRect(0, 0, canvasPartB.width, canvasPartB.height);
+                ctxPartB.fillStyle = 'white';
+                ctxPartB.fillRect(0, 0, canvasPartB.width, canvasPartB.height);
+
+               
+                circlesPartB.forEach(c => {
+                    const isCurrent = c.label === currentCirclePartB;
+                    drawCircleWithLabel(ctxPartB, c.x, c.y, c.label, [], c.name || "", circleRadius, isCurrent);
+                });
+
+                // Redibuja los trazos correctos
+                correctPathsPartB.forEach(path => {
+                    ctxPartB.beginPath();
+                    ctxPartB.moveTo(path[0].x, path[0].y);
+                    for (let i = 1; i < path.length; i++) {
+                        ctxPartB.lineTo(path[i].x, path[i].y);
+                    }
+                    ctxPartB.strokeStyle = 'black';
+                    ctxPartB.lineWidth = 2;
+                    ctxPartB.stroke();
+                });
+
+                // Redibuja los trazos incorrectos restantes
+                incorrectPathsPartB.forEach(path => {
+                    ctxPartB.beginPath();
+                    ctxPartB.moveTo(path.points[0].x, path.points[0].y);
+                    for (let i = 1; i < path.points.length; i++) {
+                        ctxPartB.lineTo(path.points[i].x, path.points[i].y);
+                    }
+                    ctxPartB.strokeStyle = 'red';
+                    ctxPartB.lineWidth = 2;
+                    ctxPartB.stroke();
+                });
+            }
         }
     });
 }
+
 
 const incorrectNodes = new Set(); // Guarda nodos que fueron marcados como error
 let currentPathPoints = [];
@@ -194,6 +247,7 @@ function drawMove(x, y) {
                     to: circle.label,
                     points: [...currentPathPoints]
                 });
+                lastIncorrectCircle = circle;
                 isDrawingPartB = false;
             } else if (circle.label === expectedLabel) {
 
@@ -210,7 +264,7 @@ function drawMove(x, y) {
                     const isCurrent = c.label === currentCirclePartB;
                     drawCircleWithLabel(ctxPartB, c.x, c.y, c.label, [], c.name || "", circleRadius, isCurrent);
                 });
-                
+
 
                 correctPathsPartB.forEach(path => {
                     ctxPartB.beginPath();
@@ -469,57 +523,37 @@ function startPartB2() {
 function startDrawingPartB2(x, y) {
     circlesPartB2.forEach(circle => {
         const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        if (distance < circleRadius && circle.label === currentCirclePartB2) {
-            isDrawingPartB2 = true;
-            lastCirclePartB2 = circle;
-            ctxPartB2.beginPath();
-            ctxPartB2.moveTo(circle.x, circle.y);
-
-            currentPathPointsPartB2 = [{ x: circle.x, y: circle.y }];
-        }
-    });
-}
-
-
-const incorrectNodesPartB2 = new Set(); // Guarda nodos con errores
-
-function drawMovePartB2(x, y) {
-    if (!isDrawingPartB2) return;
-    ctxPartB2.lineTo(x, y);
-    ctxPartB2.stroke();
-
-    currentPathPointsPartB2.push({ x, y });
-
-    circlesPartB2.forEach(circle => {
-        const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
-        const expectedLabel = getNextLabel(currentCirclePartB2);
-
         if (distance < circleRadius) {
-            if (circle.label !== expectedLabel && circle.label !== lastCirclePartB2.label) {
-                highlightCircle(ctxPartB2, circle, 'red', x, y);
-                incorrectNodesPartB2.add(circle.label);
-                incorrectPathsPartB2.push({
-                    from: lastCirclePartB2.label,
-                    to: circle.label,
-                    points: [...currentPathPointsPartB2]
-                });
-                isDrawingPartB2 = false;
-            } else if (circle.label === expectedLabel) {
-                correctPathsPartB2.push([...currentPathPointsPartB2]);
-                correctLines++;
-                currentCirclePartB2 = getNextLabel(currentCirclePartB2);
+            // Caso normal: comenzar trazo desde el círculo correcto
+            if (circle.label === currentCirclePartB2) {
+                isDrawingPartB2 = true;
                 lastCirclePartB2 = circle;
+                ctxPartB2.beginPath();
+                ctxPartB2.moveTo(circle.x, circle.y);
+                currentPathPointsPartB2 = [{ x: circle.x, y: circle.y }];
+            }
 
-                currentPathPointsPartB2 = [];
+            // Caso de corrección: volver al círculo anterior después de un error
+            if (lastIncorrectCircleB2 && circle.label === lastCirclePartB2.label) {
 
+                for (let i = incorrectPathsPartB2.length - 1; i >= 0; i--) {
+                    if (incorrectPathsPartB2[i].to === lastIncorrectCircleB2.label) {
+                        incorrectPathsPartB2.splice(i, 1);
+                    }
+                }
+
+                incorrectNodesPartB2.delete(lastIncorrectCircleB2.label);
+                lastIncorrectCircleB2 = null;
+
+                ctxPartB2.clearRect(0, 0, canvasPartB2.width, canvasPartB2.height);
+                ctxPartB2.fillStyle = 'white';
+                ctxPartB2.fillRect(0, 0, canvasPartB2.width, canvasPartB2.height);
 
                 circlesPartB2.forEach(c => {
-                    drawCircleWithLabel(ctxPartB2, c.x, c.y, c.label, [], c.name || "", circleRadius);
+                    const isCurrent = c.label === currentCirclePartB2;
+                    drawCircleWithLabel(ctxPartB2, c.x, c.y, c.label, [], c.name || "", circleRadius, isCurrent);
                 });
 
-                redrawCircle(ctxPartB2, circle);
-
-                // Redibuja los trazos correctos como se hicieron
                 correctPathsPartB2.forEach(path => {
                     ctxPartB2.beginPath();
                     ctxPartB2.moveTo(path[0].x, path[0].y);
@@ -531,14 +565,95 @@ function drawMovePartB2(x, y) {
                     ctxPartB2.stroke();
                 });
 
-                incorrectNodesPartB2.clear();
+                incorrectPathsPartB2.forEach(path => {
+                    if (!path.points || path.points.length === 0) return;
+                    ctxPartB2.beginPath();
+                    ctxPartB2.moveTo(path.points[0].x, path.points[0].y);
+                    for (let i = 1; i < path.points.length; i++) {
+                        ctxPartB2.lineTo(path.points[i].x, path.points[i].y);
+                    }
+                    ctxPartB2.strokeStyle = 'red';
+                    ctxPartB2.lineWidth = 2;
+                    ctxPartB2.stroke();
+                });
             }
         }
+
+    });
+}
+
+const incorrectNodesPartB2 = new Set();
+
+function drawMovePartB2(x, y) {
+    if (!isDrawingPartB2) return;
+    ctxPartB2.lineTo(x, y);
+    ctxPartB2.stroke();
+    currentPathPointsPartB2.push({ x, y });
+
+    circlesPartB2.forEach(circle => {
+        const distance = Math.sqrt((x - circle.x) ** 2 + (y - circle.y) ** 2);
+        const expectedLabel = getNextLabel(currentCirclePartB2);
+
+        if (distance < circleRadius) {
+            if (circle.label !== expectedLabel && circle.label !== lastCirclePartB2?.label) {
+                highlightCircle(ctxPartB2, circle, 'red', x, y);
+                incorrectNodesPartB2.add(circle.label);
+            
+                let originalCircle = circlesPartB2.find(c => c.label === circle.label);
+                if (originalCircle) originalCircle.isError = true;
+            
+                // ⚠️ Prevención del bug: asegúrate de que `lastCirclePartB2` está definido
+                if (lastCirclePartB2) {
+                    incorrectPathsPartB2.push({
+                        from: lastCirclePartB2.label,
+                        to: circle.label,
+                        points: [...currentPathPointsPartB2]
+                    });
+                }
+            
+                lastIncorrectCircleB2 = circle;
+                isDrawingPartB2 = false;
+                setTimeout(() => {
+                   
+                }, 150); 
+        } else if (circle.label === expectedLabel) {
+            correctPathsPartB2.push([...currentPathPointsPartB2]);
+            correctLines++;
+            currentCirclePartB2 = getNextLabel(currentCirclePartB2);
+            lastCirclePartB2 = circle;
+
+            currentPathPointsPartB2 = [];
+
+
+            circlesPartB2.forEach(c => {
+                const isCurrent = c.label === currentCirclePartB2;
+                drawCircleWithLabel(ctxPartB2, c.x, c.y, c.label, [], c.name || "", circleRadius, isCurrent);
+            });
+
+
+            redrawCircle(ctxPartB2, circle);
+
+            // Redibuja los trazos correctos como se hicieron
+            correctPathsPartB2.forEach(path => {
+                ctxPartB2.beginPath();
+                ctxPartB2.moveTo(path[0].x, path[0].y);
+                for (let i = 1; i < path.length; i++) {
+                    ctxPartB2.lineTo(path[i].x, path[i].y);
+                }
+                ctxPartB2.strokeStyle = 'black';
+                ctxPartB2.lineWidth = 2;
+                ctxPartB2.stroke();
+            });
+
+            incorrectNodesPartB2.clear();
+        }
+    }
     });
 
-    if (typeof currentCirclePartB2 === 'string' && currentCirclePartB2 === 'D') {
-        drawingCompletedB2 = true;
-    }
+if (typeof currentCirclePartB2 === 'string' && currentCirclePartB2 === '13') {
+    drawingCompletedB2 = true;
+}
+
 }
 
 function endDrawingPartB2(x, y) {
@@ -597,12 +712,15 @@ canvasPartB2.addEventListener('touchstart', function (event) {
     const { x, y } = getTouchPosRotatedPartB2(canvasPartB2, event);
     startDrawingPartB2(x, y);
 
-    if (airStartTime) {
-        let airEndTime = new Date();
-        let airTime = (airEndTime - airStartTime) / 1000;
+    if (airStartTime && !drawingCompletedB2) {
+        const airEndTime = new Date();
+        const airTime = (airEndTime - airStartTime) / 1000;
         penAirTime += airTime;
+        console.log(`Tiempo en el aire: ${airTime.toFixed(3)}s | Total acumulado: ${penAirTime.toFixed(3)}s`);
         airStartTime = null;
     }
+
+
 
     if (!isRecordingStarted) {
         mediaRecorderCanvasPartB2 = startRecording(canvasPartB2, recordedChunksCanvasPartB2);
@@ -626,10 +744,16 @@ canvasPartB2.addEventListener('touchend', function (event) {
     event.preventDefault();
     const { x, y } = getTouchPosRotatedPartB2(canvasPartB2, event);
     endDrawingPartB2(x, y);
-    
-    airStartTime = new Date();
-});
 
+    if (drawingCompletedB2) {
+        console.log("Test finalizado. No se cuenta levantamiento de lápiz.");
+        return;
+    }
+
+    airStartTime = new Date();
+    liftPenCount++;
+    console.log(`Lápiz levantado. Total lifts: ${liftPenCount} - Hora: ${airStartTime.toLocaleTimeString()}`);
+});
 
 function drawNextButtonB2() {
     const nextButtonB2 = document.createElement('button');
@@ -830,4 +954,37 @@ handInputs.forEach((input) => {
         validateInputs();
         selectedHand = e.target.value;
     });
+});
+
+// Timer para cambiar a ojo rojo
+let show1Timer = null;
+
+// Botón #show ya no controla flecha (pero si quieres que siga funcionando, déjalo activado)
+document.getElementById('show').addEventListener('click', () => {
+    const arrow = document.getElementById('endSequenceButton');
+    if (arrow) {
+        arrow.style.display = (arrow.style.display === 'none' || arrow.style.display === '') ? 'inline-block' : 'none';
+    }
+});
+document.getElementById('show1').addEventListener('click', () => {
+    const arrow = document.getElementById('endSequenceButton');
+    if (arrow) {
+        arrow.style.display = (arrow.style.display === 'none' || arrow.style.display === '') ? 'inline-block' : 'none';
+    }
+});
+
+instructionAudio.addEventListener('ended', () => {
+    console.log("Audio terminado. Inicia conteo de 5 minutos para cambiar ojo.");
+
+    // Restablece imagen a normal
+    show1.style.backgroundImage = "url('imagenes/eye.png')";
+
+    // Limpia cualquier temporizador previo
+    clearTimeout(show1Timer);
+
+    // Inicia temporizador para cambiar a rojo
+    show1Timer = setTimeout(() => {
+        show1.style.backgroundImage = "url('imagenes/eye-red.png')";
+        console.log("Ojo cambiado a rojo después de 5 minutos.");
+    }, 30000); // 5 minutos
 });

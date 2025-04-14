@@ -259,7 +259,7 @@ function mostrarFinalizacion() {
     // document.getElementById('fullscreenButton').style.display = 'none';
 
     tiempoFin = new Date(); // Guardar el tiempo de fin al finalizar la tarea
-    const tiempoTranscurrido = (tiempoFin - tiempoInicio) / 1000; // Calcular el tiempo transcurrido de milisegundos a segundos
+    const tiempoTranscurrido = (tiempoFin - tiempoInicio) / 1000; 
 
     console.log(`Tarea finalizada. Tiempo transcurrido: ${tiempoTranscurrido} segundos.`);
 
@@ -372,7 +372,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
         const numeroImagen = img.numero;
         const emocionCorrecta = img.emocionCorrecta;
         const emocionSeleccionada = emocionesSeleccionadas[index];
-        const response = tiemposRespuesta[index] ? (tiemposRespuesta[index] / 1000).toFixed(3).replace('.', ',') : '';
+        const response = tiemposRespuesta[index] ? (tiemposRespuesta[index]).toFixed(3).replace('.', ',') : '';
         const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
 
         // Agregar las iniciales del examinador a cada fila
