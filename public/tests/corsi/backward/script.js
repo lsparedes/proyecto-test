@@ -46,8 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { "top": 360, "left": 560 },
         { "top": 280, "left": 280 },
         { "top": 170, "left": 80 },
-        { "top": 160, "left": 730 },
-        { "top": 50, "left": 540 },
+        { "top": 140, "left": 730 },
+        { "top": 30, "left": 540 },
         { "top": 70, "left": 300 }
     ];
 
