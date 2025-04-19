@@ -14,30 +14,34 @@
 
   <button id="fullscreenButton" class="fullscreen-button"></button>
 
-  <div id="instructions" style="display:none;"></div>
+  <button id="endSequenceButtonPartB"
+    style="display: none; transform: rotate(-90deg); position: absolute; bottom: 20px; right: 20px; font-size: 24px;">
+  </button>
 
-  <!-- Botón para abrir el primer modal -->
   <button id="show" type="button"
     style="transform: rotate(-90deg); width: 50px; height: 50px; background-image: url('imagenes/eye.png'); background-size: cover; background-repeat: no-repeat; background-position: center; border: none; background-color: transparent; position: absolute; top: 15px; left: 15px;">
   </button>
 
-
   <div id="partB" style="transform: rotate(-90deg);">
+
     <audio controls id="instructionAudio1">
       <source src="sonidos/TMT_B_1.wav" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
-
-    <canvas id="tmtCanvasPartB" style="display:none;" width="650px" height="450px">
-        <p id="pCanvas" style="display: none;"></p>
+    <canvas id="tmtCanvas" style="display:block;" width="650px" height="450px">
+      <p id="pCanvas" style="display: none;"></p>
     </canvas>
+
   </div>
+
   <!-- Botón para abrir el segundo modal -->
   <button id="show1" type="button"
     style="transform: rotate(-90deg); width: 50px; height: 50px; background-image: url('imagenes/eye.png'); background-size: cover; background-repeat: no-repeat; background-position: center; border: none; background-color: transparent; position: absolute; top: 15px; left: 15px;">
-
   </button>
 
+  <button id="endSequenceButton"
+    style="display: none; transform: rotate(-90deg); position: absolute; bottom: 20px; right: 20px; font-size: 24px;">
+  </button>
 
   <div id="partB2" style="display:none; transform: rotate(-90deg); margin: 0px; padding: 0;">
 
@@ -45,17 +49,16 @@
       <source src="sonidos/TMT_B_2.wav" type="audio/mpeg">
       Tu navegador no soporta el elemento de audio.
     </audio>
+    <canvas id="tmtCanvasPartB2" width="850" height="1200"></canvas>
 
-
-    <canvas id="tmtCanvasPartB2" width="850" height="1200" style="display:none;"></canvas>
   </div>
-  
+
 
 
   <!-- SELECCION DE MANO HTML -->
   <div class="container" id="preEnd" style="display: none; margin: 0px; padding: 0px; transform: rotate(-90deg);">
 
-    <div id="fin" class="container" style="display: none;  margin-bottom: 15vh;">
+    <div id="fin" class="container" style="margin-bottom: 15vh;">
       <h1>¡Ha completado esta tarea con éxito!</h1>
       <br>
       <h1>¡Muchas gracias!</h1>
@@ -65,7 +68,7 @@
       <div class="row justify-content-center">
 
         <div id="selectHand" class="card opacity-75 col-3 mx-2 p-3"
-          style="display: none; width: 15%; background-color: #f9f9f9;">
+          style="width: 15%; background-color: #f9f9f9;">
           <div class="card-body" style="padding: 0;">
             <h4>Mano usada</h4>
             <div class="d-flex align-items-start">
@@ -94,7 +97,7 @@
     crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-  <script src="script-index2.js"></script>
+  <script src="PartB.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,473 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const fullscreenButton = document.getElementById('fullscreenButton');
+    const show = document.getElementById('show');
+    const show1 = document.getElementById('show1');
+
+    const canvasPractice = document.getElementById('tmtCanvas');
+    const canvasPartA = document.getElementById('tmtCanvasPartA');
+    const ctxPractice = canvasPractice.getContext('2d');
+    const ctxPartA = canvasPartA.getContext('2d');
+
+    const circleRadius = 30;
+
+    let testStartTime = Date.now();
+    let execStartTime = null;
+    let execEndTime = null;
+    let liftCount = 0;
+    let liftTotalTime = 0;
+    let liftStartTime = null;
+    let correctLinesPartA = 0;
+    let incorrectLinesPartA = 0;
+
+    let mediaRecorder;
+    let recordedChunks = [];
+
+
+    const circleCoordinates = [
+        { x: 280, y: 310 },
+        { x: 400, y: 100 },
+        { x: 570, y: 320 },
+        { x: 430, y: 220 },
+        { x: 460, y: 370 },
+        { x: 90, y: 400 },
+        { x: 70, y: 190 },
+        { x: 230, y: 150 }
+    ];
+
+    const circleCoordinatesPartA = [
+        { x: 580, y: 700 },
+        { x: 400, y: 837 },
+        { x: 654, y: 881 },
+        { x: 621, y: 490 },
+        { x: 367, y: 526 },
+        { x: 490, y: 617 },
+        { x: 343, y: 711 },
+        { x: 204, y: 879 },
+        { x: 258, y: 999 },
+        { x: 321, y: 875 },
+        { x: 537, y: 1037 },
+        { x: 130, y: 1086 },
+        { x: 200, y: 604 },
+        { x: 104, y: 741 },
+        { x: 112, y: 200 },
+        { x: 202, y: 365 },
+        { x: 435, y: 166 },
+        { x: 409, y: 395 },
+        { x: 667, y: 255 },
+        { x: 519, y: 247 },
+        { x: 744, y: 148 },
+        { x: 734, y: 464 },
+        { x: 761, y: 1060 },
+        { x: 711, y: 666 },
+        { x: 670, y: 1023 }
+    ];
+
+    function drawCircles(ctx, coordinates) {
+        ctx.font = '32px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        coordinates.forEach((circle, index) => {
+            ctx.beginPath();
+            ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fillText(index + 1, circle.x, circle.y);
+        });
+    }
+
+    drawCircles(ctxPractice, circleCoordinates);
+    drawCircles(ctxPartA, circleCoordinatesPartA);
+
+    function getCircleIndexAtPosition(x, y, coordinates) {
+        for (let i = 0; i < coordinates.length; i++) {
+            const circle = coordinates[i];
+            const dx = x - circle.x;
+            const dy = y - circle.y;
+            if (Math.sqrt(dx * dx + dy * dy) <= circleRadius) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    function drawCircleNormal(ctx, circle, index) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circleRadius + 2, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+        ctx.lineWidth = 1;
+        ctx.font = '32px Arial';
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fillText(index + 1, circle.x, circle.y);
+    }
+
+    function drawCircleBold(ctx, circle, index) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circleRadius + 2, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+        ctx.lineWidth = 4;
+        ctx.font = 'bold 32px Arial';
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fillText(index + 1, circle.x, circle.y);
+        ctx.lineWidth = 1;
+    }
+
+    function drawCircleError(ctx, circle, index) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circleRadius + 2, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'red';
+        ctx.font = '32px Arial';
+        ctx.beginPath();
+        ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
+        ctx.stroke();
+        ctx.fillStyle = 'red';
+        ctx.fillText(index + 1, circle.x, circle.y);
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'black';
+        ctx.fillStyle = 'black';
+    }
+
+    function enableDrawing(canvas, ctx) {
+        let isDrawing = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function getTouchPosRotated(canvas, touchEvent) {
+            const rect = canvas.getBoundingClientRect();
+            const touch = touchEvent.touches[0] || touchEvent.changedTouches[0];
+
+            const localX = touch.clientX - rect.left;
+            const localY = touch.clientY - rect.top;
+
+            const rotatedX = rect.height - localY;
+            const rotatedY = localX;
+            return { x: rotatedX, y: rotatedY };
+        }
+
+        let currentCircleIndex = 0;
+        const coordinates = canvas === canvasPractice ? circleCoordinates : circleCoordinatesPartA;
+
+        drawCircleNormal(ctx, coordinates[currentCircleIndex], currentCircleIndex);
+
+        let hasError = false;
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            const coords = getTouchPosRotated(canvas, e);
+            const index = getCircleIndexAtPosition(coords.x, coords.y, coordinates);
+
+            // Registrar levantamiento del lápiz si venía del aire (aunque haya error)
+            if (canvas === canvasPartA && liftStartTime !== null) {
+                liftCount++;
+                liftTotalTime += Date.now() - liftStartTime;
+                liftStartTime = null;
+            }
+
+            if (hasError && index === currentCircleIndex - 1) {
+                errorIndices.forEach((errIndex) => {
+                    drawCircleNormal(ctx, coordinates[errIndex], errIndex);
+                });
+                errorIndices = [];
+                hasError = false;
+                isDrawing = true;
+                lastX = coords.x;
+                lastY = coords.y;
+                return;
+            }
+
+            if (!hasError) {
+                isDrawing = true;
+                lastX = coords.x;
+                lastY = coords.y;
+            }
+        });
+
+
+
+        let errorIndices = [];
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isDrawing || hasError) return;
+            e.preventDefault();
+            const coords = getTouchPosRotated(canvas, e);
+
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(coords.x, coords.y);
+            ctx.stroke();
+            lastX = coords.x;
+            lastY = coords.y;
+
+            const index = getCircleIndexAtPosition(coords.x, coords.y, coordinates);
+
+            if (index === currentCircleIndex) {
+                if (errorIndices.length > 0) {
+                    errorIndices.forEach((errIndex) => {
+                        drawCircleNormal(ctx, coordinates[errIndex], errIndex);
+                    });
+                    errorIndices = [];
+                }
+
+                if (currentCircleIndex > 0) {
+                    drawCircleNormal(ctx, coordinates[currentCircleIndex - 1], currentCircleIndex - 1);
+                }
+
+                drawCircleBold(ctx, coordinates[currentCircleIndex], currentCircleIndex);
+                currentCircleIndex++;
+                if (currentCircleIndex >= coordinates.length) {
+                    isDrawing = false;
+                    hasError = false;
+                    return;
+                }
+                if (canvas === canvasPartA) {
+                    correctLinesPartA++;
+                }
+            }
+            else if (
+                index !== -1 &&
+                index !== currentCircleIndex &&
+                index !== currentCircleIndex - 1 &&
+                !errorIndices.includes(index)
+            ) {
+                drawCircleError(ctx, coordinates[index], index);
+                errorIndices.push(index);
+                hasError = true;
+                isDrawing = false;
+                if (canvas === canvasPartA) {
+                    incorrectLinesPartA++;
+                }
+            }
+        });
+
+        canvas.addEventListener('touchend', () => {
+            isDrawing = false;
+            if (canvas === canvasPartA && liftStartTime === null) {
+                liftStartTime = Date.now(); // lápiz levantado
+            }
+        });
+
+        canvas.addEventListener('touchcancel', () => {
+            isDrawing = false;
+            if (canvas === canvasPartA && liftStartTime === null) {
+                liftStartTime = Date.now(); // lápiz levantado
+            }
+        });
+
+    }
+
+    enableDrawing(canvasPractice, ctxPractice);
+    enableDrawing(canvasPartA, ctxPartA);
+
+    fullscreenButton.addEventListener('click', () => {
+        if (document.fullscreenEnabled && !document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/minimize.png')";
+            document.documentElement.requestFullscreen();
+        } else if (document.fullscreenElement) {
+            fullscreenButton.style.backgroundImage = "url('imagenes/full-screen.png')";
+            document.exitFullscreen();
+        } else {
+            console.log('El modo de pantalla completa no es soportado por tu navegador.');
+        }
+    });
+
+    const audio = document.getElementById("instructionAudio");
+    audio.addEventListener("ended", () => {
+        execStartTime = Date.now();
+        console.log('ExecTime: On', new Date(execStartTime).toLocaleString());
+
+        const stream = canvasPartA.captureStream(30); // 30 FPS
+        mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
+
+        mediaRecorder.ondataavailable = function (e) {
+            if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+
+        mediaRecorder.start();
+    });
+
+
+
+    const endSequenceButton = document.getElementById('endSequenceButton');
+    const endSequenceButtonPartA = document.getElementById('endSequenceButtonPartA');
+
+    let arrowVisible = false;
+
+    endSequenceButton.addEventListener('click', () => {
+        document.getElementById('instructions').style.display = 'none';
+        document.getElementById('partA').style.display = 'flex';
+        document.getElementById('endSequenceButton').style.display = 'none';
+
+        // Pintar fondo blanco
+        ctxPartA.fillStyle = "white";
+        ctxPartA.fillRect(0, 0, canvasPartA.width, canvasPartA.height);
+
+        // Resetear estilos antes de dibujar los círculos
+        ctxPartA.fillStyle = "black";
+        ctxPartA.strokeStyle = "black";
+
+        // Redibujar los círculos
+        drawCircles(ctxPartA, circleCoordinatesPartA);
+    });
+
+    endSequenceButtonPartA.addEventListener('click', () => {
+        if (mediaRecorder && mediaRecorder.state !== "inactive") {
+            mediaRecorder.stop();
+        }
+
+        document.getElementById('partA').style.display = 'none';
+        document.getElementById('preEnd').style.display = 'block';
+        document.getElementById('endSequenceButtonPartA').style.display = 'none';
+        execEndTime = Date.now();
+    });
+
+
+    function toggleArrowVisibility(button) {
+        arrowVisible = !arrowVisible;
+
+        // Mostrar la flecha SOLO si estás en instrucciones (canvasPractice visible)
+        const inPractice = document.getElementById('instructions').style.display !== 'none';
+
+        endSequenceButton.style.display = (arrowVisible && inPractice) ? 'block' : 'none';
+        endSequenceButtonPartA.style.display = (arrowVisible && !inPractice) ? 'block' : 'none';
+
+        button.style.backgroundImage = arrowVisible
+            ? "url('imagenes/eye.png')"
+            : "url('imagenes/noeye.png')";
+    }
+
+    show.addEventListener('click', () => {
+        toggleArrowVisibility(show);
+    });
+
+    show1.addEventListener('click', () => {
+        toggleArrowVisibility(show1);
+    });
+
+    let selectedHand = "";
+    const selectHandContainer = document.getElementById("selectHand");
+    const handButton = document.getElementById("handButton");
+    const handInputs = document.getElementsByName('hand');
+    handButton.addEventListener('click', confirmHandSelection);
+
+    function validateInputs() {
+        selectedHand = document.querySelector('input[name="hand"]:checked')?.value;
+
+        if (selectedHand) {
+            handButton.style.display = 'block';
+        }
+    }
+
+    handInputs.forEach((input) => {
+        input.addEventListener('change', (e) => {
+            validateInputs();
+            selectedHand = e.target.value;
+        });
+    });
+
+    function confirmHandSelection() {
+        document.getElementById('preEnd').style.display = 'none';
+        selectHandContainer.style.display = "none";
+        handButton.style.display = "none";
+
+    }
+
+    let userInfo;
+
+    fetch('/api/user-info')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
+
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+    // Obtener el id_participante de la URL
+    const idParticipante = getQueryParam('id_participante');
+
+    async function confirmHandSelection() {
+        
+        const fechaActual = new Date();
+        const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
+        const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
+        const [day, month, year] = fechaHoraChilena.split('-');
+        const fechaFormateada = `${day}_${month}_${year}`;
+
+        const zip = new JSZip();
+        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        // 1. CSV
+        const totTime = (execEndTime - testStartTime) / 1000;
+        const execTime = execStartTime ? (execEndTime - execStartTime) / 1000 : 0;
+        const liftTime = liftTotalTime / 1000;
+        const csvContent = `TotTime;ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;Hand\n` +
+            `${totTime.toFixed(2)};${execTime.toFixed(2)};${incorrectLinesPartA};${correctLinesPartA};${liftCount};${liftTime.toFixed(2)};${selectedHand}\n`;
+        zip.file("2_TMT_Part_A.csv", csvContent);
+
+        // 2. Imagen PNG del canvas
+        // Crear una copia del canvas con fondo blanco
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = canvasPartA.width;
+        tempCanvas.height = canvasPartA.height;
+        const tempCtx = tempCanvas.getContext("2d");
+
+        // Fondo blanco
+        tempCtx.fillStyle = "white";
+        tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+        // Dibujar el contenido original encima
+        tempCtx.drawImage(canvasPartA, 0, 0);
+
+        // Generar imagen PNG
+        const imageDataUrl = tempCanvas.toDataURL("image/png");
+        const imageBlob = await (await fetch(imageDataUrl)).blob();
+        zip.file("2_TMT_Part_A_Canvas_Screenshot.png", imageBlob);
+
+
+        // 3. Video .webm
+        const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
+        zip.file("2_TMT_Part_A_Canvas_Recording.webm", videoBlob);
+
+        // 4. Generar y descargar ZIP
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        const zipUrl = URL.createObjectURL(zipBlob);
+        const link = document.createElement("a");
+        link.href = zipUrl;
+        link.download = `${idParticipante}_2_TMT_PartA_${inicialesExaminador}_${fechaFormateada}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Ocultar interfaz
+        document.getElementById('preEnd').style.display = 'none';
+        selectHandContainer.style.display = "none";
+        handButton.style.display = "none";
+
+        setTimeout(() => {
+            window.close();
+        }, 3000);
+    }
+
+
+});
