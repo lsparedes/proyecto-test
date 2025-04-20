@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playerSequence.length < sequence.length) {
             if (playerSequence.length == 0 && !isPractice) {
                 stopTimer();
-                console.log(milliseconds);
+                console.log(`RT registrado: ${milliseconds} ms (${(milliseconds)} s)`);
             }
             resetBlocks();
             playerSequence.push(index);
@@ -367,7 +367,9 @@ document.addEventListener('DOMContentLoaded', () => {
         stopTimer();
         milliseconds = 0;
         timer = setInterval(updateTimer, 10);
+        console.log("Inicia conteo de RT...");
     }
+    
 
     function stopTimer() {
         clearInterval(timer);

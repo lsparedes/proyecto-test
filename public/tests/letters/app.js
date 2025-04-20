@@ -868,6 +868,23 @@ function stopRecording() {
     }
 }
 
+const show = document.getElementById('show');
+
+
+function toggleArrowVisibilityAndImage() {
+    const visible = nextButton.style.display !== 'none';
+
+    // Alternar visibilidad de las flechas
+    nextButton.style.display = visible ? 'none' : 'block';
+    
+    // Cambiar imagen del botón
+    const newImage = visible ? "url('noeye.png')" : "url('eye.png')";
+    show.style.backgroundImage = newImage;
+}
+
+// Asignar a ambos botones
+show.addEventListener('click', toggleArrowVisibilityAndImage);
+
 
 // SELECCION DE MANO JS
 const fin = document.getElementById('fin');

@@ -116,8 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (practiceMode) {
             trialIndicator.innerText = `P${currentTrial + 1}`;
         } else {
-            globalTrialCount++;
-            trialIndicator.innerText = `E${globalTrialCount}`;
+            trialIndicator.innerText = `E${globalTrialCount + 1}`;
         }
 
 
@@ -292,28 +291,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generatePracticeTrials() {
         const practiceTrials = [];
-        const halfTrials = Math.floor(cantidad_ensayos_prueba / 2);
-
-        for (let i = 0; i < halfTrials; i++) {
+        const totalTrials = cantidad_ensayos_prueba;
+        let leftRewardChance, rightRewardChance;
+    
+        // Asigna las probabilidades igual que en el bloque 1 (fase de práctica)
+        if (caseOption === 'A') {
+            leftRewardChance = 0.25;
+            rightRewardChance = 0.75;
+        } else {
+            leftRewardChance = 0.75;
+            rightRewardChance = 0.25;
+        }
+    
+        for (let i = 0; i < totalTrials; i++) {
+            const randomValue = Math.random();
+            let leftReward = randomValue < leftRewardChance;
+            let rightReward = !leftReward;
+    
             practiceTrials.push({
-                leftReward: true,
-                rightReward: false,
+                trialNumber: i + 1,
+                leftReward: leftReward,
+                rightReward: rightReward,
+                leftRewardChance: leftRewardChance,
+                rightRewardChance: rightRewardChance,
                 caseOption: caseOption,
                 caseImage: caseImage
             });
         }
-
-        for (let i = 0; i < halfTrials; i++) {
-            practiceTrials.push({
-                leftReward: false,
-                rightReward: true,
-                caseOption: caseOption,
-                caseImage: caseImage
-            });
-        }
-
+    
         return practiceTrials;
     }
+    
 
     function generateTestTrials(block) {
         const testTrials = [];

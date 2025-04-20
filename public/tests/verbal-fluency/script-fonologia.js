@@ -70,20 +70,11 @@ async function startRecording(part) {
 
     micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
-    const audio = new Audio('beep.wav');
-    audio.crossOrigin = "anonymous";
-    audio.play();
-
     audioContext = new AudioContext();
-
     destination = audioContext.createMediaStreamDestination();
 
     const micSource = audioContext.createMediaStreamSource(micStream);
     micSource.connect(destination);
-
-    const audioElementSource = audioContext.createMediaElementSource(audio);
-    audioElementSource.connect(audioContext.destination);
-    audioElementSource.connect(destination);
 
     combinedStream = destination.stream;
 
@@ -96,8 +87,11 @@ async function startRecording(part) {
 
     document.getElementById('stopRecordingButton' + part).style.display = 'inline-block';
     document.getElementById('recButton' + part).style.display = 'inline-block';
+
     startTimer(part); // Start the timer
 }
+
+
 
 function stopRecording(part) {
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
@@ -170,36 +164,35 @@ function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
 
-    // Elegir aleatoriamente entre Fonologica_2 y Fonologica_3
-    const opciones = ['Fonologica_2'];
-
     audio.src = `audios/Fonologica_2.wav`;
+    letterDisplay.textContent = 'S';
 
     audio.addEventListener('loadedmetadata', () => {
-        let recordingStarted = false;
-        const checkTimeRemaining = () => {
+        const duration = audio.duration;
+
+        setTimeout(() => {
+            startRecording(part);
+        }, (duration - 2) * 1000);
+
+        // Mostrar letra durante los últimos 3 segundos
+        const interval = setInterval(() => {
             const timeRemaining = (audio.duration - audio.currentTime) / audio.playbackRate;
-
-            if (!recordingStarted && timeRemaining <= 1) {
-                startRecording(part);
-                recordingStarted = true;
-            }
-
             if (timeRemaining <= 3 && timeRemaining > 0) {
                 letterDisplay.style.display = 'block';
             }
-        };
-
-        setInterval(() => {
-            checkTimeRemaining();
         }, 100);
-    });
 
-    audio.addEventListener('ended', () => {
-        letterDisplay.style.display = 'none';
-        document.getElementById('nextButton' + part).style.display = 'inline-block';
+        // Al terminar el audio
+        audio.addEventListener('ended', () => {
+            clearInterval(interval);
+            letterDisplay.style.display = 'none';
+            document.getElementById('nextButton' + part).style.display = 'inline-block';
+            const beep = new Audio('beep.wav');
+            beep.play();
+        });
     });
 }
+
 
 
 function showRecordingCreatedMessage(part) {

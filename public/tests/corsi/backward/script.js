@@ -109,18 +109,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleBlockClick(event) {
         if (sequenceDisplaying) return;
-
+    
         const index = parseInt(event.target.dataset.index);
         if (playerSequence.length < sequence.length) {
             if (playerSequence.length == 0 && !isPractice) {
                 stopTimer();
-                console.log(milliseconds);
+                console.log(`RT registrado: ${milliseconds} ms (${(milliseconds)} s)`);
             }
             resetBlocks(); // Desmarcar todos los bloques antes de marcar el actual
             playerSequence.push(index);
             event.target.classList.add('selected');
         }
     }
+    
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
@@ -365,9 +366,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startTimer() {
         stopTimer(); // Reiniciar el timer si ya está corriendo
-        milliseconds = 0; // Reiniciar los milisegundos
+        milliseconds = 0;
         timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
+        console.log("Inicia conteo de RT...");
     }
+    
 
     function stopTimer() {
         clearInterval(timer);

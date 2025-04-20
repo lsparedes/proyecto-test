@@ -68,7 +68,7 @@ window.onload = function () {
         startPracticeRecording('practiceCanvas');
         document.getElementById('practiceNextButton').style.display = 'block';
     });
-    
+
     // Fuerza el clic para iniciar inmediatamente
     startButton.click();
 
@@ -94,7 +94,7 @@ window.onload = function () {
         image.onload = function () {
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         };
-        
+
     });
 
     Audio.addEventListener('ended', function () {
@@ -104,7 +104,7 @@ window.onload = function () {
         reiniciarTemporizador();
         startRecording('designCanvas');  // Iniciar grabación después de que el audio termine
     });
-    
+
 
     document.getElementById('finishButton').addEventListener('click', function () {
         stopAllAudios();
@@ -112,18 +112,18 @@ window.onload = function () {
         document.getElementById('instructionAudio').style.display = 'none';
         canvasContainer.style.display = 'none';
         showHandSelection();
-    
+
         if (startTime) {
             let endTime = Date.now();
             let ExecTime = (endTime - startTime); // Tiempo en segundos
             console.log(`Tiempo de ejecución: ${ExecTime} segundos`);
-    
+
             // Guardar ExecTime en data
             data.push({
                 taskTime: (endTime - beginingTime) / 1000, // Tiempo total de la tarea
                 ExecTime: ExecTime // Tiempo de ejecución desde el fin del audio
             });
-    
+
         } else {
             console.log('startTime no está definido correctamente.');
         }
@@ -183,24 +183,24 @@ window.onload = function () {
                 return;
             }
             const stream = canvas.captureStream(30); // 30 FPS
-    
+
             mediaRecorder = new MediaRecorder(stream, {
                 mimeType: 'video/webm;codecs=vp9'
             });
-    
+
             mediaRecorder.ondataavailable = (event) => {
                 if (event.data.size > 0) {
                     recordedChunks.push(event.data);
                 }
             };
-    
+
             mediaRecorder.start();
             console.log("grabando...");
         } catch (error) {
             console.error("Error al iniciar la grabación:", error);
         }
     }
-    
+
 
     function stopRecording() {
         if (mediaRecorder && mediaRecorder.state !== "inactive") {
@@ -214,7 +214,7 @@ window.onload = function () {
             console.warn("mediaRecorder no está inicializado o ya ha sido detenido.");
         }
     }
-    
+
     function getpracticeCanvasCoordinates(practiceCanvas, clientX, clientY) {
         const rectpractice = practiceCanvas.getBoundingClientRect();
         const scaleX = practiceCanvas.width / rectpractice.width;
@@ -328,27 +328,27 @@ window.onload = function () {
             console.error('Error al obtener la información del usuario:', error);
         });
 
-        function generateCSV(data) {
-            if (!userInfo || !userInfo.name || !userInfo.last_name) {
-                console.error("Error: userInfo no está definido correctamente.");
-                return new Blob([], { type: 'text/csv' });
-            }
-        
-            const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-        
-            let csvContent = `TotTime;ExecTime;Hand;Examinador\n`;
-        
-            data.forEach(entry => {
-                const totTime = entry.taskTime ?? "";
-                const execTime = entry.ExecTime ?? "";
-                const hand = selectedHand ?? "";
-                const examiner = initials;
-                
-                csvContent += `${totTime.toFixed(3).replace('.', ',')};${execTime.toFixed(3).replace('.', ',')};${hand};${examiner}\n`;
-            });
-        
-            return new Blob([csvContent], { type: 'text/csv' });
+    function generateCSV(data) {
+        if (!userInfo || !userInfo.name || !userInfo.last_name) {
+            console.error("Error: userInfo no está definido correctamente.");
+            return new Blob([], { type: 'text/csv' });
         }
+
+        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+
+        let csvContent = `TotTime;ExecTime;Hand;Examinador\n`;
+
+        data.forEach(entry => {
+            const totTime = entry.taskTime ?? "";
+            const execTime = entry.ExecTime ?? "";
+            const hand = selectedHand ?? "";
+            const examiner = initials;
+
+            csvContent += `${totTime.toFixed(3).replace('.', ',')};${execTime.toFixed(3).replace('.', ',')};${hand};${examiner}\n`;
+        });
+
+        return new Blob([csvContent], { type: 'text/csv' });
+    }
 
 
     function getQueryParam(param) {
@@ -462,4 +462,27 @@ window.onload = function () {
         const audios = document.querySelectorAll('audio');
         audios.forEach(audio => audio.pause());
     }
+
+    const show = document.getElementById('show');
+    const show1 = document.getElementById('show1');
+    const toMainTestButton = document.getElementById('toMainTestButton');
+    const finishButton = document.getElementById('finishButton');
+    
+    function toggleArrowVisibilityAndImage() {
+        const visible = toMainTestButton.style.display !== 'none' || finishButton.style.display !== 'none';
+    
+        // Alternar visibilidad de las flechas
+        toMainTestButton.style.display = visible ? 'none' : 'block';
+        finishButton.style.display = visible ? 'none' : 'block';
+    
+        // Cambiar imagen del botón
+        const newImage = visible ? "url('noeye.png')" : "url('eye.png')";
+        show.style.backgroundImage = newImage;
+        show1.style.backgroundImage = newImage;
+    }
+    
+    // Asignar a ambos botones
+    show.addEventListener('click', toggleArrowVisibilityAndImage);
+    show1.addEventListener('click', toggleArrowVisibilityAndImage);
+    
 };
