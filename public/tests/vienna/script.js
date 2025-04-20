@@ -155,8 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
             items: {
                 correcto: [{ x: 280, y: 105 }],
 
-
-                error_rotacion: [{ x: 220 , y: 105 }],
+                error_rotacion: [{ x: 222 , y: 105 }],
                 
                 error_actualizacion: [
                     { x: 280, y: 105 - 50 }, 
@@ -519,7 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.error_actualizacion.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 5) {
+            if (Math.sqrt(dx * dx + dy * dy) < 7) {
                 response.errorActualizacion = `(${item.x}, ${item.y})`;
             }
         });
@@ -527,7 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.error_rotacion.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 5) {
+            if (Math.sqrt(dx * dx + dy * dy) < 7) {
                 response.errorRotacion = `(${item.x}, ${item.y})`;
             }
         });
@@ -535,7 +534,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.correcto.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 5) {
+            if (Math.sqrt(dx * dx + dy * dy) < 7) {
                 response.precision = 2;
             }
         });
@@ -573,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.correcto.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 5) {
+                    if (Math.sqrt(dx * dx + dy * dy) < 7) {
                         isCorrect = true;
                         correctClicks++;
                     }
@@ -582,7 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.error_rotacion.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 5) {
+                    if (Math.sqrt(dx * dx + dy * dy) < 7) {
                         isRotationError = true;
                         rotationErrors++;
                     }
@@ -591,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.error_actualizacion.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 5) {
+                    if (Math.sqrt(dx * dx + dy * dy) < 7) {
                         isUpdateError = true;
                         updateErrors++;
                     }
@@ -662,20 +661,26 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     };
 
-    const generarTxt = (tiempoTotal, selectedHand, inicialesExaminador) => {
-        let txtContent = `Tiempo Total: ${tiempoTotal} segundos\n`;
-        txtContent += `Mano seleccionada: ${selectedHand}\n`;
-        txtContent += `Examinador: ${inicialesExaminador}\n`;
-
-        responses.forEach((response, index) => {
-            txtContent += `Ensayo ${index + 1}:\n`;
-            txtContent += `  - NoUpdErr: ${response.errorActualizacion}\n`;
-            txtContent += `  - NoRotErr: ${response.errorRotacion}\n`;
-            txtContent += `  - No0Ans: ${response.resp0puntos}\n`;
+    const generarTxt = (tiempoTotal, selectedHand) => {
+        // Contadores de errores
+        let totalNoUpdErr = 0;
+        let totalNoRotErr = 0;
+        let totalNo0Ans = 0;
+    
+        responses.forEach(response => {
+            if (response.errorActualizacion) totalNoUpdErr++;
+            if (response.errorRotacion) totalNoRotErr++;
+            if (response.resp0puntos === 1) totalNo0Ans++;
         });
-
-        return new Blob([txtContent], { type: 'text/plain;charset=utf-8;' });
+    
+        // Formato CSV con columnas
+        let txtContent = `Tiempo Total;Mano Seleccionada;NoUpdErr;NoRotErr;No0Ans\n`;
+        txtContent += `${tiempoTotal};${selectedHand};${totalNoUpdErr};${totalNoRotErr};${totalNo0Ans}\n`;
+        
+        return new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
     };
+    
+    
 
     let userInfo;
 
