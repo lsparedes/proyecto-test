@@ -168,7 +168,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const coords = getTouchPosRotated(canvas, e);
             const index = getCircleIndexAtPosition(coords.x, coords.y, coordinates);
 
-            // Registrar levantamiento del lápiz si venía del aire (aunque haya error)
             if (canvas === canvasPartA && liftStartTime !== null) {
                 liftCount++;
                 liftTotalTime += Date.now() - liftStartTime;
@@ -193,8 +192,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastY = coords.y;
             }
         });
-
-
 
         let errorIndices = [];
 
@@ -254,14 +251,14 @@ document.addEventListener('DOMContentLoaded', function () {
         canvas.addEventListener('touchend', () => {
             isDrawing = false;
             if (canvas === canvasPartA && liftStartTime === null) {
-                liftStartTime = Date.now(); // lápiz levantado
+                liftStartTime = Date.now();
             }
         });
 
         canvas.addEventListener('touchcancel', () => {
             isDrawing = false;
             if (canvas === canvasPartA && liftStartTime === null) {
-                liftStartTime = Date.now(); // lápiz levantado
+                liftStartTime = Date.now();
             }
         });
 
@@ -295,9 +292,19 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         mediaRecorder.start();
+
+        show1.style.backgroundImage = "url('imagenes/eye.png')";
+
+        if (typeof show1Timer !== 'undefined') {
+            clearTimeout(show1Timer);
+        }
+
+        show1Timer = setTimeout(() => {
+            show1.style.backgroundImage = "url('imagenes/eye-red.png')";
+            console.log("Ojo cambiado a rojo después de 1 minuto y 30 segundos.");
+        }, 90000);
+
     });
-
-
 
     const endSequenceButton = document.getElementById('endSequenceButton');
     const endSequenceButtonPartA = document.getElementById('endSequenceButtonPartA');
@@ -309,15 +316,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('partA').style.display = 'flex';
         document.getElementById('endSequenceButton').style.display = 'none';
 
-        // Pintar fondo blanco
         ctxPartA.fillStyle = "white";
         ctxPartA.fillRect(0, 0, canvasPartA.width, canvasPartA.height);
 
-        // Resetear estilos antes de dibujar los círculos
         ctxPartA.fillStyle = "black";
         ctxPartA.strokeStyle = "black";
 
-        // Redibujar los círculos
         drawCircles(ctxPartA, circleCoordinatesPartA);
     });
 
@@ -325,18 +329,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (mediaRecorder && mediaRecorder.state !== "inactive") {
             mediaRecorder.stop();
         }
-
         document.getElementById('partA').style.display = 'none';
         document.getElementById('preEnd').style.display = 'block';
         document.getElementById('endSequenceButtonPartA').style.display = 'none';
         execEndTime = Date.now();
     });
 
-
     function toggleArrowVisibility(button) {
         arrowVisible = !arrowVisible;
 
-        // Mostrar la flecha SOLO si estás en instrucciones (canvasPractice visible)
         const inPractice = document.getElementById('instructions').style.display !== 'none';
 
         endSequenceButton.style.display = (arrowVisible && inPractice) ? 'block' : 'none';
@@ -393,7 +394,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
         })
         .then(data => {
-            userInfo = data; // Asignar los datos al objeto global
+            userInfo = data;
             console.log("Usuario autenticado:", userInfo);
         })
         .catch(error => {
@@ -404,11 +405,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    // Obtener el id_participante de la URL
+
     const idParticipante = getQueryParam('id_participante');
 
     async function confirmHandSelection() {
-        
+
         const fechaActual = new Date();
         const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
         const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
@@ -417,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const zip = new JSZip();
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-        // 1. CSV
+
         const totTime = (execEndTime - testStartTime) / 1000;
         const execTime = execStartTime ? (execEndTime - execStartTime) / 1000 : 0;
         const liftTime = liftTotalTime / 1000;
@@ -425,31 +426,23 @@ document.addEventListener('DOMContentLoaded', function () {
             `${totTime.toFixed(2)};${execTime.toFixed(2)};${incorrectLinesPartA};${correctLinesPartA};${liftCount};${liftTime.toFixed(2)};${selectedHand}\n`;
         zip.file("2_TMT_Part_A.csv", csvContent);
 
-        // 2. Imagen PNG del canvas
-        // Crear una copia del canvas con fondo blanco
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = canvasPartA.width;
         tempCanvas.height = canvasPartA.height;
         const tempCtx = tempCanvas.getContext("2d");
 
-        // Fondo blanco
         tempCtx.fillStyle = "white";
         tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-        // Dibujar el contenido original encima
         tempCtx.drawImage(canvasPartA, 0, 0);
 
-        // Generar imagen PNG
         const imageDataUrl = tempCanvas.toDataURL("image/png");
         const imageBlob = await (await fetch(imageDataUrl)).blob();
         zip.file("2_TMT_Part_A_Canvas_Screenshot.png", imageBlob);
 
-
-        // 3. Video .webm
         const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
         zip.file("2_TMT_Part_A_Canvas_Recording.webm", videoBlob);
 
-        // 4. Generar y descargar ZIP
         const zipBlob = await zip.generateAsync({ type: "blob" });
         const zipUrl = URL.createObjectURL(zipBlob);
         const link = document.createElement("a");
@@ -459,7 +452,6 @@ document.addEventListener('DOMContentLoaded', function () {
         link.click();
         document.body.removeChild(link);
 
-        // Ocultar interfaz
         document.getElementById('preEnd').style.display = 'none';
         selectHandContainer.style.display = "none";
         handButton.style.display = "none";
@@ -468,6 +460,4 @@ document.addEventListener('DOMContentLoaded', function () {
             window.close();
         }, 3000);
     }
-
-
 });

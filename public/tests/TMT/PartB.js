@@ -71,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
             ctx.stroke();
             const label = index % 2 === 0
-                ? Math.floor(index / 2) + 1   // Números en posiciones pares
-                : String.fromCharCode(65 + Math.floor(index / 2)); // Letras en posiciones impares: 65 = 'A'
+                ? Math.floor(index / 2) + 1 
+                : String.fromCharCode(65 + Math.floor(index / 2));
             ctx.fillText(label, circle.x, circle.y);
 
         });
@@ -106,10 +106,9 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
         ctx.stroke();
         const label = index % 2 === 0
-            ? Math.floor(index / 2) + 1   // Números en posiciones pares
-            : String.fromCharCode(65 + Math.floor(index / 2)); // Letras en posiciones impares: 65 = 'A'
+            ? Math.floor(index / 2) + 1
+            : String.fromCharCode(65 + Math.floor(index / 2));
         ctx.fillText(label, circle.x, circle.y);
-
     }
 
     function drawCircleBold(ctx, circle, index) {
@@ -125,8 +124,8 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
         ctx.stroke();
         const label = index % 2 === 0
-            ? Math.floor(index / 2) + 1   // Números en posiciones pares
-            : String.fromCharCode(65 + Math.floor(index / 2)); // Letras en posiciones impares: 65 = 'A'
+            ? Math.floor(index / 2) + 1
+            : String.fromCharCode(65 + Math.floor(index / 2));
         ctx.fillText(label, circle.x, circle.y);
 
         ctx.lineWidth = 1;
@@ -147,8 +146,8 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
         ctx.fillStyle = 'red';
         const label = index % 2 === 0
-            ? Math.floor(index / 2) + 1   // Números en posiciones pares
-            : String.fromCharCode(65 + Math.floor(index / 2)); // Letras en posiciones impares: 65 = 'A'
+            ? Math.floor(index / 2) + 1 
+            : String.fromCharCode(65 + Math.floor(index / 2));
         ctx.fillText(label, circle.x, circle.y);
 
         ctx.lineWidth = 1;
@@ -184,7 +183,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const coords = getTouchPosRotated(canvas, e);
             const index = getCircleIndexAtPosition(coords.x, coords.y, coordinates);
 
-            // Registrar levantamiento del lápiz si venía del aire (aunque haya error)
             if (canvas === canvasPartB && liftStartTime !== null) {
                 liftCount++;
                 liftTotalTime += Date.now() - liftStartTime;
@@ -209,8 +207,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastY = coords.y;
             }
         });
-
-
 
         let errorIndices = [];
 
@@ -270,14 +266,14 @@ document.addEventListener('DOMContentLoaded', function () {
         canvas.addEventListener('touchend', () => {
             isDrawing = false;
             if (canvas === canvasPartB && liftStartTime === null) {
-                liftStartTime = Date.now(); // lápiz levantado
+                liftStartTime = Date.now();
             }
         });
 
         canvas.addEventListener('touchcancel', () => {
             isDrawing = false;
             if (canvas === canvasPartB && liftStartTime === null) {
-                liftStartTime = Date.now(); // lápiz levantado
+                liftStartTime = Date.now();
             }
         });
 
@@ -303,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function () {
         execStartTime = Date.now();
         console.log('ExecTime: On', new Date(execStartTime).toLocaleString());
 
-        const stream = canvasPartB.captureStream(30); // 30 FPS
+        const stream = canvasPartB.captureStream(30);
         mediaRecorder = new MediaRecorder(stream, { mimeType: "video/webm" });
 
         mediaRecorder.ondataavailable = function (e) {
@@ -311,9 +307,19 @@ document.addEventListener('DOMContentLoaded', function () {
         };
 
         mediaRecorder.start();
+
+        show1.style.backgroundImage = "url('imagenes/eye.png')";
+
+        if (typeof show1Timer !== 'undefined') {
+            clearTimeout(show1Timer);
+        }
+
+        show1Timer = setTimeout(() => {
+            show1.style.backgroundImage = "url('imagenes/eye-red.png')";
+            console.log("Ojo cambiado a rojo después de 3 minutos");
+        }, 180000);
+
     });
-
-
 
     const endSequenceButton = document.getElementById('endSequenceButton');
     const endSequenceButtonPartB = document.getElementById('endSequenceButtonPartB');
@@ -325,15 +331,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('partB2').style.display = 'flex';
         document.getElementById('endSequenceButton').style.display = 'none';
 
-        // Pintar fondo blanco
         ctxPartB.fillStyle = "white";
         ctxPartB.fillRect(0, 0, canvasPartB.width, canvasPartB.height);
 
-        // Resetear estilos antes de dibujar los círculos
         ctxPartB.fillStyle = "black";
         ctxPartB.strokeStyle = "black";
 
-        // Redibujar los círculos
         drawCircles(ctxPartB, circleCoordinatesPartB);
     });
 
@@ -352,7 +355,6 @@ document.addEventListener('DOMContentLoaded', function () {
     function toggleArrowVisibility(button) {
         arrowVisible = !arrowVisible;
 
-        // Mostrar la flecha SOLO si estás en instrucciones (canvasPractice visible)
         const inPractice = document.getElementById('partB').style.display !== 'none';
 
         endSequenceButton.style.display = (arrowVisible && inPractice) ? 'block' : 'none';
@@ -409,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return response.json();
         })
         .then(data => {
-            userInfo = data; // Asignar los datos al objeto global
+            userInfo = data;
             console.log("Usuario autenticado:", userInfo);
         })
         .catch(error => {
@@ -420,8 +422,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
         }
-        // Obtener el id_participante de la URL
-        const idParticipante = getQueryParam('id_participante');
+
+    const idParticipante = getQueryParam('id_participante');
 
     async function confirmHandSelection() {
 
@@ -433,7 +435,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const zip = new JSZip();
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-        // 1. CSV
+  
         const totTime = (execEndTime - testStartTime) / 1000;
         const execTime = execStartTime ? (execEndTime - execStartTime) / 1000 : 0;
         const liftTime = liftTotalTime / 1000;
@@ -441,31 +443,23 @@ document.addEventListener('DOMContentLoaded', function () {
             `${totTime.toFixed(2)};${execTime.toFixed(2)};${incorrectLinesPartB};${correctLinesPartB};${liftCount};${liftTime.toFixed(2)};${selectedHand}\n`;
             zip.file("2_TMT_Part_B.csv", csvContent);
 
-        // 2. Imagen PNG del canvas
-        // Crear una copia del canvas con fondo blanco
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = canvasPartB.width;
         tempCanvas.height = canvasPartB.height;
         const tempCtx = tempCanvas.getContext("2d");
 
-        // Fondo blanco
         tempCtx.fillStyle = "white";
         tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
 
-        // Dibujar el contenido original encima
         tempCtx.drawImage(canvasPartB, 0, 0);
 
-        // Generar imagen PNG
         const imageDataUrl = tempCanvas.toDataURL("image/png");
         const imageBlob = await (await fetch(imageDataUrl)).blob();
         zip.file("2_TMT_Part_B_Canvas_Screenshot.png", imageBlob);
 
-
-        // 3. Video .webm
         const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
         zip.file("2_TMT_Part_B_Canvas_Recording.webm", videoBlob);
 
-        // 4. Generar y descargar ZIP
         const zipBlob = await zip.generateAsync({ type: "blob" });
         const zipUrl = URL.createObjectURL(zipBlob);
         const link = document.createElement("a");
@@ -475,7 +469,6 @@ document.addEventListener('DOMContentLoaded', function () {
         link.click();
         document.body.removeChild(link);
 
-        // Ocultar interfaz
         document.getElementById('preEnd').style.display = 'none';
         selectHandContainer.style.display = "none";
         handButton.style.display = "none";

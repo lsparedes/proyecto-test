@@ -784,6 +784,4 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log("Ojo cambiado a rojo después de 5 minutos.");
         }, 300000); // 5 minutos en milisegundos
     });
-
-
 });
