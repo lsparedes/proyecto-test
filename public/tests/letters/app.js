@@ -534,9 +534,8 @@ function handleClick(e) {
     // Verifica que el evento provenga de un lápiz
     if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
 
-    const rect = imageCanvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (2105 / imageCanvas.width);
-    const y = (e.clientY - rect.top) * (1489 / imageCanvas.height);
+    const { x, y } = adjustClickCoordinates(e, imageCanvas, originalCanvasSize);
+
     clicks.push({ x, y });
     drawCircle(
         x * (imageCanvas.width / originalCanvasSize.width),
@@ -548,9 +547,8 @@ function handleClick(e) {
 function handleClickPractice(e) {
     if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
 
-    const rect = practiceCanvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (2105 / practiceCanvas.width);
-    const y = (e.clientY - rect.top) * (1489 / practiceCanvas.height);
+    const { x, y } = adjustClickCoordinates(e, practiceCanvas, originalCanvasSize);
+
     practiceClicks.push({ x, y });
     drawCirclePractice(
         x * (practiceCanvas.width / originalCanvasSize.width),
