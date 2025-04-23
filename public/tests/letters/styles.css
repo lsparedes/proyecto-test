@@ -18,7 +18,7 @@ body {
 
 canvas {
     border: 1px solid white;
-    max-width: 98%;
+    max-width: 100%;
     height: auto;
 }
 
@@ -94,7 +94,8 @@ p {
 #startButton,
 #next-button-practice,
 #test-button,
-#handButton {
+#handButton,
+#next-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
