@@ -461,6 +461,10 @@ function resizeCanvas(canvas, ctx, image, desktopPercentage = 95, tabletPercenta
 
     // Redibujar la imagen
     ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    canvas.style.width = `${canvas.width}px`;
+    canvas.style.height = `${canvas.height}px`;
+
 }
 
 
@@ -484,14 +488,14 @@ startButton.addEventListener('click', () => {
     document.getElementById('instructionAudio1').pause();
     instructionsScreenP.style.display = 'none';
     mainScreenP.style.display = 'block';
-    testButton.style.display = 'block'; 
+    testButton.style.display = 'block';
     totalStartTime = new Date(); // Registro del tiempo de inicio total
 });
 
 nextButtonP.addEventListener('click', () => {
     mainScreenP.style.display = 'none';
     instructionsScreen.style.display = 'flex';
-    nextButtonP.style.display = 'block'; 
+    nextButtonP.style.display = 'block';
 
 });
 
@@ -541,8 +545,8 @@ function handleClick(e) {
         x * (imageCanvas.width / originalCanvasSize.width),
         y * (imageCanvas.height / originalCanvasSize.height),
         'blue'
-      );
-      
+    );
+
 }
 function handleClickPractice(e) {
     if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
@@ -554,8 +558,8 @@ function handleClickPractice(e) {
         x * (practiceCanvas.width / originalCanvasSize.width),
         y * (practiceCanvas.height / originalCanvasSize.height),
         'blue'
-      );
-      
+    );
+
 }
 
 
@@ -682,32 +686,32 @@ function validateClicks() {
     });
     const centerX = sumX / correctClicks;
     const centerY = sumY / correctClicks;
-    
+
     let strategy = detectarEstrategia(promedio);
     console.log("Estrategia detectada:", strategy);
-    
+
     function detectarEstrategia(clicks) {
         if (clicks.length < 2) return "No suficiente información";
-    
+
         let xDiffs = [];
         let yDiffs = [];
-    
+
         for (let i = 1; i < clicks.length; i++) {
             xDiffs.push(clicks[i].x - clicks[i - 1].x);
             yDiffs.push(clicks[i].y - clicks[i - 1].y);
         }
-    
+
         const meanAbs = arr => arr.reduce((sum, val) => sum + Math.abs(val), 0) / arr.length;
         const meanSigned = arr => arr.reduce((sum, val) => sum + val, 0) / arr.length;
-    
+
         const meanX = meanAbs(xDiffs);
         const meanY = meanAbs(yDiffs);
         const signedX = meanSigned(xDiffs);
         const signedY = meanSigned(yDiffs);
-    
+
         // ¿La búsqueda es más horizontal o vertical?
         const isHorizontal = meanX > meanY;
-    
+
         // ¿Se cambia constantemente de dirección?
         const cambiosDeSigno = arr => {
             let cambios = 0;
@@ -716,10 +720,10 @@ function validateClicks() {
             }
             return cambios;
         };
-    
+
         const zigzagX = cambiosDeSigno(xDiffs) > xDiffs.length / 3;
         const zigzagY = cambiosDeSigno(yDiffs) > yDiffs.length / 3;
-    
+
         if (isHorizontal) {
             return zigzagX ? "B. Zigzag Horizontal (fila a fila alternando)" : "A. Horizontal (fila a fila izquierda a derecha)";
         } else {
@@ -748,19 +752,19 @@ function validateClicks() {
         }
     });
 
-    endTime = new Date(); 
+    endTime = new Date();
 
     const rawTestDuration = (endTime - startItemTime);
 
-    
+
     const testDuration = rawTestDuration.toFixed(3).replace('.', ','); // ← solo para mostrar/exportar
     let searchSpeed = (correctClicks / rawTestDuration) * 1000;
     const searchSpeedFormatted = searchSpeed.toLocaleString('es-CL', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
-      });
-      
-    
+    });
+
+
 
     const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
     const normalizedCenterY = (centerY - (1489 / 2)) / (1489 / 2);
@@ -874,7 +878,7 @@ function toggleArrowVisibilityAndImage() {
 
     // Alternar visibilidad de las flechas
     nextButton.style.display = visible ? 'none' : 'block';
-    
+
     // Cambiar imagen del botón
     const newImage = visible ? "url('noeye.png')" : "url('eye.png')";
     show.style.backgroundImage = newImage;
@@ -894,7 +898,7 @@ const handInputs = document.getElementsByName('hand');
 
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
-    
+
     handButton.addEventListener('click', function () {
         stopRecording();
         validateClicks();
