@@ -45,13 +45,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     showinstruction.addEventListener('click', () => {
-        if (instruccion.classList.contains('show')) {
-            instruccion.classList.remove('show');
+        const isVisible = finishIdentifyingFigureButton.style.display === 'block';
+    
+        if (isVisible) {
+            finishIdentifyingFigureButton.style.display = 'none';
             showinstruction.style.backgroundImage = "url('noeye.png')";
         } else {
-            instruccion.classList.add('show');
+            finishIdentifyingFigureButton.style.display = 'block';
             showinstruction.style.backgroundImage = "url('eye.png')";
         }
+        
     });
 
     finishIdentifyingFigureButton.addEventListener('click', () => {

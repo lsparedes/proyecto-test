@@ -176,17 +176,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        // canvas.addEventListener('mousedown', (e) => {
-        //     if (!startDrawingTime) {
-        //         startDrawingTime = new Date();
-        //         console.log("Comenzó a dibujar: ", startDrawingTime);
-        //         startCanvasRecording('memory-canvas');
-        //     }
-        //     x = e.offsetX;
-        //     y = e.offsetY;
-        //     drawing = true;
-        // });
-
         canvas.addEventListener('touchstart', (e) => {
             e.preventDefault();
             if (!startDrawingTime) {
@@ -199,17 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
             y = touchPos.y;
             drawing = true;
         });
-
-        // canvas.addEventListener('mousemove', (e) => {
-        //     if (drawing) {
-        //         ctx.beginPath();
-        //         ctx.moveTo(x, y);
-        //         ctx.lineTo(e.offsetX, e.offsetY);
-        //         ctx.stroke();
-        //         x = e.offsetX;
-        //         y = e.offsetY;
-        //     }
-        // });
 
         canvas.addEventListener('touchmove', (e) => {
             e.preventDefault();
