@@ -89,6 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
         mainScreen2.style.display = 'none';
         mainScreen3.style.display = 'block';
         recordingControls4.style.display = 'block';
+        const beep = new Audio('/audios/beep.wav');
+        beep.play();
     });
 
     startRecordingButton4.addEventListener('click', () => {

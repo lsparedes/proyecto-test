@@ -135,38 +135,15 @@ document.addEventListener('DOMContentLoaded', () => {
     audioBtn.addEventListener('click', () => {
         testAudio.play();
         audioBtn.style.display = 'none';
+    });
+
+    testAudio.addEventListener('ended', () => {
         RecordingBtn.style.display = 'inline-block';
         stopBtn.style.display = 'inline-block';
     });
 
     let cameraStream = null;
     let isCameraActive = false;
-
-
-    // camaraButton.addEventListener('click', () => {
-    //     if (!isCameraActive) {
-    //         // Encender la cámara
-    //         navigator.mediaDevices.getUserMedia({ video: true })
-    //             .then((stream) => {
-    //                 cameraStream = stream; 
-    //                 videoElement.srcObject = stream; 
-    //                 videoElement.style.transform = 'scaleX(-1)';
-    //                 videoElement.play(); 
-    //                 isCameraActive = true; 
-    //             })
-    //             .catch((error) => {
-    //                 console.error('Error al acceder a la cámara:', error);
-    //             });
-    //     } else {
-    //         // Apagar la cámara
-    //         if (cameraStream) {
-    //             cameraStream.getTracks().forEach(track => track.stop());
-    //             cameraStream = null; 
-    //             videoElement.srcObject = null; 
-    //         }
-    //         isCameraActive = false;
-    //     }
-    // });
 
     testAudio.addEventListener('timeupdate', () => {
         const timeRemaining = testAudio.duration - testAudio.currentTime;
@@ -179,29 +156,40 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function startRecording() {
-        if (cameraStream) {
-            cameraStream.getTracks().forEach(track => track.stop());
+        try {
+            // Asegúrate de cerrar la cámara anterior (si existe)
+            if (cameraStream) {
+                cameraStream.getTracks().forEach(track => track.stop());
+                cameraStream = null;
+            }
+    
+            // Intenta pedir un nuevo stream de cámara
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            cameraStream = stream; // Actualizar la nueva referencia
+            videoPreviewTest.srcObject = stream;
+    
+            mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = e => chunks.push(e.data);
+            mediaRecorder.start();
+    
+            RecordingBtn.disabled = false;
+            RecordingBtn.style.display = 'inline-block';
+            stopBtn.disabled = false;
+            stopBtn.style.display = 'inline-block';
+            nextBtn.disabled = false;
+            nextBtn.style.display = 'inline-block';
+            audioBtn.style.display = 'none';
+            testImage.classList.add('hidden');
+            testAudio.classList.add('hidden');
+            videoPreviewTest.classList.remove('hidden');
+            timerDisplay.classList.remove('hidden');
+            startTimer();
+        } catch (error) {
+            console.error('Error al iniciar grabación:', error);
+            alert('No se pudo iniciar la grabación. Verifica que la cámara esté disponible.');
         }
-
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        videoPreviewTest.srcObject = stream;
-
-        mediaRecorder = new MediaRecorder(stream);
-        mediaRecorder.ondataavailable = e => chunks.push(e.data);
-        mediaRecorder.start();
-        RecordingBtn.disabled = false;
-        RecordingBtn.style.display = 'inline-block';
-        stopBtn.disabled = false;
-        stopBtn.style.display = 'inline-block';
-        nextBtn.disabled = false;
-        nextBtn.style.display = 'inline-block';
-        audioBtn.style.display = 'none';
-        testImage.classList.add('hidden');
-        testAudio.classList.add('hidden');
-        videoPreviewTest.classList.remove('hidden');
-        timerDisplay.classList.remove('hidden');
-        startTimer();
     }
+    
 
     stopBtn.addEventListener('click', () => {
         stopAllAudios();
@@ -217,6 +205,8 @@ document.addEventListener('DOMContentLoaded', () => {
         proceedToNextImage(); // ← Luego avanzamos
         document.getElementById('FinishRecordingImage').style.display = 'none';
         audioBtn.style.display = 'inline-block';
+        stopBtn.style.display = 'none';
+        RecordingBtn.style.display = 'none';
     });
     
 

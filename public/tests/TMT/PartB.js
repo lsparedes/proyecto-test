@@ -70,13 +70,26 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.beginPath();
             ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
             ctx.stroke();
+    
             const label = index % 2 === 0
                 ? Math.floor(index / 2) + 1 
                 : String.fromCharCode(65 + Math.floor(index / 2));
             ctx.fillText(label, circle.x, circle.y);
+    
+            if (index === 0) {
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText("Empezar", circle.x, circle.y - 50);
+                ctx.font = '32px Arial'; 
+            }
 
+            if (index === coordinates.length - 1) {
+                ctx.font = 'bold 18px Arial';
+                ctx.fillText("Terminar", circle.x, circle.y + 50);
+                ctx.font = '32px Arial'; 
+            }
         });
     }
+    
 
     drawCircles(ctxPractice, circleCoordinates);
     drawCircles(ctxPartB, circleCoordinatesPartB);
@@ -308,16 +321,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         mediaRecorder.start();
 
-        show1.style.backgroundImage = "url('imagenes/eye.png')";
+        show1.style.backgroundImage = "url('imagenes/noeye.png')";
 
         if (typeof show1Timer !== 'undefined') {
             clearTimeout(show1Timer);
         }
 
         show1Timer = setTimeout(() => {
-            show1.style.backgroundImage = "url('imagenes/eye-red.png')";
+            show1.style.backgroundImage = "url('imagenes/noeye-red.png')";
             console.log("Ojo cambiado a rojo después de 3 minutos");
-        }, 180000);
+        }, 300000);
 
     });
 
@@ -338,6 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctxPartB.strokeStyle = "black";
 
         drawCircles(ctxPartB, circleCoordinatesPartB);
+        resetArrowAndButton();
     });
 
     endSequenceButtonPartB.addEventListener('click', () => {
@@ -348,18 +362,30 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('partB2').style.display = 'none';
         document.getElementById('preEnd').style.display = 'block';
         document.getElementById('endSequenceButtonPartB').style.display = 'none';
+        document.getElementById('show1').style.display = 'none';
+        document.getElementById('show').style.display = 'none';
         execEndTime = Date.now();
     });
+
+    function resetArrowAndButton() {
+        arrowVisible = false;
+    
+        endSequenceButton.style.display = 'none';
+        endSequenceButtonPartB.style.display = 'none';
+    
+        show.style.backgroundImage = "url('imagenes/noeye.png')";
+        show1.style.backgroundImage = "url('imagenes/noeye.png')";
+    }
 
 
     function toggleArrowVisibility(button) {
         arrowVisible = !arrowVisible;
-
+    
         const inPractice = document.getElementById('partB').style.display !== 'none';
-
+    
         endSequenceButton.style.display = (arrowVisible && inPractice) ? 'block' : 'none';
         endSequenceButtonPartB.style.display = (arrowVisible && !inPractice) ? 'block' : 'none';
-
+    
         button.style.backgroundImage = arrowVisible
             ? "url('imagenes/eye.png')"
             : "url('imagenes/noeye.png')";

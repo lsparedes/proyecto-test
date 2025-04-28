@@ -160,6 +160,9 @@ function endGame() {
     downloadRecordingAndTime();
 }
 
+const recButton1 = document.getElementById('recButton1');
+const stopRecordingButton1 = document.getElementById('stopRecordingButton1');
+
 function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
@@ -168,13 +171,6 @@ function loadAudio(part) {
     letterDisplay.textContent = 'S';
 
     audio.addEventListener('loadedmetadata', () => {
-        const duration = audio.duration;
-
-        setTimeout(() => {
-            startRecording(part);
-        }, (duration - 2) * 1000);
-
-        // Mostrar letra durante los últimos 3 segundos
         const interval = setInterval(() => {
             const timeRemaining = (audio.duration - audio.currentTime) / audio.playbackRate;
             if (timeRemaining <= 3 && timeRemaining > 0) {
@@ -182,13 +178,24 @@ function loadAudio(part) {
             }
         }, 100);
 
-        // Al terminar el audio
         audio.addEventListener('ended', () => {
             clearInterval(interval);
             letterDisplay.style.display = 'none';
-            document.getElementById('nextButton' + part).style.display = 'inline-block';
+            recButton1.style.display = 'block';
+            stopRecordingButton1.style.display = 'block';
+            startRecording(part);
+        
+            const nextButton = document.getElementById('nextButton' + part);
+            nextButton.style.display = 'inline-block';
+        
             const beep = new Audio('beep.wav');
             beep.play();
+        
+            
+            setTimeout(() => {
+                nextButton.style.backgroundImage = "url('flecha4.png')";
+                nextButton.style.backgroundSize = "cover"; 
+            }, 60000); 
         });
     });
 }

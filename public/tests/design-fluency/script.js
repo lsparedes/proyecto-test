@@ -129,7 +129,7 @@ window.onload = function () {
         }
     });
 
-    document.getElementById('finishButton').style.display = 'block';
+
 
     document.getElementById('endTestButton').addEventListener('click', function () {
         stopAllAudios();
@@ -302,13 +302,25 @@ window.onload = function () {
     });
 
     function reiniciarTemporizador() {
-        clearTimeout(temporizador);
-        temporizador = setTimeout(arrowToRed, 60000); // Cambia después de 60 segundos
+        if (temporizador) {
+            clearTimeout(temporizador);
+        }
+        temporizador = setTimeout(() => {
+            cambiarImagenes();
+            temporizador = null; 
+        }, 60000); 
     }
-
-    function arrowToRed() {
-        const arrow = document.getElementById('finishButton');
-        arrow.style.backgroundImage = "url('flecha4.png')";
+    
+    
+    function cambiarImagenes() {
+        const finishButton = document.getElementById('finishButton');
+        const show1 = document.getElementById('show1');
+    
+        // Cambiar imagen de flecha
+        finishButton.style.backgroundImage = "url('flecha4.png')";
+    
+        // Cambiar imagen del ojo a rojo
+        show1.style.backgroundImage = "url('noeye-red.png')";
     }
 
     let userInfo;
@@ -469,20 +481,15 @@ window.onload = function () {
     const finishButton = document.getElementById('finishButton');
     
     function toggleArrowVisibilityAndImage() {
-        const visible = toMainTestButton.style.display !== 'none' || finishButton.style.display !== 'none';
+        const visible = finishButton.style.display !== 'none';
     
-        // Alternar visibilidad de las flechas
-        toMainTestButton.style.display = visible ? 'none' : 'block';
         finishButton.style.display = visible ? 'none' : 'block';
     
-        // Cambiar imagen del botón
         const newImage = visible ? "url('noeye.png')" : "url('eye.png')";
-        show.style.backgroundImage = newImage;
         show1.style.backgroundImage = newImage;
     }
     
-    // Asignar a ambos botones
-    show.addEventListener('click', toggleArrowVisibilityAndImage);
+
     show1.addEventListener('click', toggleArrowVisibilityAndImage);
     
 };

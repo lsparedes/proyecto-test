@@ -149,6 +149,9 @@ function endGame() {
     downloadRecordingAndTime();
 }
 
+const recButton2 = document.getElementById('recButton2');
+const stopRecordingButton2 = document.getElementById('stopRecordingButton2');
+
 function loadAudio(part) {
     const audio = document.getElementById('instructionAudio' + part);
     const letterDisplay = document.getElementById('letterDisplay' + part);
@@ -161,16 +164,6 @@ function loadAudio(part) {
     }
 
     audio.addEventListener('loadedmetadata', () => {
-        // Calcular duración del audio
-        const duration = audio.duration;
-
-        // Iniciar la grabación 2 segundos antes de que termine el audio
-        setTimeout(() => {
-            startRecording(part);
-        }, (duration - 2) * 1000);
-
-
-        
         const interval = setInterval(() => {
             const timeRemaining = (audio.duration - audio.currentTime) / audio.playbackRate;
             if (timeRemaining <= 3 && timeRemaining > 0) {
@@ -181,13 +174,24 @@ function loadAudio(part) {
         audio.addEventListener('ended', () => {
             clearInterval(interval);
             letterDisplay.style.display = 'none';
-            document.getElementById('nextButton' + part).style.display = 'inline-block';
+            recButton2.style.display = 'block';
+            stopRecordingButton2.style.display = 'block';
+            startRecording(part);
+        
+            const nextButton = document.getElementById('nextButton' + part);
+            nextButton.style.display = 'inline-block';
+        
             const beep = new Audio('beep.wav');
             beep.play();
+        
+            
+            setTimeout(() => {
+                nextButton.style.backgroundImage = "url('flecha4.png')";
+                nextButton.style.backgroundSize = "cover"; 
+            }, 60000); 
         });
     });
 }
-
 
 function showRecordingCreatedMessage(part) {
     const messageElement = document.getElementById('recordingCreatedMessage' + part);
