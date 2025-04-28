@@ -495,7 +495,7 @@ startButton.addEventListener('click', () => {
 nextButtonP.addEventListener('click', () => {
     mainScreenP.style.display = 'none';
     instructionsScreen.style.display = 'flex';
-    nextButtonP.style.display = 'block';
+    nextButtonP.style.display = 'none';
 
 });
 
@@ -503,7 +503,6 @@ testButton.addEventListener('click', () => {
     document.getElementById('instructionAudio2').pause();
     instructionsScreen.style.display = 'none';
     mainScreen.style.display = 'block';
-    nextButton.style.display = 'block';  // Asegura que el botón 'next' esté visible
     startRecording();
     startItemTime = new Date();
 });
