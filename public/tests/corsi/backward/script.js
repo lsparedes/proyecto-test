@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleBlockClick(event) {
         if (sequenceDisplaying) return;
-    
+
         const index = parseInt(event.target.dataset.index);
         if (playerSequence.length < sequence.length) {
             if (playerSequence.length == 0 && !isPractice) {
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.target.classList.add('selected');
         }
     }
-    
+
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
@@ -160,7 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         sequenceDisplaying = true;
         displaySequence(0);
-        startSequenceButton.style.visibility = 'hidden';
+        if (!isPractice || sequenceCount > 1) {
+            startSequenceButton.style.visibility = 'hidden';
+        }
+
     }
 
     function createSequence(currentSequences) {
@@ -298,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
                 testData.push(exerciseData);
             }
-            checkSequence(); 
+            checkSequence();
         } else if (sequenceDisplaying) {
             sequenceDisplaying = false;
             continueTest = false;
@@ -370,7 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
         timer = setInterval(updateTimer, 10); // Actualizar cada 10 ms
         console.log("Inicia conteo de RT...");
     }
-    
+
 
     function stopTimer() {
         clearInterval(timer);
