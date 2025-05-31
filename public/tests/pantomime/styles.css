@@ -75,7 +75,12 @@ button:not(:disabled):active {
 }
 
 #FinishRecordingImage{
-    
+    position: absolute;
+    bottom: 14%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
 }
 
 #next-btn,

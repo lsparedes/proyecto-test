@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainScreen3 = document.getElementById('main-screen2-1');
     const FinishRecordingImage = document.getElementById('FinishRecordingImage');
 
+    const beep = new Audio('audios/beep.wav');
+    beep.load(); // Pre-carga el beep
+
     let recordingInterval;
     let recordingSeconds = 0;
     let startTime = new Date();
@@ -51,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
             clearInterval(recordingInterval);
             startRecordingButton4.disabled = false;
             stopRecordingButton4.disabled = true;
-            
         }
     }
 
@@ -73,13 +75,13 @@ document.addEventListener('DOMContentLoaded', () => {
         startRecording('HVLT-R Ensayo 2.wav', false); // false para que no se reproduzca el beep
         startFinishTimer();
     });
-    
+
     audio1_ej2.addEventListener('play', () => {
         const remainingTime = audio1_ej2.duration - audio1_ej2.currentTime;
         if (remainingTime > 2) {
             setTimeout(() => {
                 startRecording('HVLT-R Ensayo 2.wav');
-            }, (remainingTime - 2) * 1000); 
+            }, (remainingTime - 2) * 1000);
         } else {
             startRecording('HVLT-R Ensayo 2.wav');
         }
@@ -89,8 +91,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mainScreen2.style.display = 'none';
         mainScreen3.style.display = 'block';
         recordingControls4.style.display = 'block';
-        const beep = new Audio('/audios/beep.wav');
-        beep.play();
+
+        beep.play().then(() => {
+            startRecording('HVLT-R Ensayo 2.wav');
+        }).catch((error) => {
+            console.error("Error al reproducir el beep:", error);
+            startRecording('HVLT-R Ensayo 2.wav'); // continuar de todas formas
+        });
+
     });
 
     startRecordingButton4.addEventListener('click', () => {
@@ -110,43 +118,38 @@ document.addEventListener('DOMContentLoaded', () => {
         generateZip();
     });
 
-    async function startRecording(fileName, playBeep = true) {
+    async function startRecording(fileName) {
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    
-        if (playBeep) {
-            const audio = new Audio('audios/beep.wav');
-            audio.crossOrigin = "anonymous";
-            audio.play();
-        }
-    
+
+
         audioContext = new AudioContext();
         destination = audioContext.createMediaStreamDestination();
-    
+
         const micSource = audioContext.createMediaStreamSource(micStream);
         micSource.connect(destination);
-    
+
         combinedStream = destination.stream;
-    
+
         audioChunks = [];
         mediaRecorder = new MediaRecorder(combinedStream);
         mediaRecorder.ondataavailable = event => {
             audioChunks.push(event.data);
         };
-    
+
         mediaRecorder.start();
         mediaRecorder.addEventListener('stop', () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/mpeg' });
             audioFiles.push({ blob: audioBlob, fileName: fileName });
         });
-    
+
         recordingInterval = setInterval(() => {
             recordingSeconds++;
         }, 1000);
-    
+
         startRecordingButton4.disabled = true;
         stopRecordingButton4.disabled = false;
     }
-    
+
 
     function stopRecording() {
         clearInterval(recordingInterval);
@@ -158,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         stopRecordingButton4.disabled = true;
         DownloadButton.style.display = 'block';
     }
-    
+
     function formatTime(seconds) {
         const hours = Math.floor(seconds / 3600);
         const minutes = Math.floor((seconds % 3600) / 60);
@@ -170,25 +173,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     const idParticipante = getQueryParam('id_participante');
 
     let userInfo;
 
     fetch('/api/user-info')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al obtener la información del usuario');
-        }
-        return response.json();
-    })
-    .then(data => {
-        userInfo = data; // Asignar los datos al objeto global
-        console.log("Usuario autenticado:", userInfo);
-    })
-    .catch(error => {
-        console.error('Error al obtener la información del usuario:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
 
     function saveToCSV() {
         // Asegurarse de que userInfo esté disponible para obtener las iniciales
@@ -196,25 +199,25 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error: userInfo no está definido correctamente.");
             return; // Salir si userInfo no está disponible
         }
-    
+
         // Obtener las iniciales del participante
         const inicialesParticipante = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-    
+
         // Configurar las opciones de formato de fecha
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
         const startTimeFormatted = new Date(startTime).toLocaleString('en-US', options);
         const finishTimeFormatted = new Date(finishTime).toLocaleString('en-US', options);
-    
+
         // Calcular el tiempo total en segundos
         const timeSpent = (finishTime - startTime) / 1000;
-        const timeSpentFormatted = timeSpent.toFixed(3).replace('.', ','); 
-    
+        const timeSpentFormatted = timeSpent.toFixed(3).replace('.', ',');
+
         // Crear el contenido del archivo CSV con las iniciales del participante
         const csvContent = `TotTime;Iniciales\n${timeSpentFormatted};${inicialesParticipante}`;
-    
+
         return csvContent;
     }
-    
+
 
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
