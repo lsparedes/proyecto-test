@@ -105,19 +105,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleBlockClick(event) {
-        if (sequenceDisplaying) return;
+    if (sequenceDisplaying) return;
 
-        const index = parseInt(event.target.dataset.index);
-        if (playerSequence.length < sequence.length) {
-            if (playerSequence.length == 0 && !isPractice) {
-                stopTimer();
-                console.log(`RT registrado: ${milliseconds} ms (${(milliseconds)} s)`);
-            }
-            resetBlocks();
-            playerSequence.push(index);
-            event.target.classList.add('selected');
-        }
+    const index = parseInt(event.target.dataset.index);
+
+    
+    if (playerSequence.length === 0 && !isPractice) {
+        stopTimer();
+        console.log(`RT registrado: ${milliseconds} ms (${(milliseconds)} s)`);
     }
+
+    // Opcional: comenta la siguiente línea si quieres que se vean múltiples seleccionados
+    resetBlocks();
+
+    playerSequence.push(index);
+    event.target.classList.add('selected');
+}
 
     function startTest() {
         playerSequence = [];
@@ -214,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 endPractice();
             }
         } else {
-            if (errorCount === 2 || sequenceCount === fixedSequences.length) {
+            if (errorCount === 3 || sequenceCount === fixedSequences.length) {
                 game.style.display = 'none';
                 showHandSelection();
             } else {

@@ -201,8 +201,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 liftTotalTime += Date.now() - liftStartTime;
                 liftStartTime = null;
             }
-
-            if (hasError && index === currentCircleIndex - 1) {
+                if (hasError &&(
+                    (currentCircleIndex === 0 && index === 0) ||                 
+                    (currentCircleIndex > 0 && index === currentCircleIndex - 1) 
+                )){
                 errorIndices.forEach((errIndex) => {
                     drawCircleNormal(ctx, coordinates[errIndex], errIndex);
                 });
@@ -212,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastX = coords.x;
                 lastY = coords.y;
                 return;
-            }
+                }
 
             if (!hasError) {
                 isDrawing = true;

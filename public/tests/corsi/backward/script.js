@@ -111,15 +111,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sequenceDisplaying) return;
 
         const index = parseInt(event.target.dataset.index);
-        if (playerSequence.length < sequence.length) {
-            if (playerSequence.length == 0 && !isPractice) {
-                stopTimer();
-                console.log(`RT registrado: ${milliseconds} ms (${(milliseconds)} s)`);
-            }
-            resetBlocks(); // Desmarcar todos los bloques antes de marcar el actual
-            playerSequence.push(index);
-            event.target.classList.add('selected');
+
+        if (playerSequence.length === 0 && !isPractice) {
+        stopTimer();
+        console.log(`RT registrado: ${milliseconds} ms (${(milliseconds)} s)`);
         }
+
+        resetBlocks();
+
+        playerSequence.push(index);
+        event.target.classList.add('selected');
+
     }
 
     function getQueryParam(param) {
@@ -225,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 endPractice();
             }
         } else {
-            if (errorCount === 2 || sequenceCount === fixedSequences.length) {
+            if (errorCount === 3 || sequenceCount === fixedSequences.length) {
                 game.style.display = 'none';
                 showHandSelection();
             } else {
