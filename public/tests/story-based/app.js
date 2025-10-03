@@ -28,7 +28,7 @@ const imagenes = [
         options: [
             { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.2.jpg", letter: 'a' },
             { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.3.jpg", letter: 'b' },
-            { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.4.jpg", letter: 'c ' },
+            { src: "imagenes/1-SET.IA/2/1_SET-IA_item2.4.jpg", letter: 'c' },
         ],
         correct: 'b'
     },
@@ -366,76 +366,95 @@ document.getElementById('showMainButton').addEventListener('click', function () 
 
 
 let respuestaSeleccionada = false; // Variable para verificar si se seleccionó una respuesta
-
+let seleccionActual = null;
 let respuestasSeleccionadas = []; // Array para almacenar las respuestas seleccionadas
 
 function verificarRespuesta(selectedOptionIndex) {
     const itemActual = imagenes[indiceActual];
-    const correctOptionIndex = itemActual.options.findIndex(option => option.letter === itemActual.correct);
-    const letraSeleccionada = itemActual.options[selectedOptionIndex].letter;
-    const letraCorrecta = itemActual.options[correctOptionIndex].letter;
 
+    // calcular tiempos
     const tiempoTranscurrido = Date.now() - tiempoInicio;
 
-    // Ignorar la respuesta si el texto distintivo es "P1"
-    if (itemActual.textoDistintivo !== "P1" && !respuestaSeleccionada) {
-        respuestasSeleccionadas.push({
+    // normalizar letras
+    const letraCorrecta = String(itemActual.correct).trim().toLowerCase();
+    const letraSeleccionada = String(itemActual.options[selectedOptionIndex].letter).trim().toLowerCase();
+
+    // Marcar visualmente
+    document.querySelectorAll('.option').forEach((opt, i) => {
+        opt.classList.toggle('selected', i === selectedOptionIndex);
+    });
+
+    // No guardamos todavía al arreglo definitivo.
+    // Solo actualizamos la “selección actual”. Saltamos la práctica P1.
+    if (itemActual.textoDistintivo !== "P1") {
+        seleccionActual = {
             item: itemActual.textoDistintivo,
             opcionSeleccionada: letraSeleccionada,
             respuestaCorrecta: letraCorrecta,
             tiempo: tiempoTranscurrido
-        });
-
+        };
         respuestaSeleccionada = true;
+    } else {
+        // En práctica, no persistimos nada
+        seleccionActual = null;
+        respuestaSeleccionada = false;
     }
-
-    document.querySelectorAll('.option').forEach(option => {
-        option.classList.remove('selected');
-    });
-    document.querySelectorAll('.option')[selectedOptionIndex].classList.add('selected');
 }
 
-function cambiarImagen(selectedOptionIndex) {
+
+function cambiarImagen() {
     if (indiceActual >= imagenes.length) {
         console.error("Índice fuera de rango:", indiceActual);
         return;
     }
 
-    if (respuestaSeleccionada || selectedOptionIndex === undefined) {
-        if (selectedOptionIndex === undefined) {
-            // Solo agregar respuesta omitida si no se ha registrado una respuesta
-            if (!respuestaSeleccionada) {
-                respuestasSeleccionadas.push({
-                    item: imagenes[indiceActual].textoDistintivo,
-                    opcionSeleccionada: '',
-                    respuestaCorrecta: imagenes[indiceActual].correct,
-                    tiempo: Date.now() - tiempoInicio
-                });
-            }
-        }
-
-        respuestaSeleccionada = false; // Reiniciar la variable para el siguiente ítem
-        indiceActual++;
-        respuestaSeleccionada = false;
-        if (practice) {
-            practice = false;
-            mostrarInstrucciones();
-            return;
-        }
-        if (indiceActual === imagenes.length) {
-            const imageContainer = document.getElementById('imageContainer');
-            imageContainer.style.display = 'none';
-            document.getElementById('continueButton').style.display = 'none';
-            const previousImageText = document.querySelector('.imageText');
-            if (previousImageText) {
-                previousImageText.remove();
-            }
-            showHandSelection();
+    // Antes de avanzar, consolidamos la respuesta del ítem actual:
+    const itemActual = imagenes[indiceActual];
+    if (itemActual.textoDistintivo !== "P1") {
+        if (respuestaSeleccionada && seleccionActual) {
+            // Guardar la última selección (la visible) como definitiva
+            respuestasSeleccionadas.push({ ...seleccionActual });
         } else {
-            mostrarImagen(indiceActual);
+            // Sin selección -> respuesta omitida
+            const tiempoOmitida = Date.now() - tiempoInicio;
+            respuestasSeleccionadas.push({
+                item: itemActual.textoDistintivo,
+                opcionSeleccionada: '',
+                respuestaCorrecta: String(itemActual.correct).trim().toLowerCase(),
+                tiempo: null
+            });
         }
     }
+
+    // Reset para el siguiente ítem
+    respuestaSeleccionada = false;
+    seleccionActual = null;
+
+    // Avanzar de ítem
+    indiceActual++;
+
+    // Si veníamos de la práctica, mostramos instrucciones y salimos
+    if (practice) {
+        practice = false;
+        mostrarInstrucciones();
+        return;
+    }
+
+    // Fin del test
+    if (indiceActual === imagenes.length) {
+        const imageContainer = document.getElementById('imageContainer');
+        imageContainer.style.display = 'none';
+        document.getElementById('continueButton').style.display = 'none';
+        const previousImageText = document.querySelector('.imageText');
+        if (previousImageText) previousImageText.remove();
+        showHandSelection();
+        return;
+    }
+
+    // Siguiente ítem
+    mostrarImagen(indiceActual);
 }
+
 
 let userInfo;
 
@@ -484,14 +503,23 @@ function generarArchivoCSV() {
         respuesta.opcionSeleccionada === respuesta.respuestaCorrecta
     ).length;
 
-    respuestasSeleccionadas.forEach(respuesta => {
-        const tiempoConComa = (respuesta.tiempo).toFixed(3).replace('.', ',');
-        const precision = respuesta.opcionSeleccionada === respuesta.respuestaCorrecta ? 1 : 0;
+respuestasSeleccionadas.forEach(respuesta => {
+    const huboResp = String(respuesta.opcionSeleccionada || '').trim() !== '';
 
-        // Agregar las iniciales del examinador en cada fila
-        csvContent += `${respuesta.item};${respuesta.respuestaCorrecta};${respuesta.opcionSeleccionada};${precision};${tiempoConComa};${inicialesExaminador}\n`;
-    });
+    const rt = (huboResp && typeof respuesta.tiempo === 'number')
+      ? (respuesta.tiempo / 1000).toFixed(3).replace('.', ',')
+      : '';
 
+    let acc = '';
+    if (huboResp) {
+      acc = (
+        String(respuesta.opcionSeleccionada).trim().toLowerCase() ===
+        String(respuesta.respuestaCorrecta).trim().toLowerCase()
+      ) ? 1 : 0;
+    }
+
+    csvContent += `${respuesta.item};${respuesta.respuestaCorrecta};${respuesta.opcionSeleccionada};${acc};${rt};${inicialesExaminador}\n`;
+});
     const csvBlob = new Blob([csvContent], { type: 'text/csv' });
 
     const totalTime = totalTestTime / 1000;

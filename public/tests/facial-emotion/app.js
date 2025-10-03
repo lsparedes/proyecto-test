@@ -259,7 +259,7 @@ function mostrarFinalizacion() {
     // document.getElementById('fullscreenButton').style.display = 'none';
 
     tiempoFin = new Date(); // Guardar el tiempo de fin al finalizar la tarea
-    const tiempoTranscurrido = (tiempoFin - tiempoInicio) / 1000; 
+    const tiempoTranscurrido = (tiempoFin - tiempoInicio) / 1000;
 
     console.log(`Tarea finalizada. Tiempo transcurrido: ${tiempoTranscurrido} segundos.`);
 
@@ -348,14 +348,16 @@ fetch('/api/user-info')
         console.error('Error al obtener la información del usuario:', error);
     });
 
+function norm(s) {
+  return (s ?? '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
 function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
-    // Verificar si userInfo está disponible
     if (!userInfo || !userInfo.name || !userInfo.last_name) {
         console.error("Error: userInfo no está definido correctamente.");
-        return; // Salir si userInfo no está disponible
+        return;
     }
 
-    // Obtener las iniciales del examinador
     const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
     const fechaActual = new Date();
@@ -364,35 +366,34 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
 
-    const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT', 'Examinador']]; // Agregar columna Examinador
-    
-
+    const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT', 'Examinador']];
 
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;
-        const emocionCorrecta = img.emocionCorrecta;
-        const emocionSeleccionada = emocionesSeleccionadas[index];
-        const response = tiemposRespuesta[index] ? (tiemposRespuesta[index]).toFixed(3).replace('.', ',') : '';
-        const precision = emocionSeleccionada === emocionCorrecta ? 1 : 0;
+        const emocionCorrecta = img.emocionCorrecta; // puede venir con o sin tilde según tu arreglo
+        const seleccion = (emocionesSeleccionadas[index] ?? ''); // <-- vacío si no respondió
+        const response = tiemposRespuesta[index] ? (tiemposRespuesta[index] / 1000).toFixed(3).replace('.', ',') : '';
 
-        // Agregar las iniciales del examinador a cada fila
-        csvData.push([numeroImagen, emocionCorrecta, emocionSeleccionada, precision, response, inicialesExaminador]);
+        // Acc: vacío si no hubo respuesta; 1/0 si sí hubo respuesta
+        let acc = '';
+        if (seleccion !== '') {
+            acc = (norm(seleccion) === norm(emocionCorrecta)) ? 1 : 0;
+        }
+
+        csvData.push([numeroImagen, emocionCorrecta, seleccion, acc, response, inicialesExaminador]);
     });
 
     const csvContent = csvData.map(row => row.join(';')).join('\n');
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
-    // Generar el archivo de métricas (TotTime y Hand)
-    const totalTime = tiempoTranscurrido.toFixed(3).replace('.', ',')
+    const totalTime = (tiempoTranscurrido).toFixed(3).replace('.', ',');
     const txtContent = [['TotTime', 'Hand'], [totalTime, selectedHand]].map(row => row.join(';')).join('\n');
     const txtBlob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
 
-    // Crear el archivo ZIP y agregar los archivos CSV
     const zip = new JSZip();
     zip.file(`${idParticipante}_12_Facial_Emotion_${fechaFormateada}.csv`, csvBlob);
     zip.file(`${idParticipante}_12_Facial_Emotion_Unival_${fechaFormateada}.csv`, txtBlob);
 
-    // Generar y descargar el archivo ZIP
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const link = document.createElement('a');
@@ -405,15 +406,12 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                setTimeout(() => {
-                    window.close();
-                }, 3000);
+                setTimeout(() => { window.close(); }, 3000);
             }
         })
-        .catch(err => {
-            console.error("Error generando el archivo ZIP:", err);
-        });
+        .catch(err => console.error("Error generando el archivo ZIP:", err));
 }
+
 
 
 function reiniciarTemporizador() {

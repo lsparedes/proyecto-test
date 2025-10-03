@@ -497,14 +497,14 @@ function mostrarImagen(indice) {
     // Crear un preloader para la imagen principal
     const preloader = new Image();
     preloader.onload = function () {
-        // Asignar la nueva imagen y mostrarla
         storyImage.src = preloader.src;
 
-        // Iniciar todas las transiciones de opacidad simultáneamente
+        startTimeE = new Date();
+
         setTimeout(() => {
             storyImage.style.opacity = '1';
             agregarTextoYOpciones(imagenInfo);
-        }, 0); // Sincronizar el tiempo según sea necesario
+        }, 0);
     };
     preloader.src = imagenInfo.src; // Iniciar la carga de la imagen
 }
@@ -513,94 +513,92 @@ function agregarTextoYOpciones(imagenInfo) {
     const storyImage = document.getElementById('storyImage');
     const optionsContainer = document.getElementById('optionsContainer');
 
-    // Agregar el texto distintivo
+    // Texto distintivo
     const imageText = document.createElement('div');
     imageText.classList.add('imageText');
     imageText.textContent = imagenInfo.textoDistintivo;
-
-    // Mostrar el texto distintivo con una transición suave de opacidad
     imageText.style.opacity = '0';
-    document.body.appendChild(imageText); // Añadir el texto distintivo al body
+    document.body.appendChild(imageText);
 
-    // Mostrar las opciones
     imagenInfo.options.forEach((option, index) => {
         const optionImg = document.createElement('img');
         optionImg.src = option.src;
         optionImg.alt = `Opción ${index + 1}`;
         optionImg.classList.add('option');
-        optionImg.setAttribute('data-correct', option.correct);
+        optionImg.dataset.correct = option.correct ? '1' : '0';
+        optionImg.dataset.item = option.item ?? '';     
+        optionImg.dataset.index = String(index);         
         optionImg.addEventListener('click', verificarRespuesta);
         optionsContainer.appendChild(optionImg);
-
-        // Inicialmente ocultar cada opción
         optionImg.style.opacity = '0';
     });
 
-    // Iniciar las transiciones de opacidad simultáneamente
     setTimeout(() => {
         imageText.style.opacity = '1';
-        const options = optionsContainer.querySelectorAll('.option');
-        options.forEach(option => {
-            option.style.opacity = '1';
-        });
-    }, 0); // Ajusta el tiempo según sea necesario
+        optionsContainer.querySelectorAll('.option').forEach(o => o.style.opacity = '1');
+    }, 0);
 }
+
 
 
 function verificarRespuesta(event) {
     event.stopPropagation();
-
     const optionImg = event.target;
-    const esCorrecta = optionImg.getAttribute('data-correct') === 'true';
 
-    // Deseleccionar todas las opciones previamente seleccionadas
-    const opciones = document.querySelectorAll('.option');
-    opciones.forEach(opcion => opcion.classList.remove('selected'));
-
-    // Marcar la opción actual como seleccionada
+    // Limpia selección anterior y marca la actual
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
     optionImg.classList.add('selected');
 
+    const imgActual = imagenes[indiceActual];
+    const correcta = imgActual.options.find(o => o.correct);
+
+    // Calcular RT en segundos con 3 decimales
+    endTimeE = new Date();
+    const rtMs = endTimeE - startTimeE;
+    const rtStr = (rtMs / 1000).toFixed(3).replace('.', ',');
+
+    // Guardar respuesta con RT
     respuesta = {
-        textoDistintivo: imagenes[indiceActual].textoDistintivo,
-        imagen: imagenes[indiceActual].item,
-        respuestaCorrecta: imagenes[indiceActual].options.find(option => option.correct).item,
-        respuestaSeleccion: imagenes[indiceActual].options.find(option => option.src === "imagenes" + optionImg.src.split('imagenes')[1]).item,
-        esCorrecta: esCorrecta,
+        textoDistintivo: imgActual.textoDistintivo,
+        imagen: imgActual.item ?? '',
+        respuestaCorrecta: (correcta?.item ?? '').toString().trim(),
+        respuestaSeleccion: (optionImg.dataset.item ?? '').toString().trim(),
+        esCorrecta: optionImg.dataset.correct === '1',
+        tiempoDedicado: rtStr
     };
 
     respuestaSeleccionada = true;
 }
 
+
+
 // Al hacer clic en "Next", avanzar a la siguiente imagen
 nextButton.addEventListener('click', function () {
-    if (respuestaSeleccionada) {
-        endTimeE = new Date();
-        respuesta['tiempoDedicado'] = (endTimeE - startTimeE);
+    if (respuestaSeleccionada && respuesta) {
         respuestasSeleccionadas.push(respuesta);
-        startTimeE = new Date();
-        cambiarImagen();
     } else {
-        endTimeE = new Date();
-        respuesta = {
-            textoDistintivo: imagenes[indiceActual].textoDistintivo,
-            imagen: imagenes[indiceActual].item,
-            respuestaCorrecta: imagenes[indiceActual].options.find(option => option.correct).item,
+        // Respuesta omitida
+        const imgActual = imagenes[indiceActual];
+        const correcta = imgActual.options.find(o => o.correct);
+        respuestasSeleccionadas.push({
+            textoDistintivo: imgActual.textoDistintivo,
+            imagen: imgActual.item ?? '',
+            respuestaCorrecta: (correcta?.item ?? '').toString().trim(),
             respuestaSeleccion: "",
             esCorrecta: 0,
-        };
-        respuesta['tiempoDedicado'] = (endTimeE - startTimeE);
-        respuestasSeleccionadas.push(respuesta);
-        startTimeE = new Date();
-        cambiarImagen();
+            tiempoDedicado: "" // vacío porque nunca hizo clic
+        });
     }
-    
+
+    // Reset para el próximo ítem
+    respuestaSeleccionada = false;
+    respuesta = {};
+    startTimeE = new Date(); // reinicio cuando se muestre la próxima
+
+    cambiarImagen();
 });
 
-// Agregar evento click a todas las opciones
-const opciones = document.querySelectorAll('.option');
-opciones.forEach(opcion => {
-    opcion.addEventListener('click', verificarRespuesta);
-});
+
 
 function cambiarImagen() {
     // if (!respuestaSeleccionada) {
@@ -697,30 +695,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function generateCSV(results) {
-    if (!userInfo || !userInfo.name || !userInfo.last_name) {
-        console.error("Error: userInfo no está definido correctamente.");
-        return {
-            content: "",
-            filename: ""
-        };
-    }
+    const initials = (userInfo && userInfo.name && userInfo.last_name)
+        ? (userInfo.name[0] + userInfo.last_name[0]).toUpperCase()
+        : 'NA';
 
-    // Crear el encabezado del CSV
     let csvContent = "Trial;Item;CorrResp;PartResp;Acc;RT;Examinador\n";
 
-    // Obtener las iniciales del examinador
-    const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-
-    // Recorrer las respuestas seleccionadas
-    results.forEach(respuesta => {
-        if (respuesta.textoDistintivo !== 'P1' && respuesta.textoDistintivo !== 'P2' && respuesta.textoDistintivo !== 'P3') {
-            // Construir una línea del CSV con los datos de la respuesta
-            const tiempoDedicadoFormatted = respuesta.tiempoDedicado.toFixed(3).replace('.', ',');
-
-            const lineaCSV = `${respuesta.textoDistintivo};${respuesta.imagen};${respuesta.respuestaCorrecta};${respuesta.respuestaSeleccion};${respuesta.esCorrecta ? 1 : 0};${respuesta.tiempoDedicado};${initials}\n`;
-
-            // Agregar la línea al contenido del CSV
-            csvContent += lineaCSV;
+    results.forEach(r => {
+        if (r.textoDistintivo !== 'P1' && r.textoDistintivo !== 'P2' && r.textoDistintivo !== 'P3') {
+            const acc = r.esCorrecta ? 1 : 0;
+            csvContent += `${r.textoDistintivo};${r.imagen};${r.respuestaCorrecta};${r.respuestaSeleccion};${acc};${r.tiempoDedicado};${initials}\n`;
         }
     });
 
@@ -729,6 +713,7 @@ function generateCSV(results) {
         filename: `${idParticipante}_7_mCCT_${getCurrentDate()}.csv`
     };
 }
+
 
 
 function generateTxt(startTimeTotal, selectedHand) {

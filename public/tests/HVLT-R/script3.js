@@ -48,26 +48,31 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         mainScreen.style.display = 'none';
         audioContainer.style.display = 'block';
-        
+
     });
 
-    audioItems.forEach((audioItem, index) => {
+    audioItems.forEach((audioItem) => {
         const audioElement = audioItem.querySelector('audio');
+        const idx = parseInt(audioElement.dataset.audio || audioElement.getAttribute('data-audio') || audioElement.dataset.index || audioElement.getAttribute('data-index'), 10);
+
+        const audioIndex = Number.isFinite(idx) ? idx : ([...audioItems].indexOf(audioItem) + 1);
+
         audioElement.addEventListener('ended', () => {
-            audioEndTimes[index + 1] = new Date(); // Registrar el tiempo exacto al terminar
-            console.log(`Audio ${index + 1} terminó en: ${audioEndTimes[index + 1]}`);
+            audioEndTimes[audioIndex] = new Date();
+            console.log(`Audio ${audioIndex} terminó en: ${audioEndTimes[audioIndex]}`);
         });
     });
 
+
     NXButton.addEventListener('click', () => {
         pauseAudios();
-        
+
         // Ocultar el audio actual
         audioItems[currentAudioIndex].style.display = 'none';
-        
+
         // Avanzar al siguiente audio
         currentAudioIndex++;
-        
+
         // Si hay un siguiente audio, mostrarlo
         if (currentAudioIndex < audioItems.length) {
             audioItems[currentAudioIndex].style.display = 'block';
@@ -90,31 +95,30 @@ document.addEventListener('DOMContentLoaded', () => {
             DownloadButton.style.display = 'block';
         });
     });
-    
+
     DownloadButton.addEventListener('click', () => {
         downloadZip();
     });
 
-  
+
 
     document.querySelectorAll('.option-btn').forEach(button => {
         button.addEventListener('click', (e) => {
-            const audioIndex = parseInt(e.target.getAttribute('data-audio'));
-            const answer = e.target.getAttribute('data-answer');
-            const responseTime = new Date(); // Momento en que se hace clic
+            const btn = e.currentTarget;
+            const audioIndex = parseInt(btn.dataset.audio, 10);
+            const answer = btn.dataset.answer;
+            const responseTime = new Date();
 
-            // Calcular RT si existe el tiempo de finalización del audio
-            let RT = audioEndTimes[audioIndex]
-                ? (responseTime - audioEndTimes[audioIndex])
-                : null;
+            let RT = '';
+            if (audioEndTimes[audioIndex] instanceof Date) {
+                const diffMs = responseTime - audioEndTimes[audioIndex];
+                if (diffMs >= 0) {
+                    RT = (diffMs / 1000).toFixed(3).replace('.', ',');
+                }
+            }
 
-            // Guardar la respuesta y RT
-            answers[audioIndex] = {
-                answer: answer,
-                RT: RT
-            };
-
-            console.log(`Audio ${audioIndex}, Respuesta: ${answer}, RT: ${RT} segundos`);
+            answers[audioIndex] = { answer, RT };
+            console.log(`Audio ${audioIndex}, Respuesta: ${answer ?? ''}, RT: ${RT === '' ? 'null' : RT} segundos`);
         });
     });
 
@@ -122,26 +126,26 @@ document.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);
     }
-    
+
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
     let userInfo;
 
     fetch('/api/user-info')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al obtener la información del usuario');
-        }
-        return response.json();
-    })
-    .then(data => {
-        userInfo = data; // Asignar los datos al objeto global
-        console.log("Usuario autenticado:", userInfo);
-    })
-    .catch(error => {
-        console.error('Error al obtener la información del usuario:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error al obtener la información del usuario');
+            }
+            return response.json();
+        })
+        .then(data => {
+            userInfo = data; // Asignar los datos al objeto global
+            console.log("Usuario autenticado:", userInfo);
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
 
 
     function createCSV() {
@@ -149,53 +153,54 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Error: userInfo no está definido correctamente.");
             return;
         }
-    
+
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
         const total = Object.keys(correctAnswers).length;
-    
+
         let mainCsvContent = 'Trial;Word;CorrResp;PartResp;RT;Acc\n';
+
         for (let i = 1; i <= total; i++) {
             const word = words[i];
-            const correctAnswer = correctAnswers[i];
-            const participantAnswer = answers[i]?.answer || '';
-    
-            let RT = '';
-            if (answers[i]?.RT !== undefined && answers[i]?.RT !== null) {
-                RT = answers[i].RT.toFixed(3).replace('.', ','); 
+            const correctAnswer = (correctAnswers[i] || '').toString().trim();     // 'si' | 'no'
+            const participantAnswer = (answers[i]?.answer || '').toString().trim(); // '' | 'si' | 'no'
+
+            // RT: ya lo guardamos como string "x,xxx" arriba; si no está, dejar vacío
+            const RT = (answers[i]?.RT ?? '');
+
+            // Acc: vacío si no hubo respuesta; si hubo, 1/0
+            let Acc = '';
+            if (participantAnswer !== '') {
+                Acc = (participantAnswer === correctAnswer) ? 1 : 0;
             }
-    
-            const isCorrect = correctAnswer === participantAnswer ? 1 : 0;
-            mainCsvContent += `${i};${word};${correctAnswer};${participantAnswer};${RT};${isCorrect}\n`;
+
+            mainCsvContent += `${i};${word};${correctAnswer};${participantAnswer};${RT};${Acc}\n`;
         }
-    
+
         let selectedHandElement = document.querySelector('input[name="hand"]:checked');
         let selectedHand = selectedHandElement ? selectedHandElement.value : 'No seleccionado';
-    
+
         const endTime = new Date();
         const timeSpentInSeconds = (endTime - startTime) / 1000;
         const timeSpentFormatted = timeSpentInSeconds.toFixed(3).replace('.', ',');
-    
+
         let additionalCsvContent = 'Hand;TotTime;Iniciales Examinador\n';
         additionalCsvContent += `${selectedHand};${timeSpentFormatted};${inicialesExaminador}\n`;
-    
+
         return { mainCsvContent, additionalCsvContent };
     }
     
-    
-
-
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
-    
+
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
             console.error('JSZip is not loaded.');
             return;
         }
-    
+
         const zip = new JSZip();
-        
+
         const { mainCsvContent, additionalCsvContent } = createCSV();
         // Agregar los archivos CSV al ZIP
         zip.file("1_HVLT-R_Reconocimiento.csv", mainCsvContent);
@@ -203,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // // Agregar el archivo CSV al zip
         // const csvContent = createCSV();
         // zip.file('HVLT-R_Reconocimiento_.csv', csvContent);
-    
+
         // Generar y descargar el zip
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
@@ -216,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 window.close();
             }, 3000);
- 
+
         });
 
     }

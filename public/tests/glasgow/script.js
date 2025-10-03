@@ -126,11 +126,12 @@ function nextImage() {
         responses.push({
             imageIndex: currentImageIndex,
             imageSrc: images[currentImageIndex].src,
-            isSame: 'N/A',
+            isSame: images[currentImageIndex].isSame, // mejor guarda el valor real
             response: '',
-            responseTime: (new Date() - startTime)
+            responseTime: null // <- sin tiempo
         });
     }
+
 
     document.getElementById('same-button').classList.remove('selected');
     document.getElementById('different-button').classList.remove('selected');
@@ -227,26 +228,40 @@ fetch('/api/user-info')
 
 
 function generateCSV(results) {
-    // Asegurarse de que userInfo esté disponible
     if (!userInfo || !userInfo.name || !userInfo.last_name) {
         console.error("Error: userInfo no está definido correctamente.");
-        return; // Salir si userInfo no está disponible
+        return;
     }
 
-    // Obtener las iniciales del examinador
     const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
-    const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT', 'Examinador']]; // Agregar columna Examinador
-    results.forEach((response) => {
-        const numeroImagen = response.imageIndex + 1;
-        const rutaImagen = response.imageSrc;
-        const esIgual = response.isSame ? 'Misma' : 'Diferentes';
-        const respuestaUsuario = response.response === '' ? '' : (response.response === 'same' ? 'Misma' : 'Diferentes');
-        const precision = response.isSame === (response.response === 'same') ? 1 : 0;
-        const tiempoRespuesta = (response.responseTime).toFixed(3).replace('.', ',');
+    const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT', 'Examinador']];
 
-        // Agregar las iniciales del examinador a cada fila
-        csvData.push([numeroImagen, esIgual, respuestaUsuario, precision, tiempoRespuesta, inicialesExaminador]);
+    results.forEach((r) => {
+        // Trial: usa el número del arreglo original
+        const trial = (images[r.imageIndex]?.numero) || (r.imageIndex + 1);
+
+        const corrResp = (r.isSame === true) ? 'Misma'
+            : (r.isSame === false) ? 'Diferentes'
+                : '';
+
+        const huboRespuesta = r.response === 'same' || r.response === 'different';
+
+        // PartResp
+        const partResp = huboRespuesta ? (r.response === 'same' ? 'Misma' : 'Diferentes') : '';
+
+        // Acc: vacío si no hubo respuesta; si hubo, 1/0
+        let acc = '';
+        if (huboRespuesta && (r.isSame === true || r.isSame === false)) {
+            acc = (r.isSame === (r.response === 'same')) ? 1 : 0;
+        }
+
+        // RT: vacío si no hubo respuesta; si hubo, a segundos con 3 decimales (coma)
+        const rt = (huboRespuesta && typeof r.responseTime === 'number')
+            ? (r.responseTime / 1000).toFixed(3).replace('.', ',')
+            : '';
+
+        csvData.push([trial, corrResp, partResp, acc, rt, inicialesExaminador]);
     });
 
     const csvContent = csvData.map(row => row.join(';')).join('\n');
@@ -255,6 +270,7 @@ function generateCSV(results) {
         filename: `${idParticipante}_14_GFMT2_Low_${getCurrentDate()}.csv`
     };
 }
+
 
 function generateCSV2(startTimeTotal, selectedHand) {
     // Obtener las iniciales del examinador
