@@ -526,8 +526,8 @@ function agregarTextoYOpciones(imagenInfo) {
         optionImg.alt = `Opción ${index + 1}`;
         optionImg.classList.add('option');
         optionImg.dataset.correct = option.correct ? '1' : '0';
-        optionImg.dataset.item = option.item ?? '';     
-        optionImg.dataset.index = String(index);         
+        optionImg.dataset.item = option.item ?? '';
+        optionImg.dataset.index = String(index);
         optionImg.addEventListener('click', verificarRespuesta);
         optionsContainer.appendChild(optionImg);
         optionImg.style.opacity = '0';
@@ -569,8 +569,6 @@ function verificarRespuesta(event) {
 
     respuestaSeleccionada = true;
 }
-
-
 
 // Al hacer clic en "Next", avanzar a la siguiente imagen
 nextButton.addEventListener('click', function () {
@@ -703,8 +701,16 @@ function generateCSV(results) {
 
     results.forEach(r => {
         if (r.textoDistintivo !== 'P1' && r.textoDistintivo !== 'P2' && r.textoDistintivo !== 'P3') {
-            const acc = r.esCorrecta ? 1 : 0;
-            csvContent += `${r.textoDistintivo};${r.imagen};${r.respuestaCorrecta};${r.respuestaSeleccion};${acc};${r.tiempoDedicado};${initials}\n`;
+            const huboResp = (r.respuestaSeleccion ?? '').toString().trim() !== '';
+
+            let acc = '';
+            if (huboResp) {
+                acc = (r.esCorrecta ? 1 : 0);
+            }
+
+            const rt = r.tiempoDedicado ?? '';
+
+            csvContent += `${r.textoDistintivo};${r.imagen};${r.respuestaCorrecta};${r.respuestaSeleccion};${acc};${rt};${initials}\n`;
         }
     });
 
@@ -713,6 +719,7 @@ function generateCSV(results) {
         filename: `${idParticipante}_7_mCCT_${getCurrentDate()}.csv`
     };
 }
+
 
 
 
