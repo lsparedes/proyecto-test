@@ -53,13 +53,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     audioItems.forEach((audioItem) => {
         const audioElement = audioItem.querySelector('audio');
-        const idx = parseInt(audioElement.dataset.audio || audioElement.getAttribute('data-audio') || audioElement.dataset.index || audioElement.getAttribute('data-index'), 10);
+        const idx = parseInt(
+            audioElement.dataset.audio ||
+            audioElement.getAttribute('data-audio') ||
+            audioElement.dataset.index ||
+            audioElement.getAttribute('data-index'),
+            10
+        );
 
-        const audioIndex = Number.isFinite(idx) ? idx : ([...audioItems].indexOf(audioItem) + 1);
+        const audioIndex = Number.isFinite(idx)
+            ? idx
+            : ([...audioItems].indexOf(audioItem) + 1);
 
         audioElement.addEventListener('ended', () => {
             audioEndTimes[audioIndex] = new Date();
             console.log(`Audio ${audioIndex} terminó en: ${audioEndTimes[audioIndex]}`);
+
+            // 🔹 HABILITAR BOTONES SOLO PARA ESTE AUDIO
+            document
+                .querySelectorAll(`.option-btn[data-audio="${audioIndex}"]`)
+                .forEach(btn => {
+                    btn.disabled = false;
+                    btn.classList.remove('disabled');
+                });
         });
     });
 
@@ -67,26 +83,33 @@ document.addEventListener('DOMContentLoaded', () => {
     NXButton.addEventListener('click', () => {
         pauseAudios();
 
+        // 🔹 DESHABILITAR BOTONES DEL AUDIO ACTUAL
+        const currentIndexForButtons = currentAudioIndex + 1; // Ojo: depende de cómo numeraste data-audio
+        document
+            .querySelectorAll(`.option-btn[data-audio="${currentIndexForButtons}"]`)
+            .forEach(btn => {
+                btn.disabled = true;
+                btn.classList.add('disabled');
+            });
+
         // Ocultar el audio actual
         audioItems[currentAudioIndex].style.display = 'none';
 
         // Avanzar al siguiente audio
         currentAudioIndex++;
 
-        // Si hay un siguiente audio, mostrarlo
         if (currentAudioIndex < audioItems.length) {
             audioItems[currentAudioIndex].style.display = 'block';
         } else {
-            // Si no hay más audios, mostrar la pantalla final
             audioContainer.style.display = 'none';
             selectHand.style.display = 'inline-block';
             finishScreen.style.display = 'block';
-            // DownloadButton.style.display = 'block';
 
             finishTime = new Date();
             console.log(`${finishTime}`);
         }
     });
+
 
     const handInputs = document.getElementsByName('hand');
 
@@ -102,25 +125,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    document.querySelectorAll('.option-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const btn = e.currentTarget;
-            const audioIndex = parseInt(btn.dataset.audio, 10);
-            const answer = btn.dataset.answer;
-            const responseTime = new Date();
+const optionButtons = document.querySelectorAll('.option-btn');
 
-            let RT = '';
-            if (audioEndTimes[audioIndex] instanceof Date) {
-                const diffMs = responseTime - audioEndTimes[audioIndex];
-                if (diffMs >= 0) {
-                    RT = (diffMs / 1000).toFixed(3).replace('.', ',');
-                }
+optionButtons.forEach(button => {
+    // 🔹 DESHABILITAR TODOS AL INICIO
+    button.disabled = true;
+    button.classList.add('disabled'); // por si quieres estilarlos en CSS (cursor: not-allowed, etc.)
+
+    button.addEventListener('click', (e) => {
+        // Si por alguna razón siguen deshabilitados, no hacer nada
+        if (button.disabled) return;
+
+        const btn = e.currentTarget;
+        const audioIndex = parseInt(btn.dataset.audio, 10);
+        const answer = btn.dataset.answer;
+        const responseTime = new Date();
+
+        let RT = '';
+        if (audioEndTimes[audioIndex] instanceof Date) {
+            const diffMs = responseTime - audioEndTimes[audioIndex];
+            if (diffMs >= 0) {
+                RT = (diffMs / 1000).toFixed(3).replace('.', ',');
             }
+        }
 
-            answers[audioIndex] = { answer, RT };
-            console.log(`Audio ${audioIndex}, Respuesta: ${answer ?? ''}, RT: ${RT === '' ? 'null' : RT} segundos`);
+        answers[audioIndex] = { answer, RT };
+        console.log(`Audio ${audioIndex}, Respuesta: ${answer ?? ''}, RT: ${RT === '' ? 'null' : RT} segundos`);
+
+        // 🔹 OPCIONAL: si quieres que solo cuente el primer clic, deshabilita después de responder:
+        document.querySelectorAll(`.option-btn[data-audio="${audioIndex}"]`).forEach(b => {
+            b.disabled = true;
+            b.classList.add('disabled');
         });
     });
+});
+
 
     function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);

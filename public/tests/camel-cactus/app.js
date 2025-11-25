@@ -539,7 +539,7 @@ function agregarTextoYOpciones(imagenInfo) {
     }, 0);
 }
 
-
+let respuestaPorTrial = {}; // índice → datos (RT, opción clickeada, etc.)
 
 function verificarRespuesta(event) {
     event.stopPropagation();
@@ -557,8 +557,8 @@ function verificarRespuesta(event) {
     const rtMs = endTimeE - startTimeE;
     const rtStr = (rtMs / 1000).toFixed(3).replace('.', ',');
 
-    // Guardar respuesta con RT
-    respuesta = {
+    // Guardar los datos de este ensayo por índice
+    respuestaPorTrial[indiceActual] = {
         textoDistintivo: imgActual.textoDistintivo,
         imagen: imgActual.item ?? '',
         respuestaCorrecta: (correcta?.item ?? '').toString().trim(),
@@ -567,48 +567,61 @@ function verificarRespuesta(event) {
         tiempoDedicado: rtStr
     };
 
-    respuestaSeleccionada = true;
+    respuestaSeleccionada = true; // si quieres mantener esta bandera
 }
 
-// Al hacer clic en "Next", avanzar a la siguiente imagen
 nextButton.addEventListener('click', function () {
-    if (respuestaSeleccionada && respuesta) {
-        respuestasSeleccionadas.push(respuesta);
+    const imgActual = imagenes[indiceActual];
+    const correcta = imgActual.options.find(o => o.correct);
+
+    // Buscar opción seleccionada en el DOM
+    const selectedOption = document.querySelector('.option.selected');
+
+    let registro;
+
+    if (selectedOption && respuestaPorTrial[indiceActual]) {
+        // Hubo respuesta válida y ya calculamos RT en verificarRespuesta
+        const r = respuestaPorTrial[indiceActual];
+
+        registro = {
+            textoDistintivo: r.textoDistintivo,
+            imagen: r.imagen,
+            respuestaCorrecta: r.respuestaCorrecta,
+            respuestaSeleccion: r.respuestaSeleccion,
+            esCorrecta: r.esCorrecta,
+            tiempoDedicado: r.tiempoDedicado
+        };
     } else {
-        // Respuesta omitida
-        const imgActual = imagenes[indiceActual];
-        const correcta = imgActual.options.find(o => o.correct);
-        respuestasSeleccionadas.push({
+        // Ensayo omitido
+        registro = {
             textoDistintivo: imgActual.textoDistintivo,
             imagen: imgActual.item ?? '',
             respuestaCorrecta: (correcta?.item ?? '').toString().trim(),
             respuestaSeleccion: "",
             esCorrecta: 0,
             tiempoDedicado: "" // vacío porque nunca hizo clic
-        });
+        };
     }
+
+    // Guardar explicitamente en la posición del ensayo
+    respuestasSeleccionadas[indiceActual] = registro;
 
     // Reset para el próximo ítem
     respuestaSeleccionada = false;
     respuesta = {};
-    startTimeE = new Date(); // reinicio cuando se muestre la próxima
+    delete respuestaPorTrial[indiceActual]; // opcional, por limpieza
 
     cambiarImagen();
 });
 
-
-
 function cambiarImagen() {
-    // if (!respuestaSeleccionada) {
-    //     return; // Si no se ha seleccionado una respuesta, no cambiar de imagen
-    // }
-
     indiceActual++;
-    respuestaSeleccionada = false; // Restablecer la bandera de respuesta seleccionada
+    respuestaSeleccionada = false;
+
     if (indiceActual === imagenes.length) {
         const imageContainer = document.getElementById('imageContainer');
         imageContainer.style.display = 'none';
-        document.getElementById('nextButton').style.display = 'none'; // Ocultar el botón "Next"
+        document.getElementById('nextButton').style.display = 'none';
         const previousImageText = document.querySelector('.imageText');
         if (previousImageText) {
             previousImageText.remove();
@@ -618,6 +631,7 @@ function cambiarImagen() {
         mostrarImagen(indiceActual);
     }
 }
+
 
 document.getElementById('startButton').addEventListener('click', iniciarPresentacion);
 
@@ -699,11 +713,13 @@ function generateCSV(results) {
 
     let csvContent = "Trial;Item;CorrResp;PartResp;Acc;RT;Examinador\n";
 
-    results.forEach(r => {
-        if (r.textoDistintivo !== 'P1' && r.textoDistintivo !== 'P2' && r.textoDistintivo !== 'P3') {
-            const huboResp = (r.respuestaSeleccion ?? '').toString().trim() !== '';
+    let contExportadas = 0;
 
+    results.forEach(r => {
+        if (r && r.textoDistintivo !== 'P1' && r.textoDistintivo !== 'P2' && r.textoDistintivo !== 'P3') {
+            const huboResp = (r.respuestaSeleccion ?? '').toString().trim() !== '';
             let acc = '';
+
             if (huboResp) {
                 acc = (r.esCorrecta ? 1 : 0);
             }
@@ -711,17 +727,18 @@ function generateCSV(results) {
             const rt = r.tiempoDedicado ?? '';
 
             csvContent += `${r.textoDistintivo};${r.imagen};${r.respuestaCorrecta};${r.respuestaSeleccion};${acc};${rt};${initials}\n`;
+            contExportadas++;
         }
     });
+
+    console.log(`Respuestas totales registradas: ${results.length}`);
+    console.log(`Respuestas exportadas (sin P1-P3): ${contExportadas}`);
 
     return {
         content: csvContent,
         filename: `${idParticipante}_7_mCCT_${getCurrentDate()}.csv`
     };
 }
-
-
-
 
 function generateTxt(startTimeTotal, selectedHand) {
     const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
