@@ -289,12 +289,38 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadResults(); // Automatically download results
     }
 
-    function generatePracticeTrials() {
-        const practiceTrials = [];
-        const totalTrials = cantidad_ensayos_prueba;
-        let leftRewardChance, rightRewardChance;
+function generatePracticeTrials() {
+    const totalTrials = cantidad_ensayos_prueba;
+    let leftRewardChance, rightRewardChance;
+
+    // Igual que antes: práctica copia el patrón del bloque 1
+    if (caseOption === 'A') {
+        leftRewardChance = 0.25;
+        rightRewardChance = 0.75;
+    } else {
+        leftRewardChance = 0.75;
+        rightRewardChance = 0.25;
+    }
+
+    const practiceTrials = buildDeterministicTrials(
+        totalTrials,
+        leftRewardChance,
+        rightRewardChance,
+        caseOption,
+        caseImage
+    );
+
+    return practiceTrials;
+}
+
     
-        // Asigna las probabilidades igual que en el bloque 1 (fase de práctica)
+
+  function generateTestTrials(block) {
+    let blockTrialsCount;
+    let leftRewardChance, rightRewardChance;
+
+    if (block === 1) {
+        blockTrialsCount = cantidad_ensayos_bloque_1;
         if (caseOption === 'A') {
             leftRewardChance = 0.25;
             rightRewardChance = 0.75;
@@ -302,81 +328,93 @@ document.addEventListener('DOMContentLoaded', () => {
             leftRewardChance = 0.75;
             rightRewardChance = 0.25;
         }
-    
-        for (let i = 0; i < totalTrials; i++) {
-            const randomValue = Math.random();
-            let leftReward = randomValue < leftRewardChance;
-            let rightReward = !leftReward;
-    
-            practiceTrials.push({
-                trialNumber: i + 1,
-                leftReward: leftReward,
-                rightReward: rightReward,
-                leftRewardChance: leftRewardChance,
-                rightRewardChance: rightRewardChance,
-                caseOption: caseOption,
-                caseImage: caseImage
-            });
-        }
-    
-        return practiceTrials;
-    }
-    
-
-    function generateTestTrials(block) {
-        const testTrials = [];
-        let blockTrialsCount;
-        let leftRewardChance, rightRewardChance;
-
-        if (block === 1) {
-            blockTrialsCount = cantidad_ensayos_bloque_1;
-            if (caseOption === 'A') {
-                leftRewardChance = 0.25;
-                rightRewardChance = 0.75;
-            } else {
-                leftRewardChance = 0.75;
-                rightRewardChance = 0.25;
-            }
-        } else if (block === 2) {
-            blockTrialsCount = cantidad_ensayos_bloque_2;
-            if (caseOption === 'A') {
-                leftRewardChance = 0.75;
-                rightRewardChance = 0.25;
-            } else {
-                leftRewardChance = 0.25;
-                rightRewardChance = 0.75;
-            }
-        } else if (block === 3) {
-            blockTrialsCount = cantidad_ensayos_bloque_3;
-            if (caseOption === 'A') {
-                leftRewardChance = 0.25;
-                rightRewardChance = 0.75;
-            } else {
-                leftRewardChance = 0.75;
-                rightRewardChance = 0.25;
-            }
+    } else if (block === 2) {
+        blockTrialsCount = cantidad_ensayos_bloque_2;
+        // OJO: aquí invertimos
+        if (caseOption === 'A') {
+            leftRewardChance = 0.75;
+            rightRewardChance = 0.25;
         } else {
-            return [];
+            leftRewardChance = 0.25;
+            rightRewardChance = 0.75;
         }
-
-        for (let trial = 1; trial <= blockTrialsCount; trial++) {
-            const randomValue = Math.random();
-            let leftReward = randomValue < leftRewardChance;
-            let rightReward = !leftReward;
-
-            testTrials.push({
-                trialNumber: trial,
-                leftReward: leftReward,
-                rightReward: rightReward,
-                leftRewardChance: leftRewardChance,
-                rightRewardChance: rightRewardChance,
-                caseOption: caseOption,
-                caseImage: caseImage
-            });
+    } else if (block === 3) {
+        blockTrialsCount = cantidad_ensayos_bloque_3;
+        // Volvemos a la configuración del bloque 1
+        if (caseOption === 'A') {
+            leftRewardChance = 0.25;
+            rightRewardChance = 0.75;
+        } else {
+            leftRewardChance = 0.75;
+            rightRewardChance = 0.25;
         }
-
-        return testTrials;
+    } else {
+        return [];
     }
+
+    const testTrials = buildDeterministicTrials(
+        blockTrialsCount,
+        leftRewardChance,
+        rightRewardChance,
+        caseOption,
+        caseImage
+    );
+
+    return testTrials;
+}
+
+
+    function buildDeterministicTrials(numTrials, leftRewardChance, rightRewardChance, caseOption, caseImage) {
+    const trials = [];
+
+    // Como left + right = 1, basta controlar uno de los dos
+    const leftWins = Math.round(numTrials * leftRewardChance);
+    const rightWins = numTrials - leftWins; // El resto son wins de la derecha
+
+    // 1) Crear ensayos con recompensa en la izquierda
+    for (let i = 0; i < leftWins; i++) {
+        trials.push({
+            trialNumber: 0, // lo rellenamos luego
+            leftReward: true,
+            rightReward: false,
+            leftRewardChance: leftRewardChance,
+            rightRewardChance: rightRewardChance,
+            caseOption: caseOption,
+            caseImage: caseImage
+        });
+    }
+
+    // 2) Crear ensayos con recompensa en la derecha
+    for (let i = 0; i < rightWins; i++) {
+        trials.push({
+            trialNumber: 0,
+            leftReward: false,
+            rightReward: true,
+            leftRewardChance: leftRewardChance,
+            rightRewardChance: rightRewardChance,
+            caseOption: caseOption,
+            caseImage: caseImage
+        });
+    }
+
+    // 3) Barajar (Fisher–Yates)
+    for (let i = trials.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [trials[i], trials[j]] = [trials[j], trials[i]];
+    }
+
+    // 4) Asignar número de ensayo ordenado
+    trials.forEach((t, idx) => {
+        t.trialNumber = idx + 1;
+    });
+
+    // 5) (Opcional) Log para verificar
+    const totalLeftWins = trials.filter(t => t.leftReward).length;
+    const totalRightWins = trials.filter(t => t.rightReward).length;
+    console.log(`Trials generados -> LeftWins: ${totalLeftWins}, RightWins: ${totalRightWins}`);
+
+    return trials;
+}
 
 
     function resetSlotMachines() {
