@@ -1074,8 +1074,6 @@ function showHandSelection() {
     });
 
 }
-
-
 confirmReviewButton.addEventListener('click', () => {
     // Ocultar pantalla de revisión
     reviewScreen.style.display = 'none';
