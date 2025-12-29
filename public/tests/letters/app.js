@@ -2,6 +2,12 @@ const imageCanvas = document.getElementById('imageCanvas');
 const ctx = imageCanvas.getContext('2d');
 const practiceCanvas = document.getElementById('imageCanvasPractice');
 const ctxPractice = practiceCanvas.getContext('2d');
+
+const reviewScreen = document.getElementById('reviewScreen');
+const reviewCanvas = document.getElementById('reviewCanvas');
+const reviewCtx = reviewCanvas.getContext('2d');
+const confirmReviewButton = document.getElementById('confirmReviewButton');
+
 const startButton = document.getElementById('startButton');
 const fullscreenButton = document.getElementById('fullscreenButton');
 const nextButton = document.getElementById('next-button');
@@ -20,6 +26,7 @@ let practiceClicks = [];
 let startItemTime, endTime, totalStartTime;
 let originalCanvasSize = { width: 2105, height: 1489 };
 
+let clickResults = [];
 // Coordenadas de las letras "A" en la resolución de la imagen
 
 let letrasA = [
@@ -476,13 +483,7 @@ practiceCanvas.addEventListener('', (e) => {
     practiceClicks.push({ x, y });
     drawCirclePractice(e.clientX - practiceCanvas.getBoundingClientRect().left, e.clientY - practiceCanvas.getBoundingClientRect().top, 'blue');
 });
-function showHandSelection() {
 
-    handButton.addEventListener('click', function () {
-        stopRecording();
-        validateClicks();
-    });
-}
 
 startButton.addEventListener('click', () => {
     document.getElementById('instructionAudio1').pause();
@@ -513,6 +514,7 @@ nextButton.addEventListener('click', () => {
     mainScreen.style.display = 'none';
     showHandSelection();
 });
+
 
 fullscreenButton.addEventListener('click', () => {
     if (document.fullscreenEnabled && !document.fullscreenElement) {
@@ -607,97 +609,240 @@ function downloadVideo(callback) {
     callback(videoBlob);
 }
 
+function prepararResultadosParaRevision() {
+    const umbral = 20;
+    const imageWidth = 2105;
+    const halfWidth = imageWidth / 2;
+
+    clickResults = clicks.map((click, index) => {
+        let nearestAIndex = -1;
+        let minDistA = Infinity;
+
+        // Buscar la A más cercana
+        letrasA.forEach((letra, idx) => {
+            const dx = click.x - letra.x;
+            const dy = click.y - letra.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < minDistA) {
+                minDistA = dist;
+                nearestAIndex = idx;
+            }
+        });
+
+        const isNearA = minDistA < umbral;
+
+        // ¿Está cerca de alguna otra letra? (para error de comisión)
+        let isCommission = false;
+        otrasLetras.forEach(letra => {
+            const dx = click.x - letra.x;
+            const dy = click.y - letra.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < umbral) {
+                isCommission = true;
+            }
+        });
+
+        const isCorrectInitial = isNearA; // criterio original
+
+        return {
+            index: index + 1,
+            x: click.x,
+            y: click.y,
+            targetIndex: isNearA ? nearestAIndex : null, // índice de la A asociada
+            isCommission: isCommission,
+            isCorrectInitial: isCorrectInitial,
+            isCorrect: isCorrectInitial
+        };
+    });
+}
+
+function abrirPantallaRevision() {
+    // Preparar estructura de resultados
+    prepararResultadosParaRevision();
+
+    // Ocultar todo lo anterior
+    fin.style.display = 'none';
+    selectHandContainer.style.display = "none";
+    mainScreen.style.display = 'none';
+
+    // Mostrar pantalla de revisión
+    reviewScreen.style.display = 'block';
+
+    // 👉 Ajustar el tamaño del canvas de revisión SIN usar resizeCanvas
+    reviewCanvas.width = imageCanvas.width;
+    reviewCanvas.height = imageCanvas.height;
+
+    // Dibujar sobre el reviewCanvas
+    dibujarPuntosRevision();
+}
+
+function dibujarPuntosRevision() {
+    // Limpiar y dibujar la imagen de fondo
+    reviewCtx.clearRect(0, 0, reviewCanvas.width, reviewCanvas.height);
+    reviewCtx.drawImage(image, 0, 0, reviewCanvas.width, reviewCanvas.height);
+
+    const scaleX = reviewCanvas.width / originalCanvasSize.width;
+    const scaleY = reviewCanvas.height / originalCanvasSize.height;
+
+    clickResults.forEach(c => {
+        const sx = c.x * scaleX;
+        const sy = c.y * scaleY;
+
+        reviewCtx.beginPath();
+        reviewCtx.arc(sx, sy, 10, 0, 2 * Math.PI);
+        reviewCtx.lineWidth = 3;
+        reviewCtx.strokeStyle = c.isCorrect ? 'green' : 'red';
+        // solo contorno, sin fill
+        reviewCtx.stroke();
+    });
+}
+
+reviewCanvas.addEventListener('pointerdown', (e) => {
+    const { x, y } = adjustClickCoordinates(e, reviewCanvas, originalCanvasSize);
+
+    let nearestIndex = -1;
+    let nearestDist = Infinity;
+
+    clickResults.forEach((c, idx) => {
+        const dx = x - c.x;
+        const dy = y - c.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < nearestDist) {
+            nearestDist = dist;
+            nearestIndex = idx;
+        }
+    });
+
+    // Si tocó cerca de algún punto (mismo umbral que antes)
+    if (nearestDist < 20 && nearestIndex !== -1) {
+        // Invertir estado
+        clickResults[nearestIndex].isCorrect = !clickResults[nearestIndex].isCorrect;
+        // Redibujar todo
+        dibujarPuntosRevision();
+    }
+});
+
+function dataURLtoBlob(dataURL) {
+    const arr = dataURL.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], { type: mime });
+}
+
 function validateClicks() {
     fin.style.display = 'block';
     selectHandContainer.style.display = "none";
     mainScreen.style.display = 'none';
     handButton.style.display = 'none';
+
+    if (!clickResults || clickResults.length === 0) {
+        console.error("clickResults está vacío. Asegúrate de llamar a prepararResultadosParaRevision / revisión antes de validar.");
+        return;
+    }
+
+    // 👉 1) Guardamos el estado ORIGINAL del canvas (sin corrección)
+    const originalImageDataURL = imageCanvas.toDataURL('image/png');
+
     let correctClicks = 0;
     let totalErrors = 0;
     let leftClicks = 0;
     let rightClicks = 0;
     let erroresComision = 0;
-    let searchDistance = 0;  // Variable para almacenar la distancia total
+    let searchDistance = 0;
 
-    const imageWidth = 2105; // Ancho de la imagen original
-    const halfWidth = imageWidth / 2; // Punto de referencia para dividir la imagen
+    const imageWidth = 2105;
+    const imageHeight = 1489;
+    const halfWidth = imageWidth / 2;
     const results = [];
+
+    // Redibujar imagen base en el canvas principal (para la versión corregida)
     ctx.drawImage(image, 0, 0, imageCanvas.width, imageCanvas.height);
 
-    let lastCorrectClick = null;  // Variable para almacenar el último clic correcto
+    let lastCorrectClick = null;
     let sumX = 0;
     let sumY = 0;
 
-    clicks.forEach((click, index) => {
-        let isCorrect = false;
+    const scaleX = imageCanvas.width / originalCanvasSize.width;
+    const scaleY = imageCanvas.height / originalCanvasSize.height;
 
-        letrasA.forEach(letra => {
-            const dx = click.x - letra.x;
-            const dy = click.y - letra.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 20) {
-                isCorrect = true;
-                correctClicks++;
-                promedio.push({ x: click.x, y: click.y });
-                sumX += click.x;
-                sumY += click.y;
+    clickResults.forEach((c, index) => {
+        if (c.isCorrect) {
+            correctClicks++;
+            sumX += c.x;
+            sumY += c.y;
 
-                // Si hay un clic correcto anterior, calcular la distancia y sumarla
-                if (lastCorrectClick) {
-                    const distance = Math.sqrt(Math.pow(click.x - lastCorrectClick.x, 2) + Math.pow(click.y - lastCorrectClick.y, 2));
-                    searchDistance += distance;
-                }
-
-                // Actualizar el último clic correcto
-                lastCorrectClick = { x: click.x, y: click.y };
+            if (lastCorrectClick) {
+                const distance = Math.sqrt(
+                    Math.pow(c.x - lastCorrectClick.x, 2) +
+                    Math.pow(c.y - lastCorrectClick.y, 2)
+                );
+                searchDistance += distance;
             }
-        });
-
-        otrasLetras.forEach(letra => {
-            const dx = click.x - letra.x;
-            const dy = click.y - letra.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 20) {
-                erroresComision++;
-            }
-        });
-
-        drawCircle(
-            click.x * (imageCanvas.width / 2105),
-            click.y * (imageCanvas.height / 1489),
-            isCorrect ? 'green' : 'red'
-        );
-        results.push({ orden: index + 1, x: click.x, y: click.y, correcto: isCorrect ? 'Si' : 'No' });
-        if (!isCorrect) {
+            lastCorrectClick = { x: c.x, y: c.y };
+        } else {
             totalErrors++;
         }
-        if (click.x < halfWidth) {
+
+        if (c.isCommission && !c.isCorrect) {
+            erroresComision++;
+        }
+
+        if (c.x < halfWidth) {
             leftClicks++;
         } else {
             rightClicks++;
         }
+
+        const px = c.x * scaleX;
+        const py = c.y * scaleY;
+
+        ctx.beginPath();
+        ctx.arc(px, py, 10, 0, 2 * Math.PI);
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = c.isCorrect ? 'green' : 'red';
+        ctx.fillStyle = c.isCorrect ? 'rgba(0,255,0,0.2)' : 'rgba(255,0,0,0.2)';
+        ctx.fill();
+        ctx.stroke();
+
         if (index > 0) {
-            drawLine(
-                clicks[index - 1].x * (imageCanvas.width / 2105),
-                clicks[index - 1].y * (imageCanvas.height / 1489),
-                click.x * (imageCanvas.width / 2105),
-                click.y * (imageCanvas.height / 1489)
-            );
+            const prev = clickResults[index - 1];
+            ctx.beginPath();
+            ctx.moveTo(prev.x * scaleX, prev.y * scaleY);
+            ctx.lineTo(px, py);
+            ctx.strokeStyle = 'black';
+            ctx.lineWidth = 2;
+            ctx.stroke();
         }
+
+        results.push({
+            orden: index + 1,
+            x: c.x,
+            y: c.y,
+            correcto: c.isCorrect ? 'Si' : 'No'
+        });
     });
-    const centerX = sumX / correctClicks;
-    const centerY = sumY / correctClicks;
 
-    let strategy = detectarEstrategia(promedio);
-    console.log("Estrategia detectada:", strategy);
+    const centerX = correctClicks > 0 ? (sumX / correctClicks) : (imageWidth / 2);
+    const centerY = correctClicks > 0 ? (sumY / correctClicks) : (imageHeight / 2);
 
-    function detectarEstrategia(clicks) {
-        if (clicks.length < 2) return "No suficiente información";
+    const promedio = clickResults
+        .filter(c => c.isCorrect)
+        .map(c => ({ x: c.x, y: c.y }));
+
+    function detectarEstrategia(clicksPromedio) {
+        if (!clicksPromedio || clicksPromedio.length < 2) return "No suficiente información";
 
         let xDiffs = [];
         let yDiffs = [];
 
-        for (let i = 1; i < clicks.length; i++) {
-            xDiffs.push(clicks[i].x - clicks[i - 1].x);
-            yDiffs.push(clicks[i].y - clicks[i - 1].y);
+        for (let i = 1; i < clicksPromedio.length; i++) {
+            xDiffs.push(clicksPromedio[i].x - clicksPromedio[i - 1].x);
+            yDiffs.push(clicksPromedio[i].y - clicksPromedio[i - 1].y);
         }
 
         const meanAbs = arr => arr.reduce((sum, val) => sum + Math.abs(val), 0) / arr.length;
@@ -705,13 +850,7 @@ function validateClicks() {
 
         const meanX = meanAbs(xDiffs);
         const meanY = meanAbs(yDiffs);
-        const signedX = meanSigned(xDiffs);
-        const signedY = meanSigned(yDiffs);
 
-        // ¿La búsqueda es más horizontal o vertical?
-        const isHorizontal = meanX > meanY;
-
-        // ¿Se cambia constantemente de dirección?
         const cambiosDeSigno = arr => {
             let cambios = 0;
             for (let i = 1; i < arr.length; i++) {
@@ -723,22 +862,31 @@ function validateClicks() {
         const zigzagX = cambiosDeSigno(xDiffs) > xDiffs.length / 3;
         const zigzagY = cambiosDeSigno(yDiffs) > yDiffs.length / 3;
 
-        if (isHorizontal) {
-            return zigzagX ? "B. Zigzag Horizontal (fila a fila alternando)" : "A. Horizontal (fila a fila izquierda a derecha)";
+        if (meanX > meanY) {
+            return zigzagX
+                ? "B. Zigzag Horizontal (fila a fila alternando)"
+                : "A. Horizontal (fila a fila izquierda a derecha)";
         } else {
-            return zigzagY ? "D. Zigzag Vertical (columna a columna alternando)" : "C. Vertical (columna a columna de arriba a abajo)";
+            return zigzagY
+                ? "D. Zigzag Vertical (columna a columna alternando)"
+                : "C. Vertical (columna a columna de arriba a abajo)";
         }
     }
 
+    let strategy = detectarEstrategia(promedio);
+    console.log("Estrategia detectada:", strategy);
+
     let omisionesDerecha = 0;
     let omisionesIzquierda = 0;
+    const umbral = 20;
 
-    const umbral = 20; // mismo radio que usas para considerar un clic como válido
+    letrasA.forEach((letra, idx) => {
+        const fueSeleccionada = clickResults.some(c => {
+            if (!c.isCorrect) return false;
+            if (c.targetIndex === idx) return true;
 
-    letrasA.forEach(letra => {
-        const fueSeleccionada = clicks.some(click => {
-            const dx = click.x - letra.x;
-            const dy = click.y - letra.y;
+            const dx = c.x - letra.x;
+            const dy = c.y - letra.y;
             return Math.sqrt(dx * dx + dy * dy) < umbral;
         });
 
@@ -752,34 +900,34 @@ function validateClicks() {
     });
 
     endTime = new Date();
-
     const rawTestDuration = (endTime - startItemTime);
 
-
-    const testDuration = rawTestDuration.toFixed(3).replace('.', ','); // ← solo para mostrar/exportar
-    let searchSpeed = (correctClicks / rawTestDuration) * 1000;
+    const testDuration = rawTestDuration.toFixed(3).replace('.', ',');
+    let searchSpeed = rawTestDuration > 0 ? (correctClicks / rawTestDuration) * 1000 : 0;
     const searchSpeedFormatted = searchSpeed.toLocaleString('es-CL', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
 
-
-
-    const normalizedCenterX = (centerX - (2105 / 2)) / (2105 / 2);
-    const normalizedCenterY = (centerY - (1489 / 2)) / (1489 / 2);
-
-    console.log(sumX, sumY, correctClicks);
-    endTime = new Date();
+    const normalizedCenterX = (centerX - (imageWidth / 2)) / (imageWidth / 2);
     const CoC = Math.sign(normalizedCenterX) === -1 ? -1 : 1;
+
     const totalDuration = ((endTime - totalStartTime) / 1000).toFixed(3).replace('.', ',');
-    const totalDurationFormatted = totalDuration.toLocaleString('es-CL');
-    const testDurationFormatted = testDuration.toLocaleString('es-CL');
+
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
     const fechaFormateada = `${day}_${month}_${year}`;
-    const searchDistanceFormatted = (searchDistance / promedio.length).toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const searchDistancePromedio = promedio.length > 0
+        ? (searchDistance / promedio.length)
+        : 0;
+
+    const searchDistanceFormatted = searchDistancePromedio.toLocaleString('es-CL', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
 
     let csvContent = 'ExecTime;NoTargets;NoCommErr;NoOmiErrR;NoOmiErrL;CoC;SSpeed;SDistance;SStrategy;Examinador\n';
 
@@ -792,41 +940,52 @@ function validateClicks() {
 
     csvContent += `${testDuration};${correctClicks};${erroresComision};${omisionesDerecha};${omisionesIzquierda};${CoC};${searchSpeedFormatted};${searchDistanceFormatted};${strategy};${inicialesExaminador}\n`;
 
-    console.log(csvContent);
-
     let csv2 = 'TotTime;Hand;Examinador\n';
     csv2 += `${totalDuration};${selectedHand};${inicialesExaminador}\n`;
-    const csvunival = downloadCSV(csv2);
 
     const csvBlob = downloadCSV(csvContent);
-    downloadCanvas(canvasBlob => {
-        downloadVideo(videoBlob => {
-            const zip = new JSZip();
-            zip.file(`${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}.csv`, csvBlob);
-            zip.file(`${idParticipante}_4_Cancelación_Letras_A_Unival_${fechaFormateada}.csv`, csvunival);
-            zip.file(`${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}.png`, canvasBlob);
-            zip.file(`${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}.mp4`, videoBlob);
-            zip.generateAsync({ type: 'blob' }).then(content => {
-                // Define la fecha actual y la formateas
-                const url = URL.createObjectURL(content);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}.zip`;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
-                setTimeout(() => {
-                    window.close();
-                }, 3000);
-            });
+    const csvunival = downloadCSV(csv2);
 
+    // 👉 Convertimos la imagen original (sin corrección) a Blob
+    const originalPngBlob = dataURLtoBlob(originalImageDataURL);
+
+    // 👉 Video como webm
+    const videoBlob = new Blob(chunks, { type: 'video/webm' });
+    console.log("Tamaño del video (bytes):", videoBlob.size);
+
+    // 👉 Ahora tomamos el canvas CORREGIDO como PNG
+    imageCanvas.toBlob(function (correctedPngBlob) {
+        const zip = new JSZip();
+        const baseName = `${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}`;
+
+        zip.file(`${baseName}.csv`, csvBlob);
+        zip.file(`${baseName}_Unival.csv`, csvunival);
+        zip.file(`${baseName}_SinCorrección.png`, originalPngBlob);
+        zip.file(`${baseName}_Corregida.png`, correctedPngBlob);
+        zip.file(`${baseName}.webm`, videoBlob);
+
+        zip.generateAsync({ type: 'blob' }).then(content => {
+            const url = URL.createObjectURL(content);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${baseName}.zip`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            setTimeout(() => {
+                window.close();
+            }, 3000);
         });
-    });
+    }, 'image/png');
 
+    // Limpiar para un posible siguiente uso
     clicks = [];
+    clickResults = [];
     chunks = [];
 }
+
+
 let stream;
 
 let userInfo;
@@ -898,11 +1057,32 @@ const handInputs = document.getElementsByName('hand');
 // Funcion para mostrar la pantalla de seleccion de mano
 function showHandSelection() {
 
-    handButton.addEventListener('click', function () {
+    // Asignar UNA sola vez
+    handButton.addEventListener('click', () => {
+        // Detener grabación antes de pasar a corrección
         stopRecording();
-        validateClicks();
+
+        // Ocultar pantalla selección mano
+        fin.style.display = 'none';
+        selectHandContainer.style.display = "none";
+
+        // Abrir pantalla de revisión/corrección
+        abrirPantallaRevision();
+
+        // IMPORTANTE: aquí el handButton ya no pinta nada
+        handButton.style.display = 'none';
     });
+
 }
+
+
+confirmReviewButton.addEventListener('click', () => {
+    // Ocultar pantalla de revisión
+    reviewScreen.style.display = 'none';
+    // Ahora sí generamos métricas, csv, zip, etc.
+    validateClicks();
+});
+
 
 // Funcion unida al boton de flecha para hacer la seleccion, debe llevar a la funcion de termino.
 // En este caso fue mostrarFinalizacion()

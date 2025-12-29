@@ -97,7 +97,8 @@ p {
 #next-button-practice,
 #test-button,
 #handButton,
-#next-button {
+#next-button,
+#confirmReviewButton {
     background-color: transparent;
     border: none;
     cursor: pointer;
