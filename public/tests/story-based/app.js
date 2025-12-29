@@ -506,24 +506,28 @@ function generarArchivoCSV() {
 respuestasSeleccionadas.forEach(respuesta => {
     const huboResp = String(respuesta.opcionSeleccionada || '').trim() !== '';
 
+    // RT en milisegundos (entero). Si omitió, vacío.
     const rt = (huboResp && typeof respuesta.tiempo === 'number')
-      ? (respuesta.tiempo / 1000).toFixed(3).replace('.', ',')
-      : '';
+        ? String(Math.round(respuesta.tiempo))
+        : '';
 
     let acc = '';
     if (huboResp) {
-      acc = (
-        String(respuesta.opcionSeleccionada).trim().toLowerCase() ===
-        String(respuesta.respuestaCorrecta).trim().toLowerCase()
-      ) ? 1 : 0;
+        acc = (
+            String(respuesta.opcionSeleccionada).trim().toLowerCase() ===
+            String(respuesta.respuestaCorrecta).trim().toLowerCase()
+        ) ? 1 : 0;
     }
 
     csvContent += `${respuesta.item};${respuesta.respuestaCorrecta};${respuesta.opcionSeleccionada};${acc};${rt};${inicialesExaminador}\n`;
 });
+
     const csvBlob = new Blob([csvContent], { type: 'text/csv' });
 
-    const totalTime = totalTestTime / 1000;
-    const txtContent = [["TotTime", "Hand"], [totalTime.toFixed(3).replace('.', ','), selectedHand]].map(e => e.join(";")).join("\n");
+const txtContent = [["TotTime", "Hand"], [String(totalTestTime), selectedHand]]
+    .map(e => e.join(";"))
+    .join("\n");
+
     const txtBlob = new Blob([txtContent], { type: 'text/csv' });
 
     // Obtener la fecha y la hora actuales

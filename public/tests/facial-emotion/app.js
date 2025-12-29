@@ -259,13 +259,13 @@ function mostrarFinalizacion() {
     // document.getElementById('fullscreenButton').style.display = 'none';
 
     tiempoFin = new Date(); // Guardar el tiempo de fin al finalizar la tarea
-    const tiempoTranscurrido = (tiempoFin - tiempoInicio) / 1000;
+    const tiempoTranscurridoMs = (tiempoFin - tiempoInicio); // ms
+    generarCSV(tiempoTranscurridoMs, tiemposRespuesta);
+
 
     console.log(`Tarea finalizada. Tiempo transcurrido: ${tiempoTranscurrido} segundos.`);
 
-    // Aquí podrías hacer lo que necesites con el tiempo transcurrido, como guardar en un archivo CSV, etc.
 
-    generarCSV(tiempoTranscurrido, tiemposRespuesta);
 }
 
 function iniciarPresentacion() {
@@ -349,7 +349,7 @@ fetch('/api/user-info')
     });
 
 function norm(s) {
-  return (s ?? '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    return (s ?? '').toString().normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
 }
 
 function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
@@ -370,9 +370,12 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
 
     imagenes.forEach((img, index) => {
         const numeroImagen = img.numero;
-        const emocionCorrecta = img.emocionCorrecta; // puede venir con o sin tilde según tu arreglo
-        const seleccion = (emocionesSeleccionadas[index] ?? ''); // <-- vacío si no respondió
-        const response = tiemposRespuesta[index] ? (tiemposRespuesta[index] / 1000).toFixed(3).replace('.', ',') : '';
+        const emocionCorrecta = img.emocionCorrecta;
+        const seleccion = (emocionesSeleccionadas[index] ?? '');
+        const response = (typeof tiemposRespuesta[index] === 'number')
+            ? String(Math.round(tiemposRespuesta[index]))  // ms
+            : '';
+
 
         // Acc: vacío si no hubo respuesta; 1/0 si sí hubo respuesta
         let acc = '';
@@ -386,7 +389,8 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const csvContent = csvData.map(row => row.join(';')).join('\n');
     const csvBlob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
 
-    const totalTime = (tiempoTranscurrido).toFixed(3).replace('.', ',');
+    const totalTime = String(Math.round(tiempoTranscurrido)); // ms
+
     const txtContent = [['TotTime', 'Hand'], [totalTime, selectedHand]].map(row => row.join(';')).join('\n');
     const txtBlob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
 

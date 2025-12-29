@@ -258,8 +258,9 @@ function generateCSV(results) {
 
         // RT: vacío si no hubo respuesta; si hubo, a segundos con 3 decimales (coma)
         const rt = (huboRespuesta && typeof r.responseTime === 'number')
-            ? (r.responseTime / 1000).toFixed(3).replace('.', ',')
+            ? String(Math.round(r.responseTime))   // ms
             : '';
+
 
         csvData.push([trial, corrResp, partResp, acc, rt, inicialesExaminador]);
     });
@@ -281,7 +282,7 @@ function generateCSV2(startTimeTotal, selectedHand) {
 
     const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
 
-    const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+    const totalTime = String(new Date() - startTimeTotal); // ms
 
     const txtContent = [
         ["TotTime", "Hand", "Examinador"],

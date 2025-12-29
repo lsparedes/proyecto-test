@@ -554,17 +554,15 @@ function verificarRespuesta(event) {
 
     // Calcular RT en segundos con 3 decimales
     endTimeE = new Date();
-    const rtMs = endTimeE - startTimeE;
-    const rtStr = (rtMs / 1000).toFixed(3).replace('.', ',');
+    const rtMs = endTimeE - startTimeE; // milisegundos (número entero)
 
-    // Guardar los datos de este ensayo por índice
     respuestaPorTrial[indiceActual] = {
         textoDistintivo: imgActual.textoDistintivo,
         imagen: imgActual.item ?? '',
         respuestaCorrecta: (correcta?.item ?? '').toString().trim(),
         respuestaSeleccion: (optionImg.dataset.item ?? '').toString().trim(),
         esCorrecta: optionImg.dataset.correct === '1',
-        tiempoDedicado: rtStr
+        tiempoDedicado: String(rtMs) // RT en ms como texto (para el CSV)
     };
 
     respuestaSeleccionada = true; // si quieres mantener esta bandera
