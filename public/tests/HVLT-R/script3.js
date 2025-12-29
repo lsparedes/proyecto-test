@@ -49,6 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
         mainScreen.style.display = 'none';
         audioContainer.style.display = 'block';
 
+        // ✅ Asegura que solo el primer audio se vea
+        audioItems.forEach((item, i) => item.style.display = (i === 0 ? 'block' : 'none'));
+        currentAudioIndex = 0;
+
+        // ✅ Botones del audio 1 ocultos mientras suena
+        setOptionButtonsVisible(1, false);
     });
 
     audioItems.forEach((audioItem) => {
@@ -67,16 +73,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         audioElement.addEventListener('ended', () => {
             audioEndTimes[audioIndex] = new Date();
-            console.log(`Audio ${audioIndex} terminó en: ${audioEndTimes[audioIndex]}`);
 
-            // 🔹 HABILITAR BOTONES SOLO PARA ESTE AUDIO
+            // ✅ hacer visibles y habilitar
             document
                 .querySelectorAll(`.option-btn[data-audio="${audioIndex}"]`)
                 .forEach(btn => {
+                    btn.style.display = 'inline-block'; // ✅ visibles al terminar audio
                     btn.disabled = false;
                     btn.classList.remove('disabled');
                 });
         });
+
     });
 
 
@@ -99,6 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
         currentAudioIndex++;
 
         if (currentAudioIndex < audioItems.length) {
+            const nextAudioIndexForButtons = currentAudioIndex + 1;
+
+            // ✅ ocultar botones del audio que viene (mientras suena)
+            setOptionButtonsVisible(nextAudioIndexForButtons, false);
+
             audioItems[currentAudioIndex].style.display = 'block';
         } else {
             audioContainer.style.display = 'none';
@@ -125,40 +137,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-const optionButtons = document.querySelectorAll('.option-btn');
+    const optionButtons = document.querySelectorAll('.option-btn');
 
-optionButtons.forEach(button => {
-    // 🔹 DESHABILITAR TODOS AL INICIO
-    button.disabled = true;
-    button.classList.add('disabled'); // por si quieres estilarlos en CSS (cursor: not-allowed, etc.)
+    optionButtons.forEach(button => {
+        button.disabled = true;
+        button.classList.add('disabled');
+        button.style.display = 'none'; // ✅ ocultos al inicio
 
-    button.addEventListener('click', (e) => {
-        // Si por alguna razón siguen deshabilitados, no hacer nada
-        if (button.disabled) return;
+        button.addEventListener('click', (e) => {
+            if (button.disabled) return;
 
-        const btn = e.currentTarget;
-        const audioIndex = parseInt(btn.dataset.audio, 10);
-        const answer = btn.dataset.answer;
-        const responseTime = new Date();
+            const btn = e.currentTarget;
+            const audioIndex = parseInt(btn.dataset.audio, 10);
+            const answer = btn.dataset.answer;
+            const responseTime = new Date();
 
-        let RT = '';
-        if (audioEndTimes[audioIndex] instanceof Date) {
-            const diffMs = responseTime - audioEndTimes[audioIndex];
-            if (diffMs >= 0) {
-                RT = (diffMs / 1000).toFixed(3).replace('.', ',');
+            let RT = '';
+            if (audioEndTimes[audioIndex] instanceof Date) {
+                const diffMs = responseTime - audioEndTimes[audioIndex];
+                if (diffMs >= 0) RT = (diffMs / 1000).toFixed(3).replace('.', ',');
             }
-        }
 
-        answers[audioIndex] = { answer, RT };
-        console.log(`Audio ${audioIndex}, Respuesta: ${answer ?? ''}, RT: ${RT === '' ? 'null' : RT} segundos`);
+            answers[audioIndex] = { answer, RT };
 
-        // 🔹 OPCIONAL: si quieres que solo cuente el primer clic, deshabilita después de responder:
-        document.querySelectorAll(`.option-btn[data-audio="${audioIndex}"]`).forEach(b => {
-            b.disabled = true;
-            b.classList.add('disabled');
+            document.querySelectorAll(`.option-btn[data-audio="${audioIndex}"]`).forEach(b => {
+                b.disabled = true;
+                b.classList.add('disabled');
+                // (opcional) podrías ocultarlos tras responder:
+                // b.style.display = 'none';
+            });
         });
     });
-});
+
+
+    function setOptionButtonsVisible(audioIndex, visible) {
+        document
+            .querySelectorAll(`.option-btn[data-audio="${audioIndex}"]`)
+            .forEach(btn => {
+                btn.style.display = visible ? 'inline-block' : 'none';
+            });
+    }
+
+    function hideAllOptionButtons() {
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.style.display = 'none';
+        });
+    }
 
 
     function getQueryParam(param) {
@@ -227,7 +251,7 @@ optionButtons.forEach(button => {
 
         return { mainCsvContent, additionalCsvContent };
     }
-    
+
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
