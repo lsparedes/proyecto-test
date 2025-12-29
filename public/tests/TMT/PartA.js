@@ -75,17 +75,17 @@ document.addEventListener('DOMContentLoaded', function () {
             if (index === 0) {
                 ctx.font = 'bold 18px Arial';
                 ctx.fillText("Empezar", circle.x, circle.y - 50);
-                ctx.font = '32px Arial'; 
+                ctx.font = '32px Arial';
             }
-    
+
             if (index === coordinates.length - 1) {
                 ctx.font = 'bold 18px Arial';
                 ctx.fillText("Terminar", circle.x, circle.y + 50);
-                ctx.font = '32px Arial'; 
+                ctx.font = '32px Arial';
             }
         });
     }
-    
+
 
     drawCircles(ctxPractice, circleCoordinates);
     drawCircles(ctxPartA, circleCoordinatesPartA);
@@ -186,10 +186,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 liftTotalTime += Date.now() - liftStartTime;
                 liftStartTime = null;
             }
-                if (hasError &&(
-                    (currentCircleIndex === 0 && index === 0) ||                 
-                    (currentCircleIndex > 0 && index === currentCircleIndex - 1) 
-                )){
+            if (hasError && (
+                (currentCircleIndex === 0 && index === 0) ||
+                (currentCircleIndex > 0 && index === currentCircleIndex - 1)
+            )) {
                 errorIndices.forEach((errIndex) => {
                     drawCircleNormal(ctx, coordinates[errIndex], errIndex);
                 });
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastX = coords.x;
                 lastY = coords.y;
                 return;
-                }
+            }
             if (!hasError) {
                 isDrawing = true;
                 lastX = coords.x;
@@ -329,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('instructions').style.display = 'none';
         document.getElementById('partA').style.display = 'flex';
         document.getElementById('endSequenceButton').style.display = 'none';
-
+        fullscreenButton.style.display = 'none';
         ctxPartA.fillStyle = "white";
         ctxPartA.fillRect(0, 0, canvasPartA.width, canvasPartA.height);
 
@@ -344,6 +344,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (mediaRecorder && mediaRecorder.state !== "inactive") {
             mediaRecorder.stop();
         }
+        fullscreenButton.style.display = 'none';
         document.getElementById('partA').style.display = 'none';
         document.getElementById('preEnd').style.display = 'block';
         document.getElementById('endSequenceButtonPartA').style.display = 'none';
@@ -355,37 +356,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function toggleArrowVisibility(button) {
         arrowVisible = !arrowVisible;
-    
+
         const inPractice = document.getElementById('instructions').style.display !== 'none';
-    
+
         endSequenceButton.style.display = (arrowVisible && inPractice) ? 'block' : 'none';
         endSequenceButtonPartA.style.display = (arrowVisible && !inPractice) ? 'block' : 'none';
-    
+
         button.style.backgroundImage = arrowVisible
             ? "url('imagenes/eye.png')"
             : "url('imagenes/noeye.png')";
     }
-    
+
     function resetArrowAndButton() {
         arrowVisible = false;
-    
+
         endSequenceButton.style.display = 'none';
         endSequenceButtonPartA.style.display = 'none';
-    
+
         show.style.backgroundImage = "url('imagenes/noeye.png')";
         show1.style.backgroundImage = "url('imagenes/noeye.png')";
     }
-    
+
     show.addEventListener('click', () => {
         toggleArrowVisibility(show);
     });
-    
+
     show1.addEventListener('click', () => {
         toggleArrowVisibility(show1);
     });
-    
- 
-    
+
+
+
     let selectedHand = "";
     const selectHandContainer = document.getElementById("selectHand");
     const handButton = document.getElementById("handButton");

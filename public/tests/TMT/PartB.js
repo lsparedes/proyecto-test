@@ -70,26 +70,26 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.beginPath();
             ctx.arc(circle.x, circle.y, circleRadius, 0, 2 * Math.PI);
             ctx.stroke();
-    
+
             const label = index % 2 === 0
-                ? Math.floor(index / 2) + 1 
+                ? Math.floor(index / 2) + 1
                 : String.fromCharCode(65 + Math.floor(index / 2));
             ctx.fillText(label, circle.x, circle.y);
-    
+
             if (index === 0) {
                 ctx.font = 'bold 18px Arial';
                 ctx.fillText("Empezar", circle.x, circle.y - 50);
-                ctx.font = '32px Arial'; 
+                ctx.font = '32px Arial';
             }
 
             if (index === coordinates.length - 1) {
                 ctx.font = 'bold 18px Arial';
                 ctx.fillText("Terminar", circle.x, circle.y + 50);
-                ctx.font = '32px Arial'; 
+                ctx.font = '32px Arial';
             }
         });
     }
-    
+
 
     drawCircles(ctxPractice, circleCoordinates);
     drawCircles(ctxPartB, circleCoordinatesPartB);
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.stroke();
         ctx.fillStyle = 'red';
         const label = index % 2 === 0
-            ? Math.floor(index / 2) + 1 
+            ? Math.floor(index / 2) + 1
             : String.fromCharCode(65 + Math.floor(index / 2));
         ctx.fillText(label, circle.x, circle.y);
 
@@ -201,10 +201,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 liftTotalTime += Date.now() - liftStartTime;
                 liftStartTime = null;
             }
-                if (hasError &&(
-                    (currentCircleIndex === 0 && index === 0) ||                 
-                    (currentCircleIndex > 0 && index === currentCircleIndex - 1) 
-                )){
+            if (hasError && (
+                (currentCircleIndex === 0 && index === 0) ||
+                (currentCircleIndex > 0 && index === currentCircleIndex - 1)
+            )) {
                 errorIndices.forEach((errIndex) => {
                     drawCircleNormal(ctx, coordinates[errIndex], errIndex);
                 });
@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 lastX = coords.x;
                 lastY = coords.y;
                 return;
-                }
+            }
 
             if (!hasError) {
                 isDrawing = true;
@@ -345,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('partB').style.display = 'none';
         document.getElementById('partB2').style.display = 'flex';
         document.getElementById('endSequenceButton').style.display = 'none';
-
+        fullscreenButton.style.display = 'none';
         ctxPartB.fillStyle = "white";
         ctxPartB.fillRect(0, 0, canvasPartB.width, canvasPartB.height);
 
@@ -360,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (mediaRecorder && mediaRecorder.state !== "inactive") {
             mediaRecorder.stop();
         }
-
+        fullscreenButton.style.display = 'none';
         document.getElementById('partB2').style.display = 'none';
         document.getElementById('preEnd').style.display = 'block';
         document.getElementById('endSequenceButtonPartB').style.display = 'none';
@@ -371,10 +371,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function resetArrowAndButton() {
         arrowVisible = false;
-    
+
         endSequenceButton.style.display = 'none';
         endSequenceButtonPartB.style.display = 'none';
-    
+
         show.style.backgroundImage = "url('imagenes/noeye.png')";
         show1.style.backgroundImage = "url('imagenes/noeye.png')";
     }
@@ -382,12 +382,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function toggleArrowVisibility(button) {
         arrowVisible = !arrowVisible;
-    
+
         const inPractice = document.getElementById('partB').style.display !== 'none';
-    
+
         endSequenceButton.style.display = (arrowVisible && inPractice) ? 'block' : 'none';
         endSequenceButtonPartB.style.display = (arrowVisible && !inPractice) ? 'block' : 'none';
-    
+
         button.style.backgroundImage = arrowVisible
             ? "url('imagenes/eye.png')"
             : "url('imagenes/noeye.png')";
@@ -446,10 +446,10 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Error al obtener la información del usuario:', error);
         });
 
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
 
     const idParticipante = getQueryParam('id_participante');
 
@@ -463,13 +463,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const zip = new JSZip();
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
-  
+
         const totTime = (execEndTime - testStartTime) / 1000;
         const execTime = execStartTime ? (execEndTime - execStartTime) / 1000 : 0;
         const liftTime = liftTotalTime / 1000;
         const csvContent = `TotTime;ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;Hand\n` +
             `${totTime.toFixed(2)};${execTime.toFixed(2)};${incorrectLinesPartB};${correctLinesPartB};${liftCount};${liftTime.toFixed(2)};${selectedHand}\n`;
-            zip.file("2_TMT_Part_B.csv", csvContent);
+        zip.file("2_TMT_Part_B.csv", csvContent);
 
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = canvasPartB.width;
