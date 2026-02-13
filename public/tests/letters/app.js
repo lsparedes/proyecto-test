@@ -25,8 +25,10 @@ let chunks = [];
 let practiceClicks = [];
 let startItemTime, endTime, totalStartTime;
 let originalCanvasSize = { width: 2105, height: 1489 };
-
+let reviewShowAll = false;
 let clickResults = [];
+
+
 // Coordenadas de las letras "A" en la resolución de la imagen
 
 let letrasA = [
@@ -684,7 +686,12 @@ function dibujarPuntosRevision() {
     const scaleX = reviewCanvas.width / originalCanvasSize.width;
     const scaleY = reviewCanvas.height / originalCanvasSize.height;
 
-    clickResults.forEach(c => {
+    // Si reviewShowAll=false => dibuja SOLO incorrectas (isCorrect === false)
+    const pointsToDraw = reviewShowAll
+        ? clickResults
+        : clickResults.filter(c => !c.isCorrect);
+
+    pointsToDraw.forEach(c => {
         const sx = c.x * scaleX;
         const sy = c.y * scaleY;
 
@@ -692,32 +699,33 @@ function dibujarPuntosRevision() {
         reviewCtx.arc(sx, sy, 10, 0, 2 * Math.PI);
         reviewCtx.lineWidth = 3;
         reviewCtx.strokeStyle = c.isCorrect ? 'green' : 'red';
-        // solo contorno, sin fill
-        reviewCtx.stroke();
+        reviewCtx.stroke(); // solo contorno
     });
 }
 
 reviewCanvas.addEventListener('pointerdown', (e) => {
     const { x, y } = adjustClickCoordinates(e, reviewCanvas, originalCanvasSize);
 
+    const candidates = reviewShowAll
+        ? clickResults
+        : clickResults.filter(c => !c.isCorrect); // solo visibles (rojos)
+
     let nearestIndex = -1;
     let nearestDist = Infinity;
 
-    clickResults.forEach((c, idx) => {
+    candidates.forEach(c => {
         const dx = x - c.x;
         const dy = y - c.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < nearestDist) {
             nearestDist = dist;
-            nearestIndex = idx;
+            nearestIndex = clickResults.indexOf(c); // índice real en clickResults
         }
     });
 
-    // Si tocó cerca de algún punto (mismo umbral que antes)
     if (nearestDist < 20 && nearestIndex !== -1) {
-        // Invertir estado
+        // Si era rojo (incorrecto) y lo corriges -> pasa a correcto y DESAPARECE (porque ya no se dibuja)
         clickResults[nearestIndex].isCorrect = !clickResults[nearestIndex].isCorrect;
-        // Redibujar todo
         dibujarPuntosRevision();
     }
 });

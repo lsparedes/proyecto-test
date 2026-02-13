@@ -291,26 +291,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function generatePracticeTrials() {
     const totalTrials = cantidad_ensayos_prueba;
-    let leftRewardChance, rightRewardChance;
 
-    // Igual que antes: práctica copia el patrón del bloque 1
-    if (caseOption === 'A') {
-        leftRewardChance = 0.25;
-        rightRewardChance = 0.75;
-    } else {
-        leftRewardChance = 0.75;
-        rightRewardChance = 0.25;
-    }
+    // Práctica SIEMPRE 50/50
+    const leftRewardChance = 0.5;
+    const rightRewardChance = 0.5;
 
-    const practiceTrials = buildDeterministicTrials(
+    return buildDeterministicTrials(
         totalTrials,
         leftRewardChance,
         rightRewardChance,
-        caseOption,
+        caseOption, 
         caseImage
     );
-
-    return practiceTrials;
 }
 
     

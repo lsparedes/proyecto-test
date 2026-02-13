@@ -254,9 +254,11 @@ button:active {
 
 
 
-canvas {
-    border: 1px solid #000;
-
+canvas{
+    border: solid;            /* el canvas sin borde */
+    border-radius: 22px;     /* por si el trazo llega al borde */
+    border-color: #5cf55e;
+    display: block;
 }
 
 #drawing-canvas {
