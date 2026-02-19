@@ -75,3 +75,16 @@ export function clearResultsByPart(partId) {
   if (data.resultsByPart) delete data.resultsByPart[partId];
   save(data);
 }
+
+export function setPartData(partId, dataPatch) {
+  const data = load();
+  data.partData = data.partData || {};
+  const current = data.partData[partId] || {};
+  data.partData[partId] = { ...current, ...dataPatch };
+  save(data);
+}
+
+export function getPartData(partId) {
+  const data = load();
+  return (data.partData && data.partData[partId]) ? data.partData[partId] : {};
+}

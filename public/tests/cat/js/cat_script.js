@@ -22,6 +22,7 @@ export const CAT = {
                 {
                     type: "semantic_match",
                     instruction: "Selecciona la imagen que más se relacione con la imagen central.",
+                    instructionAudio: "assets/audio/parte2_instrucciones.mp3",
                     trials: [
                         {
                             id: 1,
@@ -276,12 +277,74 @@ export const CAT = {
         // Escritura
         // =======================
         { id: 24, group: "Escritura", name: "Copia", steps: [] },
-        { id: 25, group: "Escritura", name: "Etiquetado de imágenes", steps: [] },
-        { id: 26, group: "Escritura", name: "Escritura al dictado", steps: [] },
+        {
+            id: 25,
+            group: "Escritura",
+            name: "Etiquetado de imágenes",
+            steps: [
+                {
+                    type: "image_labeling",
+
+                    // Pantalla 1 (instrucción)
+                    instructionTitle: "Etiquetado de imágenes",
+                    instructionBody: "Escuche las instrucciones y escriba el nombre correspondiente a la imagen.",
+                    instructionAudio: null, // ejemplo: "assets/audio/part25_instrucciones.mp3"
+
+                    // Imágenes (6 en total: 1 práctica + 5 ensayos)
+                    images: [
+                        "assets/parte25/1.png", // práctica
+                        "assets/parte25/2.png", // ensayo 1
+                        "assets/parte25/3.png", // ensayo 2
+                        "assets/parte25/4.png", // ensayo 3
+                        "assets/parte25/5.png", // ensayo 4
+                        "assets/parte25/6.png", // ensayo 5
+                    ],
+
+                    placeholder: "Escriba aquí...",
+                    minChars: 0
+                }
+            ]
+        },
+
+        {
+            id: 26,
+            group: "Escritura",
+            name: "Escritura al dictado",
+            steps: [
+                {
+                    type: "dictation_text",
+                    audio: null, // ejemplo: "assets/audio/parte26_dictado.mp3"
+
+                    prompt: "",
+
+                    // 1 práctica + 5 ensayos = 6
+                    totalPractice: 1,
+                    totalTrials: 5,
+
+                    // si después quieres mínimo de caracteres
+                    minChars: 0
+                }
+            ]
+        },
+
 
         // =======================
         // Discurso Escrito
         // =======================
-        { id: 27, group: "Discurso Escrito", name: "Descripción escrita de una imagen", steps: [] },
+        {
+            id: 27,
+            group: "Discurso Escrito",
+            name: "Descripción escrita de una imagen",
+            instructionAudio: "assets/audio/parte2_instrucciones.mp3",
+            steps: [
+                {
+                    type: "text_image",
+                    image: "assets/parte27/imagen.png",
+                    placeholder: "Escriba aquí su descripción...",
+                    minChars: 1 // por ahora mínimo 1, lo ajustamos cuando definan criterios
+                }
+            ]
+        },
+
     ],
 };
