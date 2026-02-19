@@ -263,15 +263,76 @@ export const CAT = {
         // =======================
         // Discurso Oral
         // =======================
-        { id: 19, group: "Discurso Oral", name: "Descripción oral de una imagen", steps: [] },
+        {
+            id: 19,
+            group: "Discurso Oral",
+            name: "Descripción oral de una imagen",
+            steps: [
+                {
+                    type: "audio_record_image",
+                    image: "assets/parte19/imagen.png",          // pon tu ruta real
+                    instructionAudio: null,                     // "assets/audio/part19_instrucciones.mp3"
+                    audioKey: "part19_take1"                    // clave para guardar el wav
+                }
+            ]
+        },
+
 
         // =======================
         // Lectura
         // =======================
-        { id: 20, group: "Lectura", name: "Lectura de palabras aisladas", steps: [] },
-        { id: 21, group: "Lectura", name: "Lectura de palabras complejas", steps: [] },
-        { id: 22, group: "Lectura", name: "Lectura de palabras funcionales", steps: [] },
-        { id: 23, group: "Lectura", name: "Lectura de no-palabras", steps: [] },
+        {
+            id: 20,
+            group: "Lectura",
+            name: "Lectura de palabras aisladas",
+            steps: [{
+                type: "audio_record_words",
+                instructionAudio: null,
+                autoStart: true,
+                words: [
+                    "silla", "contenedor", "goce", "micrófono", "pierna", "trecho", "pasaporte", "sonajero", "zorro", "tomar",
+                    "estropajo", "causa", "dormitorio", "culpa", "educación", "pasar", "bailarina", "hurgar", "siglo",
+                    "televisión", "diccionario", "brillar", "porcelana", "pecar", "chocolate"
+                ]
+            }]
+        },
+
+        {
+            id: 21,
+            group: "Lectura",
+            name: "Lectura de palabras complejas",
+            steps: [{
+                type: "audio_record_words",
+                instructionAudio: null,
+                autoStart: true,
+                words: ["informativo", "recalentado", "preconcebido"]
+            }]
+        },
+
+        {
+            id: 22,
+            group: "Lectura",
+            name: "Lectura de palabras funcionales",
+            steps: [{
+                type: "audio_record_words",
+                instructionAudio: null,
+                autoStart: true,
+                words: ["pero", "de", "y"]
+            }]
+        },
+
+        {
+            id: 23,
+            group: "Lectura",
+            name: "Lectura de no-palabras",
+            steps: [{
+                type: "audio_record_words",
+                instructionAudio: null,
+                autoStart: true,
+                words: ["polma", "tarco", "fugamo", "vitero", "espisto"]
+            }]
+        },
+
 
         // =======================
         // Escritura

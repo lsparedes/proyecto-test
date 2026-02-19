@@ -1,6 +1,9 @@
 import { CAT } from "./cat_script.js";
 import { getPartProgress, setPartProgress } from "./storage.js";
 import { getPartData, setPartData } from "./storage.js";
+import { WavRecorder } from "./audio_recorder_wav.js";
+import { saveAudioBlob } from "./audio_store_idb.js";
+
 
 const topBar = document.getElementById("topBar");
 const btnNext = document.getElementById("btnNext");
@@ -11,6 +14,7 @@ const layoutCalc = document.getElementById("layoutCalc");
 const layoutTextImage = document.getElementById("layoutTextImage");
 const layoutInstruction = document.getElementById("layoutInstruction");
 const layoutDictation = document.getElementById("layoutDictation");
+const layoutAudioRecord = document.getElementById("layoutAudioRecord");
 
 const btnAudio = document.getElementById("btnAudio");
 const instructionAudio = document.getElementById("instructionAudio");
@@ -21,6 +25,8 @@ function showLayout(which) {
   layoutTextImage.style.display = (which === "text_image") ? "block" : "none";
   layoutInstruction.style.display = (which === "instruction") ? "block" : "none";
   layoutDictation.style.display = (which === "dictation") ? "block" : "none";
+  layoutAudioRecord.style.display = (which === "audio_record") ? "block" : "none";
+
 }
 
 
@@ -582,6 +588,246 @@ function runTextImage(step) {
   };
 }
 
+function runAudioRecordImage(step) {
+  showLayout("audio_record");
+
+  // UI refs
+  const arImage = document.getElementById("arImage");
+  const btnRec = document.getElementById("btnRec");
+  const btnStop = document.getElementById("btnStop");
+  const btnRecording = document.getElementById("btnRecording");
+
+  // top bar
+  topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · ${part.name}`;
+
+  // imagen
+  arImage.src = step.image;
+
+  // audio instrucciones (icono arriba derecha)
+  setupInstructionAudio(step.instructionAudio);
+
+  // fullscreen disponible
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  // flecha: si está grabando -> detiene. Si ya está detenido -> termina (vuelve menú)
+  btnNext.style.display = "block";
+
+  const recorder = new WavRecorder();
+  let isRecording = false;
+  let hasAudio = false;
+
+  function setIdleUI() {
+    btnRec.style.display = "block";
+    btnStop.style.display = "none";
+    btnRecording.style.display = "none";
+  }
+
+  function setRecordingUI() {
+    btnRec.style.display = "none";
+    btnStop.style.display = "block";
+    btnRecording.style.display = "block";
+  }
+
+  async function startRec() {
+    try {
+      await recorder.start({ numChannels: 1 });
+      isRecording = true;
+      setRecordingUI();
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo acceder al micrófono.");
+      setIdleUI();
+    }
+  }
+
+  async function stopRecAndSave() {
+    if (!isRecording) return;
+    isRecording = false;
+
+    const blob = await recorder.stop();
+    if (blob) {
+      hasAudio = true;
+      const key = step.audioKey || `part${partId}_take1`;
+      await saveAudioBlob(key, blob);
+      // Dejamos UI en reposo (puedes decidir ocultar rec si solo es 1 toma)
+      setIdleUI();
+    } else {
+      setIdleUI();
+    }
+  }
+
+  btnRec.onclick = () => startRec();
+  btnStop.onclick = () => stopRecAndSave();
+
+  btnNext.onclick = async () => {
+    // flecha también detiene
+    if (isRecording) {
+      await stopRecAndSave();
+      return; // primera pulsación solo detiene
+    }
+
+    // opcional: exigir que exista audio antes de salir
+    // si no quieres exigirlo, elimina este if
+    if (!hasAudio) {
+      const ok = confirm("Aún no hay grabación. ¿Desea continuar igual?");
+      if (!ok) return;
+    }
+
+    setPartProgress(partId, { status: "done" });
+    window.location.href = "index.html";
+  };
+
+  // estado inicial
+  setIdleUI();
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1 });
+}
+
+function runAudioRecordWords(step) {
+  showLayout("audio_record");
+
+  const arWordWrap = document.getElementById("arWordWrap");
+  const arWord = document.getElementById("arWord");
+  const arImageWrap = document.getElementById("arImageWrap");
+  const arImage = document.getElementById("arImage");
+
+  const btnRec = document.getElementById("btnRec");
+  const btnStop = document.getElementById("btnStop");
+  const btnRecording = document.getElementById("btnRecording");
+
+  // Este layout será solo palabras
+  arImageWrap.style.display = "none";
+  arWordWrap.style.display = "flex";
+
+  // instrucciones por icono
+  setupInstructionAudio(step.instructionAudio);
+
+  // fullscreen disponible
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  // flecha siempre visible
+  btnNext.style.display = "block";
+
+  const words = step.words || [];
+  if (!words.length) throw new Error("Sin palabras configuradas");
+
+  // Progreso (reanudar en la palabra exacta)
+  const saved = getPartProgress(partId);
+  let wordIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.wordIndex)) {
+    wordIndex = Math.min(Math.max(saved.wordIndex, 0), words.length - 1);
+  }
+
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, wordIndex, totalWords: words.length });
+
+  // Para el ZIP futuro: guardamos mapping palabra->key
+  const partData = getPartData(partId);
+  const takes = partData.takes || {}; // { "0": {word, key}, ... }
+
+  const recorder = new WavRecorder();
+  let isRecording = false;
+  let hasThisWordAudio = false;
+
+  function keyForWord(i) {
+    // Ej: part20_w001
+    return `part${String(partId).padStart(2, "0")}_w${String(i + 1).padStart(3, "0")}`;
+  }
+
+  function setIdleUI() {
+    // En este test NO necesitamos rec manual (autoStart),
+    // pero lo dejamos oculto para evitar tocarlo.
+    btnRec.style.display = "none";
+    btnStop.style.display = "none";
+    btnRecording.style.display = "none";
+  }
+
+  function setRecordingUI() {
+    btnRec.style.display = "none";
+    btnStop.style.display = "block";
+    btnRecording.style.display = "block";
+  }
+
+  function setStoppedUI() {
+    // detenido: mostramos solo el botón detener? no; mejor ocultarlo
+    btnStop.style.display = "none";
+    btnRecording.style.display = "none";
+  }
+
+  async function startRecAuto() {
+    try {
+      await recorder.start({ numChannels: 1 });
+      isRecording = true;
+      hasThisWordAudio = false;
+      setRecordingUI();
+    } catch (err) {
+      console.error(err);
+      alert("No se pudo acceder al micrófono.");
+      setIdleUI();
+    }
+  }
+
+  async function stopRecAndSaveCurrent() {
+    if (!isRecording) return;
+    isRecording = false;
+
+    const blob = await recorder.stop();
+    if (blob) {
+      const key = keyForWord(wordIndex);
+      await saveAudioBlob(key, blob);
+
+      takes[String(wordIndex)] = { word: words[wordIndex], key };
+      setPartData(partId, { takes });
+
+      hasThisWordAudio = true;
+    }
+    setStoppedUI();
+  }
+
+  function updateTopBar() {
+    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Palabra ${wordIndex + 1}/${words.length}`;
+  }
+
+  async function renderWord() {
+    updateTopBar();
+    arWord.textContent = words[wordIndex];
+    setPartProgress(partId, { wordIndex });
+
+    // clave: apenas aparece la palabra, ya está grabando
+    setIdleUI();
+    await startRecAuto();
+  }
+
+  // Botón detener: detiene y guarda, pero NO avanza
+  btnStop.onclick = async () => {
+    await stopRecAndSaveCurrent();
+  };
+
+  // Flecha: si está grabando, primero detiene+guarda y luego avanza
+  btnNext.onclick = async () => {
+    if (isRecording) {
+      await stopRecAndSaveCurrent();
+      // después de detener, avanzamos inmediatamente
+    }
+
+    // avanzar
+    wordIndex++;
+    if (wordIndex >= words.length) {
+      setPartProgress(partId, { status: "done", wordIndex: words.length - 1 });
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", wordIndex });
+    await renderWord();
+  };
+
+  // iniciar
+  renderWord();
+}
+
 
 // Router
 if (step.type === "semantic_match") runSemanticMatch(step);
@@ -589,6 +835,8 @@ else if (step.type === "mcq_image") runCalcMCQ(step);
 else if (step.type === "text_image") runTextImage(step);
 else if (step.type === "dictation_text") runDictationText(step);
 else if (step.type === "image_labeling") runImageLabeling(step);
+else if (step.type === "audio_record_image") runAudioRecordImage(step);
+else if (step.type === "audio_record_words") runAudioRecordWords(step);
 else {
   topBar.textContent = `Tipo no soportado: ${step.type}`;
   btnNext.style.display = "none";
