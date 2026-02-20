@@ -151,8 +151,49 @@ export const CAT = {
         },
 
         { id: 3, group: "Examen Cognitivo", name: "Fluidez verbal", steps: [] },
-        { id: 4, group: "Examen Cognitivo", name: "Memoria a corto plazo", steps: [] },
-        { id: 5, group: "Examen Cognitivo", name: "Pantomima", steps: [] },
+        {
+            id: 4,
+            group: "Examen Cognitivo",
+            name: "Memoria a corto plazo",
+            steps: [
+                {
+                    type: "mcq4_image_trials",
+
+                    // solo en prueba (pantalla 1)
+                    instructionAudio: null, // ejemplo: "assets/audio/parte4_instrucciones.mp3"
+
+                    // 1 prueba + 10 ensayos (total 11 pantallas)
+                    totalTrials: 11,       // pantallas 1..11
+                    practiceIndex: 1,      // la pantalla 1 es prueba
+
+                    // ruta base y patrón de nombres
+                    basePath: "assets/parte4",  // ojo: “parte4” como dijiste
+                    filePattern: "{t}-{o}.png", // t = 1..11, o = 1..4
+
+                    // UI
+                    requireSelectionToAdvance: true
+                }
+            ]
+        },
+        {
+            id: 5,
+            group: "Examen Cognitivo",
+            name: "Pantomima",
+            steps: [
+                {
+                    type: "video_record_trials",
+                    instructionAudio: null, // pones el mp3 después
+
+                    // 1 práctica + 6 ensayos => total 7 pantallas de estímulo
+                    practiceCount: 1,
+                    trialCount: 6,
+
+                    // imágenes: práctica = 1.png, ensayos = 2.png..7.png
+                    basePath: "assets/parte5",
+                    images: ["1.png", "2.png", "3.png", "4.png", "5.png", "6.png", "7.png"]
+                }
+            ]
+        },
         {
             id: 6,
             group: "Examen Cognitivo",

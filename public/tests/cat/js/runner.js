@@ -3,7 +3,8 @@ import { getPartProgress, setPartProgress } from "./storage.js";
 import { getPartData, setPartData } from "./storage.js";
 import { WavRecorder } from "./audio_recorder_wav.js";
 import { saveAudioBlob } from "./audio_store_idb.js";
-
+import { VideoRecorder } from "./video_recorder.js";
+import { saveBlob } from "./blob_store_idb.js";
 
 const topBar = document.getElementById("topBar");
 const btnNext = document.getElementById("btnNext");
@@ -15,6 +16,7 @@ const layoutTextImage = document.getElementById("layoutTextImage");
 const layoutInstruction = document.getElementById("layoutInstruction");
 const layoutDictation = document.getElementById("layoutDictation");
 const layoutAudioRecord = document.getElementById("layoutAudioRecord");
+const layoutVideoRecord = document.getElementById("layoutVideoRecord");
 
 const btnAudio = document.getElementById("btnAudio");
 const instructionAudio = document.getElementById("instructionAudio");
@@ -26,7 +28,7 @@ function showLayout(which) {
   layoutInstruction.style.display = (which === "instruction") ? "block" : "none";
   layoutDictation.style.display = (which === "dictation") ? "block" : "none";
   layoutAudioRecord.style.display = (which === "audio_record") ? "block" : "none";
-
+  layoutVideoRecord.style.display = (which === "video_record") ? "block" : "none";
 }
 
 
@@ -184,6 +186,326 @@ function runSemanticMatch(step) {
   renderTrial();
 }
 
+//Memoria a corto plazo
+
+function runMCQ4ImageTrials(step) {
+  showLayout("semantic"); // reutilizamos layout de 4 opciones + centro
+
+  const centerBox = document.getElementById("centerBox");
+  const centerImg = document.getElementById("centerImg");
+  const optBoxes = [
+    document.getElementById("opt0"),
+    document.getElementById("opt1"),
+    document.getElementById("opt2"),
+    document.getElementById("opt3"),
+  ];
+  const optImgs = [
+    document.getElementById("img0"),
+    document.getElementById("img1"),
+    document.getElementById("img2"),
+    document.getElementById("img3"),
+  ];
+
+  // En este test NO hay imagen central. Ocultamos el centro:
+  centerBox.style.display = "none";
+
+  // Fullscreen disponible siempre
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  // Flecha oculta hasta elegir (si requireSelectionToAdvance)
+  btnNext.style.display = "none";
+
+  const total = Number(step.totalTrials ?? 11);      // 11 pantallas: 1 prueba + 10 ensayos
+  const practiceIndex = Number(step.practiceIndex ?? 1); // 1 = prueba
+  const basePath = step.basePath || "assets/parte4";
+  const pattern = step.filePattern || "{t}-{o}.png";
+  const requireSel = step.requireSelectionToAdvance !== false;
+
+  // Progreso
+  const saved = getPartProgress(partId);
+  let trialIndex = 1; // 1..total
+
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.trialIndex)) {
+    trialIndex = Math.min(Math.max(saved.trialIndex, 1), total);
+  }
+
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, trialIndex, totalTrials: total });
+
+  let selectedIndex = null;
+
+  function fileFor(t, o) {
+    return `${basePath}/${pattern.replace("{t}", String(t)).replace("{o}", String(o))}`;
+  }
+
+  function clearSelection() {
+    optBoxes.forEach(b => b.classList.remove("selected"));
+    selectedIndex = null;
+    btnNext.style.display = requireSel ? "none" : "block";
+  }
+
+  function updateTopBar() {
+    // Prueba (t=1)
+    if (trialIndex === practiceIndex) {
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Prueba 1/1`;
+    } else {
+      // Ensayos cuentan sin la prueba
+      const ensayoN = trialIndex - practiceIndex; // 2->1 ... 11->10
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Ensayo ${ensayoN}/10`;
+    }
+  }
+
+  function updateAudioButton() {
+    // Solo en la prueba: instrucciones en audio (sin texto)
+    if (trialIndex === practiceIndex) {
+      setupInstructionAudio(step.instructionAudio); // icono visible (aunque sea null por ahora, quedará oculto)
+      // OJO: tú pediste “deja el icono puesto” aunque no haya audio aún.
+      // Entonces forzamos el icono visible en prueba aunque no haya src:
+      btnAudio.style.display = "block";
+      instructionAudio.src = step.instructionAudio || "";
+      btnAudio.onclick = () => {
+        if (!instructionAudio.src) return; // cuando pongas el audio, funcionará
+        instructionAudio.currentTime = 0;
+        instructionAudio.play();
+      };
+    } else {
+      setupInstructionAudio(null);
+    }
+  }
+
+  function renderTrial() {
+    clearSelection();
+    updateTopBar();
+    updateAudioButton();
+
+    // cargar las 4 imágenes del trial
+    for (let o = 1; o <= 4; o++) {
+      optImgs[o - 1].src = fileFor(trialIndex, o);
+    }
+
+    setPartProgress(partId, { trialIndex });
+  }
+
+  // Elegir opción (no avanza automático)
+  optBoxes.forEach(box => {
+    box.onclick = () => {
+      const idx = Number(box.dataset.opt); // 0..3
+      selectedIndex = idx;
+
+      optBoxes.forEach(b => b.classList.remove("selected"));
+      box.classList.add("selected");
+
+      btnNext.style.display = "block";
+    };
+  });
+
+  // Flecha: avanza (exige selección si corresponde)
+  btnNext.onclick = () => {
+    if (requireSel && selectedIndex === null) return;
+
+    // (por ahora solo guardamos “selección” en partData para futuro ZIP)
+    const data = getPartData(partId);
+    const responses = data.responses || {};
+    responses[String(trialIndex)] = { selected: selectedIndex }; // 0..3
+    setPartData(partId, { responses });
+
+    trialIndex++;
+    if (trialIndex > total) {
+      setPartProgress(partId, { status: "done", trialIndex: total });
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", trialIndex });
+    renderTrial();
+  };
+
+  renderTrial();
+}
+
+// Pantomina
+
+function runVideoRecordTrials(step) {
+  showLayout("video_record");
+
+  const vrPreviewWrap = document.getElementById("vrPreviewWrap");
+  const vrPreview = document.getElementById("vrPreview");
+
+  const vrStimWrap = document.getElementById("vrStimWrap");
+  const vrStimImage = document.getElementById("vrStimImage");
+  const vrSmallPreview = document.getElementById("vrSmallPreview");
+
+  const vBtnRec = document.getElementById("vBtnRec");
+  const vBtnStop = document.getElementById("vBtnStop");
+  const vBtnRecording = document.getElementById("vBtnRecording");
+
+  const images = step.images || [];
+  const practiceCount = Number(step.practiceCount ?? 1);
+  const trialCount = Number(step.trialCount ?? 6);
+  const totalStimScreens = images.length; // debería ser 7 (1..7)
+
+  // estado: screenIndex 0=ajuste cam, 1..7=estímulos
+  const totalScreens = 1 + totalStimScreens;
+
+  const saved = getPartProgress(partId);
+  let screenIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+  }
+
+  setPartProgress(partId, { status:"in_progress", stepIndex:0, totalSteps:1, screenIndex, totalScreens });
+
+  // audio instrucciones (icono arriba derecha) — lo mostramos en pantallas de estímulo
+  // (si quieres solo en práctica, lo cambiamos)
+  // setupInstructionAudio(step.instructionAudio);
+
+  // fullscreen + flecha
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+  btnNext.style.display = "block";
+
+  const recorder = new VideoRecorder();
+  let isRecording = false;
+  let didRecordThisScreen = false;
+
+  function setIdleUI() {
+    vBtnRec.style.display = "block";
+    vBtnStop.style.display = "none";
+    vBtnRecording.style.display = "none";
+    isRecording = false;
+  }
+
+  function setRecordingUI() {
+    vBtnRec.style.display = "none";
+    vBtnStop.style.display = "block";
+    vBtnRecording.style.display = "block";
+    isRecording = true;
+  }
+
+  async function startStreamTo(el) {
+    await recorder.startStream(el);
+  }
+
+  async function startRecording() {
+    await recorder.startRecording();
+    didRecordThisScreen = false;
+    setRecordingUI();
+  }
+
+  async function stopRecordingAndSave() {
+    if (!isRecording) return;
+    const blob = await recorder.stopRecording();
+    setIdleUI();
+
+    if (blob) {
+      didRecordThisScreen = true;
+
+      // key: part05_s02 (screen estímulo)
+      const stimIndex = screenIndex; // 1..7
+      const key = `part${String(partId).padStart(2,"0")}_s${String(stimIndex).padStart(2,"0")}.webm`;
+      await saveBlob(key, blob);
+
+      // guardamos mapping en partData (para ZIP futuro)
+      const data = getPartData(partId);
+      const takes = data.takes || {};
+      takes[String(stimIndex)] = { key, image: images[stimIndex - 1] };
+      setPartData(partId, { takes });
+    }
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2,"0")}`;
+
+    if (screenIndex === 0) {
+      topBar.textContent = `${partLabel} · Ajuste cámara`;
+      return;
+    }
+
+    if (screenIndex === 1) {
+      topBar.textContent = `${partLabel} · Prueba 1/1`;
+      return;
+    }
+
+    const ensayoN = screenIndex - 1; // 2..7 => 1..6
+    topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/${trialCount}`;
+  }
+
+  async function render() {
+    updateTopBar();
+    setPartProgress(partId, { screenIndex });
+
+    // Pantalla 1: ajuste cámara
+    if (screenIndex === 0) {
+      vrPreviewWrap.style.display = "flex";
+      vrStimWrap.style.display = "none";
+
+      setupInstructionAudio(null); // no instrucciones aquí
+      btnAudio.style.display = "none"; // opcional: oculto
+
+      // stream al preview grande
+      await startStreamTo(vrPreview);
+
+      // sin botones rec/detener
+      setIdleUI();
+      vBtnRec.style.display = "none";
+      vBtnStop.style.display = "none";
+      vBtnRecording.style.display = "none";
+      return;
+    }
+
+    // Pantallas estímulo
+    vrPreviewWrap.style.display = "none";
+    vrStimWrap.style.display = "block";
+
+    // mostrar audio de instrucciones
+    // (si luego quieres solo en práctica: if(screenIndex===1) setupInstructionAudio(...) else setupInstructionAudio(null))
+    setupInstructionAudio(step.instructionAudio);
+
+    // stream a preview pequeño
+    await startStreamTo(vrSmallPreview);
+
+    // imagen estímulo
+    vrStimImage.src = `${step.basePath}/${images[screenIndex - 1]}`;
+
+    setIdleUI();
+  }
+
+  // botones
+  vBtnRec.onclick = async () => {
+    try { await startRecording(); }
+    catch (e) { console.error(e); alert("No se pudo iniciar la grabación."); setIdleUI(); }
+  };
+
+  vBtnStop.onclick = async () => {
+    await stopRecordingAndSave();
+  };
+
+  // flecha: si está grabando -> detiene+guarda; si no, avanza
+  btnNext.onclick = async () => {
+    if (isRecording) {
+      await stopRecordingAndSave();
+      return; // primera pulsación solo detiene (igual que audio)
+    }
+
+    // avanzar
+    screenIndex++;
+    if (screenIndex >= totalScreens) {
+      setPartProgress(partId, { status:"done", screenIndex: totalScreens - 1 });
+      // opcional: detener stream al final
+      recorder.stopStream();
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status:"in_progress", screenIndex });
+    await render();
+  };
+
+  // inicial
+  render();
+}
 
 /* =========================
    CÁLCULO (Parte 6)
@@ -837,6 +1159,8 @@ else if (step.type === "dictation_text") runDictationText(step);
 else if (step.type === "image_labeling") runImageLabeling(step);
 else if (step.type === "audio_record_image") runAudioRecordImage(step);
 else if (step.type === "audio_record_words") runAudioRecordWords(step);
+else if (step.type === "mcq4_image_trials") runMCQ4ImageTrials(step);
+else if (step.type === "video_record_trials") runVideoRecordTrials(step);
 else {
   topBar.textContent = `Tipo no soportado: ${step.type}`;
   btnNext.style.display = "none";
