@@ -12,7 +12,7 @@ export const CAT = {
         // =======================
         // Examen Cognitivo
         // =======================
-        { id: 1, group: "Examen Cognitivo", name: "Disección de líneas", steps: [] },
+        { id: 1, group: "Examen Cognitivo", name: "Disección de líneas - Falta terminar!!!", steps: [] },
         // Parte 2 - Memoria semántica
         {
             id: 2,
@@ -150,7 +150,26 @@ export const CAT = {
             ]
         },
 
-        { id: 3, group: "Examen Cognitivo", name: "Fluidez verbal", steps: [] },
+        {
+            id: 3,
+            group: "Examen Cognitivo",
+            name: "Fluidez verbal",
+            steps: [
+                {
+                    type: "verbal_fluency",
+
+                    // Audios
+                    instr1Audio: null,
+                    ropaAudio: null,
+                    animalesAudio: null,
+                    instr2Audio: null,
+                    letraBAudio: null,
+                    letraSAudio: null,
+
+                    recordDurationMs: 60000
+                }
+            ]
+        },
         {
             id: 4,
             group: "Examen Cognitivo",
@@ -284,22 +303,314 @@ export const CAT = {
         // =======================
         // Batería de Lenguaje - Parte 1: Comprensión
         // =======================
-        { id: 7, group: "Batería de Lenguaje · Comprensión", name: "Comprensión oral de palabras aisladas", steps: [] },
-        { id: 8, group: "Batería de Lenguaje · Comprensión", name: "Comprensión escrita de palabras aisladas", steps: [] },
-        { id: 9, group: "Batería de Lenguaje · Comprensión", name: "Comprensión oral de oraciones", steps: [] },
-        { id: 10, group: "Batería de Lenguaje · Comprensión", name: "Comprensión escrita de oraciones", steps: [] },
-        { id: 11, group: "Batería de Lenguaje · Comprensión", name: "Comprensión oral de párrafos", steps: [] },
+        {
+            id: 7,
+            group: "Batería de Lenguaje",
+            name: "Comprensión oral de palabras aisladas",
+            steps: [
+                {
+                    type: "audio_mcq4_trials",
+
+                    basePath: "assets/parte7",
+                    // imágenes: 1-1..1-4 práctica, 2-1..16-4 ensayos
+                    firstTrial: 1,
+                    lastTrial: 16,
+                    filePattern: "{t}-{o}.png", // t=1..16, o=1..4
+
+                    // Audios (tú los enlazas después)
+                    instructionAudio: null,         // pantalla 1 (audio centrado)
+                    practiceAudio1: null,           // pantalla 2 (icono 1 arriba derecha)
+                    practiceAudio2: null,           // pantalla 2 (icono 2 arriba derecha)
+
+                    // Audio por ensayo (1 por pantalla del 2 al 16)
+                    trialAudioPattern: null,        // ejemplo: "assets/parte7/audio/{t}.mp3"
+
+                    requireSelectionToAdvance: true
+                }
+            ]
+        },
+        {
+            id: 8,
+            group: "Batería de Lenguaje",
+            name: "Comprensión escrita de palabras aisladas",
+            steps: [
+                {
+                    type: "audio_mcq4_words_on_screen",
+
+                    basePath: "assets/parte8",
+                    firstTrial: 1,
+                    lastTrial: 16,
+                    filePattern: "{t}-{o}.png",
+
+                    // Pantalla 1: instrucción (audio centrado)
+                    instructionAudio: null,
+
+                    // Audios: solo en t=1 y t=2
+                    audioT1: null,
+                    audioT2: null,
+
+                    // Palabras en orden t=1..16
+                    words: [
+                        "piña", "dedal", "sable", "mesa", "carta", "cocina", "espina", "vela",
+                        "rama", "toro", "hueso", "lima", "pata", "cama", "fuente", "barco"
+                    ],
+
+                    requireSelectionToAdvance: true
+                }
+            ]
+        },
+        {
+            id: 9,
+            group: "Batería de Lenguaje",
+            name: "Comprensión oral de oraciones",
+            steps: [
+                {
+                    type: "audio_mcq4_trials_with_dual_intro",
+
+                    basePath: "assets/parte9",
+                    firstTrial: 1,
+                    lastTrial: 17,
+                    filePattern: "{t}-{o}.png",
+
+                    // Pantalla 1: 2 audios centrados
+                    introAudio1: null,  // "assets/parte9/audio/intro_1.mp3"
+                    introAudio2: null,  // "assets/parte9/audio/intro_2.mp3"
+
+                    // Audio por pantalla (t=1..17). Tú lo enlazas después.
+                    trialAudioPattern: null, // ej: "assets/parte9/audio/{t}.mp3"
+
+                    requireSelectionToAdvance: true
+                }
+            ]
+        },
+        {
+            id: 10,
+            group: "Batería de Lenguaje",
+            name: "Comprensión escrita de oraciones",
+            steps: [
+                {
+                    type: "mcq4_sentence_center_with_audio_practice",
+
+                    basePath: "assets/parte10",
+                    firstTrial: 1,
+                    lastTrial: 17,
+                    filePattern: "{t}-{o}.png",
+
+                    // Pantalla 1 (instrucción)
+                    instructionAudio: null,
+
+                    // Pantalla 2 (t=1): 2 audios arriba derecha
+                    practiceAudio1: null,
+                    practiceAudio2: null,
+
+                    // Oraciones por t=1..17
+                    sentences: [
+                        "El hombre está sentado",
+                        "El hombre está bebiendo",
+                        "La mujer está caminando",
+                        "Él está llorando",
+                        "La mujer se está comiendo un helado",
+                        "El hombre está pintando un cuadro",
+                        "El niño está sentado bajo la mesa",
+                        "El lápiz está bajo el papel",
+                        "El cocinero llama al doctor",
+                        "El doctor empuja al cantante",
+                        "La bailarina es dibujada por la bruja",
+                        "El doctor es perseguido por el cocinero",
+                        "La bruja dibuja a la bailarina",
+                        "El zapato bajo el lápiz es rojo",
+                        "La alfombra en la que está el gato es verde",
+                        "El zapato amarillo está bajo el lápiz",
+                        "La flor bajo la taza es roja"
+                    ],
+
+                    requireSelectionToAdvance: true
+                }
+            ]
+        },
+        {
+            id: 11,
+            group: "Batería de Lenguaje",
+            name: "Comprensión oral de párrafos",
+            steps: [
+                {
+                    type: "story_yesno_flow",
+                    // Pantallas:
+                    // 1) 3 audios centrados (instrucción + 2 preguntas simples)
+                    screen1_centerAudios: [null, null, null],
+
+                    // 2) historia 1 (audio centrado)
+                    story1_audio: null,
+
+                    // 3-6) 4 preguntas Sí/No (audio arriba derecha)
+                    yesno_block1_audios: [null, null, null, null],
+
+                    // 7) historia 2 + 3 audios centrados (apilados)
+                    story2_audio: null,
+                    screen7_centerAudios: [null, null, null],
+
+                    // 8-11) 4 preguntas Sí/No (audio arriba derecha)
+                    yesno_block2_audios: [null, null, null, null],
+
+                    requireSelectionToAdvance: true
+                }
+            ]
+        },
 
         // =======================
         // Batería de Lenguaje - Parte 2: Producción
         // =======================
-        { id: 12, group: "Batería de Lenguaje · Producción", name: "Repetición de palabras", steps: [] },
-        { id: 13, group: "Batería de Lenguaje · Producción", name: "Repetición de palabras complejas", steps: [] },
-        { id: 14, group: "Batería de Lenguaje · Producción", name: "Repetición de no-palabras", steps: [] },
-        { id: 15, group: "Batería de Lenguaje · Producción", name: "Repetición de dígitos", steps: [] },
-        { id: 16, group: "Batería de Lenguaje · Producción", name: "Repetición de oraciones", steps: [] },
-        { id: 17, group: "Batería de Lenguaje · Producción", name: "Denominación de objetos", steps: [] },
-        { id: 18, group: "Batería de Lenguaje · Producción", name: "Denominación de acciones", steps: [] },
+        {
+            id: 12,
+            group: "Parte 2: Producción",
+            name: "Repetición de palabras",
+            steps: [
+                {
+                    type: "repeat_audio_record",
+
+                    // Pantalla 1: 2 audios de instrucción (centrados)
+                    introAudios: [null, null],
+
+                    // Pantalla 2: ejemplo (audio centrado)
+                    exampleAudio: null,
+
+                    // Pantallas 3..16: ensayos (14 audios centrados)
+                    trialAudioPattern: null, // ejemplo: "assets/parte12/audio/{n}.mp3" con n=1..14
+
+                    totalTrials: 14
+                }
+            ]
+        },
+        {
+            id: 13,
+            group: "Parte 2: Producción",
+            name: "Repetición de palabras complejas",
+            steps: [
+                {
+                    type: "repeat_audio_record",
+
+                    // sin pantalla de instrucciones
+                    introAudios: [],
+
+                    // pantalla 1 (ejemplo / primer audio)
+                    exampleAudio: null,
+
+                    // pantallas 2 y 3 (2 ensayos)
+                    trialAudioPattern: null, // ejemplo: "assets/parte13/audio/{n}.mp3" con n=1..2
+
+                    totalTrials: 2
+                }
+            ]
+        },
+        {
+            id: 14,
+            group: "Parte 2: Producción",
+            name: "Repetición de no-palabras",
+            steps: [
+                {
+                    type: "repeat_audio_record",
+
+                    // Pantalla 1: 2 audios centrados (arriba/abajo)
+                    introAudios: [null, null], // luego pones rutas
+
+                    // Pantallas 2..6: audio+grabación
+                    exampleAudio: null,        // pantalla 2
+                    trialAudioPattern: null,   // pantallas 3..6 (n=1..4)
+
+                    totalTrials: 4             // 1 example + 4 trials = 5 pantallas de grabación (2..6)
+                }
+            ]
+        },
+        {
+            id: 15,
+            group: "Parte 2: Producción",
+            name: "Repetición de dígitos",
+            steps: [
+                {
+                    type: "repeat_audio_record",
+
+                    // Pantalla 1: 2 audios centrados (instrucciones)
+                    introAudios: [null, null],
+
+                    // NO hay ejemplo, así que lo dejamos null
+                    exampleAudio: null,
+
+                    // 12 ensayos (pantallas 2..13)
+                    trialAudioPattern: null, // ejemplo: "assets/parte15/audio/{n}.mp3" con n=1..12
+                    totalTrials: 12,
+
+                    // Nuevo flag para decir que NO hay ejemplo (solo trials)
+                    noExample: true
+                }
+            ]
+        },
+        {
+            id: 16,
+            group: "Parte 2: Producción",
+            name: "Repetición de oraciones",
+            steps: [
+                {
+                    type: "repeat_audio_record",
+
+                    // Pantalla 1: instrucción (2 audios centrados)
+                    introAudios: [null, null],
+
+                    // Sin ejemplo: solo ensayos
+                    noExample: true,
+                    exampleAudio: null,
+
+                    // 8 ensayos
+                    totalTrials: 8,
+                    trialAudioPattern: null // ejemplo: "assets/parte16/audio/{n}.mp3" con n=1..8
+                }
+            ]
+        },
+        {
+            id: 17,
+            group: "Parte 2: Producción",
+            name: "Denominación de objetos",
+            steps: [
+                {
+                    type: "image_instr_auto_record",
+
+                    basePath: "assets/parte17",
+                    firstImage: 1,
+                    lastImage: 25,
+                    imagePattern: "{n}.png",
+
+                    // Instrucciones por pantalla:
+                    // pantalla 1: I, P, PS, PF
+                    // pantallas 2..25: P, PS, PF
+                    instrI: null,
+                    instrP: null,
+                    instrPS: null,
+                    instrPF: null,
+
+                    // grabación wav (auto)
+                    autoStartRecording: true
+                }
+            ]
+        },
+        {
+            id: 18,
+            group: "Parte 2: Producción",
+            name: "Denominación de acciones",
+            steps: [
+                {
+                    type: "image_auto_record_simple",
+
+                    basePath: "assets/parte18",
+                    firstImage: 1,
+                    lastImage: 5,
+                    imagePattern: "{n}.png",
+
+                    // Solo pantalla 1
+                    instructionAudio: null,
+
+                    autoStartRecording: true
+                }
+            ]
+        },
 
         // =======================
         // Discurso Oral
@@ -378,7 +689,7 @@ export const CAT = {
         // =======================
         // Escritura
         // =======================
-        { id: 24, group: "Escritura", name: "Copia", steps: [] },
+        { id: 24, group: "Escritura", name: "Copia - Falta Terminar!!!", steps: [] },
         {
             id: 25,
             group: "Escritura",

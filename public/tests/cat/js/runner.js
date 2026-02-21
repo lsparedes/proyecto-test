@@ -21,6 +21,23 @@ const layoutVideoRecord = document.getElementById("layoutVideoRecord");
 const btnAudio = document.getElementById("btnAudio");
 const instructionAudio = document.getElementById("instructionAudio");
 
+const btnAudioCenter = document.getElementById("btnAudioCenter");
+const btnAudio2 = document.getElementById("btnAudio2");
+const instructionAudio2 = document.getElementById("instructionAudio2");
+const btnAudioCenter2 = document.getElementById("btnAudioCenter2");
+const instructionAudioCenter2 = document.getElementById("instructionAudioCenter2");
+
+const layoutCenterAudios = document.getElementById("layoutCenterAudios");
+const layoutYesNo = document.getElementById("layoutYesNo");
+
+const layoutRepeatAudio = document.getElementById("layoutRepeatAudio");
+
+const layoutImageInstrRecord = document.getElementById("layoutImageInstrRecord");
+
+const layoutImageRecordSimple = document.getElementById("layoutImageRecordSimple");
+
+const layoutFluency = document.getElementById("layoutFluency");
+
 function showLayout(which) {
   layoutSemantic.style.display = (which === "semantic") ? "block" : "none";
   layoutCalc.style.display = (which === "calc") ? "block" : "none";
@@ -29,9 +46,23 @@ function showLayout(which) {
   layoutDictation.style.display = (which === "dictation") ? "block" : "none";
   layoutAudioRecord.style.display = (which === "audio_record") ? "block" : "none";
   layoutVideoRecord.style.display = (which === "video_record") ? "block" : "none";
+  layoutCenterAudios.style.display = (which === "center_audios") ? "block" : "none";
+  layoutYesNo.style.display = (which === "yesno") ? "block" : "none";
+  layoutRepeatAudio.style.display = (which === "repeat_audio") ? "block" : "none";
+  layoutImageInstrRecord.style.display = (which === "img_instr_record") ? "block" : "none";
+  layoutImageRecordSimple.style.display = (which === "img_record_simple") ? "block" : "none";
+  layoutFluency.style.display = (which === "fluency") ? "block" : "none";
 }
 
+const cAudio1 = document.getElementById("cAudio1");
+const cAudio2 = document.getElementById("cAudio2");
+const cAudio3 = document.getElementById("cAudio3");
+const cAudioEl1 = document.getElementById("cAudioEl1");
+const cAudioEl2 = document.getElementById("cAudioEl2");
+const cAudioEl3 = document.getElementById("cAudioEl3");
 
+const btnYes = document.getElementById("btnYes");
+const btnNo = document.getElementById("btnNo");
 
 function toggleFullscreen() {
   const el = document.documentElement;
@@ -67,6 +98,45 @@ function setupInstructionAudio(audioPath) {
   };
 }
 
+function setupAudio(btnEl, audioEl, audioPath, { forceShow = false } = {}) {
+  if (!audioPath && !forceShow) {
+    btnEl.style.display = "none";
+    audioEl.src = "";
+    btnEl.onclick = null;
+    return;
+  }
+
+  // si no hay path aún, igual mostramos el ícono pero no hace nada
+  audioEl.src = audioPath || "";
+  btnEl.style.display = "block";
+
+  btnEl.onclick = () => {
+    if (!audioEl.src) return;
+    audioEl.currentTime = 0;
+    audioEl.play();
+  };
+}
+
+function setupCenterAudios(audioList) {
+  const list = audioList || [];
+  const audios = [cAudioEl1, cAudioEl2, cAudioEl3];
+  const btns = [cAudio1, cAudio2, cAudio3];
+
+  for (let i = 0; i < 3; i++) {
+    const path = list[i] || "";
+    audios[i].src = path;
+
+    // Mostrar u ocultar ícono: en este test queremos que se vea aunque sea null,
+    // pero solo para la cantidad que corresponde (1 o 3).
+    btns[i].style.display = (i < list.length) ? "block" : "none";
+
+    btns[i].onclick = () => {
+      if (!audios[i].src) return; // cuando pegues el audio, funcionará
+      audios[i].currentTime = 0;
+      audios[i].play();
+    };
+  }
+}
 
 const url = new URL(window.location.href);
 const partId = Number(url.searchParams.get("part") || "0");
@@ -346,15 +416,22 @@ function runVideoRecordTrials(step) {
   const totalStimScreens = images.length; // debería ser 7 (1..7)
 
   // estado: screenIndex 0=ajuste cam, 1..7=estímulos
-  const totalScreens = 1 + totalStimScreens;
+  const hasIntro = Array.isArray(step.introAudios) && step.introAudios.length > 0;
+
+  // screens:
+  // si hay intro: 0=intro, 1=example, 2..=trials
+  // si NO hay intro: 0=example, 1..=trials
+  const totalTrials = Number(step.totalTrials ?? 14);
+  const totalScreens = (hasIntro ? 1 : 0) + 1 + totalTrials; // intro? + example + trials;
 
   const saved = getPartProgress(partId);
   let screenIndex = 0;
+
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
     screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
   }
 
-  setPartProgress(partId, { status:"in_progress", stepIndex:0, totalSteps:1, screenIndex, totalScreens });
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, screenIndex, totalScreens });
 
   // audio instrucciones (icono arriba derecha) — lo mostramos en pantallas de estímulo
   // (si quieres solo en práctica, lo cambiamos)
@@ -404,7 +481,7 @@ function runVideoRecordTrials(step) {
 
       // key: part05_s02 (screen estímulo)
       const stimIndex = screenIndex; // 1..7
-      const key = `part${String(partId).padStart(2,"0")}_s${String(stimIndex).padStart(2,"0")}.webm`;
+      const key = `part${String(partId).padStart(2, "0")}_s${String(stimIndex).padStart(2, "0")}.webm`;
       await saveBlob(key, blob);
 
       // guardamos mapping en partData (para ZIP futuro)
@@ -416,7 +493,7 @@ function runVideoRecordTrials(step) {
   }
 
   function updateTopBar() {
-    const partLabel = `Parte ${String(partId).padStart(2,"0")}`;
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
 
     if (screenIndex === 0) {
       topBar.textContent = `${partLabel} · Ajuste cámara`;
@@ -492,14 +569,14 @@ function runVideoRecordTrials(step) {
     // avanzar
     screenIndex++;
     if (screenIndex >= totalScreens) {
-      setPartProgress(partId, { status:"done", screenIndex: totalScreens - 1 });
+      setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
       // opcional: detener stream al final
       recorder.stopStream();
       window.location.href = "index.html";
       return;
     }
 
-    setPartProgress(partId, { status:"in_progress", screenIndex });
+    setPartProgress(partId, { status: "in_progress", screenIndex });
     await render();
   };
 
@@ -586,6 +663,1420 @@ function runCalcMCQ(step) {
   };
 
   renderTrial();
+}
+
+function runAudioMCQ4Trials(step) {
+  // Reutilizamos layout de 4 opciones (semantic) pero SIN centro
+  showLayout("semantic");
+  const centerBox = document.getElementById("centerBox");
+  centerBox.style.display = "none";
+
+  const optBoxes = [
+    document.getElementById("opt0"),
+    document.getElementById("opt1"),
+    document.getElementById("opt2"),
+    document.getElementById("opt3"),
+  ];
+  const optImgs = [
+    document.getElementById("img0"),
+    document.getElementById("img1"),
+    document.getElementById("img2"),
+    document.getElementById("img3"),
+  ];
+
+  const basePath = step.basePath || "assets/parte7";
+  const filePattern = step.filePattern || "{t}-{o}.png";
+  const firstTrial = Number(step.firstTrial ?? 1);
+  const lastTrial = Number(step.lastTrial ?? 16);
+  const requireSel = step.requireSelectionToAdvance !== false;
+
+  // práctica = t=1
+  const practiceT = 1;
+  const totalTestTrials = Math.max(lastTrial - 1, 0); // 2..16 => 15
+
+  // screenIndex:
+  // 0 = instrucción
+  // 1 = práctica (t=1)
+  // 2..16 = ensayos (t=2..16)  -> en general, screenIndex == t
+  const totalScreens = 1 + (lastTrial - firstTrial + 1); // 1 + 16 = 17
+
+  const saved = getPartProgress(partId);
+  let screenIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+  }
+
+  setPartProgress(partId, {
+    status: "in_progress",
+    stepIndex: 0,
+    totalSteps: 1,
+    screenIndex,
+    totalScreens
+  });
+
+  // Fullscreen + flecha
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  let selectedIndex = null;
+
+  function fileFor(t, o) {
+    const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
+    return `${basePath}/${f}`;
+  }
+
+  function trialAudioFor(t) {
+    const p = step.trialAudioPattern;
+    if (!p) return null;
+    return p.replace("{t}", String(t));
+  }
+
+  function clearSelection() {
+    optBoxes.forEach(b => b.classList.remove("selected"));
+    selectedIndex = null;
+    btnNext.style.display = requireSel ? "none" : "block";
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+
+    if (screenIndex === 0) {
+      topBar.textContent = `${partLabel} · Instrucción`;
+      return;
+    }
+
+    if (screenIndex === 1) {
+      topBar.textContent = `${partLabel} · Ejemplo 1/1`;
+      return;
+    }
+
+    const t = screenIndex; // 2..16
+    const ensayoN = t - 1; // 2->1 ... 16->15
+    topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/${totalTestTrials}`;
+  }
+
+  function render() {
+    updateTopBar();
+    setPartProgress(partId, { screenIndex });
+
+    // por defecto ocultamos todo audio extra
+    btnAudioCenter.style.display = "none";
+    btnAudio2.style.display = "none";
+
+    if (screenIndex === 0) {
+      // Pantalla instrucción: solo audio centrado
+      clearSelection();
+      optBoxes.forEach(b => (b.style.display = "none")); // ocultar opciones
+
+      // audio centrado (forzar ícono visible aunque aún no exista el mp3)
+      setupAudio(btnAudioCenter, instructionAudio, step.instructionAudio, { forceShow: true });
+
+      // arriba derecha no se usa aquí
+      setupInstructionAudio(null);
+      setupAudio(btnAudio2, instructionAudio2, null);
+
+      // flecha para pasar a práctica
+      btnNext.style.display = "block";
+      return;
+    }
+
+    // Pantallas con 4 imágenes (práctica y ensayos)
+    optBoxes.forEach(b => (b.style.display = "block"));
+    clearSelection();
+
+    const t = screenIndex; // 1..16
+
+    for (let o = 1; o <= 4; o++) {
+      optImgs[o - 1].src = fileFor(t, o);
+    }
+
+    // Audio arriba derecha:
+    if (t === practiceT) {
+      // práctica: 2 iconos
+      setupAudio(btnAudio, instructionAudio, step.practiceAudio1, { forceShow: true });
+      setupAudio(btnAudio2, instructionAudio2, step.practiceAudio2, { forceShow: true });
+    } else {
+      // ensayos: 1 icono
+      setupAudio(btnAudio, instructionAudio, trialAudioFor(t), { forceShow: true });
+      setupAudio(btnAudio2, instructionAudio2, null);
+    }
+  }
+
+  // elegir opción
+  optBoxes.forEach(box => {
+    box.onclick = () => {
+      if (screenIndex === 0) return;
+      const idx = Number(box.dataset.opt);
+      selectedIndex = idx;
+
+      optBoxes.forEach(b => b.classList.remove("selected"));
+      box.classList.add("selected");
+
+      btnNext.style.display = "block";
+    };
+  });
+
+  // flecha avanza
+  btnNext.onclick = () => {
+    // si estamos en práctica/ensayo, exigir selección
+    if (screenIndex !== 0 && requireSel && selectedIndex === null) return;
+
+    // guardar selección para ZIP futuro
+    if (screenIndex !== 0) {
+      const data = getPartData(partId);
+      const responses = data.responses || {};
+      responses[String(screenIndex)] = { selected: selectedIndex }; // 0..3
+      setPartData(partId, { responses });
+    }
+
+    screenIndex++;
+    if (screenIndex >= totalScreens) {
+      setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", screenIndex });
+    render();
+  };
+
+  render();
+}
+
+function runAudioMCQ4WordsOnScreen(step) {
+  showLayout("semantic");
+
+  const centerBox = document.getElementById("centerBox");
+  const centerImg = document.getElementById("centerImg");
+  const centerWord = document.getElementById("centerWord");
+
+  const optBoxes = [
+    document.getElementById("opt0"),
+    document.getElementById("opt1"),
+    document.getElementById("opt2"),
+    document.getElementById("opt3"),
+  ];
+  const optImgs = [
+    document.getElementById("img0"),
+    document.getElementById("img1"),
+    document.getElementById("img2"),
+    document.getElementById("img3"),
+  ];
+
+  // este test no usa imagen central, usa palabra
+  centerBox.style.display = "none";
+  centerWord.style.display = "block";
+
+  const basePath = step.basePath || "assets/parte8";
+  const filePattern = step.filePattern || "{t}-{o}.png";
+  const firstTrial = Number(step.firstTrial ?? 1);
+  const lastTrial = Number(step.lastTrial ?? 16);
+  const words = step.words || [];
+  const requireSel = step.requireSelectionToAdvance !== false;
+
+  // screenIndex:
+  // 0 = instrucción
+  // 1..16 = trials
+  const totalScreens = 1 + (lastTrial - firstTrial + 1); // 17
+
+  const saved = getPartProgress(partId);
+  let screenIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+  }
+
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, screenIndex, totalScreens });
+
+  // fullscreen
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  let selectedIndex = null;
+
+  function fileFor(t, o) {
+    const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
+    return `${basePath}/${f}`;
+  }
+
+  function clearSelection() {
+    optBoxes.forEach(b => b.classList.remove("selected"));
+    selectedIndex = null;
+    btnNext.style.display = requireSel ? "none" : "block";
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+    if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucción`;
+    else topBar.textContent = `${partLabel} · ${screenIndex}/16`;
+  }
+
+  function mountAudioForTrial(t) {
+    // Reglas:
+    // - t=1: hay audio (arriba derecha)
+    // - t=2: hay audio (arriba derecha)
+    // - t>=3: sin audio
+    if (t === 1) setupAudio(btnAudio, instructionAudio, step.audioT1, { forceShow: true });
+    else if (t === 2) setupAudio(btnAudio, instructionAudio, step.audioT2, { forceShow: true });
+    else setupInstructionAudio(null);
+
+    // este test no usa audio 2
+    if (btnAudio2) btnAudio2.style.display = "none";
+  }
+
+  function render() {
+    updateTopBar();
+    setPartProgress(partId, { screenIndex });
+
+    // ocultar audio center por defecto
+    btnAudioCenter.style.display = "none";
+
+    if (screenIndex === 0) {
+      // instrucción: solo audio centrado, sin texto
+      clearSelection();
+      optBoxes.forEach(b => (b.style.display = "none"));
+      centerWord.style.display = "none";
+
+      setupAudio(btnAudioCenter, instructionAudio, step.instructionAudio, { forceShow: true });
+      setupInstructionAudio(null);
+      btnNext.style.display = "block";
+      return;
+    }
+
+    // trials
+    optBoxes.forEach(b => (b.style.display = "block"));
+    centerWord.style.display = "block";
+    clearSelection();
+
+    const t = screenIndex; // 1..16
+    centerWord.textContent = words[t - 1] || "";
+
+    for (let o = 1; o <= 4; o++) {
+      optImgs[o - 1].src = fileFor(t, o);
+    }
+
+    mountAudioForTrial(t);
+  }
+
+  // seleccionar
+  optBoxes.forEach(box => {
+    box.onclick = () => {
+      if (screenIndex === 0) return;
+      const idx = Number(box.dataset.opt);
+      selectedIndex = idx;
+
+      optBoxes.forEach(b => b.classList.remove("selected"));
+      box.classList.add("selected");
+
+      btnNext.style.display = "block";
+    };
+  });
+
+  // flecha
+  btnNext.onclick = () => {
+    if (screenIndex !== 0 && requireSel && selectedIndex === null) return;
+
+    // guardar selección
+    if (screenIndex !== 0) {
+      const data = getPartData(partId);
+      const responses = data.responses || {};
+      responses[String(screenIndex)] = {
+        word: words[screenIndex - 1] || "",
+        selected: selectedIndex
+      };
+      setPartData(partId, { responses });
+    }
+
+    screenIndex++;
+    if (screenIndex >= totalScreens) {
+      setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", screenIndex });
+    render();
+  };
+
+  render();
+}
+
+function runAudioMCQ4TrialsWithDualIntro(step) {
+  showLayout("semantic");
+
+  const centerBox = document.getElementById("centerBox");
+  centerBox.style.display = "none"; // no hay imagen central
+
+  const optBoxes = [
+    document.getElementById("opt0"),
+    document.getElementById("opt1"),
+    document.getElementById("opt2"),
+    document.getElementById("opt3"),
+  ];
+  const optImgs = [
+    document.getElementById("img0"),
+    document.getElementById("img1"),
+    document.getElementById("img2"),
+    document.getElementById("img3"),
+  ];
+
+  const basePath = step.basePath || "assets/parte9";
+  const filePattern = step.filePattern || "{t}-{o}.png";
+  const firstTrial = Number(step.firstTrial ?? 1);
+  const lastTrial = Number(step.lastTrial ?? 17);
+  const requireSel = step.requireSelectionToAdvance !== false;
+
+  // screenIndex:
+  // 0 = intro (2 audios centrados)
+  // 1 = práctica (t=1)
+  // 2..17 = ensayos (t=2..17)
+  const totalScreens = 1 + (lastTrial - firstTrial + 1); // 18
+
+  const saved = getPartProgress(partId);
+  let screenIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+  }
+
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, screenIndex, totalScreens });
+
+  // fullscreen
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  let selectedIndex = null;
+
+  function fileFor(t, o) {
+    const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
+    return `${basePath}/${f}`;
+  }
+
+  function trialAudioFor(t) {
+    const p = step.trialAudioPattern;
+    if (!p) return null;
+    return p.replace("{t}", String(t));
+  }
+
+  function clearSelection() {
+    optBoxes.forEach(b => b.classList.remove("selected"));
+    selectedIndex = null;
+    btnNext.style.display = requireSel ? "none" : "block";
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+
+    if (screenIndex === 0) {
+      topBar.textContent = `${partLabel} · Instrucción`;
+      return;
+    }
+
+    if (screenIndex === 1) {
+      topBar.textContent = `${partLabel} · Ejemplo 1/1`;
+      return;
+    }
+
+    // ensayos: screenIndex 2..17 => 1..16
+    const ensayoN = screenIndex - 1;
+    topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/16`;
+  }
+
+  function render() {
+    updateTopBar();
+    setPartProgress(partId, { screenIndex });
+
+    // reset “modo 2 audios”
+    document.body.classList.remove("twoCenterAudios");
+    btnAudioCenter.style.display = "none";
+    btnAudioCenter2.style.display = "none";
+
+    if (screenIndex === 0) {
+      // INTRO: ocultar imágenes y mostrar 2 audios centrados
+      optBoxes.forEach(b => (b.style.display = "none"));
+      clearSelection();
+
+      document.body.classList.add("twoCenterAudios");
+
+      setupAudio(btnAudioCenter, instructionAudio, step.introAudio1, { forceShow: true });
+      setupAudio(btnAudioCenter2, instructionAudioCenter2, step.introAudio2, { forceShow: true });
+
+      // no audio arriba derecha aquí
+      setupInstructionAudio(null);
+      if (btnAudio2) btnAudio2.style.display = "none";
+
+      btnNext.style.display = "block";
+      return;
+    }
+
+    // pantallas con 4 imágenes
+    optBoxes.forEach(b => (b.style.display = "block"));
+    clearSelection();
+
+    const t = screenIndex; // 1..17
+    for (let o = 1; o <= 4; o++) {
+      optImgs[o - 1].src = fileFor(t, o);
+    }
+
+    // audio arriba derecha SIEMPRE en práctica y ensayos
+    setupAudio(btnAudio, instructionAudio, trialAudioFor(t), { forceShow: true });
+    if (btnAudio2) btnAudio2.style.display = "none";
+  }
+
+  // seleccionar
+  optBoxes.forEach(box => {
+    box.onclick = () => {
+      if (screenIndex === 0) return;
+      const idx = Number(box.dataset.opt);
+      selectedIndex = idx;
+
+      optBoxes.forEach(b => b.classList.remove("selected"));
+      box.classList.add("selected");
+
+      btnNext.style.display = "block";
+    };
+  });
+
+  // flecha
+  btnNext.onclick = () => {
+    if (screenIndex !== 0 && requireSel && selectedIndex === null) return;
+
+    // guardar selección
+    if (screenIndex !== 0) {
+      const data = getPartData(partId);
+      const responses = data.responses || {};
+      responses[String(screenIndex)] = { selected: selectedIndex };
+      setPartData(partId, { responses });
+    }
+
+    screenIndex++;
+    if (screenIndex >= totalScreens) {
+      setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", screenIndex });
+    render();
+  };
+
+  render();
+}
+
+function runMCQ4SentenceCenterWithAudioPractice(step) {
+  showLayout("semantic");
+
+  const centerBox = document.getElementById("centerBox");
+  centerBox.style.display = "none";
+
+  const centerWord = document.getElementById("centerWord");
+  centerWord.style.display = "none";
+
+  const optBoxes = [
+    document.getElementById("opt0"),
+    document.getElementById("opt1"),
+    document.getElementById("opt2"),
+    document.getElementById("opt3"),
+  ];
+  const optImgs = [
+    document.getElementById("img0"),
+    document.getElementById("img1"),
+    document.getElementById("img2"),
+    document.getElementById("img3"),
+  ];
+
+  const basePath = step.basePath || "assets/parte10";
+  const filePattern = step.filePattern || "{t}-{o}.png";
+  const firstTrial = Number(step.firstTrial ?? 1);
+  const lastTrial = Number(step.lastTrial ?? 17);
+  const sentences = step.sentences || [];
+  const requireSel = step.requireSelectionToAdvance !== false;
+
+  // screenIndex:
+  // 0 = instrucción
+  // 1..17 = trials (t = screenIndex)
+  const totalScreens = 1 + (lastTrial - firstTrial + 1); // 18
+
+  const saved = getPartProgress(partId);
+  let screenIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+  }
+
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, screenIndex, totalScreens });
+
+  // fullscreen
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  let selectedIndex = null;
+
+  function fileFor(t, o) {
+    const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
+    return `${basePath}/${f}`;
+  }
+
+  function clearSelection() {
+    optBoxes.forEach(b => b.classList.remove("selected"));
+    selectedIndex = null;
+    btnNext.style.display = requireSel ? "none" : "block";
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+    if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucción`;
+    else if (screenIndex === 1) topBar.textContent = `${partLabel} · Ejemplo 1/1`;
+    else topBar.textContent = `${partLabel} · Ensayo ${screenIndex - 1}/16`;
+  }
+
+  function render() {
+    updateTopBar();
+    setPartProgress(partId, { screenIndex });
+
+    // reset audios extra
+    btnAudioCenter.style.display = "none";
+    if (btnAudio2) btnAudio2.style.display = "none";
+
+    if (screenIndex === 0) {
+      // Instrucción: audio centrado
+      optBoxes.forEach(b => (b.style.display = "none"));
+      centerWord.style.display = "none";
+      clearSelection();
+
+      setupAudio(btnAudioCenter, instructionAudio, step.instructionAudio, { forceShow: true });
+      setupInstructionAudio(null);
+
+      btnNext.style.display = "block";
+      return;
+    }
+
+    // Trials
+    optBoxes.forEach(b => (b.style.display = "block"));
+    clearSelection();
+
+    const t = screenIndex; // 1..17
+    centerWord.style.display = "block";
+    centerWord.textContent = sentences[t - 1] || "";
+
+    for (let o = 1; o <= 4; o++) {
+      optImgs[o - 1].src = fileFor(t, o);
+    }
+
+    // Audios:
+    // - t=1 (ejemplo): 2 audios arriba derecha
+    // - t>=2: sin audio
+    if (t === 1) {
+      setupAudio(btnAudio, instructionAudio, step.practiceAudio1, { forceShow: true });
+      setupAudio(btnAudio2, instructionAudio2, step.practiceAudio2, { forceShow: true });
+    } else {
+      setupInstructionAudio(null);
+      if (btnAudio2) btnAudio2.style.display = "none";
+    }
+  }
+
+  optBoxes.forEach(box => {
+    box.onclick = () => {
+      if (screenIndex === 0) return;
+      const idx = Number(box.dataset.opt);
+      selectedIndex = idx;
+
+      optBoxes.forEach(b => b.classList.remove("selected"));
+      box.classList.add("selected");
+
+      btnNext.style.display = "block";
+    };
+  });
+
+  btnNext.onclick = () => {
+    if (screenIndex !== 0 && requireSel && selectedIndex === null) return;
+
+    // guardar selección (para ZIP futuro)
+    if (screenIndex !== 0) {
+      const data = getPartData(partId);
+      const responses = data.responses || {};
+      responses[String(screenIndex)] = {
+        sentence: sentences[screenIndex - 1] || "",
+        selected: selectedIndex
+      };
+      setPartData(partId, { responses });
+    }
+
+    screenIndex++;
+    if (screenIndex >= totalScreens) {
+      setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", screenIndex });
+    render();
+  };
+
+  render();
+}
+
+function runStoryYesNoFlow(step) {
+  // Fullscreen
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  // flecha siempre visible (pero puede exigir selección)
+  btnNext.style.display = "block";
+
+  // secuencia de pantallas (11)
+  const screens = [
+    { type: "center_audios", centerAudios: step.screen1_centerAudios },           // 1
+    { type: "center_audio_one", centerAudios: [step.story1_audio] },              // 2 (historia 1 centrada)
+    { type: "yesno", audio: step.yesno_block1_audios?.[0] },                      // 3
+    { type: "yesno", audio: step.yesno_block1_audios?.[1] },                      // 4
+    { type: "yesno", audio: step.yesno_block1_audios?.[2] },                      // 5
+    { type: "yesno", audio: step.yesno_block1_audios?.[3] },                      // 6
+    { type: "center_audios", centerAudios: [step.story2_audio, ...(step.screen7_centerAudios || [])] }, // 7 (historia 2 + 3 apilados)
+    { type: "yesno", audio: step.yesno_block2_audios?.[0] },                      // 8
+    { type: "yesno", audio: step.yesno_block2_audios?.[1] },                      // 9
+    { type: "yesno", audio: step.yesno_block2_audios?.[2] },                      // 10
+    { type: "yesno", audio: step.yesno_block2_audios?.[3] },                      // 11
+  ];
+
+  // progreso
+  const saved = getPartProgress(partId);
+  let screenIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), screens.length - 1);
+  }
+
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, screenIndex, totalScreens: screens.length });
+
+  const requireSel = step.requireSelectionToAdvance !== false;
+  let selected = null;
+
+  function updateTopBar() {
+    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · ${screenIndex + 1}/${screens.length}`;
+  }
+
+  function clearYesNo() {
+    btnYes.classList.remove("selected");
+    btnNo.classList.remove("selected");
+    selected = null;
+  }
+
+  function render() {
+    updateTopBar();
+    setPartProgress(partId, { screenIndex });
+
+    // ocultar audios “arriba derecha” por defecto
+    setupInstructionAudio(null);
+
+    const s = screens[screenIndex];
+
+    if (s.type === "center_audios" || s.type === "center_audio_one") {
+      showLayout("center_audios");
+      // en pantalla de audios centrados no hay selección
+      clearYesNo();
+
+      // s.centerAudios ya trae 1 o 3 o 4 (en pantalla 7 trae 4: historia + 3)
+      // pero nosotros mostraremos exactamente el largo que venga.
+      setupCenterAudios(s.centerAudios || []);
+      return;
+    }
+
+    if (s.type === "yesno") {
+      showLayout("yesno");
+      clearYesNo();
+
+      // audio arriba derecha (forzar ícono visible aunque sea null)
+      setupAudio(btnAudio, instructionAudio, s.audio, { forceShow: true });
+      if (btnAudio2) btnAudio2.style.display = "none";
+
+      return;
+    }
+  }
+
+  // clic Sí/No
+  btnYes.onclick = () => {
+    selected = "SI";
+    btnYes.classList.add("selected");
+    btnNo.classList.remove("selected");
+  };
+  btnNo.onclick = () => {
+    selected = "NO";
+    btnNo.classList.add("selected");
+    btnYes.classList.remove("selected");
+  };
+
+  // flecha
+  btnNext.onclick = () => {
+    const s = screens[screenIndex];
+
+    if (s.type === "yesno" && requireSel && !selected) return;
+
+    // Guardar respuestas yes/no
+    if (s.type === "yesno") {
+      const data = getPartData(partId);
+      const responses = data.responses || {};
+      responses[String(screenIndex + 1)] = { answer: selected }; // pantalla 3..6 y 8..11
+      setPartData(partId, { responses });
+    }
+
+    screenIndex++;
+    if (screenIndex >= screens.length) {
+      setPartProgress(partId, { status: "done", screenIndex: screens.length - 1 });
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", screenIndex });
+    render();
+  };
+
+  render();
+}
+
+function runRepeatAudioRecord(step) {
+  const hasIntro = Array.isArray(step.introAudios) && step.introAudios.length > 0;
+  const noExample = step.noExample === true;
+
+  const totalTrials = Number(step.totalTrials ?? 14);
+
+  // screens:
+  // si hasIntro: 0=intro
+  // luego:
+  //   si noExample: trials empiezan inmediatamente
+  //   si NO: hay example y luego trials
+  const totalScreens = (hasIntro ? 1 : 0) + (noExample ? 0 : 1) + totalTrials;
+
+  // progreso
+  const saved = getPartProgress(partId);
+  let screenIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+  }
+
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, screenIndex, totalScreens });
+
+  // Fullscreen + flecha
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+  btnNext.style.display = "block";
+
+  // Layout refs
+  const btnPlay = document.getElementById("btnRepeatPlay");
+  const recRow = document.getElementById("repeatRecRow");
+  const recIcon = document.getElementById("repeatRecording");
+  const stopBtn = document.getElementById("repeatStop");
+  const promptAudio = document.getElementById("repeatPromptAudio");
+
+  // Reutilizamos botones centrados existentes para intro (2 audios al centro)
+  // (Si ya tienes btnAudioCenter y btnAudioCenter2 en run.html, los usamos)
+  // Si no los tienes, dímelo y lo montamos igual acá.
+  const introA1 = step.introAudios?.[0] ?? null;
+  const introA2 = step.introAudios?.[1] ?? null;
+
+  const recorder = new WavRecorder();
+  let prepared = false;
+  let isCapturing = false;
+  let lastSavedKey = null;
+
+  function audioForCurrentScreen() {
+    const introOffset = hasIntro ? 1 : 0;
+    const exampleOffset = noExample ? 0 : 1;
+
+    // example (si existe)
+    if (!noExample) {
+      const exampleScreen = introOffset; // justo después del intro
+      if (screenIndex === exampleScreen) return step.exampleAudio || null;
+    }
+
+    // trials
+    const trialsStart = introOffset + (noExample ? 0 : 1);
+    if (screenIndex >= trialsStart) {
+      const n = (screenIndex - trialsStart) + 1; // 1..totalTrials
+      if (!step.trialAudioPattern) return null;
+      return step.trialAudioPattern.replace("{n}", String(n));
+    }
+
+    return null;
+  }
+
+  function keyForCurrentScreen() {
+    // guardamos wav por pantalla 2..16:
+    // ejemplo = s02, ensayo1 = s03...
+    const s = screenIndex + 1; // humano
+    return `part${String(partId).padStart(2, "0")}_s${String(s).padStart(2, "0")}.wav`;
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+
+    if (hasIntro && screenIndex === 0) {
+      topBar.textContent = `${partLabel} · Instrucción`;
+      return;
+    }
+
+    const introOffset = hasIntro ? 1 : 0;
+    const trialsStart = introOffset + (noExample ? 0 : 1);
+
+    const ensayoN = (screenIndex - trialsStart) + 1; // 1..12
+    topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/${totalTrials}`;
+  }
+
+  function resetRecUI() {
+    recRow.style.display = "none";
+    isCapturing = false;
+  }
+
+  async function ensurePrepared() {
+    if (prepared) return;
+    await recorder.prepare({ numChannels: 1 });
+    prepared = true;
+  }
+
+  async function startCapture() {
+    await ensurePrepared();
+    recorder.beginCapture();
+    isCapturing = true;
+    recRow.style.display = "flex";
+  }
+
+  async function stopAndSave() {
+    if (!isCapturing) return;
+    const blob = await recorder.stop(); // WAV
+    resetRecUI();
+
+    if (blob) {
+      const key = keyForCurrentScreen();
+      lastSavedKey = key;
+      await saveAudioBlob(key, blob);
+      // (Opcional) guardar mapping para el ZIP futuro:
+      const data = getPartData(partId);
+      const takes = data.takes || {};
+      takes[String(screenIndex)] = { key };
+      setPartData(partId, { takes });
+    }
+  }
+
+  async function render() {
+    showLayout("repeat_audio");
+    updateTopBar();
+    setPartProgress(partId, { screenIndex });
+
+    // Por defecto ocultamos audio arriba derecha (no se usa en este test)
+    setupInstructionAudio(null);
+    if (btnAudio2) btnAudio2.style.display = "none";
+    if (btnAudioCenter) btnAudioCenter.style.display = "none";
+    if (btnAudioCenter2) btnAudioCenter2.style.display = "none";
+    document.body.classList.remove("twoCenterAudios");
+
+    resetRecUI();
+
+    // INTRO: 2 audios centrados (sin grabación)
+    if (hasIntro && screenIndex === 0) {
+      btnPlay.style.display = "none";
+      recRow.style.display = "none";
+
+      document.body.classList.remove("twoCenterAudios");
+      document.body.classList.remove("stackCenterAudios");
+
+      // si hay 2 audios en intro, por defecto los apilamos (Test 14)
+      if (Array.isArray(step.introAudios) && step.introAudios.length === 2) {
+        document.body.classList.add("stackCenterAudios");
+      } else if (Array.isArray(step.introAudios) && step.introAudios.length === 2) {
+        document.body.classList.add("twoCenterAudios");
+      }
+
+      setupAudio(btnAudioCenter, instructionAudio, introA1, { forceShow: true });
+      setupAudio(btnAudioCenter2, instructionAudioCenter2, introA2, { forceShow: true });;
+
+      // en intro la flecha avanza
+      return;
+    }
+
+    // EJEMPLO + ENSAYOS: 1 audio centrado que al terminar => auto grabar
+    btnPlay.style.display = "block";
+
+    const a = audioForCurrentScreen();
+    promptAudio.src = a || "";
+
+    // MOSTRAR ícono aunque no exista el mp3 todavía
+    // (si está vacío, el click no hará nada)
+    btnPlay.onclick = async () => {
+      if (!promptAudio.src) return;
+
+      // PRE-CARGAR micrófono ANTES de reproducir
+      await ensurePrepared();
+
+      // reproducir audio
+      promptAudio.currentTime = 0;
+      await promptAudio.play();
+    };
+
+    // cuando termina el audio: empezar a grabar inmediatamente
+    promptAudio.onended = async () => {
+      await startCapture();
+    };
+
+    // detener manual
+    stopBtn.onclick = async () => {
+      await stopAndSave();
+    };
+  }
+
+  // Flecha:
+  // - si está grabando: detiene+guarda y (segundo click) avanza
+  // - si no está grabando: avanza
+  btnNext.onclick = async () => {
+    if (isCapturing) {
+      await stopAndSave();
+      return; // primera pulsación solo detiene
+    }
+
+    screenIndex++;
+    if (screenIndex >= totalScreens) {
+      setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
+      await recorder.close();
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", screenIndex });
+    render();
+  };
+
+  render();
+}
+
+function runImageInstrAutoRecord(step) {
+  showLayout("img_instr_record");
+
+  // refs
+  const imgEl = document.getElementById("t17Image");
+
+  const boxI = document.getElementById("t17InstrI");
+  const boxP = document.getElementById("t17InstrP");
+  const boxPS = document.getElementById("t17InstrPS");
+  const boxPF = document.getElementById("t17InstrPF");
+
+  const audioI = document.getElementById("t17AudioI");
+  const audioP = document.getElementById("t17AudioP");
+  const audioPS = document.getElementById("t17AudioPS");
+  const audioPF = document.getElementById("t17AudioPF");
+
+  // cada item tiene el icono <img> como segundo hijo
+  const iconI = boxI.querySelector("img");
+  const iconP = boxP.querySelector("img");
+  const iconPS = boxPS.querySelector("img");
+  const iconPF = boxPF.querySelector("img");
+
+  const recIcon = document.getElementById("t17Recording");
+  const stopBtn = document.getElementById("t17Stop");
+
+  // config
+  const basePath = step.basePath || "assets/parte17";
+  const first = Number(step.firstImage ?? 1);
+  const last = Number(step.lastImage ?? 25);
+  const pattern = step.imagePattern || "{n}.png";
+  const total = last - first + 1;
+
+  // progreso reanudar
+  const saved = getPartProgress(partId);
+  let n = first;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.itemIndex)) {
+    n = Math.min(Math.max(saved.itemIndex, first), last);
+  }
+
+  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, itemIndex: n, totalItems: total });
+
+  // fullscreen + flecha
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+  btnNext.style.display = "block";
+
+  // WAV recorder (auto)
+  const recorder = new WavRecorder();
+  let prepared = false;
+  let isCapturing = false;
+
+  async function ensurePrepared() {
+    if (prepared) return;
+    await recorder.prepare({ numChannels: 1 }); // versión “prepare/beginCapture”
+    prepared = true;
+  }
+
+  function imageFile(num) {
+    return `${basePath}/${pattern.replace("{n}", String(num))}`;
+  }
+
+  function wavKey(num) {
+    // part17_item001.wav ... item025.wav
+    return `part${String(partId).padStart(2, "0")}_item${String(num).padStart(3, "0")}.wav`;
+  }
+
+  function mountInstr({ showI, showP, showPS, showPF }) {
+    // mostrar/ocultar items
+    boxI.style.display = showI ? "flex" : "none";
+    boxP.style.display = showP ? "flex" : "none";
+    boxPS.style.display = showPS ? "flex" : "none";
+    boxPF.style.display = showPF ? "flex" : "none";
+
+    // asignar src (pueden ser null por ahora, el icono igual queda y no hace nada)
+    audioI.src = step.instrI || "";
+    audioP.src = step.instrP || "";
+    audioPS.src = step.instrPS || "";
+    audioPF.src = step.instrPF || "";
+
+    const play = (a) => {
+      if (!a.src) return;
+      a.currentTime = 0;
+      a.play();
+    };
+
+    iconI.onclick = () => play(audioI);
+    iconP.onclick = () => play(audioP);
+    iconPS.onclick = () => play(audioPS);
+    iconPF.onclick = () => play(audioPF);
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+    if (n === 1) topBar.textContent = `${partLabel} · Ejemplo 1/1`;
+    else topBar.textContent = `${partLabel} · Ensayo ${n - 1}/${last - 1}`;
+  }
+
+  async function startCapture() {
+    await ensurePrepared();
+    recorder.beginCapture();
+    isCapturing = true;
+    // (grabando.png ya está visible)
+  }
+
+  async function stopAndSave() {
+    if (!isCapturing) return;
+    isCapturing = false;
+
+    const blob = await recorder.stop();
+    if (blob) {
+      const key = wavKey(n);
+      await saveAudioBlob(key, blob);
+
+      const data = getPartData(partId);
+      const takes = data.takes || {};
+      takes[String(n)] = { key, image: imageFile(n) };
+      setPartData(partId, { takes });
+    }
+  }
+
+  async function render() {
+    updateTopBar();
+    imgEl.src = imageFile(n);
+
+    // instrucciones: pantalla 1 (n=1) muestra I,P,PS,PF
+    // resto (n>=2) muestra P,PS,PF
+    // Si el test tiene solo instrP (y los demás null), asumimos que es “un audio único en ejemplo”
+    const onlyOne = !!step.instrP && !step.instrI && !step.instrPS && !step.instrPF;
+
+    if (onlyOne) {
+      if (n === 1) {
+        // Ejemplo: mostrar solo P (audio único)
+        mountInstr({ showI: false, showP: true, showPS: false, showPF: false });
+      } else {
+        // Ensayos: sin audio
+        mountInstr({ showI: false, showP: false, showPS: false, showPF: false });
+      }
+    } else {
+      // Comportamiento original del test 17
+      if (n === 1) mountInstr({ showI: true, showP: true, showPS: true, showPF: true });
+      else mountInstr({ showI: false, showP: true, showPS: true, showPF: true });
+    }
+
+    // auto grabar al entrar a cada pantalla
+    setPartProgress(partId, { itemIndex: n });
+    await startCapture();
+  }
+
+  // detener manual (si quieres permitirlo)
+  stopBtn.onclick = async () => {
+    await stopAndSave();
+  };
+
+  // flecha: si está grabando -> detiene y guarda y avanza
+  btnNext.onclick = async () => {
+    if (isCapturing) {
+      await stopAndSave();
+      // seguimos avanzando en el mismo click (como tú pediste que no se pierdan segundos)
+      // si prefieres “primer click detiene, segundo avanza”, dímelo.
+    }
+
+    n++;
+    if (n > last) {
+      setPartProgress(partId, { status: "done", itemIndex: last });
+      await recorder.close();
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", itemIndex: n });
+    await render();
+  };
+
+  // iniciar
+  ensurePrepared().then(render).catch(err => {
+    console.error(err);
+    alert("No se pudo acceder al micrófono.");
+  });
+}
+
+function runImageAutoRecordSimple(step) {
+  showLayout("img_record_simple");
+
+  const imgEl = document.getElementById("t18Image");
+  const audioIcon = document.getElementById("t18InstrAudio");
+  const audioEl = document.getElementById("t18AudioEl");
+
+  const stopBtn = document.getElementById("t18Stop");
+
+  const basePath = step.basePath;
+  const first = Number(step.firstImage);
+  const last = Number(step.lastImage);
+  const pattern = step.imagePattern || "{n}.png";
+
+  const total = last - first + 1;
+
+  const saved = getPartProgress(partId);
+  let n = first;
+
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.itemIndex)) {
+    n = Math.min(Math.max(saved.itemIndex, first), last);
+  }
+
+  setPartProgress(partId, {
+    status: "in_progress",
+    stepIndex: 0,
+    totalSteps: 1,
+    itemIndex: n,
+    totalItems: total
+  });
+
+  // Fullscreen + flecha
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+  btnNext.style.display = "block";
+
+  const recorder = new WavRecorder();
+  let prepared = false;
+  let isCapturing = false;
+
+  async function ensurePrepared() {
+    if (prepared) return;
+    await recorder.prepare({ numChannels: 1 });
+    prepared = true;
+  }
+
+  function imageFile(num) {
+    return `${basePath}/${pattern.replace("{n}", String(num))}`;
+  }
+
+  function wavKey(num) {
+    return `part${String(partId).padStart(2, "0")}_item${String(num).padStart(3, "0")}.wav`;
+  }
+
+  function updateTopBar() {
+    const label = `Parte ${String(partId).padStart(2, "0")}`;
+    if (n === 1) topBar.textContent = `${label} · Ejemplo 1/1`;
+    else topBar.textContent = `${label} · Ensayo ${n - 1}/${last - 1}`;
+  }
+
+  async function startCapture() {
+    await ensurePrepared();
+    recorder.beginCapture();
+    isCapturing = true;
+  }
+
+  async function stopAndSave() {
+    if (!isCapturing) return;
+    isCapturing = false;
+
+    const blob = await recorder.stop();
+    if (blob) {
+      const key = wavKey(n);
+      await saveAudioBlob(key, blob);
+
+      const data = getPartData(partId);
+      const takes = data.takes || {};
+      takes[String(n)] = { key, image: imageFile(n) };
+      setPartData(partId, { takes });
+    }
+  }
+
+  async function render() {
+    updateTopBar();
+    imgEl.src = imageFile(n);
+
+    // Solo pantalla 1 tiene audio instrucción
+    if (n === 1 && step.instructionAudio) {
+      audioEl.src = step.instructionAudio;
+      audioIcon.style.display = "block";
+      audioIcon.onclick = () => {
+        audioEl.currentTime = 0;
+        audioEl.play();
+      };
+    } else {
+      audioIcon.style.display = "none";
+    }
+
+    setPartProgress(partId, { itemIndex: n });
+    await startCapture();
+  }
+
+  stopBtn.onclick = async () => {
+    await stopAndSave();
+  };
+
+  btnNext.onclick = async () => {
+    if (isCapturing) {
+      await stopAndSave();
+    }
+
+    n++;
+    if (n > last) {
+      setPartProgress(partId, { status: "done", itemIndex: last });
+      await recorder.close();
+      window.location.href = "index.html";
+      return;
+    }
+
+    await render();
+  };
+
+  ensurePrepared().then(render).catch(err => {
+    console.error(err);
+    alert("No se pudo acceder al micrófono.");
+  });
+}
+
+function runVerbalFluency(step) {
+  showLayout("fluency");
+
+  const centerText = document.getElementById("t3CenterText");
+  const centerAudio = document.getElementById("t3CenterAudio");
+  const topAudio = document.getElementById("t3TopAudio");
+  const audioEl = document.getElementById("t3AudioEl");
+
+  const stopBtn = document.getElementById("t3Stop");
+
+  const recorder = new WavRecorder();
+  let prepared = false;
+  let isCapturing = false;
+  let timer = null;
+
+  const duration = step.recordDurationMs || 60000;
+
+  const screens = [
+    { type: "centerAudio", audio: step.instr1Audio },
+    { type: "fluency", text: "Ropa", audio: step.ropaAudio },
+    { type: "fluency", text: "Animales", audio: step.animalesAudio },
+    { type: "centerAudio", audio: step.instr2Audio },
+    { type: "fluency", text: "b__________", audio: step.letraBAudio },
+    { type: "fluency", text: "s______", audio: step.letraSAudio }
+  ];
+
+  let index = 0;
+
+  btnFullscreen.style.display = "block";
+  btnNext.style.display = "block";
+
+  async function ensurePrepared() {
+    if (prepared) return;
+    await recorder.prepare({ numChannels: 1 });
+    prepared = true;
+  }
+
+  async function startCapture() {
+    await ensurePrepared();
+    recorder.beginCapture();
+    isCapturing = true;
+
+    timer = setTimeout(async () => {
+      await stopAndSave();
+    }, duration);
+  }
+
+  async function stopAndSave() {
+    if (!isCapturing) return;
+    isCapturing = false;
+
+    clearTimeout(timer);
+
+    const blob = await recorder.stop();
+    if (blob) {
+      const key = `part03_screen${index + 1}.wav`;
+      await saveAudioBlob(key, blob);
+    }
+  }
+
+  async function render() {
+    const s = screens[index];
+
+    centerText.style.display = "none";
+    centerAudio.style.display = "none";
+    topAudio.style.display = "none";
+
+    if (s.type === "centerAudio") {
+      centerAudio.style.display = "block";
+      centerAudio.onclick = () => {
+        if (!s.audio) return;
+        audioEl.src = s.audio;
+        audioEl.currentTime = 0;
+        audioEl.play();
+      };
+      return;
+    }
+
+    if (s.type === "fluency") {
+      centerText.style.display = "block";
+      centerText.textContent = s.text;
+
+      topAudio.style.display = "block";
+      topAudio.onclick = async () => {
+        if (!s.audio) return;
+
+        // PRELOAD 2 seg antes
+        await ensurePrepared();
+        setTimeout(() => { }, 2000);
+
+        audioEl.src = s.audio;
+        audioEl.currentTime = 0;
+        await audioEl.play();
+      };
+
+      audioEl.onended = async () => {
+        await startCapture();
+      };
+    }
+  }
+
+  stopBtn.onclick = async () => {
+    await stopAndSave();
+  };
+
+  btnNext.onclick = async () => {
+    if (isCapturing) await stopAndSave();
+
+    index++;
+    if (index >= screens.length) {
+      await recorder.close();
+      window.location.href = "index.html";
+      return;
+    }
+    render();
+  };
+
+  render();
 }
 
 function runImageLabeling(step) {
@@ -1161,6 +2652,15 @@ else if (step.type === "audio_record_image") runAudioRecordImage(step);
 else if (step.type === "audio_record_words") runAudioRecordWords(step);
 else if (step.type === "mcq4_image_trials") runMCQ4ImageTrials(step);
 else if (step.type === "video_record_trials") runVideoRecordTrials(step);
+else if (step.type === "audio_mcq4_trials") runAudioMCQ4Trials(step);
+else if (step.type === "audio_mcq4_words_on_screen") runAudioMCQ4WordsOnScreen(step);
+else if (step.type === "audio_mcq4_trials_with_dual_intro") runAudioMCQ4TrialsWithDualIntro(step);
+else if (step.type === "mcq4_sentence_center_with_audio_practice") runMCQ4SentenceCenterWithAudioPractice(step);
+else if (step.type === "story_yesno_flow") runStoryYesNoFlow(step);
+else if (step.type === "repeat_audio_record") runRepeatAudioRecord(step);
+else if (step.type === "image_instr_auto_record") runImageInstrAutoRecord(step);
+else if (step.type === "image_auto_record_simple") runImageAutoRecordSimple(step);
+else if (step.type === "verbal_fluency") runVerbalFluency(step);
 else {
   topBar.textContent = `Tipo no soportado: ${step.type}`;
   btnNext.style.display = "none";

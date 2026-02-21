@@ -432,6 +432,249 @@
       user-select: none;
       -webkit-user-drag: none;
     }
+
+    #centerWord {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 42px;
+      font-weight: 700;
+      background: #fff;
+      padding: 6px 12px;
+      border: 2px solid #000;
+    }
+
+    /* Centrar 2 audios uno al lado del otro (Test 9 pantalla 1) */
+    .twoCenterAudios #btnAudioCenter {
+      transform: translate(-140px, -50%) !important;
+    }
+
+    .twoCenterAudios #btnAudioCenter2 {
+      transform: translate(20px, -50%) !important;
+    }
+
+    /* ===== Audios centrados apilados ===== */
+    #centerAudiosStack {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+      justify-content: center;
+      z-index: 80;
+    }
+
+    #centerAudiosStack img {
+      width: 110px;
+      height: 110px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* ===== Sí/No centrado ===== */
+    #yesNoWrap {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 80px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ynBtn {
+      border: 2px solid #000;
+      padding: 18px 44px;
+      font-size: 44px;
+      font-weight: 700;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .ynBtn.selected {
+      outline: 4px solid #000;
+    }
+
+    #repeatCenter {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      align-items: center;
+      justify-content: center;
+      z-index: 80;
+    }
+
+    #btnRepeatPlay {
+      width: 120px;
+      height: 120px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    #repeatRecRow {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #repeatRecRow img {
+      width: 90px;
+      height: 90px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .stackCenterAudios #btnAudioCenter {
+      transform: translate(-50%, -120px) !important;
+    }
+
+    .stackCenterAudios #btnAudioCenter2 {
+      transform: translate(-50%, 20px) !important;
+    }
+
+    /* ===== Test 17 Layout ===== */
+    #t17ImageWrap {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      width: 92vw;
+      max-width: 1100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #t17Image {
+      max-width: 100%;
+      max-height: 65vh;
+      object-fit: contain;
+    }
+
+    /* columna audios sup derecha */
+    #t17InstrCol {
+      position: absolute;
+      top: 70px;
+      /* debajo del topBar */
+      right: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 90;
+    }
+
+    .t17InstrItem {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .t17Lbl {
+      font-weight: 700;
+      font-size: 16px;
+      width: 28px;
+      text-align: right;
+    }
+
+    .t17AudioIcon {
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    /* grabación abajo centro */
+    #t17RecRow {
+      position: absolute;
+      left: 50%;
+      top: 86%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #t17RecRow img {
+      width: 78px;
+      height: 78px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    #t18ImageWrap {
+      position: absolute;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%);
+      width: 92vw;
+      max-width: 1100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #t18Image {
+      max-width: 100%;
+      max-height: 65vh;
+      object-fit: contain;
+    }
+
+    #t18RecRow {
+      position: absolute;
+      left: 50%;
+      top: 86%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #t18RecRow img {
+      width: 78px;
+      height: 78px;
+      cursor: pointer;
+    }
+
+    #t3CenterText {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      font-weight: 700;
+    }
+
+    #t3RecRow {
+      position: absolute;
+      left: 50%;
+      top: 86%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      gap: 18px;
+    }
+
+    #t3RecRow img {
+      width: 78px;
+      height: 78px;
+      cursor: pointer;
+    }
   </style>
 </head>
 
@@ -472,6 +715,45 @@
       <div class="opt" id="opt1" data-opt="1"><img id="img1" alt="Opción 2"></div>
       <div class="opt" id="opt2" data-opt="2"><img id="img2" alt="Opción 3"></div>
       <div class="opt" id="opt3" data-opt="3"><img id="img3" alt="Opción 4"></div>
+    </div>
+
+    <!-- ====== LAYOUT TEST 3 ====== -->
+    <div id="layoutFluency" style="display:none;">
+
+      <!-- Texto central -->
+      <div id="t3CenterText"></div>
+
+      <!-- Audio centrado (pantallas de instrucción) -->
+      <img id="t3CenterAudio" src="audio.png" style="
+         position:absolute;
+         left:50%;
+         top:50%;
+         transform:translate(-50%,-50%);
+         width:120px;
+         height:120px;
+         display:none;
+         cursor:pointer;
+       ">
+
+      <!-- Audio sup derecha -->
+      <img id="t3TopAudio" src="audio.png" style="
+         position:absolute;
+         top:70px;
+         right:14px;
+         width:48px;
+         height:48px;
+         display:none;
+         cursor:pointer;
+       ">
+
+      <audio id="t3AudioEl"></audio>
+
+      <!-- Grabación -->
+      <div id="t3RecRow">
+        <img id="t3Recording" src="grabando.png">
+        <img id="t3Stop" src="detener.png">
+      </div>
+
     </div>
 
     <!-- ====== LAYOUT VIDEO RECORD (Test 5) ====== -->
@@ -516,6 +798,58 @@
       </div>
     </div>
 
+    <!-- Audio centrado (Pantalla instrucción Test 7) -->
+    <img id="btnAudioCenter" src="audio.png" alt="Audio instrucciones" style="
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:120px;
+        height:120px;
+        cursor:pointer;
+        display:none;
+        z-index:80;
+        user-select:none;
+        -webkit-user-drag:none;
+     ">
+
+    <!-- Segundo audio centrado (Test 9 instrucciones) -->
+    <img id="btnAudioCenter2" src="audio.png" alt="Audio instrucciones 2" style="
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:120px;
+        height:120px;
+        cursor:pointer;
+        display:none;
+        z-index:81;
+        user-select:none;
+        -webkit-user-drag:none;
+     ">
+
+    <audio id="instructionAudioCenter2"></audio>
+
+    <!-- Segundo audio arriba derecha (para práctica Test 7) -->
+    <img id="btnAudio2" src="audio.png" alt="Audio instrucciones 2" style="
+        position:absolute;
+        top:64px;        /* debajo del primero */
+        right:12px;
+        width:46px;
+        height:46px;
+        cursor:pointer;
+        display:none;
+        z-index:70;
+        user-select:none;
+        -webkit-user-drag:none;
+     ">
+
+    <audio id="instructionAudio2"></audio>
+
+    <!-- Layout 8vo test-->
+
+    <div id="centerWord" style="display:none;"></div>
+
     <!-- ====== LAYOUT AUDIO RECORD (Imagen o Palabra) ====== -->
     <div id="layoutAudioRecord" style="display:none;">
 
@@ -536,6 +870,110 @@
       </div>
     </div>
 
+    <!-- ====== LAYOUT AUDIOS CENTRADOS TEST 11 (1 a 3 íconos apilados) ====== -->
+    <div id="layoutCenterAudios" style="display:none;">
+      <div id="centerAudiosStack">
+        <img id="cAudio1" src="audio.png" alt="Audio 1">
+        <img id="cAudio2" src="audio.png" alt="Audio 2" style="display:none;">
+        <img id="cAudio3" src="audio.png" alt="Audio 3" style="display:none;">
+      </div>
+
+      <audio id="cAudioEl1"></audio>
+      <audio id="cAudioEl2"></audio>
+      <audio id="cAudioEl3"></audio>
+    </div>
+
+    <!-- ====== LAYOUT AUDIO CENTRADO + GRABACIÓN (Test 12) ====== -->
+    <div id="layoutRepeatAudio" style="display:none;">
+      <div id="repeatCenter">
+        <img id="btnRepeatPlay" src="audio.png" alt="Reproducir audio" />
+        <div id="repeatRecRow" style="display:none;">
+          <img id="repeatRecording" src="grabando.png" alt="Grabando" />
+          <img id="repeatStop" src="detener.png" alt="Detener" />
+        </div>
+      </div>
+
+      <audio id="repeatPromptAudio"></audio>
+    </div>
+
+    <!-- ====== LAYOUT SI/NO ====== -->
+    <div id="layoutYesNo" style="display:none;">
+      <div id="yesNoWrap">
+        <div class="ynBtn" id="btnYes" data-val="SI">Sí</div>
+        <div class="ynBtn" id="btnNo" data-val="NO">No</div>
+      </div>
+    </div>
+
+    <!-- ====== LAYOUT TEST 17: Imagen + Audios columna + Grabación ====== -->
+    <div id="layoutImageInstrRecord" style="display:none;">
+
+      <div id="t17ImageWrap">
+        <img id="t17Image" alt="Imagen">
+      </div>
+
+      <!-- Audios instrucciones (columna sup derecha) -->
+      <div id="t17InstrCol">
+        <div class="t17InstrItem" id="t17InstrI" style="display:none;">
+          <span class="t17Lbl">I</span>
+          <img class="t17AudioIcon" src="audio.png" alt="Audio I">
+        </div>
+
+        <div class="t17InstrItem" id="t17InstrP" style="display:none;">
+          <span class="t17Lbl">P</span>
+          <img class="t17AudioIcon" src="audio.png" alt="Audio P">
+        </div>
+
+        <div class="t17InstrItem" id="t17InstrPS" style="display:none;">
+          <span class="t17Lbl">PS</span>
+          <img class="t17AudioIcon" src="audio.png" alt="Audio PS">
+        </div>
+
+        <div class="t17InstrItem" id="t17InstrPF" style="display:none;">
+          <span class="t17Lbl">PF</span>
+          <img class="t17AudioIcon" src="audio.png" alt="Audio PF">
+        </div>
+      </div>
+
+      <!-- Grabación (auto) -->
+      <div id="t17RecRow">
+        <img id="t17Recording" src="grabando.png" alt="Grabando">
+        <img id="t17Stop" src="detener.png" alt="Detener">
+      </div>
+    </div>
+
+    <audio id="t17AudioI"></audio>
+    <audio id="t17AudioP"></audio>
+    <audio id="t17AudioPS"></audio>
+    <audio id="t17AudioPF"></audio>
+
+    <!-- ====== LAYOUT TEST 18 ====== -->
+    <div id="layoutImageRecordSimple" style="display:none;">
+
+      <div id="t18ImageWrap">
+        <img id="t18Image" alt="Imagen">
+      </div>
+
+      <!-- Audio instrucción (solo pantalla 1) -->
+      <img id="t18InstrAudio" src="audio.png" alt="Audio instrucción" style="
+         position:absolute;
+         top:70px;
+         left:14px;
+         width:48px;
+         height:48px;
+         cursor:pointer;
+         display:none;
+         z-index:90;
+       ">
+
+      <audio id="t18AudioEl"></audio>
+
+      <!-- Grabación -->
+      <div id="t18RecRow">
+        <img id="t18Recording" src="grabando.png" alt="Grabando">
+        <img id="t18Stop" src="detener.png" alt="Detener">
+      </div>
+
+    </div>
 
     <!-- ====== LAYOUT INSTRUCCIÓN SIMPLE (Parte 26 - Pantalla 1) ====== -->
     <div id="layoutInstruction" style="display:none;">
