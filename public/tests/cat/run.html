@@ -675,6 +675,15 @@
       height: 78px;
       cursor: pointer;
     }
+
+    #lbCanvas {
+      position: absolute;
+      left: 25%;
+      top: 25%;
+      width: 50vw;
+      height: 50vh;
+      touch-action: none;
+    }
   </style>
 </head>
 
@@ -704,6 +713,11 @@
 
     <!-- Flecha siguiente -->
     <img id="btnNext" class="cornerBtn" src="flecha.png" alt="Siguiente" />
+
+    <!-- ====== LAYOUT TEST 1: Bisección de líneas (paciente) ====== -->
+    <div id="layoutLineBisection" style="display:none;">
+      <canvas id="lbCanvas"></canvas>
+    </div>
 
     <!-- ====== LAYOUT SEMÁNTICA ====== -->
     <div id="layoutSemantic" style="display:none;">

@@ -38,6 +38,8 @@ const layoutImageRecordSimple = document.getElementById("layoutImageRecordSimple
 
 const layoutFluency = document.getElementById("layoutFluency");
 
+const layoutLineBisection = document.getElementById("layoutLineBisection");
+
 function showLayout(which) {
   layoutSemantic.style.display = (which === "semantic") ? "block" : "none";
   layoutCalc.style.display = (which === "calc") ? "block" : "none";
@@ -52,6 +54,7 @@ function showLayout(which) {
   layoutImageInstrRecord.style.display = (which === "img_instr_record") ? "block" : "none";
   layoutImageRecordSimple.style.display = (which === "img_record_simple") ? "block" : "none";
   layoutFluency.style.display = (which === "fluency") ? "block" : "none";
+  layoutLineBisection.style.display = (which === "line_bisection") ? "block" : "none";
 }
 
 const cAudio1 = document.getElementById("cAudio1");
@@ -2641,6 +2644,257 @@ function runAudioRecordWords(step) {
   renderWord();
 }
 
+function runLineBisection(step) {
+  // 3 pantallas:
+  // 0 = instrucciones (2 audios centrados apilados)
+  // 1 = demo (imagen fija, sin interacción)
+  // 2 = paciente (canvas libre para rayar)
+  const totalScreens = 3;
+
+  // === progreso / resume ===
+  const saved = getPartProgress(partId);
+  let screenIndex = 0;
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+  }
+
+  setPartProgress(partId, {
+    status: "in_progress",
+    stepIndex: 0,
+    totalSteps: 1,
+    screenIndex,
+    totalScreens
+  });
+
+  // === UI base ===
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
+  btnNext.style.display = "block";
+
+  // ocultar audio superior derecha por defecto
+  setupInstructionAudio(null);
+  if (btnAudio2) btnAudio2.style.display = "none";
+
+  // === Layout ===
+  showLayout("line_bisection");
+
+  const canvas = document.getElementById("lbCanvas");
+  const ctx = canvas.getContext("2d");
+
+  // imagen base
+  const img = new Image();
+  img.src = step.baseImage; // ej: assets/parte1/lineas.png
+
+  // trazos libres
+  let strokes = [];     // Array<Array<{x,y,t}>>
+  let drawing = false;
+
+  // si reanudamos en pantalla 2 y ya hay trazos guardados, los cargamos
+  const existingData = getPartData(partId);
+  if (existingData?.strokes && Array.isArray(existingData.strokes)) {
+    strokes = existingData.strokes;
+  }
+
+  function setCanvasSize() {
+    canvas.width = Math.floor(window.innerWidth);
+    canvas.height = Math.floor(window.innerHeight);
+  }
+
+  function drawBase() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  }
+
+  function drawStrokes() {
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 4;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    for (const stroke of strokes) {
+      if (!stroke || stroke.length < 2) continue;
+      ctx.beginPath();
+      ctx.moveTo(stroke[0].x, stroke[0].y);
+      for (let i = 1; i < stroke.length; i++) {
+        ctx.lineTo(stroke[i].x, stroke[i].y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  function renderCanvas() {
+    // Pantallas 1 y 2 usan canvas como "fondo" también (para mostrar la imagen)
+    drawBase();
+    // Solo en la pantalla del paciente mostramos lo que dibujó
+    if (screenIndex === 2) drawStrokes();
+  }
+
+  function pointerToCanvas(e) {
+    const rect = canvas.getBoundingClientRect();
+    const x = (e.clientX - rect.left) * (canvas.width / rect.width);
+    const y = (e.clientY - rect.top) * (canvas.height / rect.height);
+    return { x, y };
+  }
+
+  function startStroke(p) {
+    drawing = true;
+    strokes.push([{ x: p.x, y: p.y, t: Date.now() }]);
+    renderCanvas();
+  }
+
+  function addPoint(p) {
+    if (!drawing) return;
+    const stroke = strokes[strokes.length - 1];
+    stroke.push({ x: p.x, y: p.y, t: Date.now() });
+    renderCanvas();
+  }
+
+  function endStroke() {
+    drawing = false;
+  }
+
+  function enableDrawing(enable) {
+    // limpiar handlers
+    canvas.onmousedown = null;
+    canvas.onmousemove = null;
+    canvas.onmouseup = null;
+    canvas.onmouseleave = null;
+
+    canvas.ontouchstart = null;
+    canvas.ontouchmove = null;
+    canvas.ontouchend = null;
+    canvas.ontouchcancel = null;
+
+    if (!enable) return;
+
+    canvas.onmousedown = (e) => {
+      const p = pointerToCanvas(e);
+      startStroke(p);
+    };
+
+    canvas.onmousemove = (e) => {
+      const p = pointerToCanvas(e);
+      addPoint(p);
+    };
+
+    canvas.onmouseup = endStroke;
+    canvas.onmouseleave = endStroke;
+
+    canvas.ontouchstart = (e) => {
+      e.preventDefault();
+      const t = e.changedTouches[0];
+      const p = pointerToCanvas(t);
+      startStroke(p);
+    };
+
+    canvas.ontouchmove = (e) => {
+      e.preventDefault();
+      const t = e.changedTouches[0];
+      const p = pointerToCanvas(t);
+      addPoint(p);
+    };
+
+    canvas.ontouchend = (e) => {
+      e.preventDefault();
+      endStroke();
+    };
+
+    canvas.ontouchcancel = endStroke;
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+    if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucciones`;
+    if (screenIndex === 1) topBar.textContent = `${partLabel} · Demostración`;
+    if (screenIndex === 2) topBar.textContent = `${partLabel} · Paciente`;
+  }
+
+  function renderScreen() {
+    updateTopBar();
+    setPartProgress(partId, { screenIndex });
+
+    // apagar centrados por defecto
+    if (btnAudioCenter) btnAudioCenter.style.display = "none";
+    if (btnAudioCenter2) btnAudioCenter2.style.display = "none";
+    document.body.classList.remove("stackCenterAudios");
+
+    // ✅ Screen 0: NO mostramos el canvas para que no se vea la imagen con líneas detrás
+    if (screenIndex === 0) {
+      // ocultar canvas/layout
+      showLayout("none"); // 👈 si no tienes "none", usa display none manual (abajo te dejo)
+      enableDrawing(false);
+
+      document.body.classList.add("stackCenterAudios");
+      setupAudio(btnAudioCenter, instructionAudio, step.introAudios?.[0] ?? null, { forceShow: true });
+      setupAudio(btnAudioCenter2, instructionAudioCenter2, step.introAudios?.[1] ?? null, { forceShow: true });
+      return;
+    }
+
+    // ✅ Screen 1 y 2: mostramos canvas con imagen
+    showLayout("line_bisection");
+
+    // dibujar imagen siempre en 1 y 2
+    renderCanvas();
+
+    if (screenIndex === 1) {
+      enableDrawing(false);
+      return;
+    }
+
+    if (screenIndex === 2) {
+      enableDrawing(true);
+      renderCanvas();
+      return;
+    }
+  }
+
+  function savePatientData() {
+    // guardamos trazos y metadata para puntaje futuro
+    const data = getPartData(partId) || {};
+    setPartData(partId, {
+      ...data,
+      baseImage: step.baseImage,
+      scaleImage: step.scaleImage || null,
+      strokes,
+      canvasWidth: canvas.width,
+      canvasHeight: canvas.height,
+      savedAt: new Date().toISOString()
+    });
+  }
+
+  btnNext.onclick = () => {
+    // si salimos de pantalla paciente, guardamos
+    if (screenIndex === 2) {
+      savePatientData();
+    }
+
+    screenIndex++;
+
+    if (screenIndex >= totalScreens) {
+      setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
+      window.location.href = "index.html";
+      return;
+    }
+
+    setPartProgress(partId, { status: "in_progress", screenIndex });
+    renderScreen();
+  };
+
+  // resize
+  window.addEventListener("resize", () => {
+    setCanvasSize();
+    renderCanvas();
+  });
+
+  // cargar imagen y empezar
+  img.onload = () => {
+    setCanvasSize();
+    renderScreen();
+  };
+}
+
 
 // Router
 if (step.type === "semantic_match") runSemanticMatch(step);
@@ -2661,6 +2915,7 @@ else if (step.type === "repeat_audio_record") runRepeatAudioRecord(step);
 else if (step.type === "image_instr_auto_record") runImageInstrAutoRecord(step);
 else if (step.type === "image_auto_record_simple") runImageAutoRecordSimple(step);
 else if (step.type === "verbal_fluency") runVerbalFluency(step);
+else if (step.type === "line_bisection") runLineBisection(step);
 else {
   topBar.textContent = `Tipo no soportado: ${step.type}`;
   btnNext.style.display = "none";

@@ -12,7 +12,25 @@ export const CAT = {
         // =======================
         // Examen Cognitivo
         // =======================
-        { id: 1, group: "Examen Cognitivo", name: "Disección de líneas - Falta terminar!!!", steps: [] },
+        {
+            id: 1,
+            group: "Examen Cognitivo",
+            name: "Disección de líneas",
+            steps: [
+                {
+                    type: "line_bisection",
+
+                    // Pantalla 1: 2 audios de instrucción centrados (apilados)
+                    introAudios: [null, null],
+
+                    // Imagen base (se usa en demo y paciente)
+                    baseImage: "assets/parte1/lineas.png",
+
+                    // Imagen de escala (solo referencia para puntaje futuro)
+                    scaleImage: "assets/parte1/escala.png"
+                }
+            ]
+        },
         // Parte 2 - Memoria semántica
         {
             id: 2,
