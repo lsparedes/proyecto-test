@@ -10,10 +10,7 @@
                     <div class="col-lg-6">
                         <div class="text-center my-5">
                             <h1 class="display-4 fw-bolder text-white mb-4">Exploración NeuroCognitiva Digital</h1>
-                            <!-- <p class="lead text-white-50 mb-3">Quickly design and customize responsive mobile-first sites
-                                with Bootstrap, the world’s most popular front-end open source toolkit!</p> -->
                             <div class="d-grid gap-3 d-sm-flex justify-content-sm-center">
-
                             </div>
                         </div>
                     </div>
@@ -21,13 +18,30 @@
             </div>
         </header>
 
-
         <div class="container px-4 px-lg-2 mt-3">
+
+            <div class="text-center my-4">
+                <a href="{{ url('/?modulo=1') }}"
+                    class="btn {{ $modulo == 1 ? 'btn-primary' : 'btn-outline-primary' }} me-2">
+                    Módulo 1
+                </a>
+
+                <a href="{{ url('/?modulo=2') }}"
+                    class="btn {{ $modulo == 2 ? 'btn-success' : 'btn-outline-success' }} me-2">
+                    Módulo 2
+                </a>
+
+                <a href="{{ url('/?modulo=3') }}" class="btn {{ $modulo == 3 ? 'btn-dark' : 'btn-outline-dark' }}">
+                    Módulo 3
+                </a>
+            </div>
+
+            <p class="text-center text-muted">
+                Mostrando tests del Módulo {{ $modulo }}
+            </p>
 
             <div class="bg-light my-4 py-3 text-center">
                 <div>
-                    <!-- <h2>Listado de Tests</h2> -->
-                    <!-- Busqueda test-->
                     <form id="searchForm">
                         <div class="input-group mb-3">
                             <span class="input-group-text"><i class="fa-solid fa-magnifying-glass"></i></span>
@@ -38,34 +52,39 @@
             </div>
 
             <div class="row gx-4 gx-lg-" id="testContainer">
-                @foreach ($testIds as $testId)
-                    @php
-                        $test = $tests->where('id', $testId)->first();
-                    @endphp
+                @forelse ($tests as $test)
                     <div class="col-md-4 mb-5">
-                        <a href="{{ route('info-test', ['test_id' => $test->id]) }}"
-                            class="card h-100 text-decoration-none ">
+                        <a href="{{ route('info-test', ['test_id' => $test->id]) }}" class="card h-100 text-decoration-none">
 
                             <div class="card-header text-center">
-                                
-                                <p class="card-text"> </p>
+                                <p class="card-text"></p>
                             </div>
 
                             <div class="card-body text-center">
+                                <h2 class="card-title mt-3">{{ $test->name_test }}</h2>
+                                <p class="card-text">{{ $test->nombre_espa }}</p>
 
-                                <h2 class="card-title mt-3">{{ $test->tipoTest->num_test }} -
-                                    {{ $test->tipoTest->descripcion }}</h2>
-                                {{-- <p class="card-text"> {{ $test->name_test }}</p> --}}
-                                <p class="card-text"><i class="fas fa-clock"></i> Duración estimada:
-                                    {{ $test->duracion_minutos }} minutos</p>
-                                <div class="card-footer ">
-                                    <p class="card-text"><i class="fa-solid fa-globe"></i> Fuente:
-                                        {{ $test->tipoTest->fuente }} ({{ $test->tipoTest->implementacion}})</p>
+                                <p class="card-text">
+                                    <i class="fas fa-clock"></i> Duración estimada:
+                                    {{ $test->duracion_minutos }} minutos
+                                </p>
+
+                                <div class="card-footer">
+                                    <p class="card-text">
+                                        <i class="fa-solid fa-globe"></i> Fuente:
+                                        {{ $test->tipoTest->fuente }} ({{ $test->tipoTest->implementacion }})
+                                    </p>
                                 </div>
                             </div>
                         </a>
                     </div>
-                @endforeach
+                @empty
+                    <div class="col-12 text-center">
+                        <div class="alert alert-warning">
+                            No hay tests asignados a este módulo.
+                        </div>
+                    </div>
+                @endforelse
             </div>
         </div>
     </section>
@@ -88,9 +107,8 @@
                 </ul>
             </footer>
         </div>
-
     </div>
-    
+
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             var idParticipante = @json($IDparticipante);

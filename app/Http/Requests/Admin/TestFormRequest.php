@@ -6,35 +6,27 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class TestFormRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
         return [
-            'name_test' => 'required|string|max:255',
-            'nombre_espa' => 'nullable|string|max:255',
-            'points' => 'required|numeric',
-            'duracion_minutos' => 'required|numeric',
-            'tipotest_id' => 'required|exists:tipo_test,id',
-            'url_test' => 'nullable|string',
-            'url_adicional'=> 'nullable|string',
-            'link_millisecond'=> 'nullable|string|max:255',
-            'link_millisecond2'=> 'nullable|string|max:255',
-            'nombre_url' => 'required|string|max:255',
-            'nombre_url_opcional' => 'nullable|string|max:255',
+            'name_test' => ['required', 'string', 'max:255'],
+            'nombre_espa' => ['nullable', 'string', 'max:255'],
+            'points' => ['nullable', 'numeric'],
+            'duracion_minutos' => ['nullable', 'numeric'],
+            'tipotest_id' => ['required', 'exists:tipo_test,id'],
+            'modulo' => ['required', 'integer', 'in:1,2,3'],
+            'url_test' => ['nullable', 'string', 'max:255'],
+            'url_adicional' => ['nullable', 'string', 'max:255'],
+            'link_millisecond' => ['nullable', 'string', 'max:255'],
+            'link_millisecond2' => ['nullable', 'string', 'max:255'],
+            'nombre_url' => ['nullable', 'string', 'max:255'],
+            'nombre_url_opcional' => ['nullable', 'string', 'max:255'],
+            'descripcion_individual' => ['nullable', 'string'],
         ];
     }
 }

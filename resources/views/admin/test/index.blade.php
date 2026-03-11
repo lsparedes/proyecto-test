@@ -6,18 +6,23 @@
 
     <div class="container-fluid px-4">
 
-
         <div class="card mt-4">
             <div class="card-header" style="background-color:#1d8eaa28">
-                <h4>Listado Test
-                    <!-- @can('add-tests')
-                        <a href="{{ url('admin/add-tests') }}" class="btn btn-primary btn-sm float-end"><i class="fas fa-plus"></i>
-                            Añadir
-                            Test</a>
-                    @endcan -->
+                <h4>
+                    Listado Test
+
+                    @can('add-tests')
+                        <a href="{{ url('admin/add-tests') }}" class="btn btn-primary btn-sm float-end">
+                            <i class="fas fa-plus"></i> Añadir Test
+                        </a>
+                    @endcan
                 </h4>
-                <p class="card-title">Agregar tests y vincularlos al tipo test ingresado previamente, además de agregar url del test para que se pueda ejecutar.</p>
+
+                <p class="card-title">
+                    Agregar tests y vincularlos al tipo test ingresado previamente, además de agregar url del test para que se pueda ejecutar.
+                </p>
             </div>
+
             <div class="card-body">
                 @if (session('message'))
                     <div class="alert alert-success">{{ session('message') }}</div>
@@ -29,8 +34,9 @@
                             <th>Nombre test</th>
                             <th>Tipo Test</th>
                             <th>Nombre test (español)</th>
-                            <th>Puntaje maximo</th>
-                            <th>Duracion (minutos)</th>
+                            <th>Puntaje máximo</th>
+                            <th>Duración (minutos)</th>
+                            <th>Módulo</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -43,14 +49,29 @@
                                 <td>{{ $item->points }}</td>
                                 <td>{{ $item->duracion_minutos }}</td>
                                 <td>
+                                    @if ($item->modulo == 1)
+                                        Módulo 1
+                                    @elseif ($item->modulo == 2)
+                                        Módulo 2
+                                    @elseif ($item->modulo == 3)
+                                        Módulo 3
+                                    @else
+                                        Sin módulo
+                                    @endif
+                                </td>
+                                <td>
                                     @can('edit-tests')
-                                        <a href="{{ url('admin/edit-tests/' . $item->id) }}" class="btn btn-sm btn-success"><i
-                                                class="fas fa-pen"></i></a>
+                                        <a href="{{ url('admin/edit-tests/' . $item->id) }}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-pen"></i>
+                                        </a>
                                     @endcan
+
                                     @can('delete-tests')
-                                        <a href="{{ url('admin/delete-tests/' . $item->id) }}" class="btn btn-sm btn-danger"
-                                            onclick="return confirm('¿Seguro que deseas eliminar este test?')"><i
-                                                class="fas fa-trash-can"></i></a>
+                                        <a href="{{ url('admin/delete-tests/' . $item->id) }}"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('¿Seguro que deseas eliminar este test?')">
+                                            <i class="fas fa-trash-can"></i>
+                                        </a>
                                     @endcan
                                 </td>
                             </tr>
@@ -59,7 +80,6 @@
                 </table>
 
             </div>
-
         </div>
 
     </div>
