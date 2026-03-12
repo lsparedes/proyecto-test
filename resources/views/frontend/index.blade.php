@@ -61,8 +61,7 @@
                             </div>
 
                             <div class="card-body text-center">
-                                <h2 class="card-title mt-3">{{ $test->name_test }}</h2>
-                                <p class="card-text">{{ $test->nombre_espa }}</p>
+                                <h2 class="card-title mt-3">{{ $test->id }} - {{ $test->name_test }}</h2>
 
                                 <p class="card-text">
                                     <i class="fas fa-clock"></i> Duración estimada:

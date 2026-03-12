@@ -32,67 +32,69 @@ let clickResults = [];
 // Coordenadas de las letras "A" en la resolución de la imagen
 
 let letrasA = [
-    { x: 334, y: 78 },
-    { x: 56, y: 166 },
-    { x: 526, y: 158 },
-    { x: 816, y: 70 },
-    { x: 150, y: 328 },
-    { x: 342, y: 422 },
-    { x: 156, y: 584 },
-    { x: 260, y: 664 },
-    { x: 266, y: 818 },
-    { x: 178, y: 1172 },
-    { x: 76, y: 1328 },
-    { x: 358, y: 1412 },
-    { x: 446, y: 1248 },
-    { x: 166, y: 924 },
-    { x: 436, y: 250 },
-    { x: 534, y: 584 },
-    { x: 636, y: 482 },
-    { x: 544, y: 922 },
-    { x: 364, y: 1084 },
-    { x: 646, y: 1008 },
-    { x: 652, y: 1172 },
-    { x: 552, y: 1320 },
-    { x: 638, y: 322 },
-    { x: 820, y: 402 },
-    { x: 922, y: 658 },
-    { x: 924, y: 818 },
-    { x: 830, y: 1084 },
-    { x: 828, y: 1416 },
-    { x: 1024, y: 1242 },
-    { x: 1112, y: 1242 },
-    { x: 1008, y: 242 },
-    { x: 1098, y: 240 },
-    { x: 1300, y: 70 },
-    { x: 1290, y: 396 },
-    { x: 1482, y: 310 },
-    { x: 1666, y: 228 },
-    { x: 1576, y: 146 },
-    { x: 1800, y: 78 },
-    { x: 2052, y: 144 },
-    { x: 1952, y: 308 },
-    { x: 1484, y: 468 },
-    { x: 1770, y: 386 },
-    { x: 1940, y: 574 },
-    { x: 1870, y: 654 },
-    { x: 1870, y: 812 },
-    { x: 1942, y: 910 },
-    { x: 1938, y: 1160 },
-    { x: 2064, y: 1304 },
-    { x: 1768, y: 1402 },
-    { x: 1578, y: 1310 },
-    { x: 1682, y: 1234 },
-    { x: 1762, y: 1070 },
-    { x: 1574, y: 912 },
-    { x: 1580, y: 578 },
-    { x: 1208, y: 656 },
-    { x: 1208, y: 814 },
-    { x: 1308, y: 1078 },
-    { x: 1492, y: 998 },
-    { x: 1494, y: 1166 },
-    { x: 1312, y: 1408 },
+    { x: 336, y: 34 },
+    { x: 53, y: 132 },
+    { x: 527, y: 122 },
+    { x: 814, y: 27 },
+    { x: 149, y: 305 },
+    { x: 339, y: 402 },
+    { x: 155, y: 577 },
+    { x: 261, y: 666 },
+    { x: 260, y: 829 },
+    { x: 178, y: 1203 },
+    { x: 75, y: 1372 },
+    { x: 356, y: 1463 },
+    { x: 448, y: 1291 },
+    { x: 165, y: 935 },
+    { x: 438, y: 227 },
+    { x: 541, y: 581 },
+    { x: 642, y: 467 },
+    { x: 543, y: 941 },
+    { x: 364, y: 1111 },
+    { x: 649, y: 1034 },
+    { x: 656, y: 1203 },
+    { x: 556, y: 1362 },
+    { x: 643, y: 295 },
+    { x: 826, y: 384 },
+    { x: 930, y: 661 },
+    { x: 928, y: 831 },
+    { x: 831, y: 1112 },
+    { x: 831, y: 1465 },
+    { x: 1028, y: 1279 },
+    { x: 1117, y: 1281 },
+    { x: 1012, y: 213 },
+    { x: 1095, y: 213 },
+    { x: 1308, y: 29 },
+    { x: 1297, y: 378 },
+    { x: 1488, y: 289 },
+    { x: 1672, y: 199 },
+    { x: 1581, y: 114 },
+    { x: 1811, y: 34 },
+    { x: 2056, y: 110 },
+    { x: 1969, y: 283 },
+    { x: 1486, y: 454 },
+    { x: 1779, y: 370 },
+    { x: 1950, y: 571 },
+    { x: 1882, y: 653 },
+    { x: 1880, y: 825 },
+    { x: 1956, y: 929 },
+    { x: 1950, y: 1191 },
+    { x: 2073, y: 1344 },
+    { x: 1779, y: 1452 },
+    { x: 1585, y: 1352 },
+    { x: 1686, y: 1273 },
+    { x: 1771, y: 1102 },
+    { x: 1583, y: 927 },
+    { x: 1589, y: 571 },
+    { x: 1215, y: 659 },
+    { x: 1213, y: 822 },
+    { x: 1317, y: 1106 },
+    { x: 1496, y: 1018 },
+    { x: 1505, y: 1199 },
+    { x: 1321, y: 1456 }
 ];
+
+
 // Coordenadas de las otras letras en la resolución de la imagen
 let otrasLetras = [
 
@@ -429,6 +431,21 @@ window.addEventListener('resize', () => {
     resizeCanvas(practiceCanvas, ctxPractice, practiceImage, 17, 17); // Ajusta el canvas de práctica al 70%
 });
 
+function getCanvasDisplaySize(canvas) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        width: rect.width,
+        height: rect.height
+    };
+}
+
+function redrawCanvasImage(canvas, ctx, image) {
+    const display = getCanvasDisplaySize(canvas);
+
+    ctx.clearRect(0, 0, display.width, display.height);
+    ctx.drawImage(image, 0, 0, display.width, display.height);
+}
+
 function isTablet() {
     const userAgent = navigator.userAgent.toLowerCase();
     return /ipad|tablet|android(?!.*mobi)/i.test(userAgent);
@@ -437,54 +454,54 @@ function isTablet() {
 // Ajustar las coordenadas del click
 function adjustClickCoordinates(e, canvas, originalSize) {
     const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (originalSize.width / canvas.width);
-    const y = (e.clientY - rect.top) * (originalSize.height / canvas.height);
+
+    const x = (e.clientX - rect.left) * (originalSize.width / rect.width);
+    const y = (e.clientY - rect.top) * (originalSize.height / rect.height);
+
     return { x, y };
 }
+
 
 function resizeCanvas(canvas, ctx, image, desktopPercentage = 95, tabletPercentage = 80) {
     const isTabletDevice = isTablet();
     const percentage = isTabletDevice ? tabletPercentage : desktopPercentage;
+
     const aspectRatio = image.width / image.height;
     const windowAspectRatio = window.innerWidth / window.innerHeight;
 
-    let newWidth, newHeight;
+    let cssWidth, cssHeight;
 
-    // Ajustar dimensiones del canvas según la relación de aspecto
     if (windowAspectRatio > aspectRatio) {
-        newHeight = window.innerHeight * (percentage / 100);
-        newWidth = newHeight * aspectRatio;
+        cssHeight = window.innerHeight * (percentage / 100);
+        cssWidth = cssHeight * aspectRatio;
     } else {
-        newWidth = window.innerWidth * (percentage / 100);
-        newHeight = newWidth / aspectRatio;
+        cssWidth = window.innerWidth * (percentage / 100);
+        cssHeight = cssWidth / aspectRatio;
     }
 
-    // Ajustar el tamaño del canvas
-    canvas.width = newWidth;
-    canvas.height = newHeight;
+    const dpr = window.devicePixelRatio || 1;
 
-    console.log(`Canvas size on ${isTabletDevice ? 'tablet' : 'desktop'}: ${newWidth}px x ${newHeight}px`);
+    canvas.dataset.cssWidth = cssWidth;
+    canvas.dataset.cssHeight = cssHeight;
+    canvas.dataset.dpr = dpr;
 
-    // Limpiar el canvas antes de redibujar
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.style.width = `${cssWidth}px`;
+    canvas.style.height = `${cssHeight}px`;
 
-    // Redibujar la imagen
-    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+    canvas.width = Math.round(cssWidth * dpr);
+    canvas.height = Math.round(cssHeight * dpr);
 
-    canvas.style.width = `${canvas.width}px`;
-    canvas.style.height = `${canvas.height}px`;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
 
+    ctx.clearRect(0, 0, cssWidth, cssHeight);
+    ctx.drawImage(image, 0, 0, cssWidth, cssHeight);
 }
 
 
 imageCanvas.addEventListener('pointerdown', handleClick, false);
 practiceCanvas.addEventListener('pointerdown', handleClickPractice, false);
 
-practiceCanvas.addEventListener('', (e) => {
-    const { x, y } = adjustClickCoordinates(e, practiceCanvas, originalCanvasSize);
-    practiceClicks.push({ x, y });
-    drawCirclePractice(e.clientX - practiceCanvas.getBoundingClientRect().left, e.clientY - practiceCanvas.getBoundingClientRect().top, 'blue');
-});
 
 
 startButton.addEventListener('click', () => {
@@ -531,44 +548,69 @@ fullscreenButton.addEventListener('click', () => {
 });
 
 clearButton.addEventListener('click', () => {
-    ctxPractice.clearRect(0, 0, practiceCanvas.width, practiceCanvas.height);
-    ctxPractice.drawImage(practiceImage, 0, 0, practiceCanvas.width, practiceCanvas.height);
+    const display = getCanvasDisplaySize(practiceCanvas);
+    ctxPractice.clearRect(0, 0, display.width, display.height);
+    ctxPractice.drawImage(practiceImage, 0, 0, display.width, display.height);
     practiceClicks = [];
 });
 
 
 function handleClick(e) {
-    // Verifica que el evento provenga de un lápiz
-    if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+    if (e.pointerType !== 'touch' && e.pointerType !== 'pen' && e.pointerType !== 'mouse') return;
 
     const { x, y } = adjustClickCoordinates(e, imageCanvas, originalCanvasSize);
 
     clicks.push({ x, y });
-    drawCircle(
-        x * (imageCanvas.width / originalCanvasSize.width),
-        y * (imageCanvas.height / originalCanvasSize.height),
-        'blue'
-    );
 
+    const rect = imageCanvas.getBoundingClientRect();
+    const drawX = x * (rect.width / originalCanvasSize.width);
+    const drawY = y * (rect.height / originalCanvasSize.height);
+
+    drawCircle(drawX, drawY, 'blue');
+
+    // DEBUG: mostrar coordenada exacta del click y la A más cercana
+    let nearestAIndex = -1;
+    let minDistA = Infinity;
+
+    letrasA.forEach((letra, idx) => {
+        const dx = x - letra.x;
+        const dy = y - letra.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < minDistA) {
+            minDistA = dist;
+            nearestAIndex = idx;
+        }
+    });
+
+    console.log('Click en:', { x: Math.round(x), y: Math.round(y) });
+    console.log(
+        letrasA[nearestAIndex],
+        Math.round(minDistA)
+    );
 }
+
 function handleClickPractice(e) {
-    if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+    if (e.pointerType !== 'touch' && e.pointerType !== 'pen' && e.pointerType !== 'mouse') return;
 
     const { x, y } = adjustClickCoordinates(e, practiceCanvas, originalCanvasSize);
 
     practiceClicks.push({ x, y });
-    drawCirclePractice(
-        x * (practiceCanvas.width / originalCanvasSize.width),
-        y * (practiceCanvas.height / originalCanvasSize.height),
-        'blue'
-    );
 
+    const rect = practiceCanvas.getBoundingClientRect();
+    const drawX = x * (rect.width / originalCanvasSize.width);
+    const drawY = y * (rect.height / originalCanvasSize.height);
+
+    drawCirclePractice(drawX, drawY, 'blue');
 }
 
 
 function drawCircle(x, y, color) {
+    const scale = imageCanvas.getBoundingClientRect().width / originalCanvasSize.width;
+    const radius = Math.max(6, 10 * scale);
+
     ctx.beginPath();
-    ctx.arc(x, y, 10, 0, 2 * Math.PI, false);
+    ctx.arc(x, y, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = color;
     ctx.fill();
     ctx.lineWidth = 1;
@@ -577,8 +619,11 @@ function drawCircle(x, y, color) {
 }
 
 function drawCirclePractice(x, y, color) {
+    const scale = practiceCanvas.getBoundingClientRect().width / originalCanvasSize.width;
+    const radius = Math.max(6, 10 * scale);
+
     ctxPractice.beginPath();
-    ctxPractice.arc(x, y, 10, 0, 2 * Math.PI, false);
+    ctxPractice.arc(x, y, radius, 0, 2 * Math.PI, false);
     ctxPractice.fillStyle = color;
     ctxPractice.fill();
     ctxPractice.lineWidth = 1;
@@ -612,81 +657,118 @@ function downloadVideo(callback) {
 }
 
 function prepararResultadosParaRevision() {
-    const umbral = 20;
-    const imageWidth = 2105;
-    const halfWidth = imageWidth / 2;
+    const umbralA = 40;        // más tolerancia para A
+    const umbralOtras = 1;    // menos tolerancia para letras incorrectas
+    const margenDominio = 10;   // la A debe ganarle claramente a la otra letra
+
+    const usados = new Set();
 
     clickResults = clicks.map((click, index) => {
         let nearestAIndex = -1;
         let minDistA = Infinity;
 
-        // Buscar la A más cercana
+        let nearestOtherIndex = -1;
+        let minDistOther = Infinity;
+
+        // Buscar A más cercana
         letrasA.forEach((letra, idx) => {
             const dx = click.x - letra.x;
             const dy = click.y - letra.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
+
             if (dist < minDistA) {
                 minDistA = dist;
                 nearestAIndex = idx;
             }
         });
 
-        const isNearA = minDistA < umbral;
-
-        // ¿Está cerca de alguna otra letra? (para error de comisión)
-        let isCommission = false;
-        otrasLetras.forEach(letra => {
+        // Buscar otra letra más cercana
+        otrasLetras.forEach((letra, idx) => {
             const dx = click.x - letra.x;
             const dy = click.y - letra.y;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            if (dist < umbral) {
-                isCommission = true;
+
+            if (dist < minDistOther) {
+                minDistOther = dist;
+                nearestOtherIndex = idx;
             }
         });
 
-        const isCorrectInitial = isNearA; // criterio original
+        const nearA = minDistA <= umbralA;
+        const nearOther = minDistOther <= umbralOtras;
+
+        // La A debe estar suficientemente cerca
+        // y además no perder contra una letra incorrecta vecina
+        const aDomina = minDistA <= (minDistOther - margenDominio);
+
+        let isCorrectInitial = false;
+        let isCommission = false;
+        let isDuplicate = false;
+        let targetIndex = null;
+
+        if (nearA && (!nearOther || aDomina)) {
+            targetIndex = nearestAIndex;
+
+            if (usados.has(nearestAIndex)) {
+                isDuplicate = true;
+                isCorrectInitial = false; // no cuenta como nuevo acierto
+            } else {
+                usados.add(nearestAIndex);
+                isCorrectInitial = true;
+            }
+        } else if (nearOther) {
+            isCommission = true;
+        }
 
         return {
             index: index + 1,
             x: click.x,
             y: click.y,
-            targetIndex: isNearA ? nearestAIndex : null, // índice de la A asociada
-            isCommission: isCommission,
-            isCorrectInitial: isCorrectInitial,
+            targetIndex,
+            nearestAIndex,
+            nearestOtherIndex,
+            minDistA,
+            minDistOther,
+            isCommission,
+            isDuplicate,
+            isCorrectInitial,
             isCorrect: isCorrectInitial
         };
     });
 }
 
 function abrirPantallaRevision() {
-    // Preparar estructura de resultados
     prepararResultadosParaRevision();
 
-    // Ocultar todo lo anterior
+    const cssWidth = parseFloat(imageCanvas.dataset.cssWidth) || imageCanvas.getBoundingClientRect().width;
+    const cssHeight = parseFloat(imageCanvas.dataset.cssHeight) || imageCanvas.getBoundingClientRect().height;
+
     fin.style.display = 'none';
     selectHandContainer.style.display = "none";
     mainScreen.style.display = 'none';
 
-    // Mostrar pantalla de revisión
     reviewScreen.style.display = 'block';
 
-    // 👉 Ajustar el tamaño del canvas de revisión SIN usar resizeCanvas
-    reviewCanvas.width = imageCanvas.width;
-    reviewCanvas.height = imageCanvas.height;
+    reviewCanvas.width = Math.round(cssWidth);
+    reviewCanvas.height = Math.round(cssHeight);
+    reviewCanvas.style.width = `${Math.round(cssWidth)}px`;
+    reviewCanvas.style.height = `${Math.round(cssHeight)}px`;
 
-    // Dibujar sobre el reviewCanvas
     dibujarPuntosRevision();
 }
 
+
 function dibujarPuntosRevision() {
-    // Limpiar y dibujar la imagen de fondo
-    reviewCtx.clearRect(0, 0, reviewCanvas.width, reviewCanvas.height);
-    reviewCtx.drawImage(image, 0, 0, reviewCanvas.width, reviewCanvas.height);
+    const displayWidth = reviewCanvas.width;
+    const displayHeight = reviewCanvas.height;
 
-    const scaleX = reviewCanvas.width / originalCanvasSize.width;
-    const scaleY = reviewCanvas.height / originalCanvasSize.height;
+    reviewCtx.clearRect(0, 0, displayWidth, displayHeight);
+    reviewCtx.drawImage(image, 0, 0, displayWidth, displayHeight);
 
-    // Si reviewShowAll=false => dibuja SOLO incorrectas (isCorrect === false)
+    const scaleX = displayWidth / originalCanvasSize.width;
+    const scaleY = displayHeight / originalCanvasSize.height;
+    const radius = Math.max(6, 10 * scaleX);
+
     const pointsToDraw = reviewShowAll
         ? clickResults
         : clickResults.filter(c => !c.isCorrect);
@@ -696,11 +778,12 @@ function dibujarPuntosRevision() {
         const sy = c.y * scaleY;
 
         reviewCtx.beginPath();
-        reviewCtx.arc(sx, sy, 10, 0, 2 * Math.PI);
+        reviewCtx.arc(sx, sy, radius, 0, 2 * Math.PI);
         reviewCtx.lineWidth = 3;
         reviewCtx.strokeStyle = c.isCorrect ? 'green' : 'red';
-        reviewCtx.stroke(); // solo contorno
+        reviewCtx.stroke();
     });
+
 }
 
 reviewCanvas.addEventListener('pointerdown', (e) => {
@@ -723,7 +806,7 @@ reviewCanvas.addEventListener('pointerdown', (e) => {
         }
     });
 
-    if (nearestDist < 20 && nearestIndex !== -1) {
+    if (nearestDist < 35 && nearestIndex !== -1) {
         // Si era rojo (incorrecto) y lo corriges -> pasa a correcto y DESAPARECE (porque ya no se dibuja)
         clickResults[nearestIndex].isCorrect = !clickResults[nearestIndex].isCorrect;
         dibujarPuntosRevision();
@@ -769,14 +852,23 @@ function validateClicks() {
     const results = [];
 
     // Redibujar imagen base en el canvas principal (para la versión corregida)
-    ctx.drawImage(image, 0, 0, imageCanvas.width, imageCanvas.height);
+    //ctx.drawImage(image, 0, 0, imageCanvas.width, imageCanvas.height);
 
     let lastCorrectClick = null;
     let sumX = 0;
     let sumY = 0;
 
-    const scaleX = imageCanvas.width / originalCanvasSize.width;
-    const scaleY = imageCanvas.height / originalCanvasSize.height;
+    //const scaleX = imageCanvas.width / originalCanvasSize.width;
+    // const scaleY = imageCanvas.height / originalCanvasSize.height;
+
+    const displayWidth = parseFloat(imageCanvas.dataset.cssWidth) || imageCanvas.getBoundingClientRect().width;
+    const displayHeight = parseFloat(imageCanvas.dataset.cssHeight) || imageCanvas.getBoundingClientRect().height;
+
+    ctx.clearRect(0, 0, displayWidth, displayHeight);
+    ctx.drawImage(image, 0, 0, displayWidth, displayHeight);
+
+    const scaleX = displayWidth / originalCanvasSize.width;
+    const scaleY = displayHeight / originalCanvasSize.height;
 
     clickResults.forEach((c, index) => {
         if (c.isCorrect) {
@@ -808,9 +900,10 @@ function validateClicks() {
 
         const px = c.x * scaleX;
         const py = c.y * scaleY;
+        const radius = Math.max(6, 10 * scaleX);
 
         ctx.beginPath();
-        ctx.arc(px, py, 10, 0, 2 * Math.PI);
+        ctx.arc(px, py, radius, 0, 2 * Math.PI);
         ctx.lineWidth = 2;
         ctx.strokeStyle = c.isCorrect ? 'green' : 'red';
         ctx.fillStyle = c.isCorrect ? 'rgba(0,255,0,0.2)' : 'rgba(255,0,0,0.2)';
@@ -886,17 +979,10 @@ function validateClicks() {
 
     let omisionesDerecha = 0;
     let omisionesIzquierda = 0;
-    const umbral = 20;
+    const umbral = 40;
 
     letrasA.forEach((letra, idx) => {
-        const fueSeleccionada = clickResults.some(c => {
-            if (!c.isCorrect) return false;
-            if (c.targetIndex === idx) return true;
-
-            const dx = c.x - letra.x;
-            const dy = c.y - letra.y;
-            return Math.sqrt(dx * dx + dy * dy) < umbral;
-        });
+        const fueSeleccionada = clickResults.some(c => c.isCorrect && c.targetIndex === idx);
 
         if (!fueSeleccionada) {
             if (letra.x >= halfWidth) {
