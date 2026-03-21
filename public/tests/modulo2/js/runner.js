@@ -85,8 +85,8 @@ document.addEventListener("fullscreenchange", () => {
   }
 });
 
-function setupInstructionAudio(audioPath) {
-  if (!audioPath) {
+function setupInstructionAudio(audioPath, show = true) {
+  if (!audioPath || !show) {
     btnAudio.style.display = "none";
     instructionAudio.src = "";
     return;
@@ -151,12 +151,8 @@ if (!part) throw new Error("Parte no encontrada");
 const step = part.steps?.[0];
 if (!step) throw new Error("Parte sin steps");
 
-/* =========================
-   SEMANTIC MATCH (Parte 2)
-   - Seleccionar NO avanza
-   - Muestra flecha para avanzar
-   - Fullscreen solo ensayo 1
-========================= */
+//SEMANTIC MATCH (Parte 2)
+
 function runSemanticMatch(step) {
   showLayout("semantic");
 
@@ -187,6 +183,29 @@ function runSemanticMatch(step) {
 
   let selectedIndex = null;
 
+  function hideInstructionAudio() {
+    const possibleSelectors = [
+      "#instructionAudioBtn",
+      "#instructionAudioContainer",
+      ".instruction-audio",
+      ".instruction-audio-btn",
+      ".audio-button"
+    ];
+
+    possibleSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        el.style.display = "none";
+        el.style.visibility = "hidden";
+        el.style.pointerEvents = "none";
+      });
+    });
+
+    document.querySelectorAll("audio").forEach(audio => {
+      audio.pause();
+      audio.currentTime = 0;
+    });
+  }
+
   function clearMarks() {
     optBoxes.forEach(b => b.classList.remove("selected"));
     btnNext.style.display = "none";
@@ -207,9 +226,7 @@ function runSemanticMatch(step) {
     topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Ensayo ${testIndex + 1}/${totalTestTrials}`;
   }
 
-
   function updateFullscreenButton() {
-    // solo ensayo 1
     btnFullscreen.style.display = (trialIndex === 0) ? "block" : "none";
   }
 
@@ -222,7 +239,9 @@ function runSemanticMatch(step) {
 
     updateTopBar();
     updateFullscreenButton();
-    setupInstructionAudio(step.instructionAudio);
+
+    setupInstructionAudio(step.instructionAudio, trialIndex === 0);
+
     setPartProgress(partId, { trialIndex });
   }
 
@@ -233,11 +252,9 @@ function runSemanticMatch(step) {
       const idx = Number(box.dataset.opt);
       selectedIndex = idx;
 
-      // solo marca lo que eligió (sin correct/incorrect)
       optBoxes.forEach(b => b.classList.remove("selected"));
       box.classList.add("selected");
 
-      // habilita flecha para avanzar
       btnNext.style.display = "block";
     };
   });
@@ -245,10 +262,15 @@ function runSemanticMatch(step) {
   btnNext.onclick = () => {
     if (selectedIndex === null) return;
 
+    hideInstructionAudio();
+
     trialIndex++;
+
     if (trialIndex >= trials.length) {
       setPartProgress(partId, { status: "done", trialIndex: trials.length - 1 });
-      window.location.href = "index.html";
+      // intento de cierre
+      window.open("", "_self");
+      window.close();
       return;
     }
 
@@ -279,6 +301,32 @@ function runMCQ4ImageTrials(step) {
     document.getElementById("img3"),
   ];
 
+  // ===== NUEVO: botón para patient audio =====
+  let btnPatientAudio = document.getElementById("btnPatientAudio");
+
+  if (!btnPatientAudio) {
+    btnPatientAudio = document.createElement("img");
+    btnPatientAudio.id = "btnPatientAudio";
+    btnPatientAudio.src = "audio.png"; // cambia por tu icono real si usas otro
+    btnPatientAudio.alt = "Reproducir audio del paciente";
+    btnPatientAudio.style.position = "fixed";
+    btnPatientAudio.style.top = "12px";
+    btnPatientAudio.style.right = "12px";
+    btnPatientAudio.style.width = "46px";
+    btnPatientAudio.style.height = "46px";
+    btnPatientAudio.style.cursor = "pointer";
+    btnPatientAudio.style.zIndex = "9999";
+    btnPatientAudio.style.display = "none";
+    document.body.appendChild(btnPatientAudio);
+  }
+
+  let patientAudioEl = document.getElementById("patientAudio");
+  if (!patientAudioEl) {
+    patientAudioEl = document.createElement("audio");
+    patientAudioEl.id = "patientAudio";
+    document.body.appendChild(patientAudioEl);
+  }
+
   // En este test NO hay imagen central. Ocultamos el centro:
   centerBox.style.display = "none";
 
@@ -304,7 +352,13 @@ function runMCQ4ImageTrials(step) {
     trialIndex = Math.min(Math.max(saved.trialIndex, 1), total);
   }
 
-  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, trialIndex, totalTrials: total });
+  setPartProgress(partId, {
+    status: "in_progress",
+    stepIndex: 0,
+    totalSteps: 1,
+    trialIndex,
+    totalTrials: total
+  });
 
   let selectedIndex = null;
 
@@ -319,31 +373,59 @@ function runMCQ4ImageTrials(step) {
   }
 
   function updateTopBar() {
-    // Prueba (t=1)
     if (trialIndex === practiceIndex) {
       topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Prueba 1/1`;
     } else {
-      // Ensayos cuentan sin la prueba
       const ensayoN = trialIndex - practiceIndex; // 2->1 ... 11->10
       topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Ensayo ${ensayoN}/10`;
     }
   }
 
+  function hidePatientAudio() {
+    btnPatientAudio.style.display = "none";
+    patientAudioEl.pause();
+    patientAudioEl.currentTime = 0;
+    patientAudioEl.src = "";
+  }
+
+  function showPatientAudio(audioPath) {
+    if (!audioPath) {
+      hidePatientAudio();
+      return;
+    }
+
+    patientAudioEl.src = audioPath;
+    btnPatientAudio.style.display = "block";
+
+    btnPatientAudio.onclick = () => {
+      patientAudioEl.currentTime = 0;
+      patientAudioEl.play();
+    };
+  }
+
   function updateAudioButton() {
-    // Solo en la prueba: instrucciones en audio (sin texto)
+    // Ocultamos primero todo
+    setupInstructionAudio(null);
+    hidePatientAudio();
+
+    // PRUEBA
     if (trialIndex === practiceIndex) {
-      setupInstructionAudio(step.instructionAudio); // icono visible (aunque sea null por ahora, quedará oculto)
-      // OJO: tú pediste “deja el icono puesto” aunque no haya audio aún.
-      // Entonces forzamos el icono visible en prueba aunque no haya src:
+      setupInstructionAudio(step.instructionAudio);
+
       btnAudio.style.display = "block";
       instructionAudio.src = step.instructionAudio || "";
       btnAudio.onclick = () => {
-        if (!instructionAudio.src) return; // cuando pongas el audio, funcionará
+        if (!instructionAudio.src) return;
         instructionAudio.currentTime = 0;
         instructionAudio.play();
       };
-    } else {
-      setupInstructionAudio(null);
+      return;
+    }
+
+    // ENSAYO 1
+    const ensayoN = trialIndex - practiceIndex;
+    if (ensayoN === 1) {
+      showPatientAudio(step.patientAudio);
     }
   }
 
@@ -352,7 +434,6 @@ function runMCQ4ImageTrials(step) {
     updateTopBar();
     updateAudioButton();
 
-    // cargar las 4 imágenes del trial
     for (let o = 1; o <= 4; o++) {
       optImgs[o - 1].src = fileFor(trialIndex, o);
     }
@@ -360,7 +441,6 @@ function runMCQ4ImageTrials(step) {
     setPartProgress(partId, { trialIndex });
   }
 
-  // Elegir opción (no avanza automático)
   optBoxes.forEach(box => {
     box.onclick = () => {
       const idx = Number(box.dataset.opt); // 0..3
@@ -373,20 +453,21 @@ function runMCQ4ImageTrials(step) {
     };
   });
 
-  // Flecha: avanza (exige selección si corresponde)
   btnNext.onclick = () => {
     if (requireSel && selectedIndex === null) return;
 
-    // (por ahora solo guardamos “selección” en partData para futuro ZIP)
     const data = getPartData(partId);
     const responses = data.responses || {};
-    responses[String(trialIndex)] = { selected: selectedIndex }; // 0..3
+    responses[String(trialIndex)] = { selected: selectedIndex };
     setPartData(partId, { responses });
 
     trialIndex++;
     if (trialIndex > total) {
       setPartProgress(partId, { status: "done", trialIndex: total });
-      window.location.href = "index.html";
+      hidePatientAudio();
+      // intento de cierre
+      window.open("", "_self");
+      window.close();
       return;
     }
 
@@ -397,7 +478,7 @@ function runMCQ4ImageTrials(step) {
   renderTrial();
 }
 
-// Pantomina
+// PANTOMIMA
 
 function runVideoRecordTrials(step) {
   showLayout("video_record");
@@ -414,18 +495,17 @@ function runVideoRecordTrials(step) {
   const vBtnRecording = document.getElementById("vBtnRecording");
 
   const images = step.images || [];
-  const practiceCount = Number(step.practiceCount ?? 1);
-  const trialCount = Number(step.trialCount ?? 6);
-  const totalStimScreens = images.length; // debería ser 7 (1..7)
+  const practiceCount = Number(step.practiceCount ?? 1); // prueba
+  const trialCount = Number(step.trialCount ?? 6);       // ensayos reales
 
-  // estado: screenIndex 0=ajuste cam, 1..7=estímulos
-  const hasIntro = Array.isArray(step.introAudios) && step.introAudios.length > 0;
+  // Total real de pantallas con estímulo = prueba + ensayos
+  const totalStimScreens = practiceCount + trialCount;   // 1 + 6 = 7
 
-  // screens:
-  // si hay intro: 0=intro, 1=example, 2..=trials
-  // si NO hay intro: 0=example, 1..=trials
-  const totalTrials = Number(step.totalTrials ?? 14);
-  const totalScreens = (hasIntro ? 1 : 0) + 1 + totalTrials; // intro? + example + trials;
+  // screenIndex:
+  // 0 = ajuste cámara
+  // 1 = prueba
+  // 2..7 = ensayos 1..6
+  const totalScreens = 1 + totalStimScreens;
 
   const saved = getPartProgress(partId);
   let screenIndex = 0;
@@ -434,16 +514,18 @@ function runVideoRecordTrials(step) {
     screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
   }
 
-  setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, screenIndex, totalScreens });
+  setPartProgress(partId, {
+    status: "in_progress",
+    stepIndex: 0,
+    totalSteps: 1,
+    screenIndex,
+    totalScreens
+  });
 
-  // audio instrucciones (icono arriba derecha) — lo mostramos en pantallas de estímulo
-  // (si quieres solo en práctica, lo cambiamos)
-  // setupInstructionAudio(step.instructionAudio);
-
-  // fullscreen + flecha
   btnFullscreen.style.display = "block";
   btnFullscreen.onclick = () => toggleFullscreen();
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+
   btnNext.style.display = "block";
 
   const recorder = new VideoRecorder();
@@ -476,21 +558,23 @@ function runVideoRecordTrials(step) {
 
   async function stopRecordingAndSave() {
     if (!isRecording) return;
+
     const blob = await recorder.stopRecording();
     setIdleUI();
 
     if (blob) {
       didRecordThisScreen = true;
 
-      // key: part05_s02 (screen estímulo)
       const stimIndex = screenIndex; // 1..7
+      const imageIndex = stimIndex - 1;
+      const imageName = images[imageIndex] || null;
+
       const key = `part${String(partId).padStart(2, "0")}_s${String(stimIndex).padStart(2, "0")}.webm`;
       await saveBlob(key, blob);
 
-      // guardamos mapping en partData (para ZIP futuro)
       const data = getPartData(partId);
       const takes = data.takes || {};
-      takes[String(stimIndex)] = { key, image: images[stimIndex - 1] };
+      takes[String(stimIndex)] = { key, image: imageName };
       setPartData(partId, { takes });
     }
   }
@@ -503,12 +587,12 @@ function runVideoRecordTrials(step) {
       return;
     }
 
-    if (screenIndex === 1) {
-      topBar.textContent = `${partLabel} · Prueba 1/1`;
+    if (screenIndex <= practiceCount) {
+      topBar.textContent = `${partLabel} · Prueba ${screenIndex}/${practiceCount}`;
       return;
     }
 
-    const ensayoN = screenIndex - 1; // 2..7 => 1..6
+    const ensayoN = screenIndex - practiceCount; // 2->1, 3->2 ... 7->6
     topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/${trialCount}`;
   }
 
@@ -516,18 +600,16 @@ function runVideoRecordTrials(step) {
     updateTopBar();
     setPartProgress(partId, { screenIndex });
 
-    // Pantalla 1: ajuste cámara
+    // Pantalla 0: ajuste cámara
     if (screenIndex === 0) {
       vrPreviewWrap.style.display = "flex";
       vrStimWrap.style.display = "none";
 
-      setupInstructionAudio(null); // no instrucciones aquí
-      btnAudio.style.display = "none"; // opcional: oculto
+      setupInstructionAudio(null);
+      btnAudio.style.display = "none";
 
-      // stream al preview grande
       await startStreamTo(vrPreview);
 
-      // sin botones rec/detener
       setIdleUI();
       vBtnRec.style.display = "none";
       vBtnStop.style.display = "none";
@@ -535,47 +617,61 @@ function runVideoRecordTrials(step) {
       return;
     }
 
-    // Pantallas estímulo
+    // Pantallas con estímulo
     vrPreviewWrap.style.display = "none";
     vrStimWrap.style.display = "block";
 
-    // mostrar audio de instrucciones
-    // (si luego quieres solo en práctica: if(screenIndex===1) setupInstructionAudio(...) else setupInstructionAudio(null))
-    setupInstructionAudio(step.instructionAudio);
+    // Audio SOLO en la prueba
+    if (screenIndex <= practiceCount) {
+      setupInstructionAudio(step.instructionAudio);
+      btnAudio.style.display = "block";
+    } else {
+      setupInstructionAudio(null);
+      btnAudio.style.display = "none";
+    }
 
-    // stream a preview pequeño
     await startStreamTo(vrSmallPreview);
 
-    // imagen estímulo
-    vrStimImage.src = `${step.basePath}/${images[screenIndex - 1]}`;
+    const imageIndex = screenIndex - 1;
+
+    if (!images[imageIndex]) {
+      console.warn(`No existe imagen para screenIndex=${screenIndex}, imageIndex=${imageIndex}`);
+      return;
+    }
+
+    vrStimImage.src = `${step.basePath}/${images[imageIndex]}`;
 
     setIdleUI();
   }
 
-  // botones
   vBtnRec.onclick = async () => {
-    try { await startRecording(); }
-    catch (e) { console.error(e); alert("No se pudo iniciar la grabación."); setIdleUI(); }
+    try {
+      await startRecording();
+    } catch (e) {
+      console.error(e);
+      alert("No se pudo iniciar la grabación.");
+      setIdleUI();
+    }
   };
 
   vBtnStop.onclick = async () => {
     await stopRecordingAndSave();
   };
 
-  // flecha: si está grabando -> detiene+guarda; si no, avanza
   btnNext.onclick = async () => {
     if (isRecording) {
       await stopRecordingAndSave();
-      return; // primera pulsación solo detiene (igual que audio)
+      return;
     }
 
-    // avanzar
     screenIndex++;
+
     if (screenIndex >= totalScreens) {
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
-      // opcional: detener stream al final
       recorder.stopStream();
-      window.location.href = "index.html";
+
+      window.open("", "_self");
+      window.close();
       return;
     }
 
@@ -583,19 +679,13 @@ function runVideoRecordTrials(step) {
     await render();
   };
 
-  // inicial
   render();
 }
 
-/* =========================
-   CÁLCULO (Parte 6)
-   - mismo patrón: seleccionar NO avanza
-   - flecha para avanzar
-   - sin fullscreen (solo parte 2)
-========================= */
+//   CÁLCULO (Parte 6)
+
 function runCalcMCQ(step) {
   showLayout("calc");
-  btnFullscreen.style.display = "none"; // no se usa acá
 
   const promptImg = document.getElementById("calcPromptImg");
   const optBoxes = Array.from(document.querySelectorAll("#calcOptions .opt5"));
@@ -606,6 +696,10 @@ function runCalcMCQ(step) {
     document.getElementById("cimg3"),
     document.getElementById("cimg4"),
   ];
+
+  const btnAudio = document.getElementById("btnAudio");
+  const instructionAudio = document.getElementById("instructionAudio");
+  const btnFullscreen = document.getElementById("btnFullscreen");
 
   const trials = step.trials || [];
   if (!trials.length) throw new Error("Sin trials");
@@ -619,6 +713,47 @@ function runCalcMCQ(step) {
   setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, trialIndex });
 
   let selectedIndex = null;
+
+  // AUDIO
+  if (btnAudio && instructionAudio && step.instructionAudio) {
+    instructionAudio.src = step.instructionAudio;
+    instructionAudio.load();
+
+    btnAudio.style.display = "block";
+    btnAudio.style.position = "fixed";
+    btnAudio.style.top = "16px";
+    btnAudio.style.right = "16px";
+    btnAudio.style.left = "auto";
+    btnAudio.style.bottom = "auto";
+    btnAudio.style.zIndex = "9999";
+    btnAudio.style.width = "48px";
+    btnAudio.style.height = "48px";
+
+    btnAudio.onclick = () => {
+      instructionAudio.currentTime = 0;
+      instructionAudio.play().catch(err => {
+        console.error("No se pudo reproducir el audio:", err);
+      });
+    };
+  } else if (btnAudio) {
+    btnAudio.style.display = "none";
+  }
+
+  // FULLSCREEN
+  if (btnFullscreen) {
+    btnFullscreen.style.display = "block";
+    btnFullscreen.style.position = "fixed";
+    btnFullscreen.style.bottom = "16px";
+    btnFullscreen.style.left = "16px";
+    btnFullscreen.style.top = "auto";
+    btnFullscreen.style.right = "auto";
+    btnFullscreen.style.zIndex = "9999";
+    btnFullscreen.style.width = "48px";
+    btnFullscreen.style.height = "48px";
+
+    btnFullscreen.onclick = () => toggleFullscreen();
+    btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+  }
 
   function clearMarks() {
     optBoxes.forEach(b => b.classList.remove("selected", "correct", "wrong"));
@@ -651,16 +786,21 @@ function runCalcMCQ(step) {
     };
   });
 
-
   btnNext.onclick = () => {
     if (selectedIndex === null) return;
 
     trialIndex++;
     if (trialIndex >= trials.length) {
       setPartProgress(partId, { status: "done", trialIndex: trials.length - 1 });
-      window.location.href = "index.html";
+
+      if (btnAudio) btnAudio.style.display = "none";
+      if (btnFullscreen) btnFullscreen.style.display = "none";
+
+      window.open("", "_self");
+      window.close();
       return;
     }
+
     setPartProgress(partId, { status: "in_progress", trialIndex });
     renderTrial();
   };
@@ -732,7 +872,9 @@ function runAudioMCQ4Trials(step) {
   function trialAudioFor(t) {
     const p = step.trialAudioPattern;
     if (!p) return null;
-    return p.replace("{t}", String(t));
+
+    const audioNum = t + 2; // t=2 -> audio4, t=16 -> audio18
+    return p.replace("{t}", String(audioNum));
   }
 
   function clearSelection() {
@@ -775,8 +917,10 @@ function runAudioMCQ4Trials(step) {
       // audio centrado (forzar ícono visible aunque aún no exista el mp3)
       setupAudio(btnAudioCenter, instructionAudio, step.instructionAudio, { forceShow: true });
 
-      // arriba derecha no se usa aquí
-      setupInstructionAudio(null);
+      // ocultar solo los otros botones, sin tocar instructionAudio
+      btnAudio.style.display = "none";
+      btnAudio.onclick = null;
+
       setupAudio(btnAudio2, instructionAudio2, null);
 
       // flecha para pasar a práctica
@@ -2645,15 +2789,20 @@ function runAudioRecordWords(step) {
 }
 
 function runLineBisection(step) {
-  // 3 pantallas:
-  // 0 = instrucciones (2 audios centrados apilados)
-  // 1 = demo (imagen fija, sin interacción)
-  // 2 = paciente (canvas libre para rayar)
-  const totalScreens = 3;
+  if (!resume) {
+    clearPartProgress(partId);
+    clearPartData(partId);
+  }
+
+  // 2 pantallas:
+  // 0 = demostración (2 audios abajo izquierda + dibujo)
+  // 1 = paciente (1 audio abajo izquierda + dibujo)
+  const totalScreens = 2;
 
   // === progreso / resume ===
   const saved = getPartProgress(partId);
   let screenIndex = 0;
+
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
     screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
   }
@@ -2673,11 +2822,12 @@ function runLineBisection(step) {
 
   btnNext.style.display = "block";
 
-  // ocultar audio superior derecha por defecto
-  setupInstructionAudio(null);
-  if (btnAudio2) btnAudio2.style.display = "none";
+  // ocultar audios centrados
+  if (btnAudioCenter) btnAudioCenter.style.display = "none";
+  if (btnAudioCenter2) btnAudioCenter2.style.display = "none";
+  document.body.classList.remove("stackCenterAudios");
 
-  // === Layout ===
+  // layout
   showLayout("line_bisection");
 
   const canvas = document.getElementById("lbCanvas");
@@ -2685,16 +2835,22 @@ function runLineBisection(step) {
 
   // imagen base
   const img = new Image();
-  img.src = step.baseImage; // ej: assets/parte1/lineas.png
+  img.src = step.baseImage;
 
-  // trazos libres
-  let strokes = [];     // Array<Array<{x,y,t}>>
+  // trazos separados
+  let demoStrokes = [];
+  let patientStrokes = [];
   let drawing = false;
 
-  // si reanudamos en pantalla 2 y ya hay trazos guardados, los cargamos
-  const existingData = getPartData(partId);
-  if (existingData?.strokes && Array.isArray(existingData.strokes)) {
-    strokes = existingData.strokes;
+  const existingData = resume ? getPartData(partId) : null;
+  if (resume && existingData?.patientStrokes && Array.isArray(existingData.patientStrokes)) {
+    patientStrokes = existingData.patientStrokes;
+  }
+
+  function getCurrentStrokes() {
+    if (screenIndex === 0) return demoStrokes;
+    if (screenIndex === 1) return patientStrokes;
+    return [];
   }
 
   function setCanvasSize() {
@@ -2708,12 +2864,14 @@ function runLineBisection(step) {
   }
 
   function drawStrokes() {
+    const strokesToDraw = getCurrentStrokes();
+
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 4;
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
 
-    for (const stroke of strokes) {
+    for (const stroke of strokesToDraw) {
       if (!stroke || stroke.length < 2) continue;
       ctx.beginPath();
       ctx.moveTo(stroke[0].x, stroke[0].y);
@@ -2725,10 +2883,8 @@ function runLineBisection(step) {
   }
 
   function renderCanvas() {
-    // Pantallas 1 y 2 usan canvas como "fondo" también (para mostrar la imagen)
     drawBase();
-    // Solo en la pantalla del paciente mostramos lo que dibujó
-    if (screenIndex === 2) drawStrokes();
+    drawStrokes();
   }
 
   function pointerToCanvas(e) {
@@ -2740,13 +2896,16 @@ function runLineBisection(step) {
 
   function startStroke(p) {
     drawing = true;
-    strokes.push([{ x: p.x, y: p.y, t: Date.now() }]);
+    const currentStrokes = getCurrentStrokes();
+    currentStrokes.push([{ x: p.x, y: p.y, t: Date.now() }]);
     renderCanvas();
   }
 
   function addPoint(p) {
     if (!drawing) return;
-    const stroke = strokes[strokes.length - 1];
+    const currentStrokes = getCurrentStrokes();
+    const stroke = currentStrokes[currentStrokes.length - 1];
+    if (!stroke) return;
     stroke.push({ x: p.x, y: p.y, t: Date.now() });
     renderCanvas();
   }
@@ -2756,7 +2915,6 @@ function runLineBisection(step) {
   }
 
   function enableDrawing(enable) {
-    // limpiar handlers
     canvas.onmousedown = null;
     canvas.onmousemove = null;
     canvas.onmouseup = null;
@@ -2806,58 +2964,94 @@ function runLineBisection(step) {
 
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
-    if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucciones`;
-    if (screenIndex === 1) topBar.textContent = `${partLabel} · Demostración`;
-    if (screenIndex === 2) topBar.textContent = `${partLabel} · Paciente`;
+    if (screenIndex === 0) topBar.textContent = `${partLabel} · Demostración`;
+    if (screenIndex === 1) topBar.textContent = `${partLabel} · Paciente`;
+  }
+
+  function hideCornerAudios() {
+    if (btnAudio) btnAudio.style.display = "none";
+    if (btnAudio2) btnAudio2.style.display = "none";
+
+    if (instructionAudio) {
+      instructionAudio.pause();
+      instructionAudio.currentTime = 0;
+    }
+
+    if (instructionAudio2) {
+      instructionAudio2.pause();
+      instructionAudio2.currentTime = 0;
+    }
+  }
+
+  function showDemoAudios() {
+    hideCornerAudios();
+
+    setupAudio(btnAudio, instructionAudio, step.demoAudios?.[0] ?? null, { forceShow: true });
+    setupAudio(btnAudio2, instructionAudio2, step.demoAudios?.[1] ?? null, { forceShow: true });
+
+    if (btnAudio) {
+      btnAudio.style.display = "block";
+      btnAudio.style.position = "fixed";
+      btnAudio.style.left = "20px";
+      btnAudio.style.bottom = "130px";
+      btnAudio.style.top = "auto";
+      btnAudio.style.right = "auto";
+      btnAudio.style.zIndex = "9999";
+    }
+
+    if (btnAudio2) {
+      btnAudio2.style.display = "block";
+      btnAudio2.style.position = "fixed";
+      btnAudio2.style.left = "20px";
+      btnAudio2.style.bottom = "70px";
+      btnAudio2.style.top = "auto";
+      btnAudio2.style.right = "auto";
+      btnAudio2.style.zIndex = "9999";
+    }
+  }
+
+  function showPatientAudio() {
+    hideCornerAudios();
+
+    setupAudio(btnAudio, instructionAudio, step.patientAudio ?? null, { forceShow: true });
+
+    if (btnAudio) {
+      btnAudio.style.display = "block";
+      btnAudio.style.position = "fixed";
+      btnAudio.style.left = "20px";
+      btnAudio.style.bottom = "70px";
+      btnAudio.style.top = "auto";
+      btnAudio.style.right = "auto";
+      btnAudio.style.zIndex = "9999";
+    }
   }
 
   function renderScreen() {
     updateTopBar();
     setPartProgress(partId, { screenIndex });
 
-    // apagar centrados por defecto
-    if (btnAudioCenter) btnAudioCenter.style.display = "none";
-    if (btnAudioCenter2) btnAudioCenter2.style.display = "none";
-    document.body.classList.remove("stackCenterAudios");
+    showLayout("line_bisection");
+    renderCanvas();
+    enableDrawing(true);
 
-    // ✅ Screen 0: NO mostramos el canvas para que no se vea la imagen con líneas detrás
     if (screenIndex === 0) {
-      // ocultar canvas/layout
-      showLayout("none"); // 👈 si no tienes "none", usa display none manual (abajo te dejo)
-      enableDrawing(false);
-
-      document.body.classList.add("stackCenterAudios");
-      setupAudio(btnAudioCenter, instructionAudio, step.introAudios?.[0] ?? null, { forceShow: true });
-      setupAudio(btnAudioCenter2, instructionAudioCenter2, step.introAudios?.[1] ?? null, { forceShow: true });
+      showDemoAudios();
       return;
     }
-
-    // ✅ Screen 1 y 2: mostramos canvas con imagen
-    showLayout("line_bisection");
-
-    // dibujar imagen siempre en 1 y 2
-    renderCanvas();
 
     if (screenIndex === 1) {
-      enableDrawing(false);
-      return;
-    }
-
-    if (screenIndex === 2) {
-      enableDrawing(true);
-      renderCanvas();
+      showPatientAudio();
       return;
     }
   }
 
   function savePatientData() {
-    // guardamos trazos y metadata para puntaje futuro
     const data = getPartData(partId) || {};
     setPartData(partId, {
       ...data,
       baseImage: step.baseImage,
       scaleImage: step.scaleImage || null,
-      strokes,
+      patientStrokes,
       canvasWidth: canvas.width,
       canvasHeight: canvas.height,
       savedAt: new Date().toISOString()
@@ -2865,16 +3059,37 @@ function runLineBisection(step) {
   }
 
   btnNext.onclick = () => {
-    // si salimos de pantalla paciente, guardamos
-    if (screenIndex === 2) {
+    if (screenIndex === 1) {
       savePatientData();
+    }
+
+    if (screenIndex === 0) {
+      demoStrokes = [];
     }
 
     screenIndex++;
 
     if (screenIndex >= totalScreens) {
-      setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
-      window.location.href = "index.html";
+      if ((screenIndex - 1) === 1) {
+        savePatientData();
+      }
+
+      setPartProgress(partId, {
+        status: "done",
+        screenIndex: totalScreens - 1
+      });
+
+      clearPartProgress(partId);
+      clearPartData(partId);
+
+      demoStrokes = [];
+      patientStrokes = [];
+      drawing = false;
+
+      // intento de cierre
+      window.open("", "_self");
+      window.close();
+
       return;
     }
 
@@ -2882,17 +3097,23 @@ function runLineBisection(step) {
     renderScreen();
   };
 
-  // resize
   window.addEventListener("resize", () => {
     setCanvasSize();
     renderCanvas();
   });
 
-  // cargar imagen y empezar
   img.onload = () => {
     setCanvasSize();
     renderScreen();
   };
+}
+
+function clearPartProgress(partId) {
+  localStorage.removeItem(`partProgress_${partId}`);
+}
+
+function clearPartData(partId) {
+  localStorage.removeItem(`partData_${partId}`);
 }
 
 

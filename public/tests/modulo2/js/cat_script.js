@@ -20,13 +20,17 @@ export const CAT = {
                 {
                     type: "line_bisection",
 
-                    // Pantalla 1: 2 audios de instrucción centrados (apilados)
-                    introAudios: [null, null],
+                    // screen 0 (Demostración)
+                    demoAudios: [
+                        "/tests/modulo2/assets/Audio/Test_1/Intruccion/audio1.wav",
+                        "/tests/modulo2/assets/Audio/Test_1/Prueba/audio2.wav"
+                    ],
+                    patientAudio: "/tests/modulo2/assets/Audio/Test_1/Ensayo/audio3.wav",
 
-                    // Imagen base (se usa en demo y paciente)
+                    // Imagen base
                     baseImage: "assets/parte1/lineas.png",
 
-                    // Imagen de escala (solo referencia para puntaje futuro)
+                    // Imagen de escala
                     scaleImage: "assets/parte1/escala.png"
                 }
             ]
@@ -40,7 +44,7 @@ export const CAT = {
                 {
                     type: "semantic_match",
                     instruction: "Selecciona la imagen que más se relacione con la imagen central.",
-                    instructionAudio: "assets/audio/parte2_instrucciones.mp3",
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_2/Instruccion/audio1.wav",
                     trials: [
                         {
                             id: 1,
@@ -197,8 +201,8 @@ export const CAT = {
                     type: "mcq4_image_trials",
 
                     // solo en prueba (pantalla 1)
-                    instructionAudio: null, // ejemplo: "assets/audio/parte4_instrucciones.mp3"
-
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_4/Instruccion/audio1.wav", // ejemplo: "assets/audio/parte4_instrucciones.mp3"
+                    patientAudio: "/tests/modulo2/assets/Audio/Test_4/Prueba/audio2.wav",
                     // 1 prueba + 10 ensayos (total 11 pantallas)
                     totalTrials: 11,       // pantallas 1..11
                     practiceIndex: 1,      // la pantalla 1 es prueba
@@ -219,7 +223,7 @@ export const CAT = {
             steps: [
                 {
                     type: "video_record_trials",
-                    instructionAudio: null, // pones el mp3 después
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_5/Instruccion/audio1.wav",
 
                     // 1 práctica + 6 ensayos => total 7 pantallas de estímulo
                     practiceCount: 1,
@@ -238,7 +242,7 @@ export const CAT = {
             steps: [
                 {
                     type: "mcq_image",
-                    instruction: "Seleccione la respuesta correcta.",
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_6/Instruccion/audio1.wav",
                     trials: [
                         {
                             id: 1,
@@ -336,12 +340,12 @@ export const CAT = {
                     filePattern: "{t}-{o}.png", // t=1..16, o=1..4
 
                     // Audios (tú los enlazas después)
-                    instructionAudio: null,         // pantalla 1 (audio centrado)
-                    practiceAudio1: null,           // pantalla 2 (icono 1 arriba derecha)
-                    practiceAudio2: null,           // pantalla 2 (icono 2 arriba derecha)
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_7/Instruccion/audio1.wav",
+                    practiceAudio1: "/tests/modulo2/assets/Audio/Test_7/Prueba/audio2.wav",
+                    practiceAudio2: "/tests/modulo2/assets/Audio/Test_7/Prueba/audio3.wav",
 
                     // Audio por ensayo (1 por pantalla del 2 al 16)
-                    trialAudioPattern: null,        // ejemplo: "assets/parte7/audio/{t}.mp3"
+                    trialAudioPattern: "/tests/modulo2/assets/Audio/Test_7/Ensayo/audio{t}.wav",
 
                     requireSelectionToAdvance: true
                 }

@@ -19,10 +19,12 @@
                                 <div class="header-container">
                                     <div class="text-container">
                                         <h1 class="display-5 fw-bolder text-white mb-2">
+                                            {{ $test->id }} -
+
                                             @if (!empty($test->nombre_espa))
                                                 {{ $test->nombre_espa }}
                                             @else
-                                                {{ $test->tipoTest->num_test }} - {{ $test->tipoTest->descripcion }}
+                                                {{ $test->tipoTest->descripcion }}
                                             @endif
                                         </h1>
 
