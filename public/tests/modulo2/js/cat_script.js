@@ -171,7 +171,7 @@ export const CAT = {
                 }
             ]
         },
-
+        //3
         {
             id: 3,
             group: "Examen Cognitivo",
@@ -192,6 +192,7 @@ export const CAT = {
                 }
             ]
         },
+        //4
         {
             id: 4,
             group: "Examen Cognitivo",
@@ -216,6 +217,7 @@ export const CAT = {
                 }
             ]
         },
+        //5
         {
             id: 5,
             group: "Examen Cognitivo",
@@ -235,6 +237,7 @@ export const CAT = {
                 }
             ]
         },
+        //6
         {
             id: 6,
             group: "Examen Cognitivo",
@@ -320,8 +323,6 @@ export const CAT = {
                 }
             ]
         },
-
-
         // =======================
         // Batería de Lenguaje - Parte 1: Comprensión
         // =======================
@@ -338,7 +339,7 @@ export const CAT = {
                     firstTrial: 1,
                     lastTrial: 16,
                     filePattern: "{t}-{o}.png", // t=1..16, o=1..4
-
+                    trialAudioStart: 4,
                     // Audios (tú los enlazas después)
                     instructionAudio: "/tests/modulo2/assets/Audio/Test_7/Instruccion/audio1.wav",
                     practiceAudio1: "/tests/modulo2/assets/Audio/Test_7/Prueba/audio2.wav",
@@ -351,6 +352,7 @@ export const CAT = {
                 }
             ]
         },
+        //8
         {
             id: 8,
             group: "Batería de Lenguaje",
@@ -365,11 +367,11 @@ export const CAT = {
                     filePattern: "{t}-{o}.png",
 
                     // Pantalla 1: instrucción (audio centrado)
-                    instructionAudio: null,
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_8/Instruccion/audio1.wav",
 
                     // Audios: solo en t=1 y t=2
-                    audioT1: null,
-                    audioT2: null,
+                    audioT1: "/tests/modulo2/assets/Audio/Test_8/Prueba/audio2.wav",
+                    audioT2: "/tests/modulo2/assets/Audio/Test_8/Ensayo/audio3.wav",
 
                     // Palabras en orden t=1..16
                     words: [
@@ -381,6 +383,7 @@ export const CAT = {
                 }
             ]
         },
+        //9
         {
             id: 9,
             group: "Batería de Lenguaje",
@@ -395,16 +398,18 @@ export const CAT = {
                     filePattern: "{t}-{o}.png",
 
                     // Pantalla 1: 2 audios centrados
-                    introAudio1: null,  // "assets/parte9/audio/intro_1.mp3"
-                    introAudio2: null,  // "assets/parte9/audio/intro_2.mp3"
+                    introAudio1: "/tests/modulo2/assets/Audio/Test_9/Instruccion/audio1.wav",  // "assets/parte9/audio/intro_1.mp3"
+                    introAudio2: "/tests/modulo2/assets/Audio/Test_9/Instruccion/audio2.wav",  // "assets/parte9/audio/intro_2.mp3"
+                    practiceAudio1: "/tests/modulo2/assets/Audio/Test_9/Prueba/audio3.wav",
 
                     // Audio por pantalla (t=1..17). Tú lo enlazas después.
-                    trialAudioPattern: null, // ej: "assets/parte9/audio/{t}.mp3"
+                    trialAudioPattern: "/tests/modulo2/assets/Audio/Test_9/Ensayo/audio{t}.wav", // ej: "assets/parte9/audio/{t}.mp3"
 
                     requireSelectionToAdvance: true
                 }
             ]
         },
+        //10
         {
             id: 10,
             group: "Batería de Lenguaje",
@@ -419,11 +424,11 @@ export const CAT = {
                     filePattern: "{t}-{o}.png",
 
                     // Pantalla 1 (instrucción)
-                    instructionAudio: null,
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_10/Instruccion/audio1.wav",
 
                     // Pantalla 2 (t=1): 2 audios arriba derecha
-                    practiceAudio1: null,
-                    practiceAudio2: null,
+                    practiceAudio1: "/tests/modulo2/assets/Audio/Test_10/Prueba/audio2.wav",
+                    practiceAudio2: "/tests/modulo2/assets/Audio/Test_10/Prueba/audio3.wav",
 
                     // Oraciones por t=1..17
                     sentences: [
@@ -450,6 +455,7 @@ export const CAT = {
                 }
             ]
         },
+        //11
         {
             id: 11,
             group: "Batería de Lenguaje",
@@ -459,28 +465,41 @@ export const CAT = {
                     type: "story_yesno_flow",
                     // Pantallas:
                     // 1) 3 audios centrados (instrucción + 2 preguntas simples)
-                    screen1_centerAudios: [null, null, null],
+                    screen1_centerAudios: [
+                        "/tests/modulo2/assets/Audio/Test_11/Instruccion/audio1.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Instruccion/audio2.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Instruccion/audio3.wav"],
 
                     // 2) historia 1 (audio centrado)
-                    story1_audio: null,
+                    story1_audio: "/tests/modulo2/assets/Audio/Test_11/Instruccion/audio4.wav",
 
                     // 3-6) 4 preguntas Sí/No (audio arriba derecha)
-                    yesno_block1_audios: [null, null, null, null],
+                    yesno_block1_audios: [
+                        "/tests/modulo2/assets/Audio/Test_11/Ensayo/audio5.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Ensayo/audio6.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Ensayo/audio7.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Ensayo/audio8.wav"],
 
                     // 7) historia 2 + 3 audios centrados (apilados)
-                    story2_audio: null,
-                    screen7_centerAudios: [null, null, null],
+                    screen7_centerAudios: [
+                        "/tests/modulo2/assets/Audio/Test_11/Instruccion/audio9.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Instruccion/audio10.wav",
+                    ],
+                    story2_audio: "/tests/modulo2/assets/Audio/Test_11/Instruccion/audio11.wav",
 
                     // 8-11) 4 preguntas Sí/No (audio arriba derecha)
-                    yesno_block2_audios: [null, null, null, null],
+                    yesno_block2_audios: [
+                        "/tests/modulo2/assets/Audio/Test_11/Ensayo/audio12.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Ensayo/audio13.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Ensayo/audio14.wav",
+                        "/tests/modulo2/assets/Audio/Test_11/Ensayo/audio15.wav"],
 
                     requireSelectionToAdvance: true
                 }
             ]
         },
-
         // =======================
-        // Batería de Lenguaje - Parte 2: Producción
+        // 12 Batería de Lenguaje - Parte 2: Producción
         // =======================
         {
             id: 12,
@@ -490,19 +509,21 @@ export const CAT = {
                 {
                     type: "repeat_audio_record",
 
-                    // Pantalla 1: 2 audios de instrucción (centrados)
-                    introAudios: [null, null],
+                    introAudios: [
+                        "/tests/modulo2/assets/Audio/Test_12/Instruccion/audio1.wav",
+                        "/tests/modulo2/assets/Audio/Test_12/Instruccion/audio2.wav"
+                    ],
 
-                    // Pantalla 2: ejemplo (audio centrado)
-                    exampleAudio: null,
+                    exampleAudio: "/tests/modulo2/assets/Audio/Test_12/Prueba/audio3.wav",
 
-                    // Pantallas 3..16: ensayos (14 audios centrados)
-                    trialAudioPattern: null, // ejemplo: "assets/parte12/audio/{n}.mp3" con n=1..14
+                    trialAudioPattern: "/tests/modulo2/assets/Audio/Test_12/Ensayo/audio{n}.wav",
+                    trialAudioStart: 4,
 
-                    totalTrials: 14
+                    totalTrials: 16
                 }
             ]
         },
+        //13
         {
             id: 13,
             group: "Parte 2: Producción",
@@ -510,20 +531,18 @@ export const CAT = {
             steps: [
                 {
                     type: "repeat_audio_record",
-
-                    // sin pantalla de instrucciones
                     introAudios: [],
-
-                    // pantalla 1 (ejemplo / primer audio)
-                    exampleAudio: null,
-
-                    // pantallas 2 y 3 (2 ensayos)
-                    trialAudioPattern: null, // ejemplo: "assets/parte13/audio/{n}.mp3" con n=1..2
-
-                    totalTrials: 2
+                    noExample: true,
+                    trialAudios: [
+                        "/tests/modulo2/assets/Audio/Test_13/Ensayo/audio1.wav",
+                        "/tests/modulo2/assets/Audio/Test_13/Ensayo/audio2.wav",
+                        "/tests/modulo2/assets/Audio/Test_13/Ensayo/audio3.wav"
+                    ],
+                    totalTrials: 3
                 }
             ]
         },
+        //14
         {
             id: 14,
             group: "Parte 2: Producción",
@@ -532,17 +551,22 @@ export const CAT = {
                 {
                     type: "repeat_audio_record",
 
-                    // Pantalla 1: 2 audios centrados (arriba/abajo)
-                    introAudios: [null, null], // luego pones rutas
+                    // Pantalla 1: 2 audios centrados
+                    introAudios: [
+                        "/tests/modulo2/assets/Audio/Test_14/Instruccion/audio1.wav",
+                        "/tests/modulo2/assets/Audio/Test_14/Instruccion/audio2.wav"
+                    ],
 
-                    // Pantallas 2..6: audio+grabación
-                    exampleAudio: null,        // pantalla 2
-                    trialAudioPattern: null,   // pantallas 3..6 (n=1..4)
+                    noExample: true,
 
-                    totalTrials: 4             // 1 example + 4 trials = 5 pantallas de grabación (2..6)
+                    // Ensayos 1..5 => audio3..audio7
+                    trialAudioPattern: "/tests/modulo2/assets/Audio/Test_14/Ensayo/audio{n}.wav",
+                    trialAudioStart: 3,
+                    totalTrials: 5
                 }
             ]
         },
+        //15
         {
             id: 15,
             group: "Parte 2: Producción",
@@ -552,13 +576,16 @@ export const CAT = {
                     type: "repeat_audio_record",
 
                     // Pantalla 1: 2 audios centrados (instrucciones)
-                    introAudios: [null, null],
+                    introAudios: [
+                        "/tests/modulo2/assets/Audio/Test_15/Instruccion/audio1.wav",
+                        "/tests/modulo2/assets/Audio/Test_15/Instruccion/audio2.wav"],
 
                     // NO hay ejemplo, así que lo dejamos null
                     exampleAudio: null,
 
                     // 12 ensayos (pantallas 2..13)
-                    trialAudioPattern: null, // ejemplo: "assets/parte15/audio/{n}.mp3" con n=1..12
+                    trialAudioPattern: "/tests/modulo2/assets/Audio/Test_15/Ensayo/audio{n}.wav", // ejemplo: "assets/parte15/audio/{n}.mp3" con n=1..12
+                    trialAudioStart: 3,
                     totalTrials: 12,
 
                     // Nuevo flag para decir que NO hay ejemplo (solo trials)
@@ -566,6 +593,7 @@ export const CAT = {
                 }
             ]
         },
+        //16
         {
             id: 16,
             group: "Parte 2: Producción",
@@ -575,7 +603,9 @@ export const CAT = {
                     type: "repeat_audio_record",
 
                     // Pantalla 1: instrucción (2 audios centrados)
-                    introAudios: [null, null],
+                    introAudios: [
+                        "/tests/modulo2/assets/Audio/Test_16/Instruccion/audio1.wav",
+                        "/tests/modulo2/assets/Audio/Test_16/Instruccion/audio2.wav"],
 
                     // Sin ejemplo: solo ensayos
                     noExample: true,
@@ -583,10 +613,12 @@ export const CAT = {
 
                     // 8 ensayos
                     totalTrials: 8,
-                    trialAudioPattern: null // ejemplo: "assets/parte16/audio/{n}.mp3" con n=1..8
+                    trialAudioStart: 3,
+                    trialAudioPattern: "/tests/modulo2/assets/Audio/Test_16/Ensayo/audio{n}.wav" // ejemplo: "assets/parte16/audio/{n}.mp3" con n=1..8
                 }
             ]
         },
+        //17
         {
             id: 17,
             group: "Parte 2: Producción",
@@ -600,15 +632,17 @@ export const CAT = {
                     lastImage: 25,
                     imagePattern: "{n}.png",
 
-                    // Instrucciones por pantalla:
-                    // pantalla 1: I, P, PS, PF
-                    // pantallas 2..25: P, PS, PF
-                    instrI: null,
-                    instrP: null,
-                    instrPS: null,
-                    instrPF: null,
+                    // Ejemplo (pantalla 1)
+                    instrI: "/tests/modulo2/assets/Audio/Test_17/Prueba/audio1.wav",
+                    instrP: "/tests/modulo2/assets/Audio/Test_17/Prueba/audio2.wav",
+                    instrPS: "/tests/modulo2/assets/Audio/Test_17/Prueba/audio3.wav",
+                    instrPF: "/tests/modulo2/assets/Audio/Test_17/Prueba/audio4.wav",
 
-                    // grabación wav (auto)
+                    // Ensayos (pantallas 2..25)
+                    trialAudioBase: "/tests/modulo2/assets/Audio/Test_17/Ensayo",
+                    trialAudioStart: 5,     // audio5.wav ... audio77.wav
+                    specialTrialPF2: 12,    // el ensayo 12 tiene PF2 extra
+
                     autoStartRecording: true
                 }
             ]
@@ -627,7 +661,7 @@ export const CAT = {
                     imagePattern: "{n}.png",
 
                     // Solo pantalla 1
-                    instructionAudio: null,
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_18/Prueba/audio1.wav",
 
                     autoStartRecording: true
                 }
@@ -644,9 +678,9 @@ export const CAT = {
             steps: [
                 {
                     type: "audio_record_image",
-                    image: "assets/parte19/imagen.png",          // pon tu ruta real
-                    instructionAudio: null,                     // "assets/audio/part19_instrucciones.mp3"
-                    audioKey: "part19_take1"                    // clave para guardar el wav
+                    image: "/tests/modulo2/assets/parte19/imagen.png",
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_19/Ensayo/audio1.wav",
+                    audioKey: "part19_take1"
                 }
             ]
         },
@@ -661,7 +695,7 @@ export const CAT = {
             name: "Lectura de palabras aisladas",
             steps: [{
                 type: "audio_record_words",
-                instructionAudio: null,
+                instructionAudio: "/tests/modulo2/assets/Audio/Test_20/Prueba/audio1.wav",
                 autoStart: true,
                 words: [
                     "silla", "contenedor", "goce", "micrófono", "pierna", "trecho", "pasaporte", "sonajero", "zorro", "tomar",
@@ -679,6 +713,7 @@ export const CAT = {
                 type: "audio_record_words",
                 instructionAudio: null,
                 autoStart: true,
+                hasExample: false,
                 words: ["informativo", "recalentado", "preconcebido"]
             }]
         },
@@ -691,6 +726,7 @@ export const CAT = {
                 type: "audio_record_words",
                 instructionAudio: null,
                 autoStart: true,
+                hasExample: false,
                 words: ["pero", "de", "y"]
             }]
         },
@@ -703,6 +739,7 @@ export const CAT = {
                 type: "audio_record_words",
                 instructionAudio: null,
                 autoStart: true,
+                hasExample: false,
                 words: ["polma", "tarco", "fugamo", "vitero", "espisto"]
             }]
         },
@@ -712,35 +749,27 @@ export const CAT = {
         // Escritura
         // =======================
         { id: 24, group: "Escritura", name: "Copia - Falta Terminar!!!", steps: [] },
+
         {
             id: 25,
             group: "Escritura",
-            name: "Etiquetado de imágenes",
+            name: "Nombre del test 25",
             steps: [
                 {
                     type: "image_labeling",
-
-                    // Pantalla 1 (instrucción)
-                    instructionTitle: "Etiquetado de imágenes",
-                    instructionBody: "Escuche las instrucciones y escriba el nombre correspondiente a la imagen.",
-                    instructionAudio: null, // ejemplo: "assets/audio/part25_instrucciones.mp3"
-
-                    // Imágenes (6 en total: 1 práctica + 5 ensayos)
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_25/Instruccion/audio1.wav",
                     images: [
-                        "assets/parte25/1.png", // práctica
-                        "assets/parte25/2.png", // ensayo 1
-                        "assets/parte25/3.png", // ensayo 2
-                        "assets/parte25/4.png", // ensayo 3
-                        "assets/parte25/5.png", // ensayo 4
-                        "assets/parte25/6.png", // ensayo 5
+                        "assets/parte25/1.png",
+                        "assets/parte25/2.png",
+                        "assets/parte25/3.png",
+                        "assets/parte25/4.png",
+                        "assets/parte25/5.png",
+                        "assets/parte25/6.png"
                     ],
-
-                    placeholder: "Escriba aquí...",
                     minChars: 0
                 }
             ]
         },
-
         {
             id: 26,
             group: "Escritura",
@@ -748,21 +777,29 @@ export const CAT = {
             steps: [
                 {
                     type: "dictation_text",
-                    audio: null, // ejemplo: "assets/audio/parte26_dictado.mp3"
 
-                    prompt: "",
+                    // Textos
+                    
+                    
+                    prompt: "Escriba aquí la palabra que escucha:",
 
-                    // 1 práctica + 5 ensayos = 6
+                    // Audios
+                    instructionAudio: "/tests/modulo2/assets/Audio/Test_26/Instruccion/audio1.wav",
+                    exampleAudio: "/tests/modulo2/assets/Audio/Test_26/Prueba/audio2.wav",
+                    trialAudios: [
+                        "/tests/modulo2/assets/Audio/Test_26/Ensayo/audio3.wav",
+                        "/tests/modulo2/assets/Audio/Test_26/Ensayo/audio4.wav",
+                        "/tests/modulo2/assets/Audio/Test_26/Ensayo/audio5.wav",
+                        "/tests/modulo2/assets/Audio/Test_26/Ensayo/audio6.wav",
+                        "/tests/modulo2/assets/Audio/Test_26/Ensayo/audio7.wav"
+                    ],
+
                     totalPractice: 1,
                     totalTrials: 5,
-
-                    // si después quieres mínimo de caracteres
-                    minChars: 0
+                    minChars: 1
                 }
             ]
         },
-
-
         // =======================
         // Discurso Escrito
         // =======================
@@ -770,7 +807,7 @@ export const CAT = {
             id: 27,
             group: "Discurso Escrito",
             name: "Descripción escrita de una imagen",
-            instructionAudio: "assets/audio/parte2_instrucciones.mp3",
+            instructionAudio: "/tests/modulo2/assets/Audio/Test_27/Instruccion/audio1.wav",
             steps: [
                 {
                     type: "text_image",
