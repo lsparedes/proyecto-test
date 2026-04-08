@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Módulo 3 - Runner</title>
+  <link rel="stylesheet" href="/tests/modulo3/css/styles.css" />
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+    }
+
+    #screen {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      background: white;
+      overflow: hidden;
+    }
+
+    /* video preview para partes con grabación */
+    #videoPreview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      z-index: 1;
+      transform: scaleX(-1);
+    }
+
+    /* capa de contenido principal */
+    #content {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      pointer-events: none;
+    }
+
+    /* imagen principal */
+    #mainImage {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      display: block;
+      pointer-events: auto;
+    }
+
+    /* pantalla de texto */
+    #textScreen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #fff;
+      font-size: 52px;
+      font-weight: bold;
+      line-height: 1.25;
+      padding: 30px;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      pointer-events: auto;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .icon-btn {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      cursor: pointer;
+      z-index: 50;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .top-right {
+      top: 14px;
+      right: 14px;
+    }
+
+    .second-audio {
+      right: 84px;
+    }
+
+    .bottom-left {
+      bottom: 14px;
+      left: 14px;
+    }
+
+    .bottom-right {
+      bottom: 14px;
+      right: 14px;
+    }
+
+    .center-audio {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      transform: translate(-50%, -50%);
+      z-index: 60;
+    }
+
+    #bottomControls {
+      position: absolute;
+      right: 90px;
+      bottom: 14px;
+      z-index: 55;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    #recordingIcon,
+    #stopIcon {
+      position: static;
+      width: 56px;
+      height: 56px;
+    }
+
+    #trialIndicator {
+      position: absolute;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 45;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.35);
+    }
+  </style>
+</head>
+<body>
+  <div id="screen">
+
+    <!-- preview de video -->
+    <video id="videoPreview" autoplay playsinline muted class="hidden"></video>
+
+    <!-- barra superior -->
+    <div id="topBar"></div>
+    <div id="trialIndicator" class="hidden"></div>
+
+    <!-- Fullscreen -->
+    <img
+      id="btnFullscreen"
+      src="/tests/modulo3/full-screen.png"
+      alt="Pantalla completa"
+      class="icon-btn bottom-left"
+    />
+
+    <!-- Audio superior derecho -->
+    <img
+      id="btnAudio"
+      src="/tests/modulo3/audio.png"
+      alt="Audio"
+      class="icon-btn top-right hidden"
+    />
+
+    <!-- Segundo audio superior derecho -->
+    <img
+      id="btnAudio2"
+      src="/tests/modulo3/audio.png"
+      alt="Audio 2"
+      class="icon-btn top-right second-audio hidden"
+    />
+
+    <!-- Audio centrado -->
+    <img
+      id="btnAudioCenter"
+      src="/tests/modulo3/audio.png"
+      alt="Audio centrado"
+      class="icon-btn center-audio hidden"
+    />
+
+    <!-- Flecha -->
+    <img
+      id="btnFlecha"
+      src="/tests/modulo3/flecha.png"
+      alt="Siguiente"
+      class="icon-btn bottom-right"
+    />
+
+    <!-- Audios -->
+    <audio id="instructionAudio"></audio>
+    <audio id="instructionAudio2"></audio>
+
+    <!-- Contenido principal -->
+    <div id="content">
+      <img id="mainImage" src="" alt="Imagen del test" class="hidden" />
+      <div id="textScreen" class="hidden"></div>
+    </div>
+
+    <!-- Controles de grabación -->
+    <div id="bottomControls">
+      <img
+        id="recordingIcon"
+        src="/tests/modulo3/grabando.png"
+        alt="Grabando"
+        class="hidden"
+      />
+
+      <img
+        id="stopIcon"
+        src="/tests/modulo3/detener.png"
+        alt="Detener"
+        class="hidden"
+      />
+    </div>
+  </div>
+
+  <script type="module" src="/tests/modulo3/js/runner.js"></script>
+</body>
+</html>
