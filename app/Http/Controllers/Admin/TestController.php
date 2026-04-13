@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\TestFormRequest;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TipoTest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Schema;
 
 class TestController extends Controller
 {
@@ -48,10 +49,12 @@ class TestController extends Controller
 
         $test->name_test = $data['name_test'];
         $test->nombre_espa = $data['nombre_espa'] ?? null;
-        $test->points = $data['points'] ?? null;
-        $test->duracion_minutos = $data['duracion_minutos'] ?? null;
+        $test->points = $data['points'];
+        $test->duracion_minutos = $data['duracion_minutos'];
         $test->tipotest_id = $data['tipotest_id'];
-        $test->modulo = $data['modulo'];
+        if (Schema::hasColumn('test', 'modulo')) {
+            $test->modulo = $data['modulo'];
+        }
         $test->url_test = $data['url_test'] ?? null;
         $test->url_adicional = $data['url_adicional'] ?? null;
         $test->link_millisecond = $data['link_millisecond'] ?? null;
@@ -70,13 +73,12 @@ class TestController extends Controller
 
         $test = Test::findOrFail($test_id);
 
-        $test->update([
+        $updateData = [
             'name_test' => $data['name_test'],
             'nombre_espa' => $data['nombre_espa'] ?? null,
-            'points' => $data['points'] ?? null,
-            'duracion_minutos' => $data['duracion_minutos'] ?? null,
+            'points' => $data['points'],
+            'duracion_minutos' => $data['duracion_minutos'],
             'tipotest_id' => $data['tipotest_id'],
-            'modulo' => $data['modulo'],
             'url_test' => $data['url_test'] ?? null,
             'url_adicional' => $data['url_adicional'] ?? null,
             'link_millisecond' => $data['link_millisecond'] ?? null,
@@ -84,7 +86,13 @@ class TestController extends Controller
             'nombre_url' => $data['nombre_url'] ?? null,
             'nombre_url_opcional' => $data['nombre_url_opcional'] ?? null,
             'descripcion_individual' => $data['descripcion_individual'] ?? null,
-        ]);
+        ];
+
+        if (Schema::hasColumn('test', 'modulo')) {
+            $updateData['modulo'] = $data['modulo'];
+        }
+
+        $test->update($updateData);
 
         return redirect('admin/tests')->with('message', 'Successfully Update');
     }

@@ -273,14 +273,14 @@ function runSemanticMatch(step) {
     const practiceCount = 1;
 
     if (trialIndex === 0) {
-      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Práctica 1/1`;
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · P 1/1`;
       return;
     }
 
     const testIndex = trialIndex - practiceCount;
     const totalTestTrials = Math.max(trials.length - practiceCount, 0);
 
-    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Ensayo ${testIndex + 1}/${totalTestTrials}`;
+    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · E ${testIndex + 1}/${totalTestTrials}`;
   }
 
   function updateFullscreenButton() {
@@ -556,7 +556,7 @@ function runMCQ4ImageTrials(step) {
       topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Prueba 1/1`;
     } else {
       const ensayoN = trialIndex - practiceIndex; // 2->1 ... 11->10
-      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Ensayo ${ensayoN}/10`;
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · E ${ensayoN}/10`;
     }
   }
 
@@ -772,7 +772,7 @@ function runVideoRecordTrials(step) {
     }
 
     const ensayoN = screenIndex - practiceCount; // 2->1, 3->2 ... 7->6
-    topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/${trialCount}`;
+    topBar.textContent = `${partLabel} · E ${ensayoN}/${trialCount}`;
   }
 
   async function render() {
@@ -1082,7 +1082,7 @@ function runAudioMCQ4Trials(step) {
 
     const t = screenIndex; // 2..16
     const ensayoN = t - 1; // 2->1 ... 16->15
-    topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/${totalTestTrials}`;
+    topBar.textContent = `${partLabel} · E ${ensayoN}/${totalTestTrials}`;
   }
 
   function render() {
@@ -1469,7 +1469,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     }
 
     const ensayoN = screenIndex - 1;
-    topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/16`;
+    topBar.textContent = `${partLabel} · E ${ensayoN}/16`;
   }
 
   function render() {
@@ -1652,7 +1652,7 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
     if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucción`;
     else if (screenIndex === 1) topBar.textContent = `${partLabel} · Ejemplo 1/1`;
-    else topBar.textContent = `${partLabel} · Ensayo ${screenIndex - 1}/16`;
+    else topBar.textContent = `${partLabel} · E ${screenIndex - 1}/16`;
   }
 
   // =========================
@@ -2178,7 +2178,7 @@ function runRepeatAudioRecord(step) {
 
     const trialsStart = introOffset + (noExample ? 0 : 1);
     const ensayoN = (screenIndex - trialsStart) + 1;
-    topBar.textContent = `${partLabel} · Ensayo ${ensayoN}/${totalTrials}`;
+    topBar.textContent = `${partLabel} · E ${ensayoN}/${totalTrials}`;
   }
 
   function showRecUI() {
@@ -2620,7 +2620,7 @@ function runImageInstrAutoRecord(step) {
     if (n === 1) {
       topBar.textContent = `${partLabel} · Ejemplo 1/1`;
     } else {
-      topBar.textContent = `${partLabel} · Ensayo ${n - 1}/${last - 1}`;
+      topBar.textContent = `${partLabel} · E ${n - 1}/${last - 1}`;
     }
   }
 
@@ -2792,7 +2792,7 @@ function runImageAutoRecordSimple(step) {
     if (n === first) {
       topBar.textContent = `${label} · Ejemplo 1/1`;
     } else {
-      topBar.textContent = `${label} · Ensayo ${n - first}/${last - first}`;
+      topBar.textContent = `${label} · E ${n - first}/${last - first}`;
     }
   }
 
@@ -3411,12 +3411,12 @@ function runImageLabeling(step) {
     }
 
     if (screenIndex === 1) {
-      topBar.textContent = `${partLabel} · Práctica 1/1`;
+      topBar.textContent = `${partLabel} · P 1/1`;
       return;
     }
 
     const ensayoIndex = screenIndex - 1;
-    topBar.textContent = `${partLabel} · Ensayo ${ensayoIndex}/5`;
+    topBar.textContent = `${partLabel} · E ${ensayoIndex}/5`;
   }
 
   function render() {
@@ -3541,7 +3541,7 @@ function runDictationText(step) {
     }
 
     const ensayoIndex = screenIndex - 1; // 2->1, 3->2, ... 6->5
-    topBar.textContent = `${partLabel} · Ensayo ${ensayoIndex}/${trialCount}`;
+    topBar.textContent = `${partLabel} · E ${ensayoIndex}/${trialCount}`;
   }
 
   function getAudioForScreen() {
@@ -3892,8 +3892,8 @@ function runLineBisection(step) {
 
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
-    if (screenIndex === 0) topBar.textContent = `${partLabel} · Demostración`;
-    if (screenIndex === 1) topBar.textContent = `${partLabel} · Paciente`;
+    if (screenIndex === 0) topBar.textContent = `${partLabel} · P1`;
+    if (screenIndex === 1) topBar.textContent = `${partLabel} · E1`;
   }
 
   function hideCornerAudios() {

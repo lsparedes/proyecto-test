@@ -16,8 +16,8 @@ class TestFormRequest extends FormRequest
         return [
             'name_test' => ['required', 'string', 'max:255'],
             'nombre_espa' => ['nullable', 'string', 'max:255'],
-            'points' => ['nullable', 'numeric'],
-            'duracion_minutos' => ['nullable', 'numeric'],
+            'points' => ['required', 'integer'],
+            'duracion_minutos' => ['required', 'integer'],
             'tipotest_id' => ['required', 'exists:tipo_test,id'],
             'modulo' => ['required', 'integer', 'in:1,2,3'],
             'url_test' => ['nullable', 'string', 'max:255'],

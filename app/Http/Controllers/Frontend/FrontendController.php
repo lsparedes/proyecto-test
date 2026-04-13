@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Test;
+use Illuminate\Support\Facades\Schema;
 
 class FrontendController extends Controller
 {
@@ -17,10 +18,13 @@ class FrontendController extends Controller
         }
 
         // Obtener solo los tests del módulo seleccionado y ordenar por num_test
-        $tests = Test::with('tipoTest')
-            ->where('modulo', $modulo)
-            ->get()
-            ->sortBy('tipoTest.num_test');
+        $query = Test::with('tipoTest');
+
+        if (Schema::hasColumn('test', 'modulo')) {
+            $query->where('modulo', $modulo);
+        }
+
+        $tests = $query->get()->sortBy('tipoTest.num_test');
 
         $IDparticipante = session('id_participante');
 
