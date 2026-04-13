@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(TipoTestTableSeeder::class);
         $this->call(TestTableSeeder::class);
+        $this->call(Modulo3SystemTestSeeder::class);
         $this->call(UserSeeder::class);
 
 

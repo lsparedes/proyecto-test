@@ -23,6 +23,9 @@ Route::post('/password/update', [App\Http\Controllers\Auth\PasswordController::c
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [App\Http\Controllers\Frontend\FrontendController::class, 'index']);
+    Route::redirect('/modulo-3', '/?modulo=3')->name('modulo3.index');
+    Route::get('/modulo-3/partes/{part:slug}', [App\Http\Controllers\Frontend\Modulo3Controller::class, 'showPart'])->name('modulo3.parts.show');
+    Route::get('/modulo-3/subtests/{subtest:slug}', [App\Http\Controllers\Frontend\Modulo3Controller::class, 'showSubtest'])->name('modulo3.subtests.show');
 
     Route::get('/info-test/{test_id}', [App\Http\Controllers\Frontend\FrontendController::class, 'infoTest'])->name('info-test');
     Route::get('/api/user-info', [App\Http\Controllers\Frontend\FrontendController::class, 'getUserInfo'])->name('api.user.info');

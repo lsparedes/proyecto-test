@@ -1,0 +1,43 @@
+Genera la base del Módulo 3 en Laravel, incluyendo:
+- vistas Blade
+- rutas web
+- controlador
+- modelos
+- migraciones
+- opcionalmente seeders
+
+Estructura:
+Part1: Procesos Motores Básicos
+- Evaluación Orofacial
+- Evaluación Integrada de la Respiración, la Fonación y la Resonancia
+
+Part2: Evaluación Motora del Habla
+- Volumen creciente
+- Habla automática
+- Repetición de sílabas – diadococinesia
+- Lectura
+- Diptongos
+- Palabras polisilábicas
+- Palabras con longitud creciente
+- Pseudopalabras
+- Repetición de frases
+- Lectura de frases
+
+Part3: Habla Conectada
+- Descripción de una imagen
+- Narración de una historia
+- Narración personal
+
+Condiciones:
+- Solo estructura base
+- Sin audios reales
+- Sin imágenes reales
+- Sin grabación real
+- Sin lógica final de evaluación
+- Usar Blade y Laravel
+- Crear tabla de partes y tabla de subtests con relación 1 a muchos
+- Agregar rutas para listado de partes, vista de parte y vista placeholder de subtest
+- Entregar código completo por archivo
+- Dejar comentarios donde luego conectar assets y lógica
+
+Antes de escribir código, resume brevemente la estructura que vas a crear y luego genera los archivos completos.
