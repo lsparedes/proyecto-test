@@ -1,5 +1,5 @@
 import { CAT } from "./cat_script.js";
-import { getPartProgress, setPartProgress } from "./storage.js";
+import { addResult, getPartProgress, setPartProgress } from "./storage.js";
 import { getPartData, setPartData } from "./storage.js";
 import { WavRecorder } from "./audio_recorder_wav.js";
 import { saveAudioBlob } from "./audio_store_idb.js";
@@ -39,6 +39,22 @@ const layoutImageRecordSimple = document.getElementById("layoutImageRecordSimple
 const layoutFluency = document.getElementById("layoutFluency");
 
 const layoutLineBisection = document.getElementById("layoutLineBisection");
+const handFinishScreen = document.getElementById("handFinishScreen");
+const selectHandContainer = document.getElementById("selectHand");
+const handButton = document.getElementById("handButton");
+const handInputs = Array.from(document.querySelectorAll('input[name="hand"]'));
+
+const HAND_SELECTION_STEP_TYPES = new Set([
+  "line_bisection",
+  "semantic_match",
+  "mcq_image",
+  "mcq4_image_trials",
+  "audio_mcq4_trials",
+  "audio_mcq4_words_on_screen",
+  "audio_mcq4_trials_with_dual_intro",
+  "mcq4_sentence_center_with_audio_practice",
+  "story_yesno_flow"
+]);
 
 function showLayout(which) {
   layoutSemantic.style.display = (which === "semantic") ? "block" : "none";
@@ -85,13 +101,14 @@ document.addEventListener("fullscreenchange", () => {
   }
 });
 
-function setupInstructionAudio(audioSrc, centered = false) {
+function setupInstructionAudio(audioSrc, centered = false, position = "top-right") {
   const btnAudio = document.getElementById("btnAudio");
 
   if (!btnAudio) return;
 
   // reset estilos
   btnAudio.style.display = "none";
+  btnAudio.style.bottom = "";
   btnAudio.style.top = "";
   btnAudio.style.right = "";
   btnAudio.style.left = "";
@@ -107,6 +124,11 @@ function setupInstructionAudio(audioSrc, centered = false) {
     btnAudio.style.top = "50%";
     btnAudio.style.left = "50%";
     btnAudio.style.transform = "translate(-50%, -50%) scale(1.4)";
+  } else if (position === "bottom-left") {
+    btnAudio.style.position = "fixed";
+    btnAudio.style.left = "14px";
+    btnAudio.style.bottom = "95px";
+    btnAudio.style.transform = "none";
   } else {
     // ESQUINA
     btnAudio.style.position = "fixed";
@@ -207,6 +229,103 @@ if (!part) throw new Error("Parte no encontrada");
 
 const step = part.steps?.[0];
 if (!step) throw new Error("Parte sin steps");
+let handScreenBound = false;
+
+function requiresHandSelection(currentStep) {
+  return HAND_SELECTION_STEP_TYPES.has(currentStep?.type);
+}
+
+function closeCurrentWindow() {
+  try {
+    window.open("", "_self");
+    window.close();
+  } catch (e) { }
+
+  setTimeout(() => {
+    try {
+      window.close();
+    } catch (e) { }
+
+    if (!window.closed) {
+      window.location.href = "about:blank";
+    }
+  }, 150);
+}
+
+function hideHandSelectionScreen() {
+  if (handFinishScreen) handFinishScreen.style.display = "none";
+  if (selectHandContainer) selectHandContainer.style.display = "none";
+  if (handButton) handButton.style.display = "none";
+}
+
+function showHandSelectionScreen() {
+  if (!handFinishScreen) {
+    closeCurrentWindow();
+    return;
+  }
+
+  stopAllAudios();
+  showLayout(null);
+
+  const centerWord = document.getElementById("centerWord");
+  if (centerWord) centerWord.style.display = "none";
+
+  if (btnAudio) btnAudio.style.display = "none";
+  if (btnAudio2) btnAudio2.style.display = "none";
+  if (btnAudioCenter) btnAudioCenter.style.display = "none";
+  if (btnAudioCenter2) btnAudioCenter2.style.display = "none";
+
+  topBar.style.display = "none";
+  btnNext.style.display = "none";
+  btnFullscreen.style.display = "none";
+  handFinishScreen.style.display = "block";
+  if (selectHandContainer) selectHandContainer.style.display = "block";
+  if (handButton) handButton.style.display = "none";
+
+  handInputs.forEach((inputEl) => {
+    inputEl.checked = false;
+  });
+
+  if (handScreenBound) return;
+
+  handInputs.forEach((inputEl) => {
+    inputEl.addEventListener("change", () => {
+      if (handButton) handButton.style.display = "block";
+    });
+  });
+
+  if (handButton) {
+    handButton.addEventListener("click", () => {
+      const usedHand = document.querySelector('input[name="hand"]:checked')?.value || "";
+      if (!usedHand) return;
+
+      addResult(partId, {
+        event: "hand_selection",
+        step_type: step.type,
+        used_hand: usedHand,
+        completed_at: new Date().toISOString()
+      });
+
+      const data = getPartData(partId);
+      setPartData(partId, { ...data, usedHand });
+      setPartProgress(partId, { usedHand });
+
+      hideHandSelectionScreen();
+      closeCurrentWindow();
+    });
+  }
+
+  handScreenBound = true;
+}
+
+function finishCurrentPart() {
+  if (requiresHandSelection(step)) {
+    showHandSelectionScreen();
+    return;
+  }
+
+  closeCurrentWindow();
+}
 
 //SEMANTIC MATCH (Parte 2)
 
@@ -297,7 +416,7 @@ function runSemanticMatch(step) {
     updateTopBar();
     updateFullscreenButton();
 
-    setupInstructionAudio(step.instructionAudio, trialIndex === 0);
+    setupInstructionAudio(step.instructionAudio, false, trialIndex === 0 ? "bottom-left" : "top-right");
 
     setPartProgress(partId, { trialIndex });
   }
@@ -325,9 +444,7 @@ function runSemanticMatch(step) {
 
     if (trialIndex >= trials.length) {
       setPartProgress(partId, { status: "done", trialIndex: trials.length - 1 });
-      // intento de cierre
-      window.open("", "_self");
-      window.close();
+      finishCurrentPart();
       return;
     }
 
@@ -451,7 +568,7 @@ function runVerbalFluency(step) {
     index++;
     if (index >= screens.length) {
       await recorder.close();
-      window.location.href = "index.html";
+      finishCurrentPart();
       return;
     }
     render();
@@ -644,9 +761,7 @@ function runMCQ4ImageTrials(step) {
     if (trialIndex > total) {
       setPartProgress(partId, { status: "done", trialIndex: total });
       hidePatientAudio();
-      // intento de cierre
-      window.open("", "_self");
-      window.close();
+      finishCurrentPart();
       return;
     }
 
@@ -848,9 +963,7 @@ function runVideoRecordTrials(step) {
     if (screenIndex >= totalScreens) {
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
       recorder.stopStream();
-
-      window.open("", "_self");
-      window.close();
+      finishCurrentPart();
       return;
     }
 
@@ -974,9 +1087,7 @@ function runCalcMCQ(step) {
 
       if (btnAudio) btnAudio.style.display = "none";
       if (btnFullscreen) btnFullscreen.style.display = "none";
-
-      window.open("", "_self");
-      window.close();
+      finishCurrentPart();
       return;
     }
 
@@ -1170,8 +1281,7 @@ function runAudioMCQ4Trials(step) {
     screenIndex++;
     if (screenIndex >= totalScreens) {
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
-      window.open("", "_self");
-      window.close();
+      finishCurrentPart();
       return;
     }
 
@@ -1331,7 +1441,7 @@ function runAudioMCQ4WordsOnScreen(step) {
     screenIndex++;
     if (screenIndex >= totalScreens) {
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
-      window.location.href = "index.html";
+      finishCurrentPart();
       return;
     }
 
@@ -1569,8 +1679,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     if (screenIndex >= totalScreens) {
       stopAllAudios();
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
-      window.open("", "_self");
-      window.close();
+      finishCurrentPart();
       return;
     }
 
@@ -1818,21 +1927,7 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
 
       clearPartProgress(partId);
       clearPartData(partId);
-
-      // intentar cerrar ventana
-      try {
-        window.close();
-      } catch (e) {
-        console.warn("El navegador no permitió cerrar la ventana automáticamente.");
-      }
-
-      // fallback por si el navegador bloquea window.close()
-      setTimeout(() => {
-        if (!window.closed) {
-          window.location.href = "about:blank";
-        }
-      }, 200);
-
+      finishCurrentPart();
       return;
     }
 
@@ -1882,24 +1977,7 @@ function runStoryYesNoFlow(step) {
 
     clearPartProgress(partId);
     clearPartData(partId);
-
-    // intenta cerrar la ventana
-    try {
-      window.close();
-    } catch (e) { }
-
-    // fallback si el navegador no permite cerrar tabs no abiertas por script
-    setTimeout(() => {
-      try {
-        window.open("", "_self");
-        window.close();
-      } catch (e) { }
-
-      // último fallback
-      setTimeout(() => {
-        window.location.href = "about:blank";
-      }, 150);
-    }, 100);
+    finishCurrentPart();
   }
 
   // ---------- fullscreen ----------
@@ -2270,9 +2348,7 @@ function runRepeatAudioRecord(step) {
       status: "done",
       screenIndex: Math.max(0, totalScreens - 1)
     });
-
-    window.open("", "_self");
-    window.close();
+    finishCurrentPart();
   }
 
   async function render() {
@@ -2715,10 +2791,7 @@ function runImageInstrAutoRecord(step) {
 
       clearPartProgress(partId);
       clearPartData(partId);
-
-      window.open("", "_self");
-      window.close();
-
+      finishCurrentPart();
       return;
     }
 
@@ -2893,7 +2966,7 @@ function runImageAutoRecordSimple(step) {
       if (n > last) {
         setPartProgress(partId, { status: "done", itemIndex: last });
         await recorder.close();
-        window.location.href = "index.html";
+        finishCurrentPart();
         return;
       }
 
@@ -3087,9 +3160,7 @@ async function runAudioRecordImage(step) {
     setPartProgress(partId, { status: "done" });
     clearPartProgress(partId);
     clearPartData(partId);
-
-    window.open("", "_self");
-    window.close();
+    finishCurrentPart();
 
   };
 
@@ -3322,9 +3393,7 @@ async function runAudioRecordWords(step) {
       } catch (e) {
         console.warn("No se pudo cerrar recorder:", e);
       }
-
-      window.open("", "_self");
-      window.close();
+      finishCurrentPart();
       return;
     }
 
@@ -3397,9 +3466,7 @@ function runImageLabeling(step) {
     // borrar lo que haya en pantalla
     screenIndex = 0;
     Object.keys(responses).forEach(key => delete responses[key]);
-
-    window.open("", "_self");
-    window.close();
+    finishCurrentPart();
   }
 
   function setTopBar() {
@@ -3625,9 +3692,7 @@ function runDictationText(step) {
         status: "done",
         screenIndex: totalScreens - 1
       });
-
-      window.open("", "_self");
-      window.close();
+      finishCurrentPart();
       return;
     }
 
@@ -3709,9 +3774,7 @@ function runTextImage(step) {
 
     // cortar audio al salir
     stopAllAudios();
-
-    window.open("", "_self");
-    window.close();
+    finishCurrentPart();
   };
 }
 
@@ -4013,11 +4076,7 @@ function runLineBisection(step) {
       demoStrokes = [];
       patientStrokes = [];
       drawing = false;
-
-      // intento de cierre
-      window.open("", "_self");
-      window.close();
-
+      finishCurrentPart();
       return;
     }
 

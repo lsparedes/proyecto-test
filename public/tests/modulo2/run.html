@@ -684,6 +684,82 @@
       height: 50vh;
       touch-action: none;
     }
+
+    #handFinishScreen {
+      position: absolute;
+      inset: 0;
+      display: none;
+      background: #fff;
+      z-index: 300;
+    }
+
+    #handFinishMessage {
+      position: absolute;
+      left: 50%;
+      top: 44%;
+      transform: translate(-50%, -50%);
+      width: min(90vw, 900px);
+      text-align: center;
+    }
+
+    #handFinishMessage h1 {
+      margin: 0;
+      font-size: clamp(36px, 3vw, 44px);
+      line-height: 1.35;
+    }
+
+    #handFinishCardRow {
+      position: absolute;
+      left: 50%;
+      bottom: 15px;
+      transform: translateX(-50%);
+      width: min(92vw, 980px);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    #selectHand {
+      display: none;
+      min-width: 420px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      opacity: 0.75;
+      padding: 16px 24px;
+    }
+
+    #selectHand h4 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .handOptionRow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    #handButton {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      background-image: url('flecha.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      padding: 0;
+      width: 90px;
+      height: 80px;
+      position: fixed;
+      right: 15px;
+      bottom: 15px;
+      display: none;
+      z-index: 320;
+    }
   </style>
 </head>
 
@@ -1018,6 +1094,31 @@
     </div>
 
 
+  </div>
+
+  <div id="handFinishScreen">
+    <div id="handFinishMessage">
+      <h1>¡Ha completado esta tarea con éxito!</h1>
+      <h1>¡Muchas gracias!</h1>
+    </div>
+    <div id="handFinishCardRow">
+      <div id="selectHand">
+        <h4>Mano usada</h4>
+        <div class="handOptionRow">
+          <input type="radio" id="right_hand" name="hand" value="Derecha">
+          <label for="right_hand">Derecha</label>
+        </div>
+        <div class="handOptionRow">
+          <input type="radio" id="left_hand" name="hand" value="Izquierda">
+          <label for="left_hand">Izquierda</label>
+        </div>
+        <div class="handOptionRow">
+          <input type="radio" id="both_hands" name="hand" value="Ambas">
+          <label for="both_hands">Ambas</label>
+        </div>
+      </div>
+    </div>
+    <button id="handButton" type="button" aria-label="Finalizar"></button>
   </div>
 
   <script type="module" src="js/runner.js"></script>

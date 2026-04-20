@@ -5,6 +5,7 @@ const partId = Number(url.searchParams.get("part") || "1");
 const test = MODULO3.tests.find((item) => item.id === partId) || null;
 const test1Section = document.getElementById("part-1-test-1");
 const test2Section = document.getElementById("part-1-test-2");
+const test13Section = document.getElementById("part-3-test-1");
 
 if (test1Section) {
   test1Section.style.display = "none";
@@ -14,12 +15,20 @@ if (test2Section) {
   test2Section.style.display = "none";
 }
 
+if (test13Section) {
+  test13Section.style.display = "none";
+}
+
 if (test?.id === 1) {
   setupPart1Test1(test);
 }
 
 if (test?.id === 2) {
   setupPart1Test2(test);
+}
+
+if (test?.id === 13) {
+  setupPart3Unified(test);
 }
 
 function setupPart1Test1(testConfig) {
@@ -369,6 +378,207 @@ function setupPart1Test2(testConfig) {
 
       if (secondRecordingActive) {
         status.textContent = "Ahora puedes pasar a la siguiente pantalla.";
+        showNext(nextBtn, true);
+      }
+    };
+  }
+}
+
+function setupPart3Unified(testConfig) {
+  const section = document.getElementById("part-3-test-1");
+  const imageAudioView = document.getElementById("p3-screen-image-audio");
+  const storyIntroView = document.getElementById("p3-screen-story-intro");
+  const storyImageView = document.getElementById("p3-screen-story-image");
+  const finalView = document.getElementById("p3-screen-final");
+
+  if (!section || !imageAudioView || !storyIntroView || !storyImageView || !finalView) {
+    return;
+  }
+
+  section.style.display = "block";
+
+  const screens = testConfig.screens || [];
+  const mainImage = document.getElementById("p3-main-image");
+  const storyIntroImage = document.getElementById("p3-story-intro-image");
+  const storyImage = document.getElementById("p3-story-image");
+  const singleAudioBtn = document.getElementById("p3-single-audio-btn");
+  const audioTopBtn = document.getElementById("p3-audio-top-btn");
+  const audioBottomBtn = document.getElementById("p3-audio-bottom-btn");
+  const finalAudioBtn = document.getElementById("p3-final-audio-btn");
+  const nextBtn = document.getElementById("p3-next-btn");
+  const audioPlayer = document.getElementById("p3-audio-player");
+
+  let currentScreenIndex = 0;
+  let currentRecorder = null;
+  let autoStartTimer = null;
+  let finalStopTimer = null;
+  let firstStoryAudioDone = false;
+
+  nextBtn.addEventListener("click", async () => {
+    if (nextBtn.style.display === "none") {
+      return;
+    }
+
+    clearCountdown(autoStartTimer);
+    clearCountdown(finalStopTimer);
+    stopAudio(audioPlayer);
+
+    if (currentRecorder) {
+      await currentRecorder.stop();
+      currentRecorder = null;
+    }
+
+    if (currentScreenIndex < screens.length - 1) {
+      currentScreenIndex += 1;
+      await renderScreen();
+      return;
+    }
+
+    closeCurrentWindow();
+  });
+
+  singleAudioBtn.addEventListener("click", async () => {
+    const screen = screens[currentScreenIndex];
+    await playTimedAudio(audioPlayer, screen?.audio, 2500, async () => {
+      if (!currentRecorder) {
+        currentRecorder = new WavAudioRecorder();
+        await currentRecorder.start();
+      }
+    });
+  });
+
+  audioTopBtn.addEventListener("click", async () => {
+    const screen = screens[currentScreenIndex];
+    firstStoryAudioDone = false;
+    await playTimedAudio(audioPlayer, screen?.audioTop, 2500, () => Promise.resolve());
+    firstStoryAudioDone = true;
+  });
+
+  audioBottomBtn.addEventListener("click", async () => {
+    const screen = screens[currentScreenIndex];
+
+    if (!firstStoryAudioDone) {
+      return;
+    }
+
+    await playTimedAudio(audioPlayer, screen?.audioBottom, 2500, () => Promise.resolve());
+  });
+
+  finalAudioBtn.addEventListener("click", async () => {
+    const screen = screens[currentScreenIndex];
+
+    await playTimedAudio(audioPlayer, screen?.audio, 2500, async () => {
+      if (!currentRecorder) {
+        currentRecorder = new WavAudioRecorder();
+        await currentRecorder.start();
+        showNext(nextBtn, true);
+
+        finalStopTimer = setTimeout(async () => {
+          if (currentRecorder) {
+            await currentRecorder.stop();
+            currentRecorder = null;
+          }
+        }, screen?.maxDurationMs || 210000);
+      }
+    });
+  });
+
+  renderScreen();
+
+  async function renderScreen() {
+    const screen = screens[currentScreenIndex];
+
+    imageAudioView.classList.remove("is-active");
+    storyIntroView.classList.remove("is-active");
+    storyImageView.classList.remove("is-active");
+    finalView.classList.remove("is-active");
+
+    singleAudioBtn.style.display = "none";
+    audioTopBtn.classList.remove("is-disabled");
+    audioBottomBtn.classList.add("is-disabled");
+    finalAudioBtn.style.display = "none";
+    firstStoryAudioDone = false;
+    showNext(nextBtn, false);
+
+    clearCountdown(autoStartTimer);
+    clearCountdown(finalStopTimer);
+    stopAudio(audioPlayer);
+
+    if (currentRecorder) {
+      await currentRecorder.stop();
+      currentRecorder = null;
+    }
+
+    if (!screen) {
+      return;
+    }
+
+    if (screen.kind === "image_single_audio_record") {
+      imageAudioView.classList.add("is-active");
+      mainImage.src = screen.image || "";
+      singleAudioBtn.style.display = "block";
+      return;
+    }
+
+    if (screen.kind === "story_intro") {
+      storyIntroView.classList.add("is-active");
+      storyIntroImage.src = screen.image || "";
+      audioBottomBtn.classList.add("is-disabled");
+      return;
+    }
+
+    if (screen.kind === "story_image") {
+      storyImageView.classList.add("is-active");
+      storyImage.src = screen.image || "";
+      showNext(nextBtn, true);
+      return;
+    }
+
+    if (screen.kind === "final_record") {
+      finalView.classList.add("is-active");
+      finalAudioBtn.style.display = "block";
+    }
+  }
+
+  async function playTimedAudio(audioEl, audioPath, triggerBeforeEndMs, onNearEnd) {
+    stopAudio(audioEl);
+    clearCountdown(autoStartTimer);
+
+    if (!audioPath) {
+      return;
+    }
+
+    audioEl.src = audioPath;
+    audioEl.load();
+
+    await new Promise((resolve) => {
+      audioEl.onloadedmetadata = () => {
+        const durationMs = Number.isFinite(audioEl.duration) ? audioEl.duration * 1000 : 0;
+        const triggerDelay = Math.max(durationMs - triggerBeforeEndMs, 0);
+
+        autoStartTimer = setTimeout(async () => {
+          await onNearEnd();
+        }, triggerDelay);
+
+        resolve();
+      };
+    });
+
+    try {
+      await audioEl.play();
+    } catch (error) {
+      console.error("No se pudo reproducir el audio.", error);
+    }
+
+    audioEl.onended = () => {
+      const currentKind = screens[currentScreenIndex]?.kind;
+
+      if (currentKind === "image_single_audio_record") {
+        showNext(nextBtn, true);
+      }
+
+      if (screens[currentScreenIndex]?.kind === "story_intro" && firstStoryAudioDone) {
+        audioBottomBtn.classList.remove("is-disabled");
         showNext(nextBtn, true);
       }
     };

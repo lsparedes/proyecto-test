@@ -119,6 +119,7 @@
     .corner-bottom-left {
       left: 16px;
       bottom: 16px;
+      position: absolute;
     }
 
     .corner-bottom-right {
@@ -164,6 +165,33 @@
       line-height: 1.5;
       max-width: 760px;
       margin: 0 auto;
+    }
+
+    .center-image {
+      max-width: 92vw;
+      max-height: 78vh;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .audio-stack-left {
+      position: absolute;
+      left: 16px;
+      bottom: 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 20;
+    }
+
+    .audio-stack-left img,
+    .single-audio-left {
+      width: 72px;
+      height: 72px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
     }
   </style>
 </head>
@@ -256,6 +284,40 @@
   <!-- Habla Conectada -->
 
   <!-- Parte 3 - Test 1 -->
+  <section id="part-3-test-1" style="display:none;">
+    <div id="p3-screen-image-audio" class="screen-view">
+      <div class="screen-panel">
+        <img id="p3-main-image" class="center-image" src="" alt="Stimulus">
+      </div>
+      <img id="p3-single-audio-btn" class="single-audio-left corner-bottom-left" src="audio.png" alt="Audio">
+    </div>
+
+    <div id="p3-screen-story-intro" class="screen-view">
+      <div class="screen-panel">
+        <img id="p3-story-intro-image" class="center-image" src="" alt="Historia">
+      </div>
+      <div class="audio-stack-left">
+        <img id="p3-audio-top-btn" src="audio.png" alt="Audio superior">
+        <img id="p3-audio-bottom-btn" src="audio1.png" alt="Audio inferior">
+      </div>
+    </div>
+
+    <div id="p3-screen-story-image" class="screen-view">
+      <div class="screen-panel">
+        <img id="p3-story-image" class="center-image" src="" alt="Historia secuencia">
+      </div>
+    </div>
+
+    <div id="p3-screen-final" class="screen-view">
+      <div class="screen-panel">
+        <div class="word-label">FIN</div>
+      </div>
+      <img id="p3-final-audio-btn" class="single-audio-left corner-bottom-left" src="audio.png" alt="Audio final">
+    </div>
+
+    <img id="p3-next-btn" class="corner-icon corner-bottom-right" src="flecha.png" alt="Siguiente">
+    <audio id="p3-audio-player"></audio>
+  </section>
 
   <!-- Parte 3 - Test 2 -->
 

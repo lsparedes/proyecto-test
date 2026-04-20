@@ -301,28 +301,109 @@ export const MODULO3 = {
       id: 13,
       groupId: 3,
       groupTitle: "Habla Conectada",
-      name: "Descripcion de una imagen",
-      note: "Placeholder.",
-      instructions: "Pendiente.",
-      description: "Produccion discursiva a partir de una imagen."
-    },
-    {
-      id: 14,
-      groupId: 3,
-      groupTitle: "Habla Conectada",
-      name: "Narracion de una historia",
-      note: "Placeholder.",
-      instructions: "Pendiente.",
-      description: "Relato estructurado basado en una historia."
-    },
-    {
-      id: 15,
-      groupId: 3,
-      groupTitle: "Habla Conectada",
-      name: "Narracion personal",
-      note: "Placeholder.",
-      instructions: "Pendiente.",
-      description: "Narracion autobiografica guiada."
+      name: "Habla Conectada",
+      note: "Flujo unico con descripcion de imagen, narracion de historia y cierre final.",
+      instructions: "La secuencia completa corre dentro del mismo enlace.",
+      description: "Descripcion de una imagen, Narracion de una historia y cierre FIN.",
+      screens: [
+        {
+          id: 1,
+          kind: "image_single_audio_record",
+          title: "Descripcion de una imagen",
+          image: "/tests/modulo3/assets/parte3/test1.jpg",
+          audio: "/tests/modulo3/assets/Audio/parte3/test1.wav"
+        },
+        {
+          id: 2,
+          kind: "story_intro",
+          title: "Narracion de una historia",
+          image: "/tests/modulo3/assets/parte3/test2_1.png",
+          audioTop: "/tests/modulo3/assets/Audio/parte3/test2_1_a.wav",
+          audioBottom: "/tests/modulo3/assets/Audio/parte3/test2_1_b.wav"
+        },
+        {
+          id: 3,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_2.jpg"
+        },
+        {
+          id: 4,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_3.png"
+        },
+        {
+          id: 5,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_4.png"
+        },
+        {
+          id: 6,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_5.png"
+        },
+        {
+          id: 7,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_6.png"
+        },
+        {
+          id: 8,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_7.png"
+        },
+        {
+          id: 9,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_8.png"
+        },
+        {
+          id: 10,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_9.png"
+        },
+        {
+          id: 11,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_10.png"
+        },
+        {
+          id: 12,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_11.png"
+        },
+        {
+          id: 13,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_12.png"
+        },
+        {
+          id: 14,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_13.png"
+        },
+        {
+          id: 15,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_14.png"
+        },
+        {
+          id: 16,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_15.png"
+        },
+        {
+          id: 17,
+          kind: "story_image",
+          image: "/tests/modulo3/assets/parte3/test2_16.png"
+        },
+        {
+          id: 18,
+          kind: "final_record",
+          title: "FIN",
+          audio: "/tests/modulo3/assets/Audio/parte3/final.wav",
+          maxDurationMs: 210000
+        }
+      ]
     }
   ]
 };
