@@ -101,7 +101,7 @@ document.addEventListener("fullscreenchange", () => {
   }
 });
 
-function setupInstructionAudio(audioSrc, centered = false, position = "top-right") {
+function setupInstructionAudio(audioSrc, centered = false, position = "bottom-left") {
   const btnAudio = document.getElementById("btnAudio");
 
   if (!btnAudio) return;
@@ -127,7 +127,7 @@ function setupInstructionAudio(audioSrc, centered = false, position = "top-right
   } else if (position === "bottom-left") {
     btnAudio.style.position = "fixed";
     btnAudio.style.left = "14px";
-    btnAudio.style.bottom = "95px";
+    btnAudio.style.bottom = "84px";
     btnAudio.style.transform = "none";
   } else {
     // ESQUINA
@@ -332,6 +332,7 @@ function finishCurrentPart() {
 function runSemanticMatch(step) {
   showLayout("semantic");
 
+  const centerBox = document.getElementById("centerBox");
   const centerImg = document.getElementById("centerImg");
   const optBoxes = [
     document.getElementById("opt0"),
@@ -345,6 +346,49 @@ function runSemanticMatch(step) {
     document.getElementById("img2"),
     document.getElementById("img3"),
   ];
+
+  optBoxes[0].style.left = "34%";
+  optBoxes[0].style.top = "30%";
+  optBoxes[0].style.right = "auto";
+  optBoxes[0].style.bottom = "auto";
+  optBoxes[0].style.transform = "translate(-50%, -50%)";
+
+  optBoxes[1].style.left = "66%";
+  optBoxes[1].style.top = "30%";
+  optBoxes[1].style.right = "auto";
+  optBoxes[1].style.bottom = "auto";
+  optBoxes[1].style.transform = "translate(-50%, -50%)";
+
+  optBoxes[2].style.left = "34%";
+  optBoxes[2].style.top = "68%";
+  optBoxes[2].style.right = "auto";
+  optBoxes[2].style.bottom = "auto";
+  optBoxes[2].style.transform = "translate(-50%, -50%)";
+
+  optBoxes[3].style.left = "66%";
+  optBoxes[3].style.top = "68%";
+  optBoxes[3].style.right = "auto";
+  optBoxes[3].style.bottom = "auto";
+  optBoxes[3].style.transform = "translate(-50%, -50%)";
+
+  optBoxes.forEach((box) => {
+    box.style.border = "2px solid #000";
+    box.style.background = "#fff";
+    box.style.padding = "12px";
+    box.style.width = "320px";
+    box.style.height = "240px";
+    box.style.display = "flex";
+    box.style.alignItems = "center";
+    box.style.justifyContent = "center";
+    box.style.boxSizing = "border-box";
+  });
+
+  optImgs.forEach((imgEl) => {
+    imgEl.style.maxWidth = "290px";
+    imgEl.style.maxHeight = "210px";
+    imgEl.style.width = "100%";
+    imgEl.style.height = "100%";
+  });
 
   const trials = step.trials || [];
   if (!trials.length) throw new Error("Sin trials");
@@ -360,6 +404,16 @@ function runSemanticMatch(step) {
   let selectedIndex = null;
 
   function hideInstructionAudio() {
+    if (btnAudio) btnAudio.style.display = "none";
+
+    if (window.currentInstructionAudio) {
+      try {
+        window.currentInstructionAudio.pause();
+        window.currentInstructionAudio.currentTime = 0;
+      } catch (e) { }
+      window.currentInstructionAudio = null;
+    }
+
     const possibleSelectors = [
       "#instructionAudioBtn",
       "#instructionAudioContainer",
@@ -410,13 +464,23 @@ function runSemanticMatch(step) {
     clearMarks();
 
     const t = trials[trialIndex];
+    if (centerBox) {
+      centerBox.style.padding = "14px";
+    }
+    centerImg.style.maxWidth = "420px";
+    centerImg.style.maxHeight = "340px";
+    optImgs.forEach((imgEl) => {
+      imgEl.style.maxWidth = "360px";
+      imgEl.style.maxHeight = "280px";
+    });
+
     centerImg.src = t.center;
     for (let i = 0; i < 4; i++) optImgs[i].src = t.options[i];
 
     updateTopBar();
     updateFullscreenButton();
 
-    setupInstructionAudio(step.instructionAudio, false, trialIndex === 0 ? "bottom-left" : "top-right");
+    setupInstructionAudio(trialIndex === 0 ? step.instructionAudio : null, false, "bottom-left");
 
     setPartProgress(partId, { trialIndex });
   }
@@ -464,6 +528,8 @@ function runVerbalFluency(step) {
   const centerAudio = document.getElementById("t3CenterAudio");
   const topAudio = document.getElementById("t3TopAudio");
   const audioEl = document.getElementById("t3AudioEl");
+  const recRow = document.getElementById("t3RecRow");
+  const recordingIcon = document.getElementById("t3Recording");
 
   const stopBtn = document.getElementById("t3Stop");
 
@@ -471,22 +537,35 @@ function runVerbalFluency(step) {
   let prepared = false;
   let isCapturing = false;
   let timer = null;
+  let promptLeadTimer = null;
+  let nextRedTimer = null;
+  let promptFinished = false;
 
   const duration = step.recordDurationMs || 60000;
 
   const screens = [
-    { type: "centerAudio", audio: step.instr1Audio },
-    { type: "fluency", text: "Ropa", audio: step.ropaAudio },
-    { type: "fluency", text: "Animales", audio: step.animalesAudio },
-    { type: "centerAudio", audio: step.instr2Audio },
-    { type: "fluency", text: "b__________", audio: step.letraBAudio },
-    { type: "fluency", text: "s______", audio: step.letraSAudio }
+    { type: "instruction", audio: step.instr1Audio, topBar: "Instrucción" },
+    { type: "practice", text: "Ropa", audio: step.ropaAudio, topBar: "P 1/1" },
+    { type: "test", text: "Animales", audio: step.animalesAudio, topBar: "E 1/1" },
+    { type: "instruction", audio: step.instr2Audio, topBar: "Instrucción" },
+    { type: "practice", text: "b__________", audio: step.letraBAudio, topBar: "P 1/1" },
+    { type: "test", text: "s______", audio: step.letraSAudio, topBar: "E 1/1" }
   ];
 
   let index = 0;
 
   btnFullscreen.style.display = "block";
   btnNext.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+
+  topAudio.style.position = "fixed";
+  topAudio.style.left = "14px";
+  topAudio.style.bottom = "95px";
+  topAudio.style.top = "auto";
+  topAudio.style.right = "auto";
+  topAudio.style.width = "56px";
+  topAudio.style.height = "56px";
+  topAudio.style.zIndex = "80";
 
   async function ensurePrepared() {
     if (prepared) return;
@@ -494,13 +573,68 @@ function runVerbalFluency(step) {
     prepared = true;
   }
 
+  function showMicError(err) {
+    console.error("Error al acceder al micrófono:", err);
+
+    let msg = "No se pudo acceder al micrófono.";
+
+    if (err?.name === "NotAllowedError") {
+      msg = "El navegador bloqueó el permiso del micrófono. Debes permitirlo.";
+    } else if (err?.name === "NotFoundError") {
+      msg = "No se encontró ningún micrófono disponible.";
+    } else if (err?.name === "NotReadableError") {
+      msg = "El micrófono está siendo usado por otra aplicación o no se puede leer.";
+    } else if (err?.name === "SecurityError") {
+      msg = "El navegador bloqueó el micrófono por seguridad.";
+    } else if (err?.message) {
+      msg = `No se pudo acceder al micrófono: ${err.message}`;
+    }
+
+    alert(msg);
+  }
+
+  function showMicError(err) {
+    console.error("Error al acceder al micrófono:", err);
+
+    let msg = "No se pudo acceder al micrófono.";
+
+    if (err?.name === "NotAllowedError") {
+      msg = "El navegador bloqueó el permiso del micrófono. Debes permitirlo.";
+    } else if (err?.name === "NotFoundError") {
+      msg = "No se encontró ningún micrófono disponible.";
+    } else if (err?.name === "NotReadableError") {
+      msg = "El micrófono está siendo usado por otra aplicación o no se puede leer.";
+    } else if (err?.name === "SecurityError") {
+      msg = "El navegador bloqueó el micrófono por seguridad.";
+    } else if (err?.message) {
+      msg = `No se pudo acceder al micrófono: ${err.message}`;
+    }
+
+    alert(msg);
+  }
+
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+    if (n === 1) {
+      topBar.textContent = `${partLabel} · P 1/1`;
+    } else {
+      topBar.textContent = `${partLabel} · E ${n - 1}/${last - 1}`;
+    }
+  }
+
   async function startCapture() {
+    clearTimeout(promptLeadTimer);
+    clearTimeout(nextRedTimer);
     await ensurePrepared();
     recorder.beginCapture();
     isCapturing = true;
+    nextRedTimer = setTimeout(() => {
+      btnNext.style.filter = "invert(17%) sepia(86%) saturate(7471%) hue-rotate(355deg) brightness(92%) contrast(122%)";
+    }, 60000);
 
     timer = setTimeout(async () => {
       await stopAndSave();
+      setStoppedState();
     }, duration);
   }
 
@@ -509,6 +643,8 @@ function runVerbalFluency(step) {
     isCapturing = false;
 
     clearTimeout(timer);
+    clearTimeout(promptLeadTimer);
+    clearTimeout(nextRedTimer);
 
     const blob = await recorder.stop();
     if (blob) {
@@ -517,14 +653,91 @@ function runVerbalFluency(step) {
     }
   }
 
+  function stopPromptAudio() {
+    clearTimeout(promptLeadTimer);
+    try {
+      audioEl.pause();
+      audioEl.currentTime = 0;
+    } catch (e) { }
+    audioEl.onended = null;
+  }
+
+  function updateTopBar(label) {
+    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · ${label}`;
+  }
+
+  function resetNextButtonState() {
+    btnNext.style.display = "block";
+    btnNext.style.filter = "none";
+  }
+
+  function setPromptState() {
+    promptFinished = false;
+    resetNextButtonState();
+    recRow.style.display = "flex";
+    stopBtn.style.display = "block";
+    if (recordingIcon) {
+      recordingIcon.style.display = "none";
+      recordingIcon.src = "grabando.png";
+    }
+  }
+
+  function setRecordingState() {
+    promptFinished = true;
+    resetNextButtonState();
+    if (recordingIcon) {
+      recordingIcon.style.display = "block";
+      recordingIcon.src = "grabando.png";
+    }
+    stopBtn.style.display = "block";
+  }
+
+  function setStoppedState() {
+    clearTimeout(nextRedTimer);
+    recRow.style.display = "flex";
+    stopBtn.style.display = "none";
+    if (recordingIcon) {
+      recordingIcon.style.display = "none";
+    }
+    btnNext.style.display = "block";
+  }
+
+  function scheduleLeadRecording() {
+    clearTimeout(promptLeadTimer);
+
+    if (!Number.isFinite(audioEl.duration) || audioEl.duration <= 0) {
+      audioEl.onloadedmetadata = () => {
+        audioEl.onloadedmetadata = null;
+        scheduleLeadRecording();
+      };
+      return;
+    }
+
+    const durationMs = audioEl.duration * 1000;
+    const leadMs = Math.max(durationMs - 3000, 0);
+
+    promptLeadTimer = setTimeout(async () => {
+      if (isCapturing) return;
+      await startCapture();
+      setRecordingState();
+    }, leadMs);
+  }
+
   async function render() {
     const s = screens[index];
 
     centerText.style.display = "none";
     centerAudio.style.display = "none";
     topAudio.style.display = "none";
+    recRow.style.display = "none";
+    if (recordingIcon) recordingIcon.style.display = "none";
+    stopPromptAudio();
+    clearTimeout(nextRedTimer);
+    promptFinished = false;
+    resetNextButtonState();
+    updateTopBar(s.topBar || "");
 
-    if (s.type === "centerAudio") {
+    if (s.type === "instruction") {
       centerAudio.style.display = "block";
       centerAudio.onclick = () => {
         if (!s.audio) return;
@@ -535,35 +748,54 @@ function runVerbalFluency(step) {
       return;
     }
 
-    if (s.type === "fluency") {
+    if (s.type === "practice" || s.type === "test") {
       centerText.style.display = "block";
       centerText.textContent = s.text;
+      setPromptState();
 
       topAudio.style.display = "block";
       topAudio.onclick = async () => {
         if (!s.audio) return;
 
-        // PRELOAD 2 seg antes
-        await ensurePrepared();
-        setTimeout(() => { }, 2000);
+        if (isCapturing) {
+          await stopAndSave();
+        }
 
+        stopPromptAudio();
+        setPromptState();
         audioEl.src = s.audio;
         audioEl.currentTime = 0;
         await audioEl.play();
+        scheduleLeadRecording();
       };
 
       audioEl.onended = async () => {
-        await startCapture();
+        clearTimeout(promptLeadTimer);
+        if (!isCapturing) {
+          await startCapture();
+          setRecordingState();
+        }
       };
     }
   }
 
   stopBtn.onclick = async () => {
-    await stopAndSave();
+    stopPromptAudio();
+    if (isCapturing) {
+      await stopAndSave();
+    }
+    setStoppedState();
   };
 
   btnNext.onclick = async () => {
-    if (isCapturing) await stopAndSave();
+    stopPromptAudio();
+    clearTimeout(nextRedTimer);
+    if (isCapturing) {
+      await stopAndSave();
+    }
+    if (promptFinished) {
+      setStoppedState();
+    }
 
     index++;
     if (index >= screens.length) {
@@ -608,8 +840,8 @@ function runMCQ4ImageTrials(step) {
     btnPatientAudio.style.position = "fixed";
     btnPatientAudio.style.top = "12px";
     btnPatientAudio.style.right = "12px";
-    btnPatientAudio.style.width = "46px";
-    btnPatientAudio.style.height = "46px";
+    btnPatientAudio.style.width = "56px";
+    btnPatientAudio.style.height = "56px";
     btnPatientAudio.style.cursor = "pointer";
     btnPatientAudio.style.zIndex = "9999";
     btnPatientAudio.style.display = "none";
@@ -625,6 +857,31 @@ function runMCQ4ImageTrials(step) {
 
   // En este test NO hay imagen central. Ocultamos el centro:
   centerBox.style.display = "none";
+
+  optBoxes[0].style.left = "18vw";
+  optBoxes[0].style.top = "18vh";
+  optBoxes[0].style.right = "auto";
+  optBoxes[0].style.bottom = "auto";
+
+  optBoxes[1].style.right = "18vw";
+  optBoxes[1].style.top = "18vh";
+  optBoxes[1].style.left = "auto";
+  optBoxes[1].style.bottom = "auto";
+
+  optBoxes[2].style.left = "18vw";
+  optBoxes[2].style.bottom = "18vh";
+  optBoxes[2].style.right = "auto";
+  optBoxes[2].style.top = "auto";
+
+  optBoxes[3].style.right = "18vw";
+  optBoxes[3].style.bottom = "18vh";
+  optBoxes[3].style.left = "auto";
+  optBoxes[3].style.top = "auto";
+
+  optImgs.forEach((imgEl) => {
+    imgEl.style.maxWidth = "360px";
+    imgEl.style.maxHeight = "300px";
+  });
 
   // Fullscreen disponible siempre
   btnFullscreen.style.display = "block";
@@ -779,9 +1036,10 @@ function runVideoRecordTrials(step) {
 
   const vrPreviewWrap = document.getElementById("vrPreviewWrap");
   const vrPreview = document.getElementById("vrPreview");
-
-  const vrStimWrap = document.getElementById("vrStimWrap");
   const vrStimImage = document.getElementById("vrStimImage");
+  const vrStimImageWrap = document.getElementById("vrStimImageWrap");
+  const vrStimWrap = document.getElementById("vrStimWrap");
+  const vrSmallPreviewWrap = document.getElementById("vrSmallPreviewWrap");
   const vrSmallPreview = document.getElementById("vrSmallPreview");
 
   const vBtnRec = document.getElementById("vBtnRec");
@@ -791,15 +1049,7 @@ function runVideoRecordTrials(step) {
   const images = step.images || [];
   const practiceCount = Number(step.practiceCount ?? 1); // prueba
   const trialCount = Number(step.trialCount ?? 6);       // ensayos reales
-
-  // Total real de pantallas con estímulo = prueba + ensayos
-  const totalStimScreens = practiceCount + trialCount;   // 1 + 6 = 7
-
-  // screenIndex:
-  // 0 = ajuste cámara
-  // 1 = prueba
-  // 2..7 = ensayos 1..6
-  const totalScreens = 1 + totalStimScreens;
+  const totalScreens = 1 + images.length;
 
   const saved = getPartProgress(partId);
   let screenIndex = 0;
@@ -819,15 +1069,30 @@ function runVideoRecordTrials(step) {
   btnFullscreen.style.display = "block";
   btnFullscreen.onclick = () => toggleFullscreen();
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+  btnNext.style.display = "none";
 
-  btnNext.style.display = "block";
+  vrStimImageWrap.style.left = "50%";
+  vrStimImageWrap.style.top = "50%";
+  vrStimImageWrap.style.transform = "translate(-50%, -50%)";
+  vrStimImageWrap.style.width = "92vw";
+  vrStimImageWrap.style.maxWidth = "1200px";
+  vrStimImage.style.maxWidth = "100%";
+  vrStimImage.style.maxHeight = "74vh";
+
+  vrPreviewWrap.style.top = "44%";
+  vrPreview.style.width = "760px";
+  vrPreview.style.height = "560px";
+  vrPreview.style.maxWidth = "92vw";
+  vrPreview.style.maxHeight = "80vh";
+  vrPreview.style.objectFit = "cover";
 
   const recorder = new VideoRecorder();
   let isRecording = false;
   let didRecordThisScreen = false;
+  let audioPlayed = false;
 
   function setIdleUI() {
-    vBtnRec.style.display = "block";
+    vBtnRec.style.display = "none";
     vBtnStop.style.display = "none";
     vBtnRecording.style.display = "none";
     isRecording = false;
@@ -845,6 +1110,7 @@ function runVideoRecordTrials(step) {
   }
 
   async function startRecording() {
+    await startStreamTo(vrPreview);
     await recorder.startRecording();
     didRecordThisScreen = false;
     setRecordingUI();
@@ -858,10 +1124,8 @@ function runVideoRecordTrials(step) {
 
     if (blob) {
       didRecordThisScreen = true;
-
-      const stimIndex = screenIndex; // 1..7
-      const imageIndex = stimIndex - 1;
-      const imageName = images[imageIndex] || null;
+      const stimIndex = screenIndex;
+      const imageName = images[screenIndex - 1] || null;
 
       const key = `part${String(partId).padStart(2, "0")}_s${String(stimIndex).padStart(2, "0")}.webm`;
       await saveBlob(key, blob);
@@ -871,6 +1135,8 @@ function runVideoRecordTrials(step) {
       takes[String(stimIndex)] = { key, image: imageName };
       setPartData(partId, { takes });
     }
+
+    recorder.stopStream();
   }
 
   function updateTopBar() {
@@ -882,80 +1148,106 @@ function runVideoRecordTrials(step) {
     }
 
     if (screenIndex <= practiceCount) {
-      topBar.textContent = `${partLabel} · Prueba ${screenIndex}/${practiceCount}`;
+      topBar.textContent = `${partLabel} · P ${screenIndex}/${practiceCount}`;
       return;
     }
 
-    const ensayoN = screenIndex - practiceCount; // 2->1, 3->2 ... 7->6
+    const ensayoN = screenIndex - practiceCount;
     topBar.textContent = `${partLabel} · E ${ensayoN}/${trialCount}`;
+  }
+
+  function stopInstructionAudio() {
+    try {
+      instructionAudio.pause();
+      instructionAudio.currentTime = 0;
+    } catch (e) { }
+    instructionAudio.onended = null;
+  }
+
+  function setAudioButtonPosition() {
+    btnAudio.style.display = "block";
+    btnAudio.style.position = "fixed";
+    btnAudio.style.left = "14px";
+    btnAudio.style.bottom = "95px";
+    btnAudio.style.top = "auto";
+    btnAudio.style.right = "auto";
+    btnAudio.style.transform = "none";
+    btnAudio.style.zIndex = "80";
   }
 
   async function render() {
     updateTopBar();
     setPartProgress(partId, { screenIndex });
+    audioPlayed = false;
+    stopInstructionAudio();
+    recorder.stopStream();
 
-    // Pantalla 0: ajuste cámara
     if (screenIndex === 0) {
-      vrPreviewWrap.style.display = "flex";
       vrStimWrap.style.display = "none";
-
-      setupInstructionAudio(null);
+      vrPreviewWrap.style.display = "flex";
       btnAudio.style.display = "none";
-
-      await startStreamTo(vrPreview);
-
       setIdleUI();
-      vBtnRec.style.display = "none";
-      vBtnStop.style.display = "none";
-      vBtnRecording.style.display = "none";
+      btnNext.style.display = "block";
+      await startStreamTo(vrPreview);
       return;
     }
 
-    // Pantallas con estímulo
-    vrPreviewWrap.style.display = "none";
     vrStimWrap.style.display = "block";
+    vrPreviewWrap.style.display = "none";
+    vrStimImageWrap.style.display = "flex";
+    vrSmallPreviewWrap.style.display = "none";
 
-    // Audio SOLO en la prueba
-    if (screenIndex <= practiceCount) {
-      setupInstructionAudio(step.instructionAudio);
-      btnAudio.style.display = "block";
-    } else {
-      setupInstructionAudio(null);
-      btnAudio.style.display = "none";
-    }
+    setAudioButtonPosition();
+    instructionAudio.src = step.instructionAudio || "";
+    instructionAudio.load();
 
-    await startStreamTo(vrSmallPreview);
-
-    const imageIndex = screenIndex - 1;
-
-    if (!images[imageIndex]) {
-      console.warn(`No existe imagen para screenIndex=${screenIndex}, imageIndex=${imageIndex}`);
+    if (!images[screenIndex - 1]) {
+      console.warn(`No existe imagen para screenIndex=${screenIndex}`);
       return;
     }
 
-    vrStimImage.src = `${step.basePath}/${images[imageIndex]}`;
+    vrStimImage.src = `${step.basePath}/${images[screenIndex - 1]}`;
 
     setIdleUI();
+    btnNext.style.display = "none";
+
+    btnAudio.onclick = async () => {
+      if (!instructionAudio.src || audioPlayed) return;
+      audioPlayed = true;
+      try {
+        instructionAudio.currentTime = 0;
+        await instructionAudio.play();
+      } catch (e) {
+        console.error(e);
+      }
+    };
+
+    instructionAudio.onended = async () => {
+      btnAudio.style.display = "none";
+      vrStimImageWrap.style.display = "none";
+      vrPreviewWrap.style.display = "flex";
+      try {
+        await startRecording();
+      } catch (e) {
+        console.error(e);
+        alert("No se pudo iniciar la grabación.");
+        setIdleUI();
+      }
+    };
   }
 
-  vBtnRec.onclick = async () => {
-    try {
-      await startRecording();
-    } catch (e) {
-      console.error(e);
-      alert("No se pudo iniciar la grabación.");
-      setIdleUI();
-    }
-  };
+  vBtnRec.onclick = async () => { };
 
   vBtnStop.onclick = async () => {
+    stopInstructionAudio();
     await stopRecordingAndSave();
+    btnNext.style.display = "block";
   };
 
   btnNext.onclick = async () => {
+    stopInstructionAudio();
     if (isRecording) {
       await stopRecordingAndSave();
-      return;
     }
 
     screenIndex++;
@@ -963,6 +1255,7 @@ function runVideoRecordTrials(step) {
     if (screenIndex >= totalScreens) {
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
       recorder.stopStream();
+      btnAudio.style.display = "none";
       finishCurrentPart();
       return;
     }
@@ -988,6 +1281,22 @@ function runCalcMCQ(step) {
     document.getElementById("cimg3"),
     document.getElementById("cimg4"),
   ];
+  const optLabels = optBoxes.map((box, index) => {
+    let labelEl = box.querySelector(".calcOptionLabel");
+    if (!labelEl) {
+      labelEl = document.createElement("div");
+      labelEl.className = "calcOptionLabel";
+      labelEl.style.display = "none";
+      labelEl.style.fontSize = "42px";
+      labelEl.style.fontWeight = "700";
+      labelEl.style.lineHeight = "1";
+      labelEl.style.textAlign = "center";
+      labelEl.style.minWidth = "120px";
+      labelEl.style.padding = "18px 12px";
+      box.appendChild(labelEl);
+    }
+    return labelEl;
+  });
 
   const btnAudio = document.getElementById("btnAudio");
   const instructionAudio = document.getElementById("instructionAudio");
@@ -1013,13 +1322,13 @@ function runCalcMCQ(step) {
 
     btnAudio.style.display = "block";
     btnAudio.style.position = "fixed";
-    btnAudio.style.top = "16px";
-    btnAudio.style.right = "16px";
-    btnAudio.style.left = "auto";
-    btnAudio.style.bottom = "auto";
+    btnAudio.style.left = "14px";
+    btnAudio.style.bottom = "84px";
+    btnAudio.style.top = "auto";
+    btnAudio.style.right = "auto";
     btnAudio.style.zIndex = "9999";
-    btnAudio.style.width = "48px";
-    btnAudio.style.height = "48px";
+    btnAudio.style.width = "56px";
+    btnAudio.style.height = "56px";
 
     btnAudio.onclick = () => {
       instructionAudio.currentTime = 0;
@@ -1040,8 +1349,8 @@ function runCalcMCQ(step) {
     btnFullscreen.style.top = "auto";
     btnFullscreen.style.right = "auto";
     btnFullscreen.style.zIndex = "9999";
-    btnFullscreen.style.width = "48px";
-    btnFullscreen.style.height = "48px";
+    btnFullscreen.style.width = "56px";
+    btnFullscreen.style.height = "56px";
 
     btnFullscreen.onclick = () => toggleFullscreen();
     btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
@@ -1061,7 +1370,22 @@ function runCalcMCQ(step) {
     clearMarks();
     const t = trials[trialIndex];
     promptImg.src = t.promptImg;
-    for (let i = 0; i < 5; i++) optImgs[i].src = t.options[i];
+    for (let i = 0; i < 5; i++) {
+      const optionValue = t.options[i];
+      const isImage = typeof optionValue === "string" && /\.(png|jpe?g|webp|gif|svg)$/i.test(optionValue);
+
+      if (isImage) {
+        optImgs[i].style.display = "block";
+        optImgs[i].src = optionValue;
+        optLabels[i].style.display = "none";
+        optLabels[i].textContent = "";
+      } else {
+        optImgs[i].style.display = "none";
+        optImgs[i].removeAttribute("src");
+        optLabels[i].style.display = "block";
+        optLabels[i].textContent = String(optionValue ?? "");
+      }
+    }
     updateTop();
     setPartProgress(partId, { trialIndex });
   }
@@ -1187,7 +1511,7 @@ function runAudioMCQ4Trials(step) {
     }
 
     if (screenIndex === 1) {
-      topBar.textContent = `${partLabel} · Ejemplo 1/1`;
+      topBar.textContent = `${partLabel} · P 1/1`;
       return;
     }
 
@@ -1314,6 +1638,18 @@ function runAudioMCQ4WordsOnScreen(step) {
     document.getElementById("img3"),
   ];
 
+  optBoxes.forEach((box) => {
+    box.style.width = "360px";
+    box.style.height = "280px";
+    box.style.padding = "12px";
+  });
+  optImgs.forEach((imgEl) => {
+    imgEl.style.maxWidth = "330px";
+    imgEl.style.maxHeight = "250px";
+    imgEl.style.width = "100%";
+    imgEl.style.height = "100%";
+  });
+
   // este test no usa imagen central, usa palabra
   centerBox.style.display = "none";
   centerWord.style.display = "block";
@@ -1359,7 +1695,20 @@ function runAudioMCQ4WordsOnScreen(step) {
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
     if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucción`;
-    else topBar.textContent = `${partLabel} · ${screenIndex}/16`;
+    else topBar.textContent = `${partLabel} · E ${screenIndex}/16`;
+  }
+
+  function positionCornerAudio() {
+    if (!btnAudio) return;
+    btnAudio.style.position = "fixed";
+    btnAudio.style.left = "14px";
+    btnAudio.style.bottom = "84px";
+    btnAudio.style.top = "auto";
+    btnAudio.style.right = "auto";
+    btnAudio.style.width = "56px";
+    btnAudio.style.height = "56px";
+    btnAudio.style.transform = "none";
+    btnAudio.style.zIndex = "9999";
   }
 
   function mountAudioForTrial(t) {
@@ -1370,6 +1719,10 @@ function runAudioMCQ4WordsOnScreen(step) {
     if (t === 1) setupAudio(btnAudio, instructionAudio, step.audioT1, { forceShow: true });
     else if (t === 2) setupAudio(btnAudio, instructionAudio, step.audioT2, { forceShow: true });
     else setupInstructionAudio(null);
+
+    if (t === 1 || t === 2) {
+      positionCornerAudio();
+    }
 
     // este test no usa audio 2
     if (btnAudio2) btnAudio2.style.display = "none";
@@ -1473,6 +1826,18 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     document.getElementById("img3"),
   ];
 
+  optBoxes.forEach((box) => {
+    box.style.width = "360px";
+    box.style.height = "280px";
+    box.style.padding = "12px";
+  });
+  optImgs.forEach((imgEl) => {
+    imgEl.style.maxWidth = "330px";
+    imgEl.style.maxHeight = "250px";
+    imgEl.style.width = "100%";
+    imgEl.style.height = "100%";
+  });
+
   const basePath = step.basePath || "assets/parte9";
   const filePattern = step.filePattern || "{t}-{o}.png";
   const firstTrial = Number(step.firstTrial ?? 1);
@@ -1565,6 +1930,19 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     btnNext.style.display = requireSel ? "none" : "block";
   }
 
+  function positionCornerAudio() {
+    if (!btnAudio) return;
+    btnAudio.style.position = "fixed";
+    btnAudio.style.left = "14px";
+    btnAudio.style.bottom = "84px";
+    btnAudio.style.top = "auto";
+    btnAudio.style.right = "auto";
+    btnAudio.style.width = "56px";
+    btnAudio.style.height = "56px";
+    btnAudio.style.transform = "none";
+    btnAudio.style.zIndex = "9999";
+  }
+
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
 
@@ -1574,7 +1952,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     }
 
     if (screenIndex === 1) {
-      topBar.textContent = `${partLabel} · Ejemplo 1/1`;
+      topBar.textContent = `${partLabel} · P 1/1`;
       return;
     }
 
@@ -1635,6 +2013,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     // screenIndex 1 = ejemplo => practiceAudio1 (audio3.wav)
     if (screenIndex === 1) {
       setupExclusiveAudio(btnAudio, instructionAudio, step.practiceAudio1, { forceShow: true });
+      positionCornerAudio();
       return;
     }
 
@@ -1646,6 +2025,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       : null;
 
     setupExclusiveAudio(btnAudio, instructionAudio, ensayoAudioSrc, { forceShow: true });
+    positionCornerAudio();
   }
 
   optBoxes.forEach(box => {
@@ -1714,6 +2094,49 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
     document.getElementById("img3"),
   ];
 
+  centerWord.style.top = "15%";
+  centerWord.style.fontSize = "52px";
+  centerWord.style.maxWidth = "80vw";
+  centerWord.style.width = "max-content";
+  centerWord.style.textAlign = "center";
+
+  optBoxes[0].style.left = "34%";
+  optBoxes[0].style.top = "38%";
+  optBoxes[0].style.right = "auto";
+  optBoxes[0].style.bottom = "auto";
+  optBoxes[0].style.transform = "translate(-50%, -50%)";
+
+  optBoxes[1].style.left = "66%";
+  optBoxes[1].style.top = "38%";
+  optBoxes[1].style.right = "auto";
+  optBoxes[1].style.bottom = "auto";
+  optBoxes[1].style.transform = "translate(-50%, -50%)";
+
+  optBoxes[2].style.left = "34%";
+  optBoxes[2].style.top = "74%";
+  optBoxes[2].style.right = "auto";
+  optBoxes[2].style.bottom = "auto";
+  optBoxes[2].style.transform = "translate(-50%, -50%)";
+
+  optBoxes[3].style.left = "66%";
+  optBoxes[3].style.top = "74%";
+  optBoxes[3].style.right = "auto";
+  optBoxes[3].style.bottom = "auto";
+  optBoxes[3].style.transform = "translate(-50%, -50%)";
+
+  optBoxes.forEach((box) => {
+    box.style.width = "360px";
+    box.style.height = "280px";
+    box.style.padding = "12px";
+  });
+
+  optImgs.forEach((imgEl) => {
+    imgEl.style.maxWidth = "330px";
+    imgEl.style.maxHeight = "250px";
+    imgEl.style.width = "100%";
+    imgEl.style.height = "100%";
+  });
+
   const basePath = step.basePath || "assets/parte10";
   const filePattern = step.filePattern || "{t}-{o}.png";
   const firstTrial = Number(step.firstTrial ?? 1);
@@ -1760,7 +2183,7 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
     if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucción`;
-    else if (screenIndex === 1) topBar.textContent = `${partLabel} · Ejemplo 1/1`;
+    else if (screenIndex === 1) topBar.textContent = `${partLabel} · P 1/1`;
     else topBar.textContent = `${partLabel} · E ${screenIndex - 1}/16`;
   }
 
@@ -2048,6 +2471,24 @@ function runStoryYesNoFlow(step) {
     selected = null;
   }
 
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+
+    if (screenIndex === 0 || screenIndex === 1 || screenIndex === 6) {
+      topBar.textContent = `${partLabel} · Instrucción`;
+      return;
+    }
+
+    if (screenIndex >= 2 && screenIndex <= 5) {
+      topBar.textContent = `${partLabel} · E ${screenIndex - 1}/4`;
+      return;
+    }
+
+    if (screenIndex >= 7 && screenIndex <= 10) {
+      topBar.textContent = `${partLabel} · E ${screenIndex - 6}/4`;
+    }
+  }
+
   function render() {
     // cortar cualquier audio al cambiar de pantalla
     stopAllAudios();
@@ -2075,6 +2516,17 @@ function runStoryYesNoFlow(step) {
 
       // audio arriba derecha
       setupAudio(btnAudio, instructionAudio, s.audio, { forceShow: true });
+      if (btnAudio) {
+        btnAudio.style.position = "fixed";
+        btnAudio.style.left = "14px";
+        btnAudio.style.bottom = "84px";
+        btnAudio.style.top = "auto";
+        btnAudio.style.right = "auto";
+        btnAudio.style.width = "56px";
+        btnAudio.style.height = "56px";
+        btnAudio.style.transform = "none";
+        btnAudio.style.zIndex = "9999";
+      }
 
       if (btnAudio2) btnAudio2.style.display = "none";
       return;
@@ -2169,10 +2621,12 @@ function runRepeatAudioRecord(step) {
 
   const introA1 = step.introAudios?.[0] ?? null;
   const introA2 = step.introAudios?.[1] ?? null;
+  const startBeep = (partId === 15 || partId === 16) ? new Audio("/tests/modulo2/assets/beep.wav") : null;
 
   const recorder = new WavRecorder();
   let prepared = false;
   let isCapturing = false;
+  let psRedTimer = null;
   let isClosing = false;
   let hasRecordedCurrentScreen = false;
 
@@ -2195,6 +2649,13 @@ function runRepeatAudioRecord(step) {
       if (promptAudio) {
         promptAudio.pause();
         promptAudio.currentTime = 0;
+      }
+    } catch (_) { }
+
+    try {
+      if (startBeep) {
+        startBeep.pause();
+        startBeep.currentTime = 0;
       }
     } catch (_) { }
   }
@@ -2275,10 +2736,49 @@ function runRepeatAudioRecord(step) {
     if (stopBtn) stopBtn.style.display = "block";
   }
 
+  function updateTopBar() {
+    const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+
+    if (hasIntro && screenIndex === 0) {
+      topBar.textContent = `${partLabel} · Instrucción`;
+      return;
+    }
+
+    const introOffset = hasIntro ? 1 : 0;
+
+    if (!noExample && screenIndex === introOffset) {
+      topBar.textContent = `${partLabel} · P 1/1`;
+      return;
+    }
+
+    const trialsStart = introOffset + (noExample ? 0 : 1);
+    const ensayoN = (screenIndex - trialsStart) + 1;
+    topBar.textContent = `${partLabel} · E ${ensayoN}/${totalTrials}`;
+  }
+
   async function ensurePrepared() {
     if (prepared) return;
     await recorder.prepare({ numChannels: 1 });
     prepared = true;
+  }
+
+  function showMicError(err) {
+    console.error(err);
+
+    let message = "No se pudo acceder al micr\u00f3fono.";
+    if (err?.name === "NotAllowedError") {
+      message = "Permiso de micr\u00f3fono bloqueado en el navegador.";
+    } else if (err?.name === "NotFoundError") {
+      message = "No se encontr\u00f3 ning\u00fan micr\u00f3fono disponible.";
+    } else if (err?.name === "NotReadableError") {
+      message = "El micr\u00f3fono est\u00e1 ocupado por otra aplicaci\u00f3n.";
+    } else if (err?.name === "SecurityError") {
+      message = "El navegador bloque\u00f3 el acceso al micr\u00f3fono por seguridad.";
+    } else if (err?.message) {
+      message = err.message;
+    }
+
+    alert(message);
   }
 
   async function startCapture() {
@@ -2414,6 +2914,14 @@ function runRepeatAudioRecord(step) {
 
         promptAudio.onended = async () => {
           console.log("audio terminado -> startCapture()");
+          if (startBeep) {
+            try {
+              startBeep.currentTime = 0;
+              await startBeep.play();
+            } catch (e) {
+              console.warn("No se pudo reproducir beep.wav", e);
+            }
+          }
           await startCapture();
         };
 
@@ -2526,11 +3034,31 @@ function runImageInstrAutoRecord(step) {
   const recorder = new WavRecorder();
   let prepared = false;
   let isCapturing = false;
+  let psRedTimer = null;
 
   async function ensurePrepared() {
     if (prepared) return;
     await recorder.prepare({ numChannels: 1 });
     prepared = true;
+  }
+
+  function showMicError(err) {
+    console.error(err);
+
+    let message = "No se pudo acceder al micr\u00f3fono.";
+    if (err?.name === "NotAllowedError") {
+      message = "Permiso de micr\u00f3fono bloqueado en el navegador.";
+    } else if (err?.name === "NotFoundError") {
+      message = "No se encontr\u00f3 ning\u00fan micr\u00f3fono disponible.";
+    } else if (err?.name === "NotReadableError") {
+      message = "El micr\u00f3fono est\u00e1 ocupado por otra aplicaci\u00f3n.";
+    } else if (err?.name === "SecurityError") {
+      message = "El navegador bloque\u00f3 el acceso al micr\u00f3fono por seguridad.";
+    } else if (err?.message) {
+      message = err.message;
+    }
+
+    alert(message);
   }
 
   function imageFile(num) {
@@ -2691,10 +3219,34 @@ function runImageInstrAutoRecord(step) {
     bindBox(boxPF, iconPF, audioPF, cfg.show.PF, cfg.labels.PF, cfg.PF);
   }
 
+  function resetPsVisualState() {
+    clearTimeout(psRedTimer);
+    if (iconPS) iconPS.style.filter = "none";
+    if (boxPS) boxPS.style.color = "";
+    const labelEl = boxPS?.querySelector(".label") || boxPS?.querySelector("span") || boxPS?.querySelector("p") || boxPS?.firstElementChild;
+    if (labelEl && labelEl.tagName !== "IMG") {
+      labelEl.style.color = "";
+    }
+  }
+
+  function schedulePsRedState() {
+    resetPsVisualState();
+    psRedTimer = setTimeout(() => {
+      if (iconPS) {
+        iconPS.style.filter = "invert(17%) sepia(86%) saturate(7471%) hue-rotate(355deg) brightness(92%) contrast(122%)";
+      }
+      if (boxPS) boxPS.style.color = "#dc2626";
+      const labelEl = boxPS?.querySelector(".label") || boxPS?.querySelector("span") || boxPS?.querySelector("p") || boxPS?.firstElementChild;
+      if (labelEl && labelEl.tagName !== "IMG") {
+        labelEl.style.color = "#dc2626";
+      }
+    }, 10000);
+  }
+
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
     if (n === 1) {
-      topBar.textContent = `${partLabel} · Ejemplo 1/1`;
+      topBar.textContent = `${partLabel} · P 1/1`;
     } else {
       topBar.textContent = `${partLabel} · E ${n - 1}/${last - 1}`;
     }
@@ -2736,7 +3288,7 @@ function runImageInstrAutoRecord(step) {
       container.appendChild(boxPF);
       container.appendChild(boxI); // boxI se usa como PF2
     } else if (currentN === 1) {
-      // Ejemplo: I, P, PS, PF
+      // P 1/1: I, P, PS, PF
       container.appendChild(boxI);
       container.appendChild(boxP);
       container.appendChild(boxPS);
@@ -2752,12 +3304,14 @@ function runImageInstrAutoRecord(step) {
 
   async function render() {
     pauseAllInstructionAudios();
+    resetPsVisualState();
 
     updateTopBar();
     imgEl.src = imageFile(n);
 
     mountInstr(n);
     reorderInstructionBoxes(n);
+    schedulePsRedState();
 
     setPartProgress(partId, { itemIndex: n });
 
@@ -2772,6 +3326,7 @@ function runImageInstrAutoRecord(step) {
 
   btnNext.onclick = async () => {
     pauseAllInstructionAudios();
+    resetPsVisualState();
 
     if (isCapturing) {
       await stopAndSave();
@@ -2781,6 +3336,7 @@ function runImageInstrAutoRecord(step) {
 
     if (n > last) {
       pauseAllInstructionAudios();
+      resetPsVisualState();
 
       setPartProgress(partId, {
         status: "done",
@@ -2803,12 +3359,7 @@ function runImageInstrAutoRecord(step) {
     await render();
   };
 
-  ensurePrepared()
-    .then(render)
-    .catch(err => {
-      console.error(err);
-      alert("No se pudo acceder al micrófono.");
-    });
+  render().catch(showMicError);
 }
 
 // 14.-
@@ -2863,7 +3414,7 @@ function runImageAutoRecordSimple(step) {
   function updateTopBar() {
     const label = `Parte ${String(partId).padStart(2, "0")}`;
     if (n === first) {
-      topBar.textContent = `${label} · Ejemplo 1/1`;
+      topBar.textContent = `${label} · P 1/1`;
     } else {
       topBar.textContent = `${label} · E ${n - first}/${last - first}`;
     }
@@ -3603,7 +4154,7 @@ function runDictationText(step) {
     }
 
     if (screenIndex === 1) {
-      topBar.textContent = `${partLabel} · Ejemplo`;
+      topBar.textContent = `${partLabel} · P 1/1`;
       return;
     }
 

@@ -181,12 +181,12 @@ export const CAT = {
                     type: "verbal_fluency",
 
                     // Audios
-                    instr1Audio: null,
-                    ropaAudio: null,
-                    animalesAudio: null,
-                    instr2Audio: null,
-                    letraBAudio: null,
-                    letraSAudio: null,
+                    instr1Audio: "/tests/modulo2/assets/Audio/Test_3/Instruccion/audio1.wav",
+                    ropaAudio: "/tests/modulo2/assets/Audio/Test_3/Prueba/audio2.wav",
+                    animalesAudio: "/tests/modulo2/assets/Audio/Test_3/Ensayo/audio3.wav",
+                    instr2Audio: "/tests/modulo2/assets/Audio/Test_3/Instruccion/audio4.wav",
+                    letraBAudio: "/tests/modulo2/assets/Audio/Test_3/Prueba/audio5.wav",
+                    letraSAudio: "/tests/modulo2/assets/Audio/Test_3/Ensayo/audio6.wav",
 
                     recordDurationMs: 60000
                 }
@@ -251,11 +251,11 @@ export const CAT = {
                             id: 1,
                             promptImg: "assets/calculo/part6/calc_1.png", // imagen del cálculo
                             options: [
-                                "assets/calculo/part6/q1_a.png",
-                                "assets/calculo/part6/q1_b.png",
-                                "assets/calculo/part6/q1_c.png",
-                                "assets/calculo/part6/q1_d.png",
-                                "assets/calculo/part6/q1_e.png",
+                                "8",
+                                "13",
+                                "15",
+                                "19",
+                                "21",
                             ],
                             correctIndex: 2
                         },
@@ -263,11 +263,11 @@ export const CAT = {
                             id: 2,
                             promptImg: "assets/calculo/part6/calc_2.png",
                             options: [
-                                "assets/calculo/part6/q2_a.png",
-                                "assets/calculo/part6/q2_b.png",
-                                "assets/calculo/part6/q2_c.png",
-                                "assets/calculo/part6/q2_d.png",
-                                "assets/calculo/part6/q2_e.png",
+                                "2",
+                                "3",
+                                "4",
+                                "11",
+                                "6",
                             ],
                             correctIndex: 0
                         },
@@ -275,47 +275,47 @@ export const CAT = {
                             id: 3,
                             promptImg: "assets/calculo/part6/calc_3.png",
                             options: [
-                                "assets/calculo/part6/q3_a.png",
-                                "assets/calculo/part6/q3_b.png",
-                                "assets/calculo/part6/q3_c.png",
-                                "assets/calculo/part6/q3_d.png",
-                                "assets/calculo/part6/q3_e.png",
+                                "15",
+                                "42",
+                                "54",
+                                "56",
+                                "76",
                             ],
                             correctIndex: 4
                         },
                         {
-                            id: 3,
+                            id: 4,
                             promptImg: "assets/calculo/part6/calc_4.png",
                             options: [
-                                "assets/calculo/part6/q4_a.png",
-                                "assets/calculo/part6/q4_b.png",
-                                "assets/calculo/part6/q4_c.png",
-                                "assets/calculo/part6/q4_d.png",
-                                "assets/calculo/part6/q4_e.png",
+                                "21",
+                                "22",
+                                "28",
+                                "32",
+                                "3",
                             ],
                             correctIndex: 4
                         },
                         {
-                            id: 3,
+                            id: 5,
                             promptImg: "assets/calculo/part6/calc_5.png",
                             options: [
-                                "assets/calculo/part6/q5_a.png",
-                                "assets/calculo/part6/q5_b.png",
-                                "assets/calculo/part6/q5_c.png",
-                                "assets/calculo/part6/q5_d.png",
-                                "assets/calculo/part6/q5_e.png",
+                                "11",
+                                "19",
+                                "21",
+                                "29",
+                                "4",
                             ],
                             correctIndex: 4
                         },
                         {
-                            id: 3,
+                            id: 6,
                             promptImg: "assets/calculo/part6/calc_6.png",
                             options: [
-                                "assets/calculo/part6/q6_a.png",
-                                "assets/calculo/part6/q6_b.png",
-                                "assets/calculo/part6/q6_c.png",
-                                "assets/calculo/part6/q6_d.png",
-                                "assets/calculo/part6/q6_e.png",
+                                "89",
+                                "91",
+                                "99",
+                                "101",
+                                "205",
                             ],
                             correctIndex: 4
                         },
