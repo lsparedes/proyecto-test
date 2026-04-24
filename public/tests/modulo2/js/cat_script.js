@@ -748,12 +748,21 @@ export const CAT = {
         // =======================
         // Escritura
         // =======================
-        { id: 24, group: "Escritura", name: "Copia - Falta Terminar!!!", steps: [] },
+        {
+            id: 24,
+            group: "Escritura",
+            name: "Copia",
+            steps: [
+                {
+                    type: "writing_copy_canvas"
+                }
+            ]
+        },
 
         {
             id: 25,
             group: "Escritura",
-            name: "Nombre del test 25",
+            name: "Etiquetado de imÃ¡genes",
             steps: [
                 {
                     type: "image_labeling",

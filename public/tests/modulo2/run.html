@@ -302,6 +302,40 @@
       outline: none;
     }
 
+    /* ===== Layout Escritura con lapiz ===== */
+    #layoutWritingCanvas {
+      position: absolute;
+      inset: 0;
+      background: #fff;
+    }
+
+    #writingCanvas {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      transform: translate(-50%, -50%);
+      width: 92vw;
+      height: 78vh;
+      border: 2px solid #000;
+      background: #fff;
+      touch-action: none;
+      cursor: crosshair;
+    }
+
+    #downloadWritingBtn {
+      position: fixed;
+      left: 14px;
+      bottom: 160px;
+      z-index: 90;
+      border: 2px solid #000;
+      background: #fff;
+      color: #000;
+      padding: 10px 14px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
     /* Instrucción centrada (cuando runner lo active) */
     .centeredInstruction #instructionTitle,
     .centeredInstruction #instructionBody {
@@ -368,7 +402,7 @@
     }
 
     #arWord {
-      font-size: 56px;
+      font-size: 86px;
       font-weight: 700;
       letter-spacing: 0.5px;
       text-align: center;
@@ -1074,8 +1108,8 @@
 
       <!-- Grabación -->
       <div id="t18RecRow">
-        <img id="t18Recording" src="grabando.png" alt="Grabando">
-        <img id="t18Stop" src="detener.png" alt="Detener">
+        <img id="t18Recording" src="grabando.png" alt="Grabando" style="display:none;">
+        <img id="t18Stop" src="detener.png" alt="Detener" style="display:none;">
       </div>
 
     </div>
@@ -1092,6 +1126,12 @@
       <div id="dictationBoxWrap">
         <textarea id="dictationAnswer" spellcheck="false"></textarea>
       </div>
+    </div>
+
+    <!-- ====== LAYOUT ESCRITURA CON LAPIZ ====== -->
+    <div id="layoutWritingCanvas" style="display:none;">
+      <canvas id="writingCanvas"></canvas>
+      <button id="downloadWritingBtn" type="button">Descargar imagen</button>
     </div>
 
     <!-- ====== LAYOUT TEXTO + IMAGEN (Parte 27) ====== -->

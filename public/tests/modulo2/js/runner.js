@@ -15,6 +15,7 @@ const layoutCalc = document.getElementById("layoutCalc");
 const layoutTextImage = document.getElementById("layoutTextImage");
 const layoutInstruction = document.getElementById("layoutInstruction");
 const layoutDictation = document.getElementById("layoutDictation");
+const layoutWritingCanvas = document.getElementById("layoutWritingCanvas");
 const layoutAudioRecord = document.getElementById("layoutAudioRecord");
 const layoutVideoRecord = document.getElementById("layoutVideoRecord");
 
@@ -53,7 +54,10 @@ const HAND_SELECTION_STEP_TYPES = new Set([
   "audio_mcq4_words_on_screen",
   "audio_mcq4_trials_with_dual_intro",
   "mcq4_sentence_center_with_audio_practice",
-  "story_yesno_flow"
+  "story_yesno_flow",
+  "writing_copy_canvas",
+  "image_labeling",
+  "dictation_text"
 ]);
 
 function showLayout(which) {
@@ -62,6 +66,7 @@ function showLayout(which) {
   layoutTextImage.style.display = (which === "text_image") ? "block" : "none";
   layoutInstruction.style.display = (which === "instruction") ? "block" : "none";
   layoutDictation.style.display = (which === "dictation") ? "block" : "none";
+  layoutWritingCanvas.style.display = (which === "writing_canvas") ? "block" : "none";
   layoutAudioRecord.style.display = (which === "audio_record") ? "block" : "none";
   layoutVideoRecord.style.display = (which === "video_record") ? "block" : "none";
   layoutCenterAudios.style.display = (which === "center_audios") ? "block" : "none";
@@ -1119,8 +1124,8 @@ function runVideoRecordTrials(step) {
   async function stopRecordingAndSave() {
     if (!isRecording) return;
 
-    const blob = await recorder.stopRecording();
     setIdleUI();
+    const blob = await recorder.stopRecording();
 
     if (blob) {
       didRecordThisScreen = true;
@@ -2729,10 +2734,10 @@ function runRepeatAudioRecord(step) {
   }
 
   function hideRecUI() {
-    recRow.style.display = "none";
+    recRow.style.display = "flex";
     btnPlay.style.display = "block";
 
-    if (recIcon) recIcon.style.display = "block";
+    if (recIcon) recIcon.style.display = "none";
     if (stopBtn) stopBtn.style.display = "block";
   }
 
@@ -3264,6 +3269,7 @@ function runImageInstrAutoRecord(step) {
     isCapturing = false;
 
     if (recIcon) recIcon.style.display = "none";
+    if (stopBtn) stopBtn.style.display = "block";
 
     const blob = await recorder.stop();
     if (blob) {
@@ -3369,6 +3375,7 @@ function runImageAutoRecordSimple(step) {
   const imgEl = document.getElementById("t18Image");
   const audioIcon = document.getElementById("t18InstrAudio");
   const audioEl = document.getElementById("t18AudioEl");
+  const recIcon = document.getElementById("t18Recording");
   const stopBtn = document.getElementById("t18Stop");
 
   const basePath = step.basePath;
@@ -3402,6 +3409,16 @@ function runImageAutoRecordSimple(step) {
   let prepared = false;
   let isCapturing = false;
   let isTransitioning = false;
+
+  function setRecordingUI() {
+    if (recIcon) recIcon.style.display = "block";
+    if (stopBtn) stopBtn.style.display = "block";
+  }
+
+  function setStoppedUI() {
+    if (recIcon) recIcon.style.display = "none";
+    if (stopBtn) stopBtn.style.display = "block";
+  }
 
   function imageFile(num) {
     return `${basePath}/${pattern.replace("{n}", String(num))}`;
@@ -3444,12 +3461,14 @@ function runImageAutoRecordSimple(step) {
     await ensurePrepared();
     recorder.beginCapture();
     isCapturing = true;
+    setRecordingUI();
   }
 
   async function stopAndSave() {
     if (!isCapturing) return;
 
     isCapturing = false;
+    setStoppedUI();
     const currentN = n;
 
     const blob = await recorder.stop();
@@ -3498,6 +3517,8 @@ function runImageAutoRecordSimple(step) {
 
     if (step.autoStartRecording) {
       await startCapture();
+    } else {
+      setStoppedUI();
     }
   }
 
@@ -3841,7 +3862,7 @@ async function runAudioRecordWords(step) {
   }
 
   function setStoppedUI() {
-    btnStop.style.display = "none";
+    btnStop.style.display = "block";
     btnRecording.style.display = "none";
   }
 
@@ -3895,10 +3916,11 @@ async function runAudioRecordWords(step) {
 
   function updateTopBar() {
     if (isExampleScreen()) {
-      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Prueba - 1/1`;
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · P 1/1`;
     } else {
       const currentRealIndex = hasExample ? screenIndex : (screenIndex + 1);
-      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Palabra ${currentRealIndex}/${totalRealWords}`;
+      const noWordLabel = partId === 23 ? " (No palabra)" : "";
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · E ${currentRealIndex}/${totalRealWords}${noWordLabel}`;
     }
   }
 
@@ -3915,6 +3937,7 @@ async function runAudioRecordWords(step) {
     setupAudioForCurrentScreen();
 
     setIdleUI();
+    btnFullscreen.style.display = 'none';
     await startRecAuto();
   }
 
@@ -3957,6 +3980,233 @@ async function runAudioRecordWords(step) {
   };
 
   await renderScreen();
+}
+
+function runWritingCanvasFlow(step, config = {}) {
+  const canvas = document.getElementById("writingCanvas");
+  const downloadBtn = document.getElementById("downloadWritingBtn");
+  const ctx = canvas.getContext("2d");
+
+  const screens = config.screens || [{ label: "P 1/1", image: null, audio: null }];
+  let screenIndex = 0;
+  let drawing = false;
+  let strokes = [];
+  let backgroundImage = null;
+
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+  btnNext.style.display = "block";
+
+  function setCanvasSize() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function drawLine(y) {
+    const w = canvas.clientWidth;
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(w * 0.12, y);
+    ctx.lineTo(w * 0.88, y);
+    ctx.stroke();
+  }
+
+  function drawBackground() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const screen = screens[screenIndex] || {};
+
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, w, h);
+
+    if (backgroundImage) {
+      const maxW = w * 0.72;
+      const maxH = h * 0.48;
+      const scale = Math.min(maxW / backgroundImage.naturalWidth, maxH / backgroundImage.naturalHeight);
+      const imgW = backgroundImage.naturalWidth * scale;
+      const imgH = backgroundImage.naturalHeight * scale;
+      ctx.drawImage(backgroundImage, (w - imgW) / 2, h * 0.08, imgW, imgH);
+    }
+
+    if (screen.mode === "copy") {
+      drawLine(h * 0.48);
+      drawLine(h * 0.64);
+    }
+
+    if (screen.mode === "label") {
+      drawLine(h * 0.78);
+    }
+
+    if (screen.mode === "dictation") {
+      drawLine(h * 0.58);
+    }
+  }
+
+  function drawStrokes() {
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 4;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    for (const stroke of strokes) {
+      if (!stroke || stroke.length < 2) continue;
+      ctx.beginPath();
+      ctx.moveTo(stroke[0].x, stroke[0].y);
+      for (let i = 1; i < stroke.length; i++) {
+        ctx.lineTo(stroke[i].x, stroke[i].y);
+      }
+      ctx.stroke();
+    }
+  }
+
+  function renderCanvas() {
+    drawBackground();
+    drawStrokes();
+  }
+
+  function pointerToCanvas(e) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  }
+
+  function startStroke(e) {
+    drawing = true;
+    strokes.push([{ ...pointerToCanvas(e), t: Date.now() }]);
+    renderCanvas();
+  }
+
+  function addPoint(e) {
+    if (!drawing) return;
+    const stroke = strokes[strokes.length - 1];
+    stroke.push({ ...pointerToCanvas(e), t: Date.now() });
+    renderCanvas();
+  }
+
+  function endStroke() {
+    drawing = false;
+  }
+
+  function bindDrawing() {
+    canvas.onpointerdown = (e) => {
+      canvas.setPointerCapture(e.pointerId);
+      startStroke(e);
+    };
+    canvas.onpointermove = addPoint;
+    canvas.onpointerup = endStroke;
+    canvas.onpointercancel = endStroke;
+    canvas.onpointerleave = endStroke;
+  }
+
+  function downloadCanvas() {
+    const link = document.createElement("a");
+    link.download = `modulo2_parte${String(partId).padStart(2, "0")}_pantalla${String(screenIndex + 1).padStart(2, "0")}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+  }
+
+  function loadImage(src) {
+    return new Promise((resolve) => {
+      if (!src) {
+        backgroundImage = null;
+        resolve();
+        return;
+      }
+
+      const img = new Image();
+      img.onload = () => {
+        backgroundImage = img;
+        resolve();
+      };
+      img.onerror = () => {
+        backgroundImage = null;
+        resolve();
+      };
+      img.src = src;
+    });
+  }
+
+  async function renderScreen() {
+    const screen = screens[screenIndex] || {};
+
+    showLayout("writing_canvas");
+    setCanvasSize();
+    strokes = [];
+
+    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} Â· ${screen.label || ""}`;
+    setPartProgress(partId, {
+      status: "in_progress",
+      screenIndex,
+      totalScreens: screens.length
+    });
+
+    setupInstructionAudio(screen.audio || null);
+    await loadImage(screen.image || null);
+    renderCanvas();
+  }
+
+  downloadBtn.onclick = downloadCanvas;
+  bindDrawing();
+
+  btnNext.onclick = async () => {
+    setPartData(partId, {
+      screenIndex,
+      lastImage: canvas.toDataURL("image/png"),
+      savedAt: new Date().toISOString()
+    });
+
+    screenIndex++;
+    if (screenIndex >= screens.length) {
+      setPartProgress(partId, { status: "done", screenIndex: screens.length - 1 });
+      finishCurrentPart();
+      return;
+    }
+
+    await renderScreen();
+  };
+
+  window.addEventListener("resize", renderCanvas);
+  renderScreen();
+}
+
+function runCopyCanvas(step) {
+  runWritingCanvasFlow(step, {
+    screens: [
+      { label: "P 1/1", mode: "copy" }
+    ]
+  });
+}
+
+function runImageLabelingCanvas(step) {
+  const images = step.images || [];
+  const screens = images.map((image, index) => ({
+    label: index === 0 ? "P 1/1" : `E ${index}/${Math.max(images.length - 1, 1)}`,
+    mode: "label",
+    image
+  }));
+
+  runWritingCanvasFlow(step, { screens });
+}
+
+function runDictationCanvas(step) {
+  const screens = [];
+  if (step.exampleAudio) {
+    screens.push({ label: "P 1/1", mode: "dictation", audio: step.exampleAudio });
+  }
+
+  (step.trialAudios || []).forEach((audio, index, arr) => {
+    screens.push({ label: `E ${index + 1}/${arr.length}`, mode: "dictation", audio });
+  });
+
+  runWritingCanvasFlow(step, { screens });
 }
 
 // 25.-
@@ -4265,24 +4515,23 @@ function runDictationText(step) {
 function runTextImage(step) {
   showLayout("text_image");
 
-  // BOTONES
   btnFullscreen.style.display = "block";
   btnFullscreen.onclick = () => toggleFullscreen();
-
   btnNext.style.display = "block";
 
-  // AUDIO botón top
   const btnAudio = document.getElementById("btnAudio");
   const audioTop = document.getElementById("instructionAudio");
+  const textInstruction = document.getElementById("textInstruction");
+  const textImageWrap = document.getElementById("textImageWrap");
+  const textImage = document.getElementById("textImage");
+  const textAnswer = document.getElementById("textAnswer");
+  const textBoxWrap = document.getElementById("textBoxWrap");
 
-  // Topbar
-  topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · ${part.name}`;
+  topBar.textContent = `Parte ${String(partId).padStart(2, "0")} - ${part.name}`;
 
-  // AUDIO DE INSTRUCCIÓN
   if (part.instructionAudio) {
     btnAudio.style.display = "block";
     audioTop.src = part.instructionAudio;
-
     btnAudio.onclick = async () => {
       try {
         stopAllAudios();
@@ -4296,40 +4545,26 @@ function runTextImage(step) {
     btnAudio.style.display = "none";
   }
 
-  // CONTENIDO
-  const textInstruction = document.getElementById("textInstruction");
-  const textImage = document.getElementById("textImage");
-  const textAnswer = document.getElementById("textAnswer");
-
-  textInstruction.textContent = step.instruction || "";
+  textInstruction.textContent = "";
   textImage.src = step.image;
+  if (textImageWrap) {
+    textImageWrap.style.top = "50%";
+    textImageWrap.style.maxWidth = "1200px";
+  }
+  if (textImage) {
+    textImage.style.maxHeight = "78vh";
+  }
+  if (textAnswer) textAnswer.value = "";
+  if (textBoxWrap) textBoxWrap.style.display = "none";
 
-  // SIEMPRE iniciar vacío
-  textAnswer.value = "";
-
-  // Progreso
   setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1 });
 
-  // Next
   btnNext.onclick = () => {
-    const txt = (textAnswer.value || "").trim();
-    const minChars = Number(step.minChars ?? 1);
-
-    if (txt.length < minChars) {
-      alert(`Debe escribir al menos ${minChars} caracter(es).`);
-      return;
-    }
-
-    // Por ahora NO guardar texto
     setPartProgress(partId, { status: "done" });
-
-    // cortar audio al salir
     stopAllAudios();
     finishCurrentPart();
   };
 }
-
-
 function runLineBisection(step) {
   if (!resume) {
     clearPartProgress(partId);
@@ -4665,8 +4900,9 @@ function stopAllAudios() {
 if (step.type === "semantic_match") runSemanticMatch(step);
 else if (step.type === "mcq_image") runCalcMCQ(step);
 else if (step.type === "text_image") runTextImage(step);
-else if (step.type === "dictation_text") runDictationText(step);
-else if (step.type === "image_labeling") runImageLabeling(step);
+else if (step.type === "dictation_text") runDictationCanvas(step);
+else if (step.type === "image_labeling") runImageLabelingCanvas(step);
+else if (step.type === "writing_copy_canvas") runCopyCanvas(step);
 else if (step.type === "audio_record_image") runAudioRecordImage(step);
 else if (step.type === "audio_record_words") runAudioRecordWords(step);
 else if (step.type === "mcq4_image_trials") runMCQ4ImageTrials(step);
