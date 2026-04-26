@@ -5,6 +5,7 @@ import { WavRecorder } from "./audio_recorder_wav.js";
 import { saveAudioBlob } from "./audio_store_idb.js";
 import { VideoRecorder } from "./video_recorder.js";
 import { saveBlob } from "./blob_store_idb.js";
+import { exportSemanticPanZip } from "./export.js";
 
 const topBar = document.getElementById("topBar");
 const btnNext = document.getElementById("btnNext");
@@ -257,6 +258,10 @@ function closeCurrentWindow() {
   }, 150);
 }
 
+function wait(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 function hideHandSelectionScreen() {
   if (handFinishScreen) handFinishScreen.style.display = "none";
   if (selectHandContainer) selectHandContainer.style.display = "none";
@@ -300,7 +305,7 @@ function showHandSelectionScreen() {
   });
 
   if (handButton) {
-    handButton.addEventListener("click", () => {
+    handButton.addEventListener("click", async () => {
       const usedHand = document.querySelector('input[name="hand"]:checked')?.value || "";
       if (!usedHand) return;
 
@@ -314,6 +319,13 @@ function showHandSelectionScreen() {
       const data = getPartData(partId);
       setPartData(partId, { ...data, usedHand });
       setPartProgress(partId, { usedHand });
+
+      if (partId === 2) {
+        const exported = await exportSemanticPanZip(usedHand);
+        if (exported) {
+          await wait(2500);
+        }
+      }
 
       hideHandSelectionScreen();
       closeCurrentWindow();
@@ -352,26 +364,26 @@ function runSemanticMatch(step) {
     document.getElementById("img3"),
   ];
 
-  optBoxes[0].style.left = "34%";
-  optBoxes[0].style.top = "30%";
+  optBoxes[0].style.left = "22%";
+  optBoxes[0].style.top = "22%";
   optBoxes[0].style.right = "auto";
   optBoxes[0].style.bottom = "auto";
   optBoxes[0].style.transform = "translate(-50%, -50%)";
 
-  optBoxes[1].style.left = "66%";
-  optBoxes[1].style.top = "30%";
+  optBoxes[1].style.left = "78%";
+  optBoxes[1].style.top = "22%";
   optBoxes[1].style.right = "auto";
   optBoxes[1].style.bottom = "auto";
   optBoxes[1].style.transform = "translate(-50%, -50%)";
 
-  optBoxes[2].style.left = "34%";
-  optBoxes[2].style.top = "68%";
+  optBoxes[2].style.left = "22%";
+  optBoxes[2].style.top = "78%";
   optBoxes[2].style.right = "auto";
   optBoxes[2].style.bottom = "auto";
   optBoxes[2].style.transform = "translate(-50%, -50%)";
 
-  optBoxes[3].style.left = "66%";
-  optBoxes[3].style.top = "68%";
+  optBoxes[3].style.left = "78%";
+  optBoxes[3].style.top = "78%";
   optBoxes[3].style.right = "auto";
   optBoxes[3].style.bottom = "auto";
   optBoxes[3].style.transform = "translate(-50%, -50%)";
@@ -380,8 +392,8 @@ function runSemanticMatch(step) {
     box.style.border = "2px solid #000";
     box.style.background = "#fff";
     box.style.padding = "12px";
-    box.style.width = "320px";
-    box.style.height = "240px";
+    box.style.width = "300px";
+    box.style.height = "220px";
     box.style.display = "flex";
     box.style.alignItems = "center";
     box.style.justifyContent = "center";
@@ -389,8 +401,8 @@ function runSemanticMatch(step) {
   });
 
   optImgs.forEach((imgEl) => {
-    imgEl.style.maxWidth = "290px";
-    imgEl.style.maxHeight = "210px";
+    imgEl.style.maxWidth = "270px";
+    imgEl.style.maxHeight = "190px";
     imgEl.style.width = "100%";
     imgEl.style.height = "100%";
   });
@@ -407,6 +419,7 @@ function runSemanticMatch(step) {
   setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, trialIndex });
 
   let selectedIndex = null;
+  const panResponses = [];
 
   function hideInstructionAudio() {
     if (btnAudio) btnAudio.style.display = "none";
@@ -472,11 +485,11 @@ function runSemanticMatch(step) {
     if (centerBox) {
       centerBox.style.padding = "14px";
     }
-    centerImg.style.maxWidth = "420px";
-    centerImg.style.maxHeight = "340px";
+    centerImg.style.maxWidth = "360px";
+    centerImg.style.maxHeight = "280px";
     optImgs.forEach((imgEl) => {
-      imgEl.style.maxWidth = "360px";
-      imgEl.style.maxHeight = "280px";
+      imgEl.style.maxWidth = "270px";
+      imgEl.style.maxHeight = "190px";
     });
 
     centerImg.src = t.center;
@@ -509,6 +522,12 @@ function runSemanticMatch(step) {
 
     hideInstructionAudio();
 
+    const currentTrial = trials[trialIndex];
+    panResponses[trialIndex] = buildSemanticPanResult(currentTrial, trialIndex, selectedIndex);
+    setPartData(partId, {
+      semanticPanResponses: panResponses.filter(Boolean)
+    });
+
     trialIndex++;
 
     if (trialIndex >= trials.length) {
@@ -522,6 +541,49 @@ function runSemanticMatch(step) {
   };
 
   renderTrial();
+}
+
+const SEMANTIC_PAN_ITEMS = [
+  { item: "Ej.", target: "mono", correct: 1, close: 2, far: 0 },
+  { item: 1, target: "silbato", correct: 3, close: 1, far: 0 },
+  { item: 2, target: "mano", correct: 1, close: 3, far: 0 },
+  { item: 3, target: "cerillas", correct: 2, close: 0, far: 1 },
+  { item: 4, target: "almohada", correct: 0, close: 1, far: 3 },
+  { item: 5, target: "egipcio", correct: 1, close: 3, far: 2 },
+  { item: 6, target: "reloj", correct: 2, close: 1, far: 3 },
+  { item: 7, target: "monja", correct: 0, close: 3, far: 2 },
+  { item: 8, target: "tienda", correct: 3, close: 2, far: 1 },
+  { item: 9, target: "botella", correct: 0, close: 2, far: 3 },
+  { item: 10, target: "flor", correct: 3, close: 1, far: 2 }
+];
+
+function optionLetter(index) {
+  return ["A", "B", "C", "D"][index] || "";
+}
+
+function getPanCategory(meta, selectedIndex) {
+  if (selectedIndex === meta.correct) return "respuesta correcta";
+  if (selectedIndex === meta.close) return "distractor semantico cercano";
+  if (selectedIndex === meta.far) return "distractor semantico lejano";
+  return "distractor no relacionado";
+}
+
+function buildSemanticPanResult(trial, trialIndex, selectedIndex) {
+  const meta = SEMANTIC_PAN_ITEMS[trialIndex] || {};
+  const category = getPanCategory(meta, selectedIndex);
+
+  return {
+    numero_item: meta.item ?? trial?.id ?? trialIndex + 1,
+    target_mostrado: meta.target || trial?.center || "",
+    opcion_seleccionada: optionLetter(selectedIndex),
+    imagen_seleccionada: trial?.options?.[selectedIndex] || "",
+    categoria_opcion_seleccionada: category,
+    puntaje: category === "respuesta correcta" ? 1 : 0,
+    conteo_respuesta_correcta: category === "respuesta correcta" ? 1 : 0,
+    conteo_distractor_semantico_cercano: category === "distractor semantico cercano" ? 1 : 0,
+    conteo_distractor_semantico_lejano: category === "distractor semantico lejano" ? 1 : 0,
+    conteo_distractor_no_relacionado: category === "distractor no relacionado" ? 1 : 0
+  };
 }
 
 //test 3 Revisar

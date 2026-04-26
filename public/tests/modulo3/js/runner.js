@@ -6,6 +6,7 @@ const test = MODULO3.tests.find((item) => item.id === partId) || null;
 const test1Section = document.getElementById("part-1-test-1");
 const test2Section = document.getElementById("part-1-test-2");
 const test13Section = document.getElementById("part-3-test-1");
+const topBar = document.getElementById("topBar");
 
 if (test1Section) {
   test1Section.style.display = "none";
@@ -20,7 +21,19 @@ if (test13Section) {
 }
 
 if (test?.id === 1) {
-  setupPart1Test1(test);
+  setupPart1Test1(test, () => {
+    const integratedTest = MODULO3.tests.find((item) => item.id === 2);
+    if (test1Section) {
+      test1Section.style.display = "none";
+    }
+
+    if (integratedTest) {
+      setupPart1Test2(integratedTest, closeCurrentWindow);
+      return;
+    }
+
+    closeCurrentWindow();
+  });
 }
 
 if (test?.id === 2) {
@@ -31,7 +44,7 @@ if (test?.id === 13) {
   setupPart3Unified(test);
 }
 
-function setupPart1Test1(testConfig) {
+function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
   const section = document.getElementById("part-1-test-1");
   const instructionView = document.getElementById("p1t1-screen-instruction");
   const wordView = document.getElementById("p1t1-screen-word");
@@ -61,6 +74,8 @@ function setupPart1Test1(testConfig) {
   let mediaStream = null;
   let mediaRecorder = null;
 
+  const sectionCounters = buildSectionCounters(screens);
+
   nextBtn.addEventListener("click", async () => {
     if (nextBtn.style.display === "none") {
       return;
@@ -75,7 +90,7 @@ function setupPart1Test1(testConfig) {
       return;
     }
 
-    closeCurrentWindow();
+    onComplete();
   });
 
   fullscreenBtn.addEventListener("click", async () => {
@@ -136,6 +151,7 @@ function setupPart1Test1(testConfig) {
     }
 
     if (screen.kind === "instruction") {
+      setScreenCounter("");
       instructionView.classList.add("is-active");
       instructionText.textContent = screen.text || "";
       centerAudio.style.display = "inline-block";
@@ -144,12 +160,14 @@ function setupPart1Test1(testConfig) {
     }
 
     if (screen.kind === "label") {
+      setScreenCounter("");
       wordView.classList.add("is-active");
       wordLabel.textContent = screen.text || screen.label || "";
       return;
     }
 
     if (screen.kind === "record") {
+      setScreenCounter(sectionCounters[currentScreenIndex] || "");
       recordView.classList.add("is-active");
       recordTitle.textContent = screen.title || screen.label || "";
       audioBtn.style.display = "block";
@@ -211,7 +229,7 @@ function setupPart1Test1(testConfig) {
   }
 }
 
-function setupPart1Test2(testConfig) {
+function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   const section = document.getElementById("part-1-test-2");
   const titleView = document.getElementById("p1t2-screen-title");
   const audioView = document.getElementById("p1t2-screen-audios");
@@ -235,6 +253,7 @@ function setupPart1Test2(testConfig) {
   let firstRecordingActive = false;
   let secondRecordingActive = false;
   let endCountdownTimer = null;
+  const sectionCounters = buildSectionCounters(screens);
 
   nextBtn.addEventListener("click", async () => {
     if (nextBtn.style.display === "none") {
@@ -256,7 +275,7 @@ function setupPart1Test2(testConfig) {
       return;
     }
 
-    closeCurrentWindow();
+    onComplete();
   });
 
   audio1Btn.addEventListener("click", async () => {
@@ -322,6 +341,7 @@ function setupPart1Test2(testConfig) {
     }
 
     if (screen.kind === "title") {
+      setScreenCounter("");
       titleView.classList.add("is-active");
       titleLabel.textContent = screen.title || "";
       status.textContent = "";
@@ -329,6 +349,7 @@ function setupPart1Test2(testConfig) {
     }
 
     if (screen.kind === "dual_audio_record") {
+      setScreenCounter(sectionCounters[currentScreenIndex] || "E 1/1");
       audioView.classList.add("is-active");
       status.textContent = "Reproduce el primer audio. La grabacion iniciara automaticamente 2-3 segundos antes del final.";
       showNext(nextBtn, false);
@@ -413,6 +434,7 @@ function setupPart3Unified(testConfig) {
   let autoStartTimer = null;
   let finalStopTimer = null;
   let firstStoryAudioDone = false;
+  const sectionCounters = buildPart3Counters(screens);
 
   nextBtn.addEventListener("click", async () => {
     if (nextBtn.style.display === "none") {
@@ -510,8 +532,11 @@ function setupPart3Unified(testConfig) {
     }
 
     if (!screen) {
+      setScreenCounter("");
       return;
     }
+
+    setScreenCounter(sectionCounters[currentScreenIndex] || "");
 
     if (screen.kind === "image_single_audio_record") {
       imageAudioView.classList.add("is-active");
@@ -591,6 +616,73 @@ function showNext(buttonEl, visible) {
   }
 
   buttonEl.style.display = visible ? "block" : "none";
+}
+
+function setScreenCounter(value) {
+  if (!topBar) {
+    return;
+  }
+
+  topBar.textContent = value || "";
+  topBar.style.display = value ? "block" : "none";
+}
+
+function normalizeSectionLabel(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function buildSectionCounters(screens) {
+  const groups = new Map();
+
+  screens.forEach((screen, index) => {
+    if (screen.kind !== "record" && screen.kind !== "dual_audio_record") {
+      return;
+    }
+
+    const key = normalizeSectionLabel(screen.label || screen.title || screen.text || screen.kind);
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key).push(index);
+  });
+
+  const counters = {};
+  groups.forEach((indexes) => {
+    indexes.forEach((screenIndex, itemIndex) => {
+      counters[screenIndex] = `E ${itemIndex + 1}/${indexes.length}`;
+    });
+  });
+
+  return counters;
+}
+
+function buildPart3Counters(screens) {
+  const counters = {};
+  const storyIndexes = [];
+
+  screens.forEach((screen, index) => {
+    if (screen.kind === "story_image") {
+      storyIndexes.push(index);
+      return;
+    }
+
+    if (
+      screen.kind === "image_single_audio_record" ||
+      screen.kind === "story_intro" ||
+      screen.kind === "final_record"
+    ) {
+      counters[index] = "E 1/1";
+    }
+  });
+
+  storyIndexes.forEach((screenIndex, itemIndex) => {
+    counters[screenIndex] = `E ${itemIndex + 1}/${storyIndexes.length}`;
+  });
+
+  return counters;
 }
 
 function closeCurrentWindow() {
