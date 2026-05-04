@@ -15,15 +15,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-    $this->call(RoleSeeder::class);
-
-
-
+        $this->call(RoleSeeder::class);
         $this->call(TipoTestTableSeeder::class);
         $this->call(TestTableSeeder::class);
-        $this->call(Modulo3SystemTestSeeder::class);
+        $this->call(Modulo3PartSeeder::class);
+        $this->call(Modulo3SubtestSeeder::class);
         $this->call(UserSeeder::class);
-
-
     }
 }
