@@ -1,126 +1,175 @@
-# RESULTADOS CORRECTOS — TEST PAN
+# ESPECIFICACIÓN FUNCIONAL OFICIAL — PARTE 29: COMPRENSIÓN ORAL DE PÁRRAFOS
 
-## Estructura de evaluación
-Cada ítem contiene:
+Usar este archivo como regla oficial para extracción de datos, puntuación, exportación Excel y descarga ZIP.
 
-- Respuesta correcta
-- Distractor semántico cercano
-- Distractor semántico lejano
-- Distractor no relacionado
-- Target
+No modificar interfaz visual, audios, textos ni navegación existente del test.
 
 ---
 
-| Ítem | Respuesta correcta | Distractor semántico cercano | Distractor semántico lejano | Distractor no relacionado | Target |
-|------|--------------------|------------------------------|-----------------------------|---------------------------|--------|
-| Ej.  | plátano [PAN01]    | manzana                      | helado                      | sobre                     | mono   |
-| 1    | boca               | ojo                          | nariz                       | caracol                   | silbato [PAN02] |
-| 2    | guante             | calcetín [PAN03]            | gorro                       | araña                     | mano |
-| 3    | vela               | bombilla [PAN04]            | estrella                    | radio                     | cerillas [PAN05] |
-| 4    | cama               | hamaca                       | silla                       | tijeras                   | almohada |
-| 5    | pirámide           | iglú                         | cabaña [PAN06]             | tren                      | egipcio |
-| 6    | brazo              | pierna                       | barbilla [PAN07]           | canguro                   | reloj |
-| 7    | iglesia            | fábrica                      | ciudad                      | bota                      | monja |
-| 8    | hoguera            | antorcha                     | cohete                      | escoba                    | tienda [PAN08] |
-| 9    | vaso               | jarra [PAN09]               | sartén [PAN10]             | colgador [PAN11]         | botella |
-| 10   | regadera           | cubo [PAN12]                | rastrillo                   | alicate                   | flor |
+## Nombre del test
+
+Parte 29 — Comprensión oral de párrafos
 
 ---
 
-## Puntajes máximos por categoría
+## Estructura del test
 
-- Distractor semántico cercano: /10
-- Distractor semántico lejano: /10
-- Distractor no relacionado: /10
-- Target: /10
+El test contiene 2 historias orales.
 
----
+Cada historia tiene 4 preguntas de respuesta:
 
-## Equivalencias de palabras aceptadas
+- Sí
+- No
 
-- [PAN01] banana
-- [PAN02] pito
-- [PAN03] media
-- [PAN04] bombillo, ampolleta
-- [PAN05] cerillo, fósforos
-- [PAN06] choza
-- [PAN07] mentón
-- [PAN08] fogata
-- [PAN09] carpa
-- [PAN10] jarro, jarrón
-- [PAN11] paila
-- [PAN12] gancho
-- [PAN13] balde
+Solo se puntúan 2 respuestas correctas por historia.
 
-## Assets de imágenes
+Puntaje máximo total:
 
-Las imágenes del test están en:
-
-`public/tests/modulo2/semantic/part2`
-
-Formato de nombres:
-
-- Opciones: `t[numero]_[letra].png`
-  - Ejemplo: `t1_a.png`, `t1_b.png`, `t2_a.png`
-- Target central: `t[numero]_center.png`
-  - Ejemplo: `t1_center.png`
+`/4`
 
 ---
 
-## Clave de respuestas por opción
+## Historia 1
 
-| Ítem | Correcta | Distractor semántico cercano | Distractor semántico lejano | Distractor no relacionado |
-|------|----------|------------------------------|-----------------------------|---------------------------|
-| Ejemplo | B | C | A | opción sobrante |
-| 1 | D | B | A | opción sobrante |
-| 2 | B | D | A | opción sobrante |
-| 3 | C | A | B | opción sobrante |
-| 4 | A | B | D | opción sobrante |
-| 5 | B | D | C | opción sobrante |
-| 6 | C | B | D | opción sobrante |
-| 7 | A | D | C | opción sobrante |
-| 8 | D | C | B | opción sobrante |
-| 9 | A | C | D | opción sobrante |
-| 10 | D | B | C | opción sobrante |
+### Texto de referencia
+
+Sandra y Pablo habían estado en el tren por más de 3 horas. Estaban cansados y aburridos. El tren ya llegaba 45 minutos tarde, el restaurante había cerrado así que no había comida, y la mujer de enfrente estaba roncando.
+
+### Preguntas y respuestas correctas
+
+| Historia | Pregunta | Respuesta correcta | Puntúa |
+|----------|----------|--------------------|--------|
+| 1 | ¿Viajaban Sandra y Pablo en coche? | No | Sí |
+| 1 | ¿Llegaban tarde? | Sí | Sí |
+| 1 | ¿Viajaban en tren? | Sí | No |
+| 1 | ¿Llegaban temprano? | No | No |
+
+Puntaje máximo historia 1:
+
+`/2`
 
 ---
 
-## Regla para distractor no relacionado
+## Historia 2
 
-El distractor no relacionado corresponde a la opción que no está asignada como:
+### Texto de referencia
 
+La explosión en el centro de Santiago, causó conmoción. Inicialmente se sospechó de un ataque terrorista pero resultó no ser una bomba. Se debió a una explosión de gas que se desencadenó cuando alguien tiró un cigarro encendido. La explosión se pudo oír a 5 kilómetros y los daños materiales fueron cuantiosos.
+
+### Preguntas y respuestas correctas
+
+| Historia | Pregunta | Respuesta correcta | Puntúa |
+|----------|----------|--------------------|--------|
+| 2 | ¿Fue la explosión en Córdoba? | No | Sí |
+| 2 | ¿Fue causada por una bomba? | No | Sí |
+| 2 | ¿Fue en Santiago? | Sí | No |
+| 2 | ¿Causó el escape de gas la explosión? | Sí | No |
+
+Puntaje máximo historia 2:
+
+`/2`
+
+---
+
+## Equivalencias aceptadas
+
+- [PAN01] coche = carro, auto
+
+---
+
+## Regla oficial de puntuación
+
+Cada historia tiene 4 preguntas, pero solo 2 preguntas puntúan.
+
+Asignar:
+
+- 1 punto por cada respuesta correcta marcada como `Puntúa = Sí`
+- 0 puntos por respuesta incorrecta
+- Las preguntas marcadas como `Puntúa = No` deben registrarse en el Excel, pero no suman al puntaje final
+
+Puntajes esperados:
+
+- Historia 1: máximo /2
+- Historia 2: máximo /2
+- Total general: máximo /4
+
+---
+
+## Datos que deben registrarse por pregunta
+
+Codex debe registrar internamente:
+
+- storyNumber
+- questionNumber
+- questionText
+- selectedAnswer
+- correctAnswer
+- isCorrect
+- countsForScore
+- assignedScore
+
+---
+
+## Mano utilizada
+
+Registrar la mano utilizada por el usuario.
+
+IMPORTANTE:
+
+- `selectHand`, `handSelection` o la variable equivalente debe agregarse solo una vez en el Excel.
+- No repetir la mano en cada fila si el patrón del proyecto permite dejarla como dato general al final.
+
+---
+
+## Archivo Excel obligatorio
+
+Al finalizar el test debe generarse un archivo `.xlsx` con hoja:
+
+`RESULTADOS_COMP_ORAL_PARRAFOS`
+
+Cada fila debe contener:
+
+- historia
+- número de pregunta
+- pregunta
+- respuesta seleccionada
 - respuesta correcta
-- distractor semántico cercano
-- distractor semántico lejano
+- correcto/incorrecto
+- puntúa
+- puntaje obtenido
 
-Por lo tanto, Codex debe calcular automáticamente la opción sobrante entre A, B, C y D.
+Al final del Excel agregar:
+
+- puntaje historia 1 sobre 2
+- puntaje historia 2 sobre 2
+- total correcto sobre 4
+- mano utilizada
 
 ---
 
-## Exportación de resultados
+## Archivo ZIP final
 
-Al finalizar el test, se debe generar:
+Al finalizar el test debe generarse y descargarse automáticamente un archivo `.zip` que incluya:
 
-1. Un archivo Excel con los resultados.
-2. Un archivo ZIP que incluya el archivo Excel y los archivos asociados al test.
+- el archivo Excel de resultados
+- cualquier otro archivo de salida que el test ya genere actualmente
 
-El Excel debe registrar, por cada ítem:
+---
 
-- número de ítem
-- opción seleccionada por el usuario
-- categoría de la opción seleccionada:
-  - respuesta correcta
-  - distractor semántico cercano
-  - distractor semántico lejano
-  - distractor no relacionado
-- target mostrado
-- imagen seleccionada
-- puntaje correspondiente
+## Restricciones
 
-También debe incluir los totales finales:
+Codex NO debe:
 
-- total de respuestas correctas `/10`
-- total de distractores semánticos cercanos `/10`
-- total de distractores semánticos lejanos `/10`
-- total de distractores no relacionados `/10`
-- total de target `/10`, si aplica en la lógica actual del test
+- reconstruir el test
+- cambiar textos
+- cambiar audios
+- modificar la navegación
+- alterar el diseño visual
+
+Codex SOLO debe implementar o ajustar:
+
+- registro de respuestas Sí/No
+- comparación con esta hoja oficial
+- cálculo de puntajes
+- generación del Excel
+- descarga del ZIP final

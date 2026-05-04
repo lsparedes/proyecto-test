@@ -9,10 +9,21 @@ export class VideoRecorder {
 
   async startStream(videoEl) {
     if (!this.stream) {
-      this.stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: true
-      });
+      try {
+        this.stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+          audio: true
+        });
+      } catch (error) {
+        if (error?.name !== "NotFoundError" && error?.name !== "OverconstrainedError") {
+          throw error;
+        }
+
+        this.stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user" },
+          audio: false
+        });
+      }
     }
     if (videoEl) videoEl.srcObject = this.stream;
     return this.stream;

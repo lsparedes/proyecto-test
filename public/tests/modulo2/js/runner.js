@@ -5,7 +5,7 @@ import { WavRecorder } from "./audio_recorder_wav.js";
 import { saveAudioBlob } from "./audio_store_idb.js";
 import { VideoRecorder } from "./video_recorder.js";
 import { saveBlob } from "./blob_store_idb.js";
-import { exportSemanticPanZip } from "./export.js";
+import { exportSemanticPanZip, exportVerbalFluencyAudioZip, exportShortTermMemoryZip, exportPantomimeZip, exportCalculationZip, exportWrittenPhonologicalZip, exportOrationalPart9Zip, exportOrationalPart10Zip, exportOralParagraphsZip, exportRepeatAudioZip, exportWritingImagesZip, exportImageAssetsZip, exportLineBisectionZip } from "./export.js";
 
 const topBar = document.getElementById("topBar");
 const btnNext = document.getElementById("btnNext");
@@ -236,6 +236,7 @@ if (!part) throw new Error("Parte no encontrada");
 const step = part.steps?.[0];
 if (!step) throw new Error("Parte sin steps");
 let handScreenBound = false;
+const ZIP_DOWNLOAD_CLOSE_DELAY_MS = 3000;
 
 function requiresHandSelection(currentStep) {
   return HAND_SELECTION_STEP_TYPES.has(currentStep?.type);
@@ -320,10 +321,158 @@ function showHandSelectionScreen() {
       setPartData(partId, { ...data, usedHand });
       setPartProgress(partId, { usedHand });
 
+      if (partId === 1) {
+        const currentData = getPartData(partId);
+        setPartData(partId, {
+          ...currentData,
+          usedHand
+        });
+
+        const exported = await exportLineBisectionZip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+        clearPartData(partId);
+      }
+
+      if (partId === 4) {
+        const currentData = getPartData(partId);
+        const shortTermMemoryResponses = (currentData.shortTermMemoryResponses || []).map((response) => ({
+          ...response,
+          mano_usada: usedHand
+        }));
+
+        setPartData(partId, {
+          ...currentData,
+          usedHand,
+          shortTermMemoryResponses
+        });
+
+        const exported = await exportShortTermMemoryZip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
       if (partId === 2) {
         const exported = await exportSemanticPanZip(usedHand);
         if (exported) {
-          await wait(2500);
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 6) {
+        const currentData = getPartData(partId);
+        const calculationResponses = (currentData.calculationResponses || []).map((response) => ({
+          ...response,
+          mano_seleccionada: usedHand
+        }));
+
+        setPartData(partId, {
+          ...currentData,
+          usedHand,
+          calculationResponses
+        });
+
+        const exported = await exportCalculationZip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 8) {
+        const currentData = getPartData(partId);
+        const writtenPhonologicalResponses = (currentData.writtenPhonologicalResponses || []).map((response) => ({
+          ...response,
+          usedHand
+        }));
+
+        setPartData(partId, {
+          ...currentData,
+          usedHand,
+          writtenPhonologicalResponses
+        });
+
+        const exported = await exportWrittenPhonologicalZip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 9) {
+        const currentData = getPartData(partId);
+        const orationalPart9Responses = (currentData.orationalPart9Responses || []).map((response) => ({
+          ...response,
+          usedHand
+        }));
+
+        setPartData(partId, {
+          ...currentData,
+          usedHand,
+          orationalPart9Responses
+        });
+
+        const exported = await exportOrationalPart9Zip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 10) {
+        const currentData = getPartData(partId);
+        const orationalPart10Responses = (currentData.orationalPart10Responses || []).map((response) => ({
+          ...response,
+          usedHand
+        }));
+
+        setPartData(partId, {
+          ...currentData,
+          usedHand,
+          orationalPart10Responses
+        });
+
+        const exported = await exportOrationalPart10Zip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 11) {
+        const currentData = getPartData(partId);
+        setPartData(partId, {
+          ...currentData,
+          usedHand
+        });
+
+        const exported = await exportOralParagraphsZip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 12) {
+        const currentData = getPartData(partId);
+        setPartData(partId, {
+          ...currentData,
+          usedHand
+        });
+
+        const exported = await exportRepeatAudioZip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 13) {
+        const currentData = getPartData(partId);
+        setPartData(partId, {
+          ...currentData,
+          usedHand
+        });
+
+        const exported = await exportRepeatAudioZip(usedHand, 13, 31, "Repeticion_de_palabras_complejas");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
         }
       }
 
@@ -586,6 +735,147 @@ function buildSemanticPanResult(trial, trialIndex, selectedIndex) {
   };
 }
 
+const SHORT_TERM_MEMORY_ANSWER_KEY = {
+  1: 3,
+  2: 1,
+  3: 2,
+  4: 1,
+  5: 2,
+  6: 3,
+  7: 1,
+  8: 0,
+  9: 0,
+  10: 2,
+  11: 3
+};
+
+const CALCULATION_OPERATIONS = [
+  "9 + 6",
+  "7 - 4",
+  "8 x 7",
+  "14 + 18",
+  "34 - 15",
+  "147 + 58"
+];
+
+const WRITTEN_PHONOLOGICAL_ITEMS = {
+  1: { itemNumber: "Ej.", targetWord: "piña", correct: "piña", phonological: "viña", features: "2rd", position: "I", semantic: "pera", unrelated: "uva" },
+  2: { itemNumber: 1, targetWord: "dedal", correct: "dedal", phonological: "pedal", features: "2rd", position: "I", semantic: "aguja", unrelated: "rueda" },
+  3: { itemNumber: 2, targetWord: "sable", correct: "sable", phonological: "cable", features: "2rd", position: "I", semantic: "cuchillo", unrelated: "cuerda" },
+  4: { itemNumber: 3, targetWord: "mesa", correct: "mesa", phonological: "pesa", features: "2rd", position: "I", semantic: "taburete", unrelated: "pelota" },
+  5: { itemNumber: 4, targetWord: "carta", correct: "carta", aliases: { carta: ["carte"] }, phonological: "carpa", features: "1rd", position: "M", semantic: "dado", unrelated: "iglú" },
+  6: { itemNumber: 5, targetWord: "cocina", correct: "cocina", phonological: "bocina", features: "2rd", position: "I", semantic: "sopa", unrelated: "campana" },
+  7: { itemNumber: 6, targetWord: "espina", correct: "espina", phonological: "espiga", features: "2rd", position: "M", semantic: "aguja", unrelated: "flor" },
+  8: { itemNumber: 7, targetWord: "vela", correct: "vela", phonological: "tela", features: "2rd", position: "I", semantic: "bombilla", unrelated: "ovillo" },
+  9: { itemNumber: 8, targetWord: "rama", correct: "rama", phonological: "llama", features: "2rd", position: "I", semantic: "hoja", unrelated: "caballo" },
+  10: { itemNumber: 9, targetWord: "toro", correct: "toro", phonological: "coro", features: "1rd", position: "I", semantic: "vaca", unrelated: "guitarra" },
+  11: { itemNumber: 10, targetWord: "hueso", correct: "hueso", phonological: "huevo", features: "1rd", position: "M", semantic: "espina", unrelated: "pollito", aliases: { pollito: ["pollo"] } },
+  12: { itemNumber: 11, targetWord: "lima", correct: "lima", phonological: "liga", features: "2rd", position: "M", semantic: "cepillo", unrelated: "pie" },
+  13: { itemNumber: 12, targetWord: "pata", correct: "pata", phonological: "bata", features: "1rd", position: "I", semantic: "zapato", unrelated: "camisa" },
+  14: { itemNumber: 13, targetWord: "cama", correct: "cama", phonological: "cara", features: "2rd", position: "M", semantic: "hamaca", unrelated: "dedo" },
+  15: { itemNumber: 14, targetWord: "fuente", correct: "fuente", phonological: "puente", features: "2rd", position: "I", semantic: "grifo", unrelated: "escalera" },
+  16: { itemNumber: 15, targetWord: "barco", correct: "barco", phonological: "marco", features: "1rd", position: "I", semantic: "bote", unrelated: "pintura" }
+};
+
+const WRITTEN_PHONOLOGICAL_IMAGE_OPTIONS = {
+  1: ["1-viña.png", "1-pera.png", "1-uva.png", "1-piña.png"],
+  2: ["2-aguja.png", "2-rueda.png", "2-pedal.png", "2-dedal.png"],
+  3: ["3-sable.png", "3-cuchillo.png", "3-cuerda.png", "3-cable.png"],
+  4: ["4-taburete.png", "4-pesa.png", "4-mesa.png", "4-pelota.png"],
+  5: ["5-carte.png", "5-carpa.png", "5-iglu.png", "5-dado.png"],
+  6: ["6-campana.png", "6-bocina.png", "6-cocina.png", "6-sopa.png"],
+  7: ["7-flor.png", "7-aguja.png", "7-espina.png", "7-espiga.png"],
+  8: ["8-tela.png", "8-vela.png", "8-bombilla.png", "8-ovillo.png"],
+  9: ["9-hoja.png", "9-rama.png", "9-llama.png", "9-caballo.png"],
+  10: ["10-coro.png", "10-guitarra.png", "10-toro.png", "10-vaca.png"],
+  11: ["11-hueso.png", "11-pollo.png", "11-huevo.png", "11-espina.png"],
+  12: ["12-pie.png", "12-liga.png", "12-cepillo.png", "12-lima.png"],
+  13: ["13-camisa.png", "13-pata.png", "13-bata.png", "13-zapato.png"],
+  14: ["14-cama.png", "14-dedo.png", "14-cara.png", "14-hamaca.png"],
+  15: ["15-puente.png", "15-fuente.png", "15-escalera.png", "15-grifo.png"],
+  16: ["16-barco.png", "16-marco.png", "16-bote.png", "16-pintura.png"]
+};
+
+function normalizeResponseWord(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function wordFromSelectedImage(src) {
+  const filename = String(src || "").split(/[\\/]/).pop() || "";
+  return filename
+    .replace(/\.[^.]+$/, "")
+    .replace(/^\d+-/, "");
+}
+
+function writtenPhonologicalCategory(meta, selectedWord) {
+  const normalizedSelected = normalizeResponseWord(selectedWord);
+  const matches = (word) => {
+    if (normalizeResponseWord(word) === normalizedSelected) return true;
+    return (meta.aliases?.[word] || []).some((alias) => normalizeResponseWord(alias) === normalizedSelected);
+  };
+
+  if (matches(meta.correct)) return "correcta";
+  if (matches(meta.phonological)) return "distractor fonológico";
+  if (matches(meta.semantic)) return "distractor semántico";
+  if (matches(meta.unrelated)) return "distractor no relacionado";
+  return "";
+}
+
+const ORATIONAL_PART9_ITEMS = {
+  1: { itemNumber: "Ej.", sentenceType: "SN + SV (1)", correctLetter: "A", correctIndex: 0, correctSentence: "La mujer está sentada" },
+  2: { itemNumber: 1, sentenceType: "SN + SV (1)", correctLetter: "B", correctIndex: 1, correctSentence: "La mujer está bebiendo" },
+  3: { itemNumber: 2, sentenceType: "SN + SV (1)", correctLetter: "C", correctIndex: 2, correctSentence: "El hombre está andando" },
+  4: { itemNumber: 3, sentenceType: "SN + SV (1)", correctLetter: "C", correctIndex: 2, correctSentence: "Ella está sonriendo" },
+  5: { itemNumber: 4, sentenceType: "SN + SV + SN (2) I/A", correctLetter: "D", correctIndex: 3, correctSentence: "El hombre (se) está comiendo una manzana" },
+  6: { itemNumber: 5, sentenceType: "SN + SV + SN (2) I/A", correctLetter: "B", correctIndex: 1, correctSentence: "La mujer está pintando una valla" },
+  7: { itemNumber: 6, sentenceType: "SN + SV + SPrep (2) L", correctLetter: "A", correctIndex: 0, correctSentence: "El perro está sentado sobre la mesa" },
+  8: { itemNumber: 7, sentenceType: "SN + SV + SPrep (2) R", correctLetter: "B", correctIndex: 1, correctSentence: "La manzana está bajo el zapato" },
+  9: { itemNumber: 8, sentenceType: "SN + SV + SPrep (2) R/A", correctLetter: "B", correctIndex: 1, correctSentence: "El doctor llama al cocinero" },
+  10: { itemNumber: 9, sentenceType: "SN + SV + SPrep (2) R/A", correctLetter: "C", correctIndex: 2, correctSentence: "El cantante moja al doctor" },
+  11: { itemNumber: 10, sentenceType: "SN + SV + SPrep (2) R/P", correctLetter: "A", correctIndex: 0, correctSentence: "La bruja es dibujada por la bailarina" },
+  12: { itemNumber: 11, sentenceType: "SN + SV + SPrep (2) R/P", correctLetter: "D", correctIndex: 3, correctSentence: "El cocinero es perseguido por el doctor" },
+  13: { itemNumber: 12, sentenceType: "SN + SV + SPrep (2) R/A", correctLetter: "A", correctIndex: 0, correctSentence: "La bailarina dibuja a la bruja" },
+  14: { itemNumber: 13, sentenceType: "SN + (*SPrep) + SV + SAdj (2) R/S", correctLetter: "D", correctIndex: 3, correctSentence: "El zapato bajo el lápiz es amarillo" },
+  15: { itemNumber: 14, sentenceType: "SN + (*cláusula)+ SV + SAdj (2) R/S", correctLetter: "A", correctIndex: 0, correctSentence: "La alfombra en la que está el gato es roja" },
+  16: { itemNumber: 15, sentenceType: "SN + SV + SPrep (2) R", correctLetter: "C", correctIndex: 2, correctSentence: "El lápiz rojo está bajo el zapato" },
+  17: { itemNumber: 16, sentenceType: "SN + (*SPrep)+ SV + SAdj (2) R", correctLetter: "D", correctIndex: 3, correctSentence: "La flor en la taza es amarilla" }
+};
+
+const ORATIONAL_PART10_ITEMS = {
+  1: { itemNumber: "Ej.", sentenceType: "SN + SV (1)", correctLetter: "D", correctIndex: 3, correctSentence: "El hombre está sentado" },
+  2: { itemNumber: 1, sentenceType: "SN + SV (1)", correctLetter: "C", correctIndex: 2, correctSentence: "El hombre está bebiendo" },
+  3: { itemNumber: 2, sentenceType: "SN + SV (1)", correctLetter: "B", correctIndex: 1, correctSentence: "La mujer está andando" },
+  4: { itemNumber: 3, sentenceType: "SN + SV (1)", correctLetter: "D", correctIndex: 3, correctSentence: "Él está llorando" },
+  5: { itemNumber: 4, sentenceType: "SN + SV + SN (2) I/A", correctLetter: "B", correctIndex: 1, correctSentence: "La mujer (se) está comiendo un helado" },
+  6: { itemNumber: 5, sentenceType: "SN + SV + SN (2) I/A", correctLetter: "C", correctIndex: 2, correctSentence: "El hombre está pintando un cuadro" },
+  7: { itemNumber: 6, sentenceType: "SN + SV + SPrep (2) L", correctLetter: "D", correctIndex: 3, correctSentence: "El niño está sentado bajo la mesa" },
+  8: { itemNumber: 7, sentenceType: "SN + SV + SN (2) R", correctLetter: "A", correctIndex: 0, correctSentence: "El lápiz está bajo el papel" },
+  9: { itemNumber: 8, sentenceType: "SN + SV + SPrep (2) R/A", correctLetter: "A", correctIndex: 0, correctSentence: "El cocinero llama a el doctor" },
+  10: { itemNumber: 9, sentenceType: "SN + SV + SPrep (2) R/A", correctLetter: "D", correctIndex: 3, correctSentence: "El doctor empuja al cantante" },
+  11: { itemNumber: 10, sentenceType: "SN + SV + SPrep (2) R/P", correctLetter: "C", correctIndex: 2, correctSentence: "La bailarina es dibujada por la bruja" },
+  12: { itemNumber: 11, sentenceType: "SN + SV + SPrep (2) R/P", correctLetter: "C", correctIndex: 2, correctSentence: "El doctor es perseguido por el cocinero" },
+  13: { itemNumber: 12, sentenceType: "SN + SV + SPrep (2) R/A", correctLetter: "C", correctIndex: 2, correctSentence: "La bruja dibuja a la bailarina" },
+  14: { itemNumber: 13, sentenceType: "SN + (*SPrep)+ SV + SPrep (2) R/S", correctLetter: "D", correctIndex: 3, correctSentence: "El zapato bajo el lápiz es rojo" },
+  15: { itemNumber: 14, sentenceType: "SN + (*cláusula)+ SV + SAdj (2) R/S", correctLetter: "B", correctIndex: 1, correctSentence: "La alfombra en la que está el gato es verde" },
+  16: { itemNumber: 15, sentenceType: "SN + SV + SPrep (2) R", correctLetter: "A", correctIndex: 0, correctSentence: "El zapato amarillo está bajo el lápiz" },
+  17: { itemNumber: 16, sentenceType: "SN + (*SPrep)+ SV + SAdj (2) R", correctLetter: "B", correctIndex: 1, correctSentence: "La flor bajo la taza es roja" }
+};
+
+const ORAL_PARAGRAPHS_QUESTIONS = {
+  2: { storyNumber: 1, questionNumber: 1, questionText: "¿Viajaban Sandra y Pablo en coche?", correctAnswer: "No", countsForScore: true },
+  3: { storyNumber: 1, questionNumber: 2, questionText: "¿Llegaban tarde?", correctAnswer: "Sí", countsForScore: true },
+  4: { storyNumber: 1, questionNumber: 3, questionText: "¿Viajaban en tren?", correctAnswer: "Sí", countsForScore: false },
+  5: { storyNumber: 1, questionNumber: 4, questionText: "¿Llegaban temprano?", correctAnswer: "No", countsForScore: false },
+  7: { storyNumber: 2, questionNumber: 1, questionText: "¿Fue la explosión en Córdoba?", correctAnswer: "No", countsForScore: true },
+  8: { storyNumber: 2, questionNumber: 2, questionText: "¿Fue causada por una bomba?", correctAnswer: "No", countsForScore: true },
+  9: { storyNumber: 2, questionNumber: 3, questionText: "¿Fue en Santiago?", correctAnswer: "Sí", countsForScore: false },
+  10: { storyNumber: 2, questionNumber: 4, questionText: "¿Causó el escape de gas la explosión?", correctAnswer: "Sí", countsForScore: false }
+};
+
 //test 3 Revisar
 
 function runVerbalFluency(step) {
@@ -606,6 +896,7 @@ function runVerbalFluency(step) {
   let timer = null;
   let promptLeadTimer = null;
   let nextRedTimer = null;
+  let minuteElapsed = false;
   let promptFinished = false;
 
   const duration = step.recordDurationMs || 60000;
@@ -695,11 +986,13 @@ function runVerbalFluency(step) {
     await ensurePrepared();
     recorder.beginCapture();
     isCapturing = true;
+    minuteElapsed = false;
     nextRedTimer = setTimeout(() => {
-      btnNext.style.filter = "invert(17%) sepia(86%) saturate(7471%) hue-rotate(355deg) brightness(92%) contrast(122%)";
-    }, 60000);
+      markNextButtonAsReady();
+    }, duration);
 
     timer = setTimeout(async () => {
+      markNextButtonAsReady();
       await stopAndSave();
       setStoppedState();
     }, duration);
@@ -717,6 +1010,17 @@ function runVerbalFluency(step) {
     if (blob) {
       const key = `part03_screen${index + 1}.wav`;
       await saveAudioBlob(key, blob);
+
+      const data = getPartData(partId);
+      const verbalFluencyAudios = data.verbalFluencyAudios || {};
+      const screen = screens[index] || {};
+      verbalFluencyAudios[String(index)] = {
+        key,
+        screenIndex: index,
+        label: screen.text || screen.topBar || `pantalla_${index + 1}`,
+        type: screen.type || "",
+      };
+      setPartData(partId, { verbalFluencyAudios });
     }
   }
 
@@ -736,6 +1040,12 @@ function runVerbalFluency(step) {
   function resetNextButtonState() {
     btnNext.style.display = "block";
     btnNext.style.filter = "none";
+  }
+
+  function markNextButtonAsReady() {
+    minuteElapsed = true;
+    btnNext.style.display = "block";
+    btnNext.style.filter = "invert(17%) sepia(86%) saturate(7471%) hue-rotate(355deg) brightness(92%) contrast(122%)";
   }
 
   function setPromptState() {
@@ -767,6 +1077,11 @@ function runVerbalFluency(step) {
       recordingIcon.style.display = "none";
     }
     btnNext.style.display = "block";
+    if (minuteElapsed) {
+      markNextButtonAsReady();
+    } else {
+      btnNext.style.filter = "none";
+    }
   }
 
   function scheduleLeadRecording() {
@@ -867,7 +1182,10 @@ function runVerbalFluency(step) {
     index++;
     if (index >= screens.length) {
       await recorder.close();
-      finishCurrentPart();
+      await exportVerbalFluencyAudioZip();
+      setTimeout(() => {
+        finishCurrentPart();
+      }, ZIP_DOWNLOAD_CLOSE_DELAY_MS);
       return;
     }
     render();
@@ -925,29 +1243,29 @@ function runMCQ4ImageTrials(step) {
   // En este test NO hay imagen central. Ocultamos el centro:
   centerBox.style.display = "none";
 
-  optBoxes[0].style.left = "18vw";
-  optBoxes[0].style.top = "18vh";
-  optBoxes[0].style.right = "auto";
-  optBoxes[0].style.bottom = "auto";
+  const optionPositions = [
+    { left: "32%", top: "34%" },
+    { left: "68%", top: "34%" },
+    { left: "32%", top: "66%" },
+    { left: "68%", top: "66%" },
+  ];
 
-  optBoxes[1].style.right = "18vw";
-  optBoxes[1].style.top = "18vh";
-  optBoxes[1].style.left = "auto";
-  optBoxes[1].style.bottom = "auto";
-
-  optBoxes[2].style.left = "18vw";
-  optBoxes[2].style.bottom = "18vh";
-  optBoxes[2].style.right = "auto";
-  optBoxes[2].style.top = "auto";
-
-  optBoxes[3].style.right = "18vw";
-  optBoxes[3].style.bottom = "18vh";
-  optBoxes[3].style.left = "auto";
-  optBoxes[3].style.top = "auto";
+  optBoxes.forEach((box, boxIndex) => {
+    box.style.left = optionPositions[boxIndex].left;
+    box.style.top = optionPositions[boxIndex].top;
+    box.style.right = "auto";
+    box.style.bottom = "auto";
+    box.style.transform = "translate(-50%, -50%)";
+    box.style.width = "min(34vw, 360px)";
+    box.style.height = "min(28vh, 260px)";
+  });
 
   optImgs.forEach((imgEl) => {
-    imgEl.style.maxWidth = "360px";
-    imgEl.style.maxHeight = "300px";
+    imgEl.style.width = "100%";
+    imgEl.style.height = "100%";
+    imgEl.style.maxWidth = "100%";
+    imgEl.style.maxHeight = "100%";
+    imgEl.style.objectFit = "contain";
   });
 
   // Fullscreen disponible siempre
@@ -984,6 +1302,29 @@ function runMCQ4ImageTrials(step) {
 
   function fileFor(t, o) {
     return `${basePath}/${pattern.replace("{t}", String(t)).replace("{o}", String(o))}`;
+  }
+
+  function buildShortTermMemoryResult(currentTrialIndex, currentSelectedIndex) {
+    const correctIndex = SHORT_TERM_MEMORY_ANSWER_KEY[currentTrialIndex];
+    const isPractice = currentTrialIndex === practiceIndex;
+    const selectedOptionNumber = currentSelectedIndex + 1;
+    const correctOptionNumber = Number.isFinite(correctIndex) ? correctIndex + 1 : null;
+    const selectedImage = fileFor(currentTrialIndex, selectedOptionNumber);
+    const correctImage = correctOptionNumber ? fileFor(currentTrialIndex, correctOptionNumber) : "";
+    const isCorrect = currentSelectedIndex === correctIndex;
+
+    return {
+      numero_item: isPractice ? "Ej." : currentTrialIndex - practiceIndex,
+      pantalla: currentTrialIndex,
+      opcion_seleccionada: selectedOptionNumber,
+      imagen_seleccionada: selectedImage,
+      opcion_correcta: correctOptionNumber,
+      imagen_correcta: correctImage,
+      es_correcta: isCorrect,
+      puntaje: isPractice ? 0 : (isCorrect ? 1 : 0),
+      es_ejemplo: isPractice,
+      mano_usada: getPartData(partId).usedHand || ""
+    };
   }
 
   function clearSelection() {
@@ -1078,8 +1419,25 @@ function runMCQ4ImageTrials(step) {
 
     const data = getPartData(partId);
     const responses = data.responses || {};
-    responses[String(trialIndex)] = { selected: selectedIndex };
-    setPartData(partId, { responses });
+    const shortTermMemoryResponses = (data.shortTermMemoryResponses || [])
+      .filter((response) => Number(response.pantalla) !== trialIndex);
+    const result = buildShortTermMemoryResult(trialIndex, selectedIndex);
+
+    responses[String(trialIndex)] = {
+      selected: selectedIndex,
+      selectedOption: result.opcion_seleccionada,
+      selectedImage: result.imagen_seleccionada,
+      correctOption: result.opcion_correcta,
+      correctImage: result.imagen_correcta,
+      isCorrect: result.es_correcta,
+      score: result.puntaje,
+      isPractice: result.es_ejemplo
+    };
+
+    shortTermMemoryResponses.push(result);
+    shortTermMemoryResponses.sort((a, b) => Number(a.pantalla) - Number(b.pantalla));
+
+    setPartData(partId, { responses, shortTermMemoryResponses });
 
     trialIndex++;
     if (trialIndex > total) {
@@ -1112,6 +1470,7 @@ function runVideoRecordTrials(step) {
   const vBtnRec = document.getElementById("vBtnRec");
   const vBtnStop = document.getElementById("vBtnStop");
   const vBtnRecording = document.getElementById("vBtnRecording");
+  const vrControls = document.getElementById("vrControls");
 
   const images = step.images || [];
   const practiceCount = Number(step.practiceCount ?? 1); // prueba
@@ -1157,8 +1516,10 @@ function runVideoRecordTrials(step) {
   let isRecording = false;
   let didRecordThisScreen = false;
   let audioPlayed = false;
+  let noCameraMode = false;
 
   function setIdleUI() {
+    if (vrControls) vrControls.style.display = "none";
     vBtnRec.style.display = "none";
     vBtnStop.style.display = "none";
     vBtnRecording.style.display = "none";
@@ -1166,6 +1527,7 @@ function runVideoRecordTrials(step) {
   }
 
   function setRecordingUI() {
+    if (vrControls) vrControls.style.display = "flex";
     vBtnRec.style.display = "none";
     vBtnStop.style.display = "block";
     vBtnRecording.style.display = "block";
@@ -1176,7 +1538,61 @@ function runVideoRecordTrials(step) {
     await recorder.startStream(el);
   }
 
+  function showVideoDeviceError(error) {
+    console.error("No se pudo acceder a la camara para Pantomima:", error);
+
+    let message = "No se pudo acceder a la camara.";
+    if (error?.name === "NotFoundError") {
+      message = "No se encontro una camara disponible para realizar Pantomima.";
+    } else if (error?.name === "NotAllowedError") {
+      message = "El navegador bloqueo el permiso de camara. Debes permitirlo para realizar Pantomima.";
+    } else if (error?.name === "NotReadableError") {
+      message = "La camara esta siendo usada por otra aplicacion o no se puede leer.";
+    } else if (error?.message) {
+      message = `No se pudo acceder a la camara: ${error.message}`;
+    }
+
+    alert(message);
+  }
+
+  function enableNoCameraMode(error) {
+    noCameraMode = true;
+    recorder.stopStream();
+    setIdleUI();
+    btnNext.style.display = "block";
+
+    if (vrPreview) {
+      vrPreview.removeAttribute("src");
+      vrPreview.srcObject = null;
+      vrPreview.poster = "";
+      vrPreview.style.background = "#111";
+    }
+
+    showVideoDeviceError(error);
+  }
+
+  function saveNoCameraTake() {
+    const data = getPartData(partId);
+    const takes = data.takes || {};
+    const stimIndex = screenIndex;
+    const imageName = images[screenIndex - 1] || null;
+    takes[String(stimIndex)] = {
+      key: null,
+      image: imageName,
+      sin_camara: true
+    };
+    setPartData(partId, { takes, sin_camara: true });
+    didRecordThisScreen = true;
+  }
+
   async function startRecording() {
+    if (noCameraMode) {
+      didRecordThisScreen = false;
+      btnNext.style.display = "none";
+      setRecordingUI();
+      return;
+    }
+
     await startStreamTo(vrPreview);
     await recorder.startRecording();
     didRecordThisScreen = false;
@@ -1184,6 +1600,13 @@ function runVideoRecordTrials(step) {
   }
 
   async function stopRecordingAndSave() {
+    if (noCameraMode) {
+      saveNoCameraTake();
+      setIdleUI();
+      btnNext.style.display = "block";
+      return;
+    }
+
     if (!isRecording) return;
 
     setIdleUI();
@@ -1255,7 +1678,11 @@ function runVideoRecordTrials(step) {
       btnAudio.style.display = "none";
       setIdleUI();
       btnNext.style.display = "block";
-      await startStreamTo(vrPreview);
+      try {
+        await startStreamTo(vrPreview);
+      } catch (error) {
+        enableNoCameraMode(error);
+      }
       return;
     }
 
@@ -1296,9 +1723,7 @@ function runVideoRecordTrials(step) {
       try {
         await startRecording();
       } catch (e) {
-        console.error(e);
-        alert("No se pudo iniciar la grabación.");
-        setIdleUI();
+        enableNoCameraMode(e);
       }
     };
   }
@@ -1313,7 +1738,7 @@ function runVideoRecordTrials(step) {
 
   btnNext.onclick = async () => {
     stopInstructionAudio();
-    if (isRecording) {
+    if (isRecording || noCameraMode) {
       await stopRecordingAndSave();
     }
 
@@ -1323,6 +1748,10 @@ function runVideoRecordTrials(step) {
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
       recorder.stopStream();
       btnAudio.style.display = "none";
+      const exported = await exportPantomimeZip();
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
       finishCurrentPart();
       return;
     }
@@ -1331,7 +1760,7 @@ function runVideoRecordTrials(step) {
     await render();
   };
 
-  render();
+  render().catch(showVideoDeviceError);
 }
 
 //   CÁLCULO (Parte 6)
@@ -1472,6 +1901,21 @@ function runCalcMCQ(step) {
   btnNext.onclick = () => {
     if (selectedIndex === null) return;
 
+    const currentTrial = trials[trialIndex];
+    const data = getPartData(partId);
+    const calculationResponses = (data.calculationResponses || [])
+      .filter((response) => Number(response.ejercicio) !== trialIndex + 1);
+
+    calculationResponses.push({
+      ejercicio: trialIndex + 1,
+      operacion_aritmetica: CALCULATION_OPERATIONS[trialIndex] || currentTrial.promptImg || "",
+      opcion_elegida: currentTrial.options?.[selectedIndex] ?? "",
+      mano_seleccionada: data.usedHand || ""
+    });
+
+    calculationResponses.sort((a, b) => Number(a.ejercicio) - Number(b.ejercicio));
+    setPartData(partId, { calculationResponses });
+
     trialIndex++;
     if (trialIndex >= trials.length) {
       setPartProgress(partId, { status: "done", trialIndex: trials.length - 1 });
@@ -1509,6 +1953,32 @@ function runAudioMCQ4Trials(step) {
     document.getElementById("img2"),
     document.getElementById("img3"),
   ];
+
+  const compactOptionPositions = [
+    { left: "38%", top: "36%" },
+    { left: "62%", top: "36%" },
+    { left: "38%", top: "66%" },
+    { left: "62%", top: "66%" },
+  ];
+
+  optBoxes.forEach((box, boxIndex) => {
+    box.style.left = compactOptionPositions[boxIndex].left;
+    box.style.top = compactOptionPositions[boxIndex].top;
+    box.style.right = "auto";
+    box.style.bottom = "auto";
+    box.style.transform = "translate(-50%, -50%)";
+    box.style.width = "min(32vw, 380px)";
+    box.style.height = "min(29vh, 300px)";
+    box.style.padding = "10px";
+  });
+
+  optImgs.forEach((imgEl) => {
+    imgEl.style.width = "100%";
+    imgEl.style.height = "100%";
+    imgEl.style.maxWidth = "100%";
+    imgEl.style.maxHeight = "100%";
+    imgEl.style.objectFit = "contain";
+  });
 
   const basePath = step.basePath || "assets/parte7";
   const filePattern = step.filePattern || "{t}-{o}.png";
@@ -1749,8 +2219,34 @@ function runAudioMCQ4WordsOnScreen(step) {
   let selectedIndex = null;
 
   function fileFor(t, o) {
+    const mappedFile = WRITTEN_PHONOLOGICAL_IMAGE_OPTIONS[t]?.[o - 1];
+    if (mappedFile) return `${basePath}/${mappedFile}`;
+
     const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
     return `${basePath}/${f}`;
+  }
+
+  function buildWrittenPhonologicalResult(t, currentSelectedIndex) {
+    const meta = WRITTEN_PHONOLOGICAL_ITEMS[t];
+    if (!meta) return null;
+
+    const selectedImage = optImgs[currentSelectedIndex]?.getAttribute("src") || "";
+    const selectedWord = wordFromSelectedImage(selectedImage);
+    const selectedCategory = writtenPhonologicalCategory(meta, selectedWord);
+    const responseMode = "D";
+
+    return {
+      itemNumber: meta.itemNumber,
+      targetWord: meta.targetWord,
+      selectedImage,
+      selectedOption: optionLetter(currentSelectedIndex),
+      selectedCategory,
+      responseMode,
+      assignedScore: selectedCategory === "correcta" ? 2 : 0,
+      phonologicalDistinctiveFeatures: selectedCategory === "distractor fonológico" ? meta.features : "",
+      phonologicalPosition: selectedCategory === "distractor fonológico" ? meta.position : "",
+      usedHand: getPartData(partId).usedHand || ""
+    };
   }
 
   function clearSelection() {
@@ -1855,7 +2351,20 @@ function runAudioMCQ4WordsOnScreen(step) {
         word: words[screenIndex - 1] || "",
         selected: selectedIndex
       };
-      setPartData(partId, { responses });
+
+      const writtenPhonologicalResponses = (data.writtenPhonologicalResponses || [])
+        .filter((response) => String(response.itemNumber) !== String(WRITTEN_PHONOLOGICAL_ITEMS[screenIndex]?.itemNumber));
+      const result = buildWrittenPhonologicalResult(screenIndex, selectedIndex);
+      if (result) {
+        writtenPhonologicalResponses.push(result);
+        writtenPhonologicalResponses.sort((a, b) => {
+          if (a.itemNumber === "Ej.") return -1;
+          if (b.itemNumber === "Ej.") return 1;
+          return Number(a.itemNumber) - Number(b.itemNumber);
+        });
+      }
+
+      setPartData(partId, { responses, writtenPhonologicalResponses });
     }
 
     screenIndex++;
@@ -1939,6 +2448,30 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
   function fileFor(t, o) {
     const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
     return `${basePath}/${f}`;
+  }
+
+  function buildOrationalPart9Result(t, currentSelectedIndex) {
+    const meta = ORATIONAL_PART9_ITEMS[t];
+    if (!meta) return null;
+
+    const selectedLetter = optionLetter(currentSelectedIndex);
+    const isCorrect = currentSelectedIndex === meta.correctIndex;
+    const responseMode = "D";
+
+    return {
+      itemNumber: meta.itemNumber,
+      screenNumber: t,
+      sentenceType: meta.sentenceType,
+      correctLetter: meta.correctLetter,
+      selectedLetter,
+      selectedImage: fileFor(t, currentSelectedIndex + 1),
+      selectedSentence: isCorrect ? meta.correctSentence : "",
+      correctSentence: meta.correctSentence,
+      isCorrect,
+      responseMode,
+      assignedScore: meta.itemNumber === "Ej." ? 0 : (isCorrect ? 2 : 0),
+      usedHand: getPartData(partId).usedHand || ""
+    };
   }
 
   function stopAllAudios() {
@@ -2118,7 +2651,16 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       const data = getPartData(partId);
       const responses = data.responses || {};
       responses[String(screenIndex)] = { selected: selectedIndex };
-      setPartData(partId, { responses });
+
+      const orationalPart9Responses = (data.orationalPart9Responses || [])
+        .filter((response) => String(response.screenNumber) !== String(screenIndex));
+      const result = buildOrationalPart9Result(screenIndex, selectedIndex);
+      if (result) {
+        orationalPart9Responses.push(result);
+        orationalPart9Responses.sort((a, b) => Number(a.screenNumber) - Number(b.screenNumber));
+      }
+
+      setPartData(partId, { responses, orationalPart9Responses });
     }
 
     screenIndex++;
@@ -2239,6 +2781,30 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
   function fileFor(t, o) {
     const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
     return `${basePath}/${f}`;
+  }
+
+  function buildOrationalPart10Result(t, currentSelectedIndex) {
+    const meta = ORATIONAL_PART10_ITEMS[t];
+    if (!meta) return null;
+
+    const selectedLetter = optionLetter(currentSelectedIndex);
+    const isCorrect = currentSelectedIndex === meta.correctIndex;
+    const responseMode = "D";
+
+    return {
+      itemNumber: meta.itemNumber,
+      screenNumber: t,
+      sentenceType: meta.sentenceType,
+      correctLetter: meta.correctLetter,
+      selectedLetter,
+      selectedImage: fileFor(t, currentSelectedIndex + 1),
+      selectedSentence: sentences[t - 1] || "",
+      correctSentence: meta.correctSentence,
+      isCorrect,
+      responseMode,
+      assignedScore: meta.itemNumber === "Ej." ? 0 : (isCorrect ? 2 : 0),
+      usedHand: getPartData(partId).usedHand || ""
+    };
   }
 
   function clearSelection() {
@@ -2398,7 +2964,16 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
         sentence: sentences[screenIndex - 1] || "",
         selected: selectedIndex
       };
-      setPartData(partId, { responses });
+
+      const orationalPart10Responses = (data.orationalPart10Responses || [])
+        .filter((response) => String(response.screenNumber) !== String(screenIndex));
+      const result = buildOrationalPart10Result(screenIndex, selectedIndex);
+      if (result) {
+        orationalPart10Responses.push(result);
+        orationalPart10Responses.sort((a, b) => Number(a.screenNumber) - Number(b.screenNumber));
+      }
+
+      setPartData(partId, { responses, orationalPart10Responses });
     }
 
     // antes de pasar de pantalla, detener audios
@@ -2416,7 +2991,6 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
       });
 
       clearPartProgress(partId);
-      clearPartData(partId);
       finishCurrentPart();
       return;
     }
@@ -2466,7 +3040,6 @@ function runStoryYesNoFlow(step) {
     });
 
     clearPartProgress(partId);
-    clearPartData(partId);
     finishCurrentPart();
   }
 
@@ -2527,6 +3100,24 @@ function runStoryYesNoFlow(step) {
 
   const requireSel = step.requireSelectionToAdvance !== false;
   let selected = null;
+
+  function buildOralParagraphResult(currentScreenIndex, selectedAnswer) {
+    const meta = ORAL_PARAGRAPHS_QUESTIONS[currentScreenIndex];
+    if (!meta) return null;
+
+    const isCorrect = selectedAnswer === meta.correctAnswer;
+
+    return {
+      storyNumber: meta.storyNumber,
+      questionNumber: meta.questionNumber,
+      questionText: meta.questionText,
+      selectedAnswer,
+      correctAnswer: meta.correctAnswer,
+      isCorrect,
+      countsForScore: meta.countsForScore,
+      assignedScore: meta.countsForScore && isCorrect ? 1 : 0
+    };
+  }
 
   function updateTopBar() {
     topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · ${screenIndex + 1}/${screens.length}`;
@@ -2602,13 +3193,13 @@ function runStoryYesNoFlow(step) {
 
   // ---------- respuestas sí/no ----------
   btnYes.onclick = () => {
-    selected = "SI";
+    selected = "Sí";
     btnYes.classList.add("selected");
     btnNo.classList.remove("selected");
   };
 
   btnNo.onclick = () => {
-    selected = "NO";
+    selected = "No";
     btnNo.classList.add("selected");
     btnYes.classList.remove("selected");
   };
@@ -2624,7 +3215,19 @@ function runStoryYesNoFlow(step) {
       const data = getPartData(partId);
       const responses = data.responses || {};
       responses[String(screenIndex + 1)] = { answer: selected };
-      setPartData(partId, { responses });
+      const oralParagraphResponses = (data.oralParagraphResponses || [])
+        .filter((response) => !(response.storyNumber === ORAL_PARAGRAPHS_QUESTIONS[screenIndex]?.storyNumber
+          && response.questionNumber === ORAL_PARAGRAPHS_QUESTIONS[screenIndex]?.questionNumber));
+      const result = buildOralParagraphResult(screenIndex, selected);
+      if (result) {
+        oralParagraphResponses.push(result);
+        oralParagraphResponses.sort((a, b) => {
+          if (a.storyNumber !== b.storyNumber) return Number(a.storyNumber) - Number(b.storyNumber);
+          return Number(a.questionNumber) - Number(b.questionNumber);
+        });
+      }
+
+      setPartData(partId, { responses, oralParagraphResponses });
     }
 
     // cortar audio antes de pasar
@@ -2696,8 +3299,12 @@ function runRepeatAudioRecord(step) {
   let psRedTimer = null;
   let isClosing = false;
   let hasRecordedCurrentScreen = false;
+  let captureLeadTimer = null;
 
   function stopAllAudios() {
+    clearTimeout(captureLeadTimer);
+    captureLeadTimer = null;
+
     try {
       if (typeof instructionAudio !== "undefined" && instructionAudio) {
         instructionAudio.pause();
@@ -2767,6 +3374,18 @@ function runRepeatAudioRecord(step) {
     return `part${String(partId).padStart(2, "0")}_s${String(s).padStart(2, "0")}.wav`;
   }
 
+  function labelForCurrentScreen() {
+    const introOffset = hasIntro ? 1 : 0;
+
+    if (!noExample && screenIndex === introOffset) {
+      return "ejemplo";
+    }
+
+    const trialsStart = introOffset + (noExample ? 0 : 1);
+    const trialNumber = (screenIndex - trialsStart) + 1;
+    return trialNumber > 0 ? `ensayo_${String(trialNumber).padStart(2, "0")}` : `pantalla_${String(screenIndex + 1).padStart(2, "0")}`;
+  }
+
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
 
@@ -2800,7 +3419,7 @@ function runRepeatAudioRecord(step) {
     btnPlay.style.display = "block";
 
     if (recIcon) recIcon.style.display = "none";
-    if (stopBtn) stopBtn.style.display = "block";
+    if (stopBtn) stopBtn.style.display = "none";
   }
 
   function updateTopBar() {
@@ -2848,17 +3467,22 @@ function runRepeatAudioRecord(step) {
     alert(message);
   }
 
-  async function startCapture() {
+  async function startCapture(showControls = true) {
     console.log("startCapture() => inicia grabación");
 
-    if (isCapturing) return;
+    if (isCapturing) {
+      if (showControls) showRecUI();
+      return;
+    }
 
     await ensurePrepared();
     recorder.beginCapture();
     isCapturing = true;
     hasRecordedCurrentScreen = false;
 
-    showRecUI();
+    if (showControls) {
+      showRecUI();
+    }
 
     console.log("recRow display:", recRow.style.display);
   }
@@ -2876,7 +3500,12 @@ function runRepeatAudioRecord(step) {
 
       const data = getPartData(partId);
       const takes = data.takes || {};
-      takes[String(screenIndex)] = { key };
+      takes[String(screenIndex)] = {
+        key,
+        screenIndex,
+        label: labelForCurrentScreen(),
+        isExample: labelForCurrentScreen() === "ejemplo"
+      };
       setPartData(partId, { takes });
 
       hasRecordedCurrentScreen = true;
@@ -2915,6 +3544,42 @@ function runRepeatAudioRecord(step) {
       status: "done",
       screenIndex: Math.max(0, totalScreens - 1)
     });
+
+    if (partId === 12) {
+      const exported = await exportRepeatAudioZip("", 12, 30, "Repeticion_de_palabras");
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
+    }
+
+    if (partId === 13) {
+      const exported = await exportRepeatAudioZip("", 13, 31, "Repeticion_de_palabras_complejas");
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
+    }
+
+    if (partId === 14) {
+      const exported = await exportRepeatAudioZip("", 14, 32, "Repeticion_de_no_palabras");
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
+    }
+
+    if (partId === 15) {
+      const exported = await exportRepeatAudioZip("", 15, 33, "Repeticion_de_digitos");
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
+    }
+
+    if (partId === 16) {
+      const exported = await exportRepeatAudioZip("", 16, 34, "Repeticion_de_oraciones");
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
+    }
+
     finishCurrentPart();
   }
 
@@ -2973,30 +3638,65 @@ function runRepeatAudioRecord(step) {
           await stopAndSave();
         }
 
+        await ensurePrepared();
+
         stopAllAudios();
         clearPromptAudio();
 
-        promptAudio.src = a;
-        promptAudio.load();
-
         promptAudio.onended = async () => {
-          console.log("audio terminado -> startCapture()");
-          if (startBeep) {
-            try {
-              startBeep.currentTime = 0;
-              await startBeep.play();
-            } catch (e) {
-              console.warn("No se pudo reproducir beep.wav", e);
+          if (isCapturing) {
+            showRecUI();
+          } else {
+            console.log("audio terminado -> startCapture()");
+            if (startBeep) {
+              try {
+                startBeep.currentTime = 0;
+                await startBeep.play();
+              } catch (e) {
+                console.warn("No se pudo reproducir beep.wav", e);
+              }
             }
+            await startCapture(true);
           }
-          await startCapture();
         };
 
         promptAudio.onerror = () => {
           console.error("Error cargando audio:", a, promptAudio.error);
         };
 
+        const scheduleEarlyCapture = () => {
+          clearTimeout(captureLeadTimer);
+          captureLeadTimer = null;
+
+          const durationMs = Number.isFinite(promptAudio.duration) ? promptAudio.duration * 1000 : 0;
+          if (durationMs > 3500) {
+            const leadMs = Math.min(3000, Math.max(1000, durationMs - 500));
+            const delayMs = Math.max(0, durationMs - leadMs);
+            captureLeadTimer = setTimeout(async () => {
+              if (!isCapturing) {
+                console.log("inicio anticipado de grabacion sin mostrar controles");
+                await startCapture(false);
+              }
+            }, delayMs);
+          }
+        };
+
+        promptAudio.onloadedmetadata = scheduleEarlyCapture;
+        promptAudio.ontimeupdate = async () => {
+          const duration = Number(promptAudio.duration);
+          if (!Number.isFinite(duration) || duration <= 0 || isCapturing) return;
+          if ((duration - promptAudio.currentTime) <= 3) {
+            clearTimeout(captureLeadTimer);
+            captureLeadTimer = null;
+            console.log("inicio anticipado de grabacion por timeupdate sin mostrar controles");
+            await startCapture(false);
+          }
+        };
+
+        promptAudio.src = a;
+        promptAudio.load();
         promptAudio.currentTime = 0;
+        scheduleEarlyCapture();
         await promptAudio.play();
         console.log("audio reproduciéndose...");
       } catch (err) {
@@ -3107,6 +3807,13 @@ function runImageInstrAutoRecord(step) {
     if (prepared) return;
     await recorder.prepare({ numChannels: 1 });
     prepared = true;
+  }
+
+  async function connectObjectCueAudiosToRecorder() {
+    await ensurePrepared();
+    [audioI, audioP, audioPS, audioPF].forEach((audioEl) => {
+      recorder.connectAudioElement(audioEl);
+    });
   }
 
   function showMicError(err) {
@@ -3320,10 +4027,11 @@ function runImageInstrAutoRecord(step) {
   }
 
   async function startCapture() {
-    await ensurePrepared();
+    await connectObjectCueAudiosToRecorder();
     recorder.beginCapture();
     isCapturing = true;
     if (recIcon) recIcon.style.display = "block";
+    if (stopBtn) stopBtn.style.display = "block";
   }
 
   async function stopAndSave() {
@@ -3331,7 +4039,7 @@ function runImageInstrAutoRecord(step) {
     isCapturing = false;
 
     if (recIcon) recIcon.style.display = "none";
-    if (stopBtn) stopBtn.style.display = "block";
+    if (stopBtn) stopBtn.style.display = "none";
 
     const blob = await recorder.stop();
     if (blob) {
@@ -3340,7 +4048,12 @@ function runImageInstrAutoRecord(step) {
 
       const data = getPartData(partId);
       const takes = data.takes || {};
-      takes[String(n)] = { key, image: imageFile(n) };
+      takes[String(n)] = {
+        key,
+        image: imageFile(n),
+        screenIndex: n - 1,
+        label: n === 1 ? "ejemplo" : `ensayo_${String(n - 1).padStart(2, "0")}`
+      };
       setPartData(partId, { takes });
     }
   }
@@ -3373,6 +4086,8 @@ function runImageInstrAutoRecord(step) {
   async function render() {
     pauseAllInstructionAudios();
     resetPsVisualState();
+    if (recIcon) recIcon.style.display = "none";
+    if (stopBtn) stopBtn.style.display = "none";
 
     updateTopBar();
     imgEl.src = imageFile(n);
@@ -3414,6 +4129,10 @@ function runImageInstrAutoRecord(step) {
       await recorder.close();
 
       clearPartProgress(partId);
+      const exported = await exportRepeatAudioZip("", 17, 35, "Denominacion_de_objetos");
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
       clearPartData(partId);
       finishCurrentPart();
       return;
@@ -3479,7 +4198,7 @@ function runImageAutoRecordSimple(step) {
 
   function setStoppedUI() {
     if (recIcon) recIcon.style.display = "none";
-    if (stopBtn) stopBtn.style.display = "block";
+    if (stopBtn) stopBtn.style.display = "none";
   }
 
   function imageFile(num) {
@@ -3505,6 +4224,11 @@ function runImageAutoRecordSimple(step) {
     prepared = true;
   }
 
+  async function connectSimpleInstructionAudioToRecorder() {
+    await ensurePrepared();
+    recorder.connectAudioElement(audioEl);
+  }
+
   function preloadImage(src) {
     const img = new Image();
     img.src = src;
@@ -3520,7 +4244,7 @@ function runImageAutoRecordSimple(step) {
 
   async function startCapture() {
     if (isCapturing) return;
-    await ensurePrepared();
+    await connectSimpleInstructionAudioToRecorder();
     recorder.beginCapture();
     isCapturing = true;
     setRecordingUI();
@@ -3540,7 +4264,12 @@ function runImageAutoRecordSimple(step) {
 
       const data = getPartData(partId);
       const takes = data.takes || {};
-      takes[String(currentN)] = { key, image: imageFile(currentN) };
+      takes[String(currentN)] = {
+        key,
+        image: imageFile(currentN),
+        screenIndex: currentN - first,
+        label: currentN === first ? "ejemplo" : `ensayo_${String(currentN - first).padStart(2, "0")}`
+      };
       setPartData(partId, { takes });
     }
   }
@@ -3600,6 +4329,10 @@ function runImageAutoRecordSimple(step) {
       if (n > last) {
         setPartProgress(partId, { status: "done", itemIndex: last });
         await recorder.close();
+        const exported = await exportRepeatAudioZip("", 18, 36, "Denominacion_de_acciones");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
         finishCurrentPart();
         return;
       }
@@ -3648,9 +4381,6 @@ async function runAudioRecordImage(step) {
   btnFullscreen.onclick = () => toggleFullscreen();
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
 
-  // audio instrucciones
-  setupInstructionAudio(step.instructionAudio);
-
   // flecha
   btnNext.style.display = "block";
 
@@ -3677,6 +4407,12 @@ async function runAudioRecordImage(step) {
       if (typeof instructionAudio !== "undefined" && instructionAudio) {
         instructionAudio.pause();
         instructionAudio.currentTime = 0;
+      }
+
+      if (window.currentInstructionAudio) {
+        window.currentInstructionAudio.pause();
+        window.currentInstructionAudio.currentTime = 0;
+        window.currentInstructionAudio = null;
       }
     } catch (e) {
       console.warn("No se pudieron detener los audios:", e);
@@ -3705,9 +4441,13 @@ async function runAudioRecordImage(step) {
 
   arImage.src = step.image;
 
-  async function startRec() {
+  async function startRec(options = {}) {
     try {
-      stopAllTestAudios();
+      const { stopAudio = true } = options;
+
+      if (isRecording) return;
+
+      if (stopAudio) stopAllTestAudios();
 
       console.log("Intentando iniciar grabación...");
       console.log("Ruta imagen:", step.image);
@@ -3746,6 +4486,34 @@ async function runAudioRecordImage(step) {
     }
   }
 
+  function setupAutoRecordInstructionAudio() {
+    setupInstructionAudio(step.instructionAudio);
+
+    if (!step.instructionAudio || typeof btnAudio === "undefined" || !btnAudio) return;
+
+    btnAudio.onclick = async () => {
+      try {
+        if (window.currentInstructionAudio) {
+          window.currentInstructionAudio.pause();
+          window.currentInstructionAudio.currentTime = 0;
+        }
+
+        const a = new Audio(step.instructionAudio);
+        window.currentInstructionAudio = a;
+        a.onended = async () => {
+          if (window.currentInstructionAudio === a) window.currentInstructionAudio = null;
+          if (!isRecording && !hasAudio) {
+            await startRec({ stopAudio: false });
+          }
+        };
+
+        await a.play();
+      } catch (err) {
+        console.error("Error audio:", err);
+      }
+    };
+  }
+
   async function stopRecAndSave() {
     if (!isRecording) return;
 
@@ -3758,6 +4526,14 @@ async function runAudioRecordImage(step) {
         hasAudio = true;
         const key = step.audioKey || `part${partId}_take1`;
         await saveAudioBlob(key, blob);
+        const data = getPartData(partId);
+        const takes = data.takes || {};
+        takes["0"] = {
+          key,
+          screenIndex: 0,
+          label: "descripcion_oral_imagen"
+        };
+        setPartData(partId, { takes });
         console.log("Audio guardado correctamente con key:", key);
       } else {
         console.warn("No se obtuvo blob de audio");
@@ -3793,12 +4569,17 @@ async function runAudioRecordImage(step) {
 
     setPartProgress(partId, { status: "done" });
     clearPartProgress(partId);
+    const exported = await exportRepeatAudioZip("", 19, 37, "Descripcion_oral_de_una_imagen");
+    if (exported) {
+      await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+    }
     clearPartData(partId);
     finishCurrentPart();
 
   };
 
   setIdleUI();
+  setupAutoRecordInstructionAudio();
   setPartProgress(partId, {
     status: "in_progress",
     stepIndex: 0,
@@ -3924,7 +4705,7 @@ async function runAudioRecordWords(step) {
   }
 
   function setStoppedUI() {
-    btnStop.style.display = "block";
+    btnStop.style.display = "none";
     btnRecording.style.display = "none";
   }
 
@@ -3963,6 +4744,8 @@ async function runAudioRecordWords(step) {
         takes[String(screenIndex)] = {
           word: currentWord,
           key,
+          screenIndex,
+          label: isExampleScreen() ? "ejemplo" : `ensayo_${String(hasExample ? screenIndex : screenIndex + 1).padStart(2, "0")}_${currentWord}`,
           isExample: isExampleScreen()
         };
 
@@ -3999,7 +4782,7 @@ async function runAudioRecordWords(step) {
     setupAudioForCurrentScreen();
 
     setIdleUI();
-    btnFullscreen.style.display = 'none';
+    btnFullscreen.style.display = "block";
     await startRecAuto();
   }
 
@@ -4029,6 +4812,35 @@ async function runAudioRecordWords(step) {
       } catch (e) {
         console.warn("No se pudo cerrar recorder:", e);
       }
+
+      if (partId === 20) {
+        const exported = await exportRepeatAudioZip("", 20, 38, "Lectura_de_palabras_aisladas");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 21) {
+        const exported = await exportRepeatAudioZip("", 21, 39, "Lectura_de_palabras_complejas");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 22) {
+        const exported = await exportRepeatAudioZip("", 22, 40, "Lectura_de_palabras_funcionales");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 23) {
+        const exported = await exportRepeatAudioZip("", 23, 41, "Lectura_de_no_palabras");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
       finishCurrentPart();
       return;
     }
@@ -4175,6 +4987,43 @@ function runWritingCanvasFlow(step, config = {}) {
     link.click();
   }
 
+  function saveCurrentCanvasImage() {
+    const screen = screens[screenIndex] || {};
+    const data = getPartData(partId);
+    const writingImages = data.writingImages || {};
+
+    writingImages[String(screenIndex)] = {
+      screenIndex,
+      label: screen.label || `pantalla_${screenIndex + 1}`,
+      dataUrl: canvas.toDataURL("image/png"),
+      savedAt: new Date().toISOString()
+    };
+
+    setPartData(partId, {
+      ...data,
+      writingImages,
+      screenIndex,
+      lastImage: writingImages[String(screenIndex)].dataUrl,
+      savedAt: writingImages[String(screenIndex)].savedAt
+    });
+  }
+
+  async function exportCurrentWritingZip() {
+    const exportMap = {
+      24: { testNumber: 42, label: "Copia" },
+      25: { testNumber: 43, label: "Etiquetado_de_imagenes" },
+      26: { testNumber: 44, label: "Escritura_al_dictado" },
+      27: { testNumber: 45, label: "Descripcion_escrita_de_una_imagen" }
+    };
+    const config = exportMap[partId];
+    if (!config) return;
+
+    const exported = await exportWritingImagesZip(partId, config.testNumber, config.label);
+    if (exported) {
+      await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+    }
+  }
+
   function loadImage(src) {
     return new Promise((resolve) => {
       if (!src) {
@@ -4219,15 +5068,12 @@ function runWritingCanvasFlow(step, config = {}) {
   bindDrawing();
 
   btnNext.onclick = async () => {
-    setPartData(partId, {
-      screenIndex,
-      lastImage: canvas.toDataURL("image/png"),
-      savedAt: new Date().toISOString()
-    });
+    saveCurrentCanvasImage();
 
     screenIndex++;
     if (screenIndex >= screens.length) {
       setPartProgress(partId, { status: "done", screenIndex: screens.length - 1 });
+      await exportCurrentWritingZip();
       finishCurrentPart();
       return;
     }
@@ -4621,9 +5467,13 @@ function runTextImage(step) {
 
   setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1 });
 
-  btnNext.onclick = () => {
+  btnNext.onclick = async () => {
     setPartProgress(partId, { status: "done" });
     stopAllAudios();
+    const exported = await exportImageAssetsZip([step.image], 45, "Descripcion_escrita_de_una_imagen");
+    if (exported) {
+      await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+    }
     finishCurrentPart();
   };
 }
@@ -4676,6 +5526,12 @@ function runLineBisection(step) {
   const img = new Image();
   img.src = step.baseImage;
 
+  const lineBisectionReference = [
+    { lineNumber: 1, y: 228.5, startX: 238, endX: 645, centerX: 441.5, unitPx: 33.5 },
+    { lineNumber: 2, y: 313.5, startX: 6, endX: 343, centerX: 174.5, unitPx: 33.25 },
+    { lineNumber: 3, y: 404.5, startX: 245, endX: 910, centerX: 577.5, unitPx: 33.25 }
+  ];
+
   // trazos separados
   let demoStrokes = [];
   let patientStrokes = [];
@@ -4724,6 +5580,79 @@ function runLineBisection(step) {
   function renderCanvas() {
     drawBase();
     drawStrokes();
+  }
+
+  function canvasPointToImagePoint(point) {
+    return {
+      x: (point.x / canvas.width) * img.naturalWidth,
+      y: (point.y / canvas.height) * img.naturalHeight
+    };
+  }
+
+  function median(values) {
+    const sorted = values.filter(Number.isFinite).sort((a, b) => a - b);
+    if (!sorted.length) return null;
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+
+  function findCutXForLine(line) {
+    const candidates = [];
+    const nearLineTolerancePx = 18;
+
+    for (const stroke of patientStrokes) {
+      if (!stroke || stroke.length < 2) continue;
+
+      for (let i = 1; i < stroke.length; i++) {
+        const p1 = canvasPointToImagePoint(stroke[i - 1]);
+        const p2 = canvasPointToImagePoint(stroke[i]);
+        const minY = Math.min(p1.y, p2.y);
+        const maxY = Math.max(p1.y, p2.y);
+
+        if (line.y >= minY && line.y <= maxY && Math.abs(p2.y - p1.y) > 0.01) {
+          const ratio = (line.y - p1.y) / (p2.y - p1.y);
+          const x = p1.x + ratio * (p2.x - p1.x);
+          if (x >= line.startX - 25 && x <= line.endX + 25) {
+            candidates.push(x);
+          }
+        } else {
+          if (Math.abs(p1.y - line.y) <= nearLineTolerancePx && p1.x >= line.startX - 25 && p1.x <= line.endX + 25) {
+            candidates.push(p1.x);
+          }
+          if (Math.abs(p2.y - line.y) <= nearLineTolerancePx && p2.x >= line.startX - 25 && p2.x <= line.endX + 25) {
+            candidates.push(p2.x);
+          }
+        }
+      }
+    }
+
+    return median(candidates);
+  }
+
+  function analyzeLineBisection() {
+    return lineBisectionReference.map((line) => {
+      const cutX = findCutXForLine(line);
+      const hasCut = Number.isFinite(cutX);
+      const deviationPx = hasCut ? cutX - line.centerX : null;
+      const deviationUnits = hasCut ? deviationPx / line.unitPx : null;
+      const direction = hasCut && deviationUnits !== 0 ? Math.sign(deviationUnits) : 0;
+      const absDeviation = hasCut ? Math.abs(deviationUnits) : null;
+      const scaleScore = hasCut
+        ? (absDeviation <= 0.5 ? 0 : direction * (absDeviation <= 1.5 ? 1 : 2))
+        : null;
+      const isExact = hasCut && scaleScore === 0;
+
+      return {
+        lineNumber: line.lineNumber,
+        expectedCenterX: Number(line.centerX.toFixed(2)),
+        cutX: hasCut ? Number(cutX.toFixed(2)) : null,
+        deviationPx: hasCut ? Number(deviationPx.toFixed(2)) : null,
+        deviationUnits: hasCut ? Number(deviationUnits.toFixed(2)) : null,
+        scaleScore,
+        isExact,
+        assignedScore: scaleScore
+      };
+    });
   }
 
   function pointerToCanvas(e) {
@@ -4886,18 +5815,21 @@ function runLineBisection(step) {
 
   function savePatientData() {
     const data = getPartData(partId) || {};
+    const lineBisectionResults = analyzeLineBisection();
     setPartData(partId, {
       ...data,
       baseImage: step.baseImage,
       scaleImage: step.scaleImage || null,
       patientStrokes,
+      patientImage: canvas.toDataURL("image/png"),
+      lineBisectionResults,
       canvasWidth: canvas.width,
       canvasHeight: canvas.height,
       savedAt: new Date().toISOString()
     });
   }
 
-  btnNext.onclick = () => {
+  btnNext.onclick = async () => {
     if (screenIndex === 1) {
       savePatientData();
     }
@@ -4919,7 +5851,6 @@ function runLineBisection(step) {
       });
 
       clearPartProgress(partId);
-      clearPartData(partId);
 
       demoStrokes = [];
       patientStrokes = [];

@@ -12,6 +12,7 @@ export class WavRecorder {
     this.capture = false;
     this.numChannels = 1;
     this.prepared = false;
+    this.elementSources = new Map();
   }
 
   async prepare({ numChannels = 1 } = {}) {
@@ -42,6 +43,15 @@ export class WavRecorder {
     this.prepared = true;
   }
 
+  connectAudioElement(audioEl) {
+    if (!this.prepared || !audioEl || this.elementSources.has(audioEl)) return;
+
+    const elementSource = this.audioContext.createMediaElementSource(audioEl);
+    elementSource.connect(this.processor);
+    elementSource.connect(this.audioContext.destination);
+    this.elementSources.set(audioEl, elementSource);
+  }
+
   beginCapture() {
     if (!this.prepared) throw new Error("Recorder not prepared");
     this.buffers = [];
@@ -63,6 +73,9 @@ export class WavRecorder {
     // cerrar totalmente (al salir del test)
     try { this.processor?.disconnect(); } catch {}
     try { this.source?.disconnect(); } catch {}
+    this.elementSources.forEach((elementSource) => {
+      try { elementSource.disconnect(); } catch {}
+    });
 
     if (this.stream) this.stream.getTracks().forEach(t => t.stop());
     if (this.audioContext) {
@@ -74,6 +87,7 @@ export class WavRecorder {
     this.source = null;
     this.processor = null;
     this.buffers = [];
+    this.elementSources = new Map();
     this.prepared = false;
   }
 

@@ -323,17 +323,29 @@
     }
 
     #downloadWritingBtn {
-      position: fixed;
-      left: 14px;
-      bottom: 160px;
+      position: absolute;
+      left: 86px;
+      bottom: 18px;
       z-index: 90;
-      border: 2px solid #000;
-      background: #fff;
+      min-height: 48px;
+      border: 1px solid #222;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.96);
       color: #000;
-      padding: 10px 14px;
-      font-size: 16px;
+      padding: 0 14px;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.14);
+      white-space: nowrap;
+    }
+
+    #downloadWritingBtn:hover {
+      background: #f4f4f4;
+    }
+
+    #downloadWritingBtn:active {
+      transform: translateY(1px);
     }
 
     /* Instrucción centrada (cuando runner lo active) */
@@ -913,11 +925,12 @@
           <video id="vrSmallPreview" autoplay playsinline muted></video>
         </div>
 
-        <div id="vrControls">
-          <img id="vBtnRec" src="rec.png" alt="Grabar">
-          <img id="vBtnRecording" src="grabando.png" alt="Grabando" style="display:none;">
-          <img id="vBtnStop" src="detener.png" alt="Detener" style="display:none;">
-        </div>
+      </div>
+
+      <div id="vrControls">
+        <img id="vBtnRec" src="rec.png" alt="Grabar">
+        <img id="vBtnRecording" src="grabando.png" alt="Grabando" style="display:none;">
+        <img id="vBtnStop" src="detener.png" alt="Detener" style="display:none;">
       </div>
 
     </div>
