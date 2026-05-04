@@ -12,6 +12,7 @@ class Test extends Model
     protected $table = 'test';
 
     protected $fillable = [
+        'id',
         'name_test',
         'nombre_espa',
         'descripcion_individual',
