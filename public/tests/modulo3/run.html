@@ -127,6 +127,12 @@
       bottom: 16px;
     }
 
+    .corner-bottom-right-prev {
+      right: 96px;
+      bottom: 16px;
+      transform: rotate(180deg);
+    }
+
     .corner-icon.is-disabled {
       opacity: .35;
       pointer-events: none;
@@ -175,6 +181,23 @@
       margin: 0 auto;
     }
 
+    #p3-screen-image-audio .screen-panel,
+    #p3-screen-story-intro .screen-panel,
+    #p3-screen-story-image .screen-panel {
+      max-width: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    #p3-main-image,
+    #p3-story-intro-image,
+    #p3-story-image {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .audio-stack-left {
       position: absolute;
       left: 16px;
@@ -185,8 +208,85 @@
       z-index: 20;
     }
 
+    .audio-stack-right {
+      position: absolute;
+      right: 16px;
+      bottom: 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      z-index: 20;
+    }
+
+    .single-audio-right {
+      right: 16px;
+      bottom: 96px;
+      position: absolute;
+    }
+
+    .record-controls-right {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      margin: 20px auto 0;
+    }
+
     .audio-stack-left img,
-    .single-audio-left {
+    .audio-stack-right img,
+    .record-controls-right img,
+    .single-audio-left,
+    .single-audio-right {
+      width: 72px;
+      height: 72px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    img[id$="fullscreen-btn"] {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+
+    .motor-text {
+      font-size: 1.35rem;
+      line-height: 1.55;
+      max-width: 920px;
+      margin: 0 auto 24px;
+      text-align: left;
+    }
+
+    .motor-text.is-centered {
+      text-align: center;
+      margin: 0 auto 20px;
+      max-width: min(92vw, 980px);
+    }
+
+    .motor-audio-list {
+      position: absolute;
+      left: 16px;
+      bottom: 96px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin: 0;
+      z-index: 20;
+    }
+
+    .motor-audio-list.is-centered {
+      position: static;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      margin: 18px auto;
+    }
+
+    .motor-audio-list img {
       width: 72px;
       height: 72px;
       cursor: pointer;
@@ -259,10 +359,14 @@
       <div class="screen-panel">
         <div class="audio-pair">
           <img id="p1t2-audio-1-btn" src="audio.png" alt="Audio 1">
-          <img id="p1t2-audio-2-btn" src="audio1.png" alt="Audio 2">
+          <img id="p1t2-audio-2-btn" src="audio2.png" alt="Audio 2">
         </div>
         <div id="p1t2-status" class="audio-status">
           Reproduce el primer audio. La grabacion comenzara automaticamente 2-3 segundos antes de terminar.
+        </div>
+        <div class="record-controls">
+          <img id="p1t2-recording-indicator" class="hidden" src="grabando.png" alt="Grabando">
+          <img id="p1t2-stop-btn" class="hidden" src="detener.png" alt="Detener">
         </div>
       </div>
     </div>
@@ -273,25 +377,25 @@
 
   <!-- Evaluacion Motora del Habla -->
 
-  <!-- Parte 2 - Test 1 -->
+  <section id="part-2-motor" style="display:none;">
+    <div id="p2motor-screen" class="screen-view">
+      <div class="screen-panel">
+        <div id="p2motor-title" class="title-label"></div>
+        <p id="p2motor-label" class="instruction-text"></p>
+        <p id="p2motor-text" class="motor-text"></p>
+        <div id="p2motor-audios" class="motor-audio-list"></div>
+        <div id="p2motor-record-controls" class="record-controls">
+          <img id="p2motor-rec-btn" src="rec.png" alt="Rec">
+          <img id="p2motor-recording-indicator" class="hidden" src="grabando.png" alt="Grabando">
+          <img id="p2motor-stop-btn" class="is-disabled" src="detener.png" alt="Detener">
+        </div>
+      </div>
+    </div>
 
-  <!-- Parte 2 - Test 2 -->
-
-  <!-- Parte 2 - Test 3 -->
-
-  <!-- Parte 2 - Test 4 -->
-
-  <!-- Parte 2 - Test 5 -->
-
-  <!-- Parte 2 - Test 6 -->
-
-  <!-- Parte 2 - Test 7 -->
-
-  <!-- Parte 2 - Test 8 -->
-
-  <!-- Parte 2 - Test 9 -->
-
-  <!-- Parte 2 - Test 10 -->
+    <img id="p2motor-fullscreen-btn" class="corner-icon corner-bottom-left" src="full-screen.png" alt="Pantalla completa">
+    <img id="p2motor-next-btn" class="corner-icon corner-bottom-right" src="flecha.png" alt="Siguiente">
+    <audio id="p2motor-audio-player"></audio>
+  </section>
 
   <!-- Habla Conectada -->
 
@@ -301,16 +405,16 @@
       <div class="screen-panel">
         <img id="p3-main-image" class="center-image" src="" alt="Stimulus">
       </div>
-      <img id="p3-single-audio-btn" class="single-audio-left corner-bottom-left" src="audio.png" alt="Audio">
+      <img id="p3-single-audio-btn" class="single-audio-right" src="audio.png" alt="Audio">
     </div>
 
     <div id="p3-screen-story-intro" class="screen-view">
       <div class="screen-panel">
         <img id="p3-story-intro-image" class="center-image" src="" alt="Historia">
       </div>
-      <div class="audio-stack-left">
+      <div class="audio-stack-right">
         <img id="p3-audio-top-btn" src="audio.png" alt="Audio superior">
-        <img id="p3-audio-bottom-btn" src="audio1.png" alt="Audio inferior">
+        <img id="p3-audio-bottom-btn" src="audio2.png" alt="Audio inferior">
       </div>
     </div>
 
@@ -324,9 +428,22 @@
       <div class="screen-panel">
         <div class="word-label">FIN</div>
       </div>
-      <img id="p3-final-audio-btn" class="single-audio-left corner-bottom-left" src="audio.png" alt="Audio final">
+      <img id="p3-final-audio-btn" class="single-audio-right" src="audio.png" alt="Audio final">
     </div>
 
+    <div id="p3-screen-personal" class="screen-view">
+      <div class="screen-panel">
+        <div class="title-label">Narración personal</div>
+      </div>
+      <img id="p3-personal-audio-btn" class="single-audio-right" src="audio.png" alt="Audio narracion personal">
+    </div>
+
+    <div id="p3-record-controls" class="record-controls-right hidden">
+      <img id="p3-recording-indicator" src="grabando.png" alt="Grabando">
+      <img id="p3-stop-btn" src="detener.png" alt="Detener">
+    </div>
+    <img id="p3-fullscreen-btn" class="corner-icon corner-bottom-left" src="full-screen.png" alt="Pantalla completa">
+    <img id="p3-prev-btn" class="corner-icon corner-bottom-right-prev" src="flecha.png" alt="Anterior" style="display:none;">
     <img id="p3-next-btn" class="corner-icon corner-bottom-right" src="flecha.png" alt="Siguiente">
     <audio id="p3-audio-player"></audio>
   </section>
@@ -335,6 +452,7 @@
 
   <!-- Parte 3 - Test 3 -->
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
   <script type="module" src="js/runner.js"></script>
 </body>
 </html>
