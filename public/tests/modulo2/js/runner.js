@@ -1008,12 +1008,16 @@ function runVerbalFluency(step) {
 
     const blob = await recorder.stop();
     if (blob) {
+      const screen = screens[index] || {};
+      if (screen.type !== "test") {
+        return;
+      }
+
       const key = `part03_screen${index + 1}.wav`;
       await saveAudioBlob(key, blob);
 
       const data = getPartData(partId);
       const verbalFluencyAudios = data.verbalFluencyAudios || {};
-      const screen = screens[index] || {};
       verbalFluencyAudios[String(index)] = {
         key,
         screenIndex: index,
@@ -1130,7 +1134,17 @@ function runVerbalFluency(step) {
       return;
     }
 
-    if (s.type === "practice" || s.type === "test") {
+    if (s.type === "practice") {
+      centerText.style.display = "block";
+      centerText.textContent = s.text;
+      recRow.style.display = "none";
+      topAudio.style.display = "none";
+      stopBtn.style.display = "none";
+      if (recordingIcon) recordingIcon.style.display = "none";
+      return;
+    }
+
+    if (s.type === "test") {
       centerText.style.display = "block";
       centerText.textContent = s.text;
       setPromptState();
