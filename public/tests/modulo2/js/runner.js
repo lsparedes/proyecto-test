@@ -512,37 +512,57 @@ function runSemanticMatch(step) {
     document.getElementById("img2"),
     document.getElementById("img3"),
   ];
+  const backButtonId = "btnSemanticBack";
+  let btnBack = document.getElementById(backButtonId);
 
-  optBoxes[0].style.left = "22%";
-  optBoxes[0].style.top = "22%";
+  if (!btnBack) {
+    btnBack = document.createElement("img");
+    btnBack.id = backButtonId;
+    btnBack.src = "flecha.png";
+    btnBack.alt = "Volver";
+    btnBack.style.position = "absolute";
+    btnBack.style.left = "14px";
+    btnBack.style.bottom = "84px";
+    btnBack.style.width = "56px";
+    btnBack.style.height = "56px";
+    btnBack.style.cursor = "pointer";
+    btnBack.style.transform = "rotate(180deg)";
+    btnBack.style.zIndex = "65";
+    btnBack.style.display = "none";
+    document.getElementById("screen").appendChild(btnBack);
+  }
+
+  optBoxes[0].style.left = "25%";
+  optBoxes[0].style.top = "25%";
   optBoxes[0].style.right = "auto";
   optBoxes[0].style.bottom = "auto";
   optBoxes[0].style.transform = "translate(-50%, -50%)";
 
-  optBoxes[1].style.left = "78%";
-  optBoxes[1].style.top = "22%";
+  optBoxes[1].style.left = "75%";
+  optBoxes[1].style.top = "25%";
   optBoxes[1].style.right = "auto";
   optBoxes[1].style.bottom = "auto";
   optBoxes[1].style.transform = "translate(-50%, -50%)";
 
-  optBoxes[2].style.left = "22%";
-  optBoxes[2].style.top = "78%";
+  optBoxes[2].style.left = "25%";
+  optBoxes[2].style.top = "75%";
   optBoxes[2].style.right = "auto";
   optBoxes[2].style.bottom = "auto";
   optBoxes[2].style.transform = "translate(-50%, -50%)";
 
-  optBoxes[3].style.left = "78%";
-  optBoxes[3].style.top = "78%";
+  optBoxes[3].style.left = "75%";
+  optBoxes[3].style.top = "75%";
   optBoxes[3].style.right = "auto";
   optBoxes[3].style.bottom = "auto";
   optBoxes[3].style.transform = "translate(-50%, -50%)";
 
   optBoxes.forEach((box) => {
-    box.style.border = "2px solid #000";
-    box.style.background = "#fff";
-    box.style.padding = "12px";
-    box.style.width = "300px";
-    box.style.height = "220px";
+    box.style.border = "none";
+    box.style.background = "transparent";
+    box.style.boxShadow = "none";
+    box.style.padding = "0";
+    box.style.width = "440px";
+    box.style.height = "360px";
     box.style.display = "flex";
     box.style.alignItems = "center";
     box.style.justifyContent = "center";
@@ -550,10 +570,11 @@ function runSemanticMatch(step) {
   });
 
   optImgs.forEach((imgEl) => {
-    imgEl.style.maxWidth = "270px";
-    imgEl.style.maxHeight = "190px";
+    imgEl.style.maxWidth = "410px";
+    imgEl.style.maxHeight = "330px";
     imgEl.style.width = "100%";
     imgEl.style.height = "100%";
+    imgEl.style.filter = "none";
   });
 
   const trials = step.trials || [];
@@ -604,7 +625,16 @@ function runSemanticMatch(step) {
   }
 
   function clearMarks() {
-    optBoxes.forEach(b => b.classList.remove("selected"));
+    optBoxes.forEach((b, idx) => {
+      b.classList.remove("selected");
+      b.style.border = "none";
+      b.style.boxShadow = "none";
+      if (optImgs[idx]) {
+        optImgs[idx].style.filter = "none";
+        optImgs[idx].style.boxShadow = "none";
+        optImgs[idx].style.borderRadius = "0";
+      }
+    });
     btnNext.style.display = "none";
     selectedIndex = null;
   }
@@ -627,6 +657,10 @@ function runSemanticMatch(step) {
     btnFullscreen.style.display = (trialIndex === 0) ? "block" : "none";
   }
 
+  function updateBackButton() {
+    btnBack.style.display = trialIndex > 0 ? "block" : "none";
+  }
+
   function renderTrial() {
     clearMarks();
 
@@ -637,8 +671,11 @@ function runSemanticMatch(step) {
     centerImg.style.maxWidth = "360px";
     centerImg.style.maxHeight = "280px";
     optImgs.forEach((imgEl) => {
-      imgEl.style.maxWidth = "270px";
-      imgEl.style.maxHeight = "190px";
+      imgEl.style.maxWidth = "410px";
+      imgEl.style.maxHeight = "330px";
+      imgEl.style.filter = "none";
+      imgEl.style.boxShadow = "none";
+      imgEl.style.borderRadius = "0";
     });
 
     centerImg.src = t.center;
@@ -646,6 +683,7 @@ function runSemanticMatch(step) {
 
     updateTopBar();
     updateFullscreenButton();
+    updateBackButton();
 
     setupInstructionAudio(trialIndex === 0 ? step.instructionAudio : null, false, "bottom-left");
 
@@ -659,12 +697,36 @@ function runSemanticMatch(step) {
       const idx = Number(box.dataset.opt);
       selectedIndex = idx;
 
-      optBoxes.forEach(b => b.classList.remove("selected"));
+      optBoxes.forEach((b, imgIndex) => {
+        b.classList.remove("selected");
+        b.style.border = "none";
+        b.style.boxShadow = "none";
+        if (optImgs[imgIndex]) {
+          optImgs[imgIndex].style.filter = "none";
+          optImgs[imgIndex].style.boxShadow = "none";
+          optImgs[imgIndex].style.borderRadius = "0";
+        }
+      });
       box.classList.add("selected");
+      box.style.border = "none";
+      box.style.boxShadow = "none";
+      if (optImgs[idx]) {
+        optImgs[idx].style.filter = "none";
+        optImgs[idx].style.boxShadow = "0 0 0 10px rgba(37, 99, 235, 0.32), 0 0 22px rgba(37, 99, 235, 0.55)";
+        optImgs[idx].style.borderRadius = "8px";
+      }
 
       btnNext.style.display = "block";
     };
   });
+
+  btnBack.onclick = () => {
+    if (trialIndex <= 0) return;
+    hideInstructionAudio();
+    trialIndex--;
+    setPartProgress(partId, { status: "in_progress", trialIndex });
+    renderTrial();
+  };
 
   btnNext.onclick = () => {
     if (selectedIndex === null) return;
@@ -680,6 +742,7 @@ function runSemanticMatch(step) {
     trialIndex++;
 
     if (trialIndex >= trials.length) {
+      btnBack.style.display = "none";
       setPartProgress(partId, { status: "done", trialIndex: trials.length - 1 });
       finishCurrentPart();
       return;
@@ -900,6 +963,9 @@ function runVerbalFluency(step) {
   let promptFinished = false;
 
   const duration = step.recordDurationMs || 60000;
+  const captureDurationMs = duration + 3000;
+  const beepAudio = new Audio("/tests/modulo2/assets/beep.wav");
+  let beepConnected = false;
 
   const screens = [
     { type: "instruction", audio: step.instr1Audio, topBar: "Instrucción" },
@@ -915,6 +981,8 @@ function runVerbalFluency(step) {
   btnFullscreen.style.display = "block";
   btnNext.style.display = "block";
   btnFullscreen.onclick = () => toggleFullscreen();
+  centerText.style.fontSize = "123px";
+  centerText.style.lineHeight = "1";
 
   topAudio.style.position = "fixed";
   topAudio.style.left = "14px";
@@ -929,6 +997,14 @@ function runVerbalFluency(step) {
     if (prepared) return;
     await recorder.prepare({ numChannels: 1 });
     prepared = true;
+    if (!beepConnected && typeof recorder.connectAudioElement === "function") {
+      try {
+        recorder.connectAudioElement(beepAudio);
+        beepConnected = true;
+      } catch (e) {
+        console.warn("No se pudo conectar beep.wav a la grabacion:", e);
+      }
+    }
   }
 
   function showMicError(err) {
@@ -989,13 +1065,13 @@ function runVerbalFluency(step) {
     minuteElapsed = false;
     nextRedTimer = setTimeout(() => {
       markNextButtonAsReady();
-    }, duration);
+    }, captureDurationMs);
 
     timer = setTimeout(async () => {
       markNextButtonAsReady();
       await stopAndSave();
       setStoppedState();
-    }, duration);
+    }, captureDurationMs);
   }
 
   async function stopAndSave() {
@@ -1033,8 +1109,31 @@ function runVerbalFluency(step) {
     try {
       audioEl.pause();
       audioEl.currentTime = 0;
+      beepAudio.pause();
+      beepAudio.currentTime = 0;
     } catch (e) { }
     audioEl.onended = null;
+  }
+
+  async function playFluencyBeep() {
+    try {
+      beepAudio.pause();
+      beepAudio.currentTime = 0;
+      await beepAudio.play();
+    } catch (e) {
+      console.warn("No se pudo reproducir beep.wav:", e);
+    }
+  }
+
+  function bindTestAudioEnded() {
+    audioEl.onended = async () => {
+      clearTimeout(promptLeadTimer);
+      if (!isCapturing) {
+        await startCapture();
+        setRecordingState();
+      }
+      await playFluencyBeep();
+    };
   }
 
   function updateTopBar(label) {
@@ -1138,9 +1237,17 @@ function runVerbalFluency(step) {
       centerText.style.display = "block";
       centerText.textContent = s.text;
       recRow.style.display = "none";
-      topAudio.style.display = "none";
       stopBtn.style.display = "none";
       if (recordingIcon) recordingIcon.style.display = "none";
+
+      topAudio.style.display = s.audio ? "block" : "none";
+      topAudio.onclick = async () => {
+        if (!s.audio) return;
+        stopPromptAudio();
+        audioEl.src = s.audio;
+        audioEl.currentTime = 0;
+        await audioEl.play();
+      };
       return;
     }
 
@@ -1159,19 +1266,14 @@ function runVerbalFluency(step) {
 
         stopPromptAudio();
         setPromptState();
+        bindTestAudioEnded();
         audioEl.src = s.audio;
         audioEl.currentTime = 0;
         await audioEl.play();
         scheduleLeadRecording();
       };
 
-      audioEl.onended = async () => {
-        clearTimeout(promptLeadTimer);
-        if (!isCapturing) {
-          await startCapture();
-          setRecordingState();
-        }
-      };
+      bindTestAudioEnded();
     }
   }
 
@@ -1258,10 +1360,10 @@ function runMCQ4ImageTrials(step) {
   centerBox.style.display = "none";
 
   const optionPositions = [
-    { left: "32%", top: "34%" },
-    { left: "68%", top: "34%" },
-    { left: "32%", top: "66%" },
-    { left: "68%", top: "66%" },
+    { left: "31%", top: "30%" },
+    { left: "69%", top: "30%" },
+    { left: "31%", top: "70%" },
+    { left: "69%", top: "70%" },
   ];
 
   optBoxes.forEach((box, boxIndex) => {
@@ -1270,8 +1372,12 @@ function runMCQ4ImageTrials(step) {
     box.style.right = "auto";
     box.style.bottom = "auto";
     box.style.transform = "translate(-50%, -50%)";
-    box.style.width = "min(34vw, 360px)";
-    box.style.height = "min(28vh, 260px)";
+    box.style.width = "min(42vw, 435px)";
+    box.style.height = "min(36vh, 335px)";
+    box.style.border = "none";
+    box.style.background = "transparent";
+    box.style.boxShadow = "none";
+    box.style.padding = "0";
   });
 
   optImgs.forEach((imgEl) => {
@@ -1280,6 +1386,9 @@ function runMCQ4ImageTrials(step) {
     imgEl.style.maxWidth = "100%";
     imgEl.style.maxHeight = "100%";
     imgEl.style.objectFit = "contain";
+    imgEl.style.filter = "none";
+    imgEl.style.boxShadow = "none";
+    imgEl.style.borderRadius = "0";
   });
 
   // Fullscreen disponible siempre
@@ -1342,7 +1451,16 @@ function runMCQ4ImageTrials(step) {
   }
 
   function clearSelection() {
-    optBoxes.forEach(b => b.classList.remove("selected"));
+    optBoxes.forEach((b, idx) => {
+      b.classList.remove("selected");
+      b.style.border = "none";
+      b.style.boxShadow = "none";
+      if (optImgs[idx]) {
+        optImgs[idx].style.filter = "none";
+        optImgs[idx].style.boxShadow = "none";
+        optImgs[idx].style.borderRadius = "0";
+      }
+    });
     selectedIndex = null;
     btnNext.style.display = requireSel ? "none" : "block";
   }
@@ -1421,8 +1539,23 @@ function runMCQ4ImageTrials(step) {
       const idx = Number(box.dataset.opt); // 0..3
       selectedIndex = idx;
 
-      optBoxes.forEach(b => b.classList.remove("selected"));
+      optBoxes.forEach((b, imgIndex) => {
+        b.classList.remove("selected");
+        b.style.border = "none";
+        b.style.boxShadow = "none";
+        if (optImgs[imgIndex]) {
+          optImgs[imgIndex].style.filter = "none";
+          optImgs[imgIndex].style.boxShadow = "none";
+          optImgs[imgIndex].style.borderRadius = "0";
+        }
+      });
       box.classList.add("selected");
+      box.style.border = "none";
+      box.style.boxShadow = "none";
+      if (optImgs[idx]) {
+        optImgs[idx].style.boxShadow = "0 0 0 10px rgba(37, 99, 235, 0.32), 0 0 22px rgba(37, 99, 235, 0.55)";
+        optImgs[idx].style.borderRadius = "8px";
+      }
 
       btnNext.style.display = "block";
     };
@@ -1511,20 +1644,29 @@ function runVideoRecordTrials(step) {
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
   btnNext.style.display = "none";
 
-  vrStimImageWrap.style.left = "50%";
+  vrStimImageWrap.style.left = "44%";
   vrStimImageWrap.style.top = "50%";
   vrStimImageWrap.style.transform = "translate(-50%, -50%)";
-  vrStimImageWrap.style.width = "92vw";
-  vrStimImageWrap.style.maxWidth = "1200px";
-  vrStimImage.style.maxWidth = "100%";
-  vrStimImage.style.maxHeight = "74vh";
+  vrStimImageWrap.style.width = "720px";
+  vrStimImageWrap.style.maxWidth = "60vw";
+  vrStimImage.style.maxWidth = "720px";
+  vrStimImage.style.maxHeight = "82vh";
 
-  vrPreviewWrap.style.top = "44%";
-  vrPreview.style.width = "760px";
-  vrPreview.style.height = "560px";
-  vrPreview.style.maxWidth = "92vw";
-  vrPreview.style.maxHeight = "80vh";
+  vrPreviewWrap.style.left = "auto";
+  vrPreviewWrap.style.right = "300px";
+  vrPreviewWrap.style.top = "300px";
+  vrPreviewWrap.style.transform = "translate(0, -50%)";
+  vrPreviewWrap.style.width = "360px";
+  vrPreviewWrap.style.maxWidth = "32vw";
+  vrPreview.style.width = "360px";
+  vrPreview.style.height = "270px";
+  vrPreview.style.maxWidth = "32vw";
+  vrPreview.style.maxHeight = "45vh";
   vrPreview.style.objectFit = "cover";
+  vrControls.style.left = "auto";
+  vrControls.style.right = "430px";
+  vrControls.style.top = "520px";
+  vrControls.style.transform = "translateX(50%)";
 
   const recorder = new VideoRecorder();
   let isRecording = false;
@@ -1689,6 +1831,20 @@ function runVideoRecordTrials(step) {
     if (screenIndex === 0) {
       vrStimWrap.style.display = "none";
       vrPreviewWrap.style.display = "flex";
+      vrPreviewWrap.style.left = "50%";
+      vrPreviewWrap.style.right = "auto";
+      vrPreviewWrap.style.top = "50%";
+      vrPreviewWrap.style.transform = "translate(-50%, -50%)";
+      vrPreviewWrap.style.width = "760px";
+      vrPreviewWrap.style.maxWidth = "92vw";
+      vrPreview.style.width = "760px";
+      vrPreview.style.height = "560px";
+      vrPreview.style.maxWidth = "92vw";
+      vrPreview.style.maxHeight = "80vh";
+      vrControls.style.left = "50%";
+      vrControls.style.right = "auto";
+      vrControls.style.top = "86%";
+      vrControls.style.transform = "translate(-50%, -50%)";
       btnAudio.style.display = "none";
       setIdleUI();
       btnNext.style.display = "block";
@@ -1702,6 +1858,20 @@ function runVideoRecordTrials(step) {
 
     vrStimWrap.style.display = "block";
     vrPreviewWrap.style.display = "none";
+    vrPreviewWrap.style.left = "auto";
+    vrPreviewWrap.style.right = "300px";
+    vrPreviewWrap.style.top = "300px";
+    vrPreviewWrap.style.transform = "translate(0, -50%)";
+    vrPreviewWrap.style.width = "360px";
+    vrPreviewWrap.style.maxWidth = "32vw";
+    vrPreview.style.width = "360px";
+    vrPreview.style.height = "270px";
+    vrPreview.style.maxWidth = "32vw";
+    vrPreview.style.maxHeight = "45vh";
+    vrControls.style.left = "auto";
+    vrControls.style.right = "430px";
+    vrControls.style.top = "520px";
+    vrControls.style.transform = "translateX(50%)";
     vrStimImageWrap.style.display = "flex";
     vrSmallPreviewWrap.style.display = "none";
 
@@ -1732,7 +1902,7 @@ function runVideoRecordTrials(step) {
 
     instructionAudio.onended = async () => {
       btnAudio.style.display = "none";
-      vrStimImageWrap.style.display = "none";
+      vrStimImageWrap.style.display = "flex";
       vrPreviewWrap.style.display = "flex";
       try {
         await startRecording();
@@ -1782,7 +1952,27 @@ function runVideoRecordTrials(step) {
 function runCalcMCQ(step) {
   showLayout("calc");
 
+  const promptBox = document.getElementById("calcPromptBox");
   const promptImg = document.getElementById("calcPromptImg");
+  let promptText = document.getElementById("calcPromptText");
+  if (!promptText && promptBox) {
+    promptText = document.createElement("div");
+    promptText.id = "calcPromptText";
+    promptBox.appendChild(promptText);
+  }
+  if (promptImg) {
+    promptImg.style.display = "none";
+    promptImg.removeAttribute("src");
+  }
+  if (promptText) {
+    promptText.style.display = "block";
+    promptText.style.fontSize = "112px";
+    promptText.style.fontWeight = "800";
+    promptText.style.lineHeight = "1";
+    promptText.style.textAlign = "center";
+    promptText.style.whiteSpace = "nowrap";
+    promptText.style.minWidth = "520px";
+  }
   const optBoxes = Array.from(document.querySelectorAll("#calcOptions .opt5"));
   const optImgs = [
     document.getElementById("cimg0"),
@@ -1797,7 +1987,7 @@ function runCalcMCQ(step) {
       labelEl = document.createElement("div");
       labelEl.className = "calcOptionLabel";
       labelEl.style.display = "none";
-      labelEl.style.fontSize = "42px";
+      labelEl.style.fontSize = "88px";
       labelEl.style.fontWeight = "700";
       labelEl.style.lineHeight = "1";
       labelEl.style.textAlign = "center";
@@ -1879,7 +2069,13 @@ function runCalcMCQ(step) {
   function renderTrial() {
     clearMarks();
     const t = trials[trialIndex];
-    promptImg.src = t.promptImg;
+    if (promptImg) {
+      promptImg.style.display = "none";
+      promptImg.removeAttribute("src");
+    }
+    if (promptText) {
+      promptText.textContent = CALCULATION_OPERATIONS[trialIndex] || "";
+    }
     for (let i = 0; i < 5; i++) {
       const optionValue = t.options[i];
       const isImage = typeof optionValue === "string" && /\.(png|jpe?g|webp|gif|svg)$/i.test(optionValue);
@@ -2032,6 +2228,9 @@ function runAudioMCQ4Trials(step) {
   let selectedIndex = null;
 
   function fileFor(t, o) {
+    const mappedFile = step.imageFiles?.[t]?.[o - 1];
+    if (mappedFile) return `${basePath}/${mappedFile}`;
+
     const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
     return `${basePath}/${f}`;
   }
@@ -2194,12 +2393,21 @@ function runAudioMCQ4WordsOnScreen(step) {
     box.style.height = "280px";
     box.style.padding = "12px";
   });
-  optImgs.forEach((imgEl) => {
-    imgEl.style.maxWidth = "330px";
-    imgEl.style.maxHeight = "250px";
-    imgEl.style.width = "100%";
-    imgEl.style.height = "100%";
-  });
+  function applyPart8ImageStyle(imgEl, selected = false) {
+    if (!imgEl) return;
+    imgEl.style.maxWidth = "400px";
+    imgEl.style.maxHeight = "300px";
+    imgEl.style.width = "130%";
+    imgEl.style.height = "130%";
+    imgEl.style.filter = "none";
+    imgEl.style.border = "2px solid black";
+    imgEl.style.boxShadow = selected
+      ? "0 0 0 10px rgba(37, 99, 235, 0.32), 0 0 22px rgba(37, 99, 235, 0.55)"
+      : "none";
+    imgEl.style.borderRadius = "8px";
+  }
+
+  optImgs.forEach(applyPart8ImageStyle);
 
   // este test no usa imagen central, usa palabra
   centerBox.style.display = "none";
@@ -2264,7 +2472,12 @@ function runAudioMCQ4WordsOnScreen(step) {
   }
 
   function clearSelection() {
-    optBoxes.forEach(b => b.classList.remove("selected"));
+    optBoxes.forEach((b, idx) => {
+      b.classList.remove("selected");
+      b.style.border = "none";
+      b.style.boxShadow = "none";
+      applyPart8ImageStyle(optImgs[idx], false);
+    });
     selectedIndex = null;
     btnNext.style.display = requireSel ? "none" : "block";
   }
@@ -2334,6 +2547,7 @@ function runAudioMCQ4WordsOnScreen(step) {
 
     for (let o = 1; o <= 4; o++) {
       optImgs[o - 1].src = fileFor(t, o);
+      applyPart8ImageStyle(optImgs[o - 1], false);
     }
 
     mountAudioForTrial(t);
@@ -2346,8 +2560,16 @@ function runAudioMCQ4WordsOnScreen(step) {
       const idx = Number(box.dataset.opt);
       selectedIndex = idx;
 
-      optBoxes.forEach(b => b.classList.remove("selected"));
+      optBoxes.forEach((b, imgIndex) => {
+        b.classList.remove("selected");
+        b.style.border = "none";
+        b.style.boxShadow = "none";
+        applyPart8ImageStyle(optImgs[imgIndex], false);
+      });
       box.classList.add("selected");
+      box.style.border = "none";
+      box.style.boxShadow = "none";
+      applyPart8ImageStyle(optImgs[idx], true);
 
       btnNext.style.display = "block";
     };
@@ -2415,17 +2637,40 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     document.getElementById("img2"),
     document.getElementById("img3"),
   ];
+  const screenEl = document.getElementById("screen");
+  const introVoiceLabels = [
+    ensurePart9VoiceLabel("part9IntroFemale", "femenino.jpg", "Audio femenino"),
+    ensurePart9VoiceLabel("part9IntroMale", "masculino.jpg", "Audio masculino")
+  ];
 
-  optBoxes.forEach((box) => {
-    box.style.width = "360px";
-    box.style.height = "280px";
-    box.style.padding = "12px";
+  const part9OptionPositions = [
+    { left: "33%", top: "28%" },
+    { left: "67%", top: "28%" },
+    { left: "33%", top: "72%" },
+    { left: "67%", top: "72%" },
+  ];
+
+  optBoxes.forEach((box, boxIndex) => {
+    box.style.left = part9OptionPositions[boxIndex].left;
+    box.style.top = part9OptionPositions[boxIndex].top;
+    box.style.right = "auto";
+    box.style.bottom = "auto";
+    box.style.transform = "translate(-50%, -50%)";
+    box.style.width = "400px";
+    box.style.height = "330px";
+    box.style.padding = "0";
+    box.style.border = "none";
+    box.style.background = "transparent";
+    box.style.boxShadow = "none";
   });
   optImgs.forEach((imgEl) => {
-    imgEl.style.maxWidth = "330px";
-    imgEl.style.maxHeight = "250px";
+    imgEl.style.maxWidth = "400px";
+    imgEl.style.maxHeight = "310px";
     imgEl.style.width = "100%";
     imgEl.style.height = "100%";
+    imgEl.style.border = "none";
+    imgEl.style.boxShadow = "none";
+    imgEl.style.borderRadius = "0";
   });
 
   const basePath = step.basePath || "assets/parte9";
@@ -2458,6 +2703,42 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
 
   let selectedIndex = null;
+
+  function ensurePart9VoiceLabel(id, imageSrc, title) {
+    let label = document.getElementById(id);
+    if (!label && screenEl) {
+      label = document.createElement("div");
+      label.id = id;
+      label.title = title;
+      label.setAttribute("aria-label", title);
+      screenEl.appendChild(label);
+    }
+    if (label) {
+      label.textContent = "";
+      label.style.position = "absolute";
+      label.style.left = "50%";
+      label.style.top = "calc(50% + 82px)";
+      label.style.width = "54px";
+      label.style.height = "54px";
+      label.style.border = "none";
+      label.style.borderRadius = "0";
+      label.style.background = `transparent url("${imageSrc}") center / contain no-repeat`;
+      label.style.display = "none";
+      label.style.alignItems = "center";
+      label.style.justifyContent = "center";
+      label.style.zIndex = "82";
+      label.style.pointerEvents = "none";
+    }
+    return label;
+  }
+
+  function setPart9IntroVoiceLabelsVisible(visible) {
+    introVoiceLabels.forEach((label, index) => {
+      if (!label) return;
+      label.style.display = visible ? "flex" : "none";
+      label.style.transform = index === 0 ? "translate(-101px, 0)" : "translate(59px, 0)";
+    });
+  }
 
   function fileFor(t, o) {
     const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
@@ -2539,7 +2820,16 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
   }
 
   function clearSelection() {
-    optBoxes.forEach(b => b.classList.remove("selected"));
+    optBoxes.forEach((b, idx) => {
+      b.classList.remove("selected");
+      b.style.border = "none";
+      b.style.background = "transparent";
+      b.style.boxShadow = "none";
+      if (optImgs[idx]) {
+        optImgs[idx].style.border = "none";
+        optImgs[idx].style.boxShadow = "none";
+      }
+    });
     selectedIndex = null;
     btnNext.style.display = requireSel ? "none" : "block";
   }
@@ -2581,6 +2871,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     setPartProgress(partId, { screenIndex });
 
     document.body.classList.remove("twoCenterAudios");
+    setPart9IntroVoiceLabelsVisible(false);
 
     if (btnAudioCenter) {
       btnAudioCenter.style.display = "none";
@@ -2608,6 +2899,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       centerWord.style.display = "none";
 
       document.body.classList.add("twoCenterAudios");
+      setPart9IntroVoiceLabelsVisible(true);
 
       setupExclusiveAudio(btnAudioCenter, instructionAudio, step.introAudio1, { forceShow: true });
       setupExclusiveAudio(btnAudioCenter2, instructionAudio, step.introAudio2, { forceShow: true });
@@ -2622,6 +2914,9 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     const t = screenIndex; // imágenes 1..17
     for (let o = 1; o <= 4; o++) {
       optImgs[o - 1].src = fileFor(t, o);
+      optImgs[o - 1].style.border = "none";
+      optImgs[o - 1].style.boxShadow = "none";
+      optImgs[o - 1].style.borderRadius = "0";
     }
 
     // screenIndex 1 = ejemplo => practiceAudio1 (audio3.wav)
@@ -2649,8 +2944,20 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       const idx = Number(box.dataset.opt);
       selectedIndex = idx;
 
-      optBoxes.forEach(b => b.classList.remove("selected"));
+      optBoxes.forEach((b, imgIndex) => {
+        b.classList.remove("selected");
+        b.style.border = "none";
+        b.style.background = "transparent";
+        b.style.boxShadow = "none";
+        if (optImgs[imgIndex]) {
+          optImgs[imgIndex].style.border = "none";
+          optImgs[imgIndex].style.boxShadow = "none";
+        }
+      });
       box.classList.add("selected");
+      box.style.border = "none";
+      box.style.background = "transparent";
+      box.style.boxShadow = "0 0 0 10px rgba(37, 99, 235, 0.32), 0 0 22px rgba(37, 99, 235, 0.55)";
 
       btnNext.style.display = "block";
     };
@@ -2681,6 +2988,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
 
     if (screenIndex >= totalScreens) {
       stopAllAudios();
+      setPart9IntroVoiceLabelsVisible(false);
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
       finishCurrentPart();
       return;
@@ -2716,21 +3024,32 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
     document.getElementById("img2"),
     document.getElementById("img3"),
   ];
+  const screenEl = document.getElementById("screen");
+  const practiceVoiceIcons = [
+    ensurePart10PracticeVoiceIcon("part10PracticeFemale", "femenino.jpg", "Audio femenino"),
+    ensurePart10PracticeVoiceIcon("part10PracticeMale", "masculino.jpg", "Audio masculino")
+  ];
 
-  centerWord.style.top = "15%";
+  centerWord.style.inset = "";
+  centerWord.style.top = "50%";
+  centerWord.style.left = "50%";
+  centerWord.style.transform = "translate(-50%, -50%)";
   centerWord.style.fontSize = "52px";
   centerWord.style.maxWidth = "80vw";
   centerWord.style.width = "max-content";
   centerWord.style.textAlign = "center";
+  centerWord.style.zIndex = "60";
 
+  optBoxes[0].style.inset = "26% auto auto 34%";
   optBoxes[0].style.left = "34%";
-  optBoxes[0].style.top = "38%";
+  optBoxes[0].style.top = "26%";
   optBoxes[0].style.right = "auto";
   optBoxes[0].style.bottom = "auto";
   optBoxes[0].style.transform = "translate(-50%, -50%)";
 
+  optBoxes[1].style.inset = "26% auto auto 66%";
   optBoxes[1].style.left = "66%";
-  optBoxes[1].style.top = "38%";
+  optBoxes[1].style.top = "26%";
   optBoxes[1].style.right = "auto";
   optBoxes[1].style.bottom = "auto";
   optBoxes[1].style.transform = "translate(-50%, -50%)";
@@ -2748,16 +3067,22 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
   optBoxes[3].style.transform = "translate(-50%, -50%)";
 
   optBoxes.forEach((box) => {
-    box.style.width = "360px";
-    box.style.height = "280px";
-    box.style.padding = "12px";
+    box.style.width = "400px";
+    box.style.height = "330px";
+    box.style.padding = "0";
+    box.style.border = "none";
+    box.style.background = "transparent";
+    box.style.boxShadow = "none";
   });
 
   optImgs.forEach((imgEl) => {
-    imgEl.style.maxWidth = "330px";
-    imgEl.style.maxHeight = "250px";
+    imgEl.style.maxWidth = "400px";
+    imgEl.style.maxHeight = "310px";
     imgEl.style.width = "100%";
     imgEl.style.height = "100%";
+    imgEl.style.border = "none";
+    imgEl.style.boxShadow = "none";
+    imgEl.style.borderRadius = "0";
   });
 
   const basePath = step.basePath || "assets/parte10";
@@ -2792,6 +3117,61 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
 
   let selectedIndex = null;
 
+  function ensurePart10PracticeVoiceIcon(id, imageSrc, title) {
+    let icon = document.getElementById(id);
+    if (!icon && screenEl) {
+      icon = document.createElement("div");
+      icon.id = id;
+      icon.title = title;
+      icon.setAttribute("aria-label", title);
+      screenEl.appendChild(icon);
+    }
+    if (icon) {
+      icon.style.position = "absolute";
+      icon.style.top = "74px";
+      icon.style.width = "44px";
+      icon.style.height = "44px";
+      icon.style.border = "none";
+      icon.style.borderRadius = "0";
+      icon.style.background = `transparent url("${imageSrc}") center / contain no-repeat`;
+      icon.style.display = "none";
+      icon.style.zIndex = "72";
+      icon.style.pointerEvents = "none";
+    }
+    return icon;
+  }
+
+  function setPart10PracticeVoiceIconsVisible(visible) {
+    practiceVoiceIcons.forEach((icon, index) => {
+      if (!icon) return;
+      icon.style.display = visible ? "block" : "none";
+      icon.style.right = index === 0 ? "90px" : "18px";
+    });
+  }
+
+  function positionPart10PracticeAudioButtons() {
+    if (btnAudio) {
+      btnAudio.style.position = "absolute";
+      btnAudio.style.top = "12px";
+      btnAudio.style.right = "84px";
+      btnAudio.style.left = "auto";
+      btnAudio.style.bottom = "auto";
+      btnAudio.style.width = "56px";
+      btnAudio.style.height = "56px";
+      btnAudio.style.transform = "none";
+    }
+    if (btnAudio2) {
+      btnAudio2.style.position = "absolute";
+      btnAudio2.style.top = "12px";
+      btnAudio2.style.right = "12px";
+      btnAudio2.style.left = "auto";
+      btnAudio2.style.bottom = "auto";
+      btnAudio2.style.width = "56px";
+      btnAudio2.style.height = "56px";
+      btnAudio2.style.transform = "none";
+    }
+  }
+
   function fileFor(t, o) {
     const f = filePattern.replace("{t}", String(t)).replace("{o}", String(o));
     return `${basePath}/${f}`;
@@ -2822,7 +3202,16 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
   }
 
   function clearSelection() {
-    optBoxes.forEach(b => b.classList.remove("selected"));
+    optBoxes.forEach((b, idx) => {
+      b.classList.remove("selected");
+      b.style.border = "none";
+      b.style.background = "transparent";
+      b.style.boxShadow = "none";
+      if (optImgs[idx]) {
+        optImgs[idx].style.border = "none";
+        optImgs[idx].style.boxShadow = "none";
+      }
+    });
     selectedIndex = null;
     btnNext.style.display = requireSel ? "none" : "block";
   }
@@ -2905,6 +3294,7 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
     // al cambiar de screen, detener todo audio
     pauseAllAudios();
     hideAllAudioButtons();
+    setPart10PracticeVoiceIconsVisible(false);
 
     if (screenIndex === 0) {
       // Instrucción
@@ -2933,10 +3323,16 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
 
     for (let o = 1; o <= 4; o++) {
       optImgs[o - 1].src = fileFor(t, o);
+      optImgs[o - 1].style.border = "none";
+      optImgs[o - 1].style.boxShadow = "none";
+      optImgs[o - 1].style.borderRadius = "0";
     }
 
     // t=1: ejemplo con 2 audios
     if (t === 1) {
+      positionPart10PracticeAudioButtons();
+      setPart10PracticeVoiceIconsVisible(true);
+
       setupManagedAudio(
         btnAudio,
         instructionAudio,
@@ -2960,8 +3356,20 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
       const idx = Number(box.dataset.opt);
       selectedIndex = idx;
 
-      optBoxes.forEach(b => b.classList.remove("selected"));
+      optBoxes.forEach((b, imgIndex) => {
+        b.classList.remove("selected");
+        b.style.border = "none";
+        b.style.background = "transparent";
+        b.style.boxShadow = "none";
+        if (optImgs[imgIndex]) {
+          optImgs[imgIndex].style.border = "none";
+          optImgs[imgIndex].style.boxShadow = "none";
+        }
+      });
       box.classList.add("selected");
+      box.style.border = "none";
+      box.style.background = "transparent";
+      box.style.boxShadow = "0 0 0 10px rgba(37, 99, 235, 0.32), 0 0 22px rgba(37, 99, 235, 0.55)";
 
       btnNext.style.display = "block";
     };
@@ -2998,6 +3406,7 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
     if (screenIndex >= totalScreens) {
       pauseAllAudios();
       hideAllAudioButtons();
+      setPart10PracticeVoiceIconsVisible(false);
 
       setPartProgress(partId, {
         status: "done",
@@ -3114,6 +3523,17 @@ function runStoryYesNoFlow(step) {
 
   const requireSel = step.requireSelectionToAdvance !== false;
   let selected = null;
+
+  if (btnYes) {
+    btnYes.style.fontSize = "117px";
+    btnYes.style.padding = "18px 90px";
+    btnYes.style.paddingLeft = "113px";
+    btnYes.style.paddingRight = "113px";
+  }
+  if (btnNo) {
+    btnNo.style.fontSize = "117px";
+    btnNo.style.padding = "18px 90px";
+  }
 
   function buildOralParagraphResult(currentScreenIndex, selectedAnswer) {
     const meta = ORAL_PARAGRAPHS_QUESTIONS[currentScreenIndex];
@@ -3276,6 +3696,10 @@ function runRepeatAudioRecord(step) {
 
   const totalScreens = (hasIntro ? 1 : 0) + (noExample ? 0 : 1) + totalTrials;
 
+  if (!resume) {
+    setPartData(partId, { takes: {} });
+  }
+
   const saved = getPartProgress(partId);
   let screenIndex = 0;
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
@@ -3302,10 +3726,17 @@ function runRepeatAudioRecord(step) {
   const recIcon = document.getElementById("repeatRecording");
   const stopBtn = document.getElementById("repeatStop");
   const promptAudio = document.getElementById("repeatPromptAudio");
+  const screenEl = document.getElementById("screen");
 
   const introA1 = step.introAudios?.[0] ?? null;
   const introA2 = step.introAudios?.[1] ?? null;
   const startBeep = (partId === 15 || partId === 16) ? new Audio("/tests/modulo2/assets/beep.wav") : null;
+  const repeatIntroGenderIcons = partId === 12
+    ? [
+      ensureRepeatIntroGenderIcon("repeatIntroFemale", "femenino.jpg", "Audio femenino"),
+      ensureRepeatIntroGenderIcon("repeatIntroMale", "masculino.jpg", "Audio masculino")
+    ]
+    : [];
 
   const recorder = new WavRecorder();
   let prepared = false;
@@ -3314,6 +3745,39 @@ function runRepeatAudioRecord(step) {
   let isClosing = false;
   let hasRecordedCurrentScreen = false;
   let captureLeadTimer = null;
+
+  function ensureRepeatIntroGenderIcon(id, imageSrc, title) {
+    let icon = document.getElementById(id);
+    if (!icon && screenEl) {
+      icon = document.createElement("div");
+      icon.id = id;
+      icon.title = title;
+      icon.setAttribute("aria-label", title);
+      screenEl.appendChild(icon);
+    }
+    if (icon) {
+      icon.style.position = "absolute";
+      icon.style.left = "50%";
+      icon.style.width = "54px";
+      icon.style.height = "54px";
+      icon.style.border = "none";
+      icon.style.borderRadius = "0";
+      icon.style.background = `transparent url("${imageSrc}") center / contain no-repeat`;
+      icon.style.display = "none";
+      icon.style.zIndex = "82";
+      icon.style.pointerEvents = "none";
+    }
+    return icon;
+  }
+
+  function setRepeatIntroGenderIconsVisible(visible) {
+    repeatIntroGenderIcons.forEach((icon, index) => {
+      if (!icon) return;
+      icon.style.display = visible ? "block" : "none";
+      icon.style.top = index === 0 ? "calc(50% - 58px)" : "calc(50% + 82px)";
+      icon.style.transform = "translate(76px, 0)";
+    });
+  }
 
   function stopAllAudios() {
     clearTimeout(captureLeadTimer);
@@ -3383,9 +3847,10 @@ function runRepeatAudioRecord(step) {
     return null;
   }
 
-  function keyForCurrentScreen() {
+  function keyForCurrentScreen(takeNumber = 1) {
     const s = screenIndex + 1;
-    return `part${String(partId).padStart(2, "0")}_s${String(s).padStart(2, "0")}.wav`;
+    const suffix = takeNumber > 1 ? `_${takeNumber}` : "";
+    return `part${String(partId).padStart(2, "0")}_s${String(s).padStart(2, "0")}${suffix}.wav`;
   }
 
   function labelForCurrentScreen() {
@@ -3397,7 +3862,17 @@ function runRepeatAudioRecord(step) {
 
     const trialsStart = introOffset + (noExample ? 0 : 1);
     const trialNumber = (screenIndex - trialsStart) + 1;
-    return trialNumber > 0 ? `ensayo_${String(trialNumber).padStart(2, "0")}` : `pantalla_${String(screenIndex + 1).padStart(2, "0")}`;
+    if (trialNumber > 0) {
+      const trialWord = step.trialWords?.[trialNumber - 1];
+      return trialWord ? `ensayo_${trialWord}` : `ensayo_${String(trialNumber).padStart(2, "0")}`;
+    }
+    return `pantalla_${String(screenIndex + 1).padStart(2, "0")}`;
+  }
+
+  function takeNumberForCurrentScreen() {
+    const data = getPartData(partId);
+    const takes = Object.values(data.takes || {});
+    return takes.filter((take) => Number(take?.screenIndex) === Number(screenIndex)).length + 1;
   }
 
   function updateTopBar() {
@@ -3509,16 +3984,20 @@ function runRepeatAudioRecord(step) {
     hideRecUI();
 
     if (blob) {
-      const key = keyForCurrentScreen();
+      const takeNumber = takeNumberForCurrentScreen();
+      const key = keyForCurrentScreen(takeNumber);
       await saveAudioBlob(key, blob);
 
       const data = getPartData(partId);
       const takes = data.takes || {};
-      takes[String(screenIndex)] = {
+      const takeId = `${screenIndex}_${takeNumber}`;
+      const label = labelForCurrentScreen();
+      takes[takeId] = {
         key,
         screenIndex,
-        label: labelForCurrentScreen(),
-        isExample: labelForCurrentScreen() === "ejemplo"
+        label,
+        takeNumber,
+        isExample: label === "ejemplo"
       };
       setPartData(partId, { takes });
 
@@ -3611,6 +4090,7 @@ function runRepeatAudioRecord(step) {
     if (btnAudioCenter2) btnAudioCenter2.style.display = "none";
     document.body.classList.remove("twoCenterAudios");
     document.body.classList.remove("stackCenterAudios");
+    setRepeatIntroGenderIconsVisible(false);
 
     isCapturing = false;
     hideRecUI();
@@ -3622,6 +4102,7 @@ function runRepeatAudioRecord(step) {
 
       if (Array.isArray(step.introAudios) && step.introAudios.length === 2) {
         document.body.classList.add("stackCenterAudios");
+        setRepeatIntroGenderIconsVisible(partId === 12);
       }
 
       setupAudio(btnAudioCenter, instructionAudio, introA1, { forceShow: true });
@@ -3919,18 +4400,18 @@ function runImageInstrAutoRecord(step) {
     if (currentN === 1) {
       return {
         I: step.instrI || "",
-        P: step.instrP || "",
+        P: "",
         PS: step.instrPS || "",
         PF: step.instrPF || "",
         labels: {
           I: "I",
-          P: "P",
+          P: "",
           PS: "PS",
           PF: "PF"
         },
         show: {
           I: true,
-          P: true,
+          P: false,
           PS: true,
           PF: true
         }
@@ -3960,18 +4441,18 @@ function runImageInstrAutoRecord(step) {
       // reutilizamos la caja I para mostrar PF2
       return {
         I: ensayoAudio(startAudioNumber + 3),   // PF2
-        P: ensayoAudio(startAudioNumber + 0),   // P
+        P: "",
         PS: ensayoAudio(startAudioNumber + 1),  // PS
         PF: ensayoAudio(startAudioNumber + 2),  // PF
         labels: {
           I: "PF2",
-          P: "P",
+          P: "",
           PS: "PS",
           PF: "PF"
         },
         show: {
           I: true,
-          P: true,
+          P: false,
           PS: true,
           PF: true
         }
@@ -3980,18 +4461,18 @@ function runImageInstrAutoRecord(step) {
 
     return {
       I: "",
-      P: ensayoAudio(startAudioNumber + 0),
+      P: "",
       PS: ensayoAudio(startAudioNumber + 1),
       PF: ensayoAudio(startAudioNumber + 2),
       labels: {
         I: "",
-        P: "P",
+        P: "",
         PS: "PS",
         PF: "PF"
       },
       show: {
         I: false,
-        P: true,
+        P: false,
         PS: true,
         PF: true
       }
@@ -4077,20 +4558,17 @@ function runImageInstrAutoRecord(step) {
     if (!container) return;
 
     if (currentN === 13) {
-      // Orden deseado: P, PS, PF, PF2
-      container.appendChild(boxP);
+      // Orden deseado: PS, PF, PF2
       container.appendChild(boxPS);
       container.appendChild(boxPF);
       container.appendChild(boxI); // boxI se usa como PF2
     } else if (currentN === 1) {
-      // P 1/1: I, P, PS, PF
+      // P 1/1: I, PS, PF
       container.appendChild(boxI);
-      container.appendChild(boxP);
       container.appendChild(boxPS);
       container.appendChild(boxPF);
     } else {
-      // Ensayos normales: P, PS, PF
-      container.appendChild(boxP);
+      // Ensayos normales: PS, PF
       container.appendChild(boxPS);
       container.appendChild(boxPF);
       container.appendChild(boxI); // queda oculto igual
@@ -4691,7 +5169,7 @@ async function runAudioRecordWords(step) {
   function setupAudioForCurrentScreen() {
     stopInstructionAudioOnly();
 
-    if (isExampleScreen() && step.instructionAudio) {
+    if ((isExampleScreen() || (!hasExample && screenIndex === 0)) && step.instructionAudio) {
       setupInstructionAudio(step.instructionAudio);
     } else {
       if (typeof btnAudio !== "undefined" && btnAudio) {
@@ -4904,6 +5382,15 @@ function runWritingCanvasFlow(step, config = {}) {
     ctx.stroke();
   }
 
+  function drawLineAt(x1, x2, y) {
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(x1, y);
+    ctx.lineTo(x2, y);
+    ctx.stroke();
+  }
+
   function drawBackground() {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
@@ -4914,17 +5401,69 @@ function runWritingCanvasFlow(step, config = {}) {
     ctx.fillRect(0, 0, w, h);
 
     if (backgroundImage) {
-      const maxW = w * 0.72;
-      const maxH = h * 0.48;
+      const maxW = w * (screen.imageMaxW ?? 0.72);
+      const maxH = h * (screen.imageMaxH ?? 0.48);
       const scale = Math.min(maxW / backgroundImage.naturalWidth, maxH / backgroundImage.naturalHeight);
       const imgW = backgroundImage.naturalWidth * scale;
       const imgH = backgroundImage.naturalHeight * scale;
-      ctx.drawImage(backgroundImage, (w - imgW) / 2, h * 0.08, imgW, imgH);
+      ctx.drawImage(backgroundImage, (w - imgW) / 2, h * (screen.imageY ?? 0.08), imgW, imgH);
     }
 
     if (screen.mode === "copy") {
       drawLine(h * 0.48);
       drawLine(h * 0.64);
+    }
+
+    if (screen.mode === "copy_prompt") {
+      ctx.fillStyle = "#111";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      ctx.font = screen.promptFont || "700 34px Arial, sans-serif";
+
+      if (screen.layout === "word_columns") {
+        const words = Array.isArray(screen.words) ? screen.words : [];
+        const xs = [0.24, 0.50, 0.76];
+        words.forEach((word, index) => {
+          const x = w * (xs[index] ?? 0.5);
+          ctx.fillText(word, x, h * 0.24);
+          drawLineAt(x - w * 0.12, x + w * 0.12, h * 0.42);
+        });
+        return;
+      }
+
+      if (screen.layout === "letter_columns") {
+        const letters = Array.isArray(screen.letters) ? screen.letters : [];
+        const count = Math.max(letters.length, 1);
+        letters.forEach((letter, index) => {
+          const x = w * ((index + 1) / (count + 1));
+          const label = screen.letterLabels?.[index];
+          if (label) {
+            ctx.save();
+            ctx.font = screen.labelFont || "700 30px Arial, sans-serif";
+            ctx.fillText(label, x, h * (screen.labelY ?? 0.15));
+            ctx.restore();
+            ctx.font = screen.promptFont || "700 34px Arial, sans-serif";
+          }
+          ctx.fillText(letter, x, h * (screen.letterY ?? 0.25));
+          drawLineAt(x - w * 0.055, x + w * 0.055, h * (screen.lineY ?? 0.43));
+        });
+        return;
+      }
+
+      const lines = Array.isArray(screen.promptLines) ? screen.promptLines : [screen.prompt || ""];
+      const startY = h * (screen.promptStartY ?? 0.16);
+      const gap = Number(screen.promptGap ?? 44);
+      lines.forEach((line, index) => {
+        if (Array.isArray(screen.promptFonts) && screen.promptFonts[index]) {
+          ctx.font = screen.promptFonts[index];
+        } else {
+          ctx.font = screen.promptFont || "700 34px Arial, sans-serif";
+        }
+        ctx.fillText(line, w / 2, startY + (index * gap));
+      });
+
+      const writingLines = Array.isArray(screen.writingLines) ? screen.writingLines : [0.48];
+      writingLines.forEach((lineY) => drawLine(h * lineY));
     }
 
     if (screen.mode === "label") {
@@ -5063,6 +5602,8 @@ function runWritingCanvasFlow(step, config = {}) {
     const screen = screens[screenIndex] || {};
 
     showLayout("writing_canvas");
+    if (downloadBtn) downloadBtn.style.display = "none";
+    canvas.style.border = "none";
     setCanvasSize();
     strokes = [];
 
@@ -5078,7 +5619,7 @@ function runWritingCanvasFlow(step, config = {}) {
     renderCanvas();
   }
 
-  downloadBtn.onclick = downloadCanvas;
+  if (downloadBtn) downloadBtn.onclick = downloadCanvas;
   bindDrawing();
 
   btnNext.onclick = async () => {
@@ -5102,7 +5643,39 @@ function runWritingCanvasFlow(step, config = {}) {
 function runCopyCanvas(step) {
   runWritingCanvasFlow(step, {
     screens: [
-      { label: "P 1/1", mode: "copy" }
+      {
+        label: "P 1/3",
+        mode: "copy_prompt",
+        promptLines: ["Por favor, escriba su nombre"],
+        writingLines: [0.48]
+      },
+      {
+        label: "P 2/4",
+        mode: "copy_prompt",
+        layout: "letter_columns",
+        promptFont: "700 52px Arial, sans-serif",
+        letters: ["T", "C", "H", "A", "Y"],
+        letterY: 0.24,
+        lineY: 0.43
+      },
+      {
+        label: "P 3/4",
+        mode: "copy_prompt",
+        layout: "letter_columns",
+        promptFont: "700 52px Arial, sans-serif",
+        letters: ["d", "e", "r", "b", "f", "g"],
+        letterLabels: ["Ejemplo"],
+        labelY: 0.14,
+        letterY: 0.24,
+        lineY: 0.43
+      },
+      {
+        label: "P 4/4",
+        mode: "copy_prompt",
+        layout: "word_columns",
+        promptFont: "700 44px Arial, sans-serif",
+        words: ["pie", "taza", "salvavidas"]
+      }
     ]
   });
 }
@@ -5112,7 +5685,10 @@ function runImageLabelingCanvas(step) {
   const screens = images.map((image, index) => ({
     label: index === 0 ? "P 1/1" : `E ${index}/${Math.max(images.length - 1, 1)}`,
     mode: "label",
-    image
+    image,
+    imageMaxW: 0.86,
+    imageMaxH: 0.62,
+    imageY: 0.04
   }));
 
   runWritingCanvasFlow(step, { screens });
@@ -5448,6 +6024,11 @@ function runTextImage(step) {
   const textImage = document.getElementById("textImage");
   const textAnswer = document.getElementById("textAnswer");
   const textBoxWrap = document.getElementById("textBoxWrap");
+  const textCanvasLabel = document.getElementById("textCanvasLabel");
+  const textWriteCanvas = document.getElementById("textWriteCanvas");
+  const textWriteCtx = textWriteCanvas?.getContext("2d");
+  let drawing = false;
+  let strokes = [];
 
   topBar.textContent = `Parte ${String(partId).padStart(2, "0")} - ${part.name}`;
 
@@ -5470,21 +6051,114 @@ function runTextImage(step) {
   textInstruction.textContent = "";
   textImage.src = step.image;
   if (textImageWrap) {
+    textImageWrap.style.left = "25%";
     textImageWrap.style.top = "50%";
-    textImageWrap.style.maxWidth = "1200px";
+    textImageWrap.style.width = "58vw";
+    textImageWrap.style.maxWidth = "835px";
+    textImageWrap.style.transform = "translate(-50%, -50%)";
   }
   if (textImage) {
-    textImage.style.maxHeight = "78vh";
+    textImage.style.width = "100%";
+    textImage.style.maxWidth = "835px";
+    textImage.style.maxHeight = "92vh";
   }
-  if (textAnswer) textAnswer.value = "";
-  if (textBoxWrap) textBoxWrap.style.display = "none";
+  if (textAnswer) {
+    textAnswer.value = "";
+    textAnswer.style.display = "none";
+  }
+  if (textBoxWrap) {
+    textBoxWrap.style.display = "block";
+    textBoxWrap.style.left = "74%";
+    textBoxWrap.style.top = "50%";
+    textBoxWrap.style.width = "44vw";
+    textBoxWrap.style.height = "76vh";
+    textBoxWrap.style.maxWidth = "780px";
+    textBoxWrap.style.transform = "translate(-50%, -50%)";
+  }
+  if (textWriteCanvas) {
+    textWriteCanvas.style.display = "block";
+  }
+  if (textCanvasLabel) {
+    textCanvasLabel.style.display = "block";
+  }
+
+  function resizeTextCanvas() {
+    if (!textWriteCanvas || !textWriteCtx) return;
+    const rect = textWriteCanvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    textWriteCanvas.width = Math.floor(rect.width * dpr);
+    textWriteCanvas.height = Math.floor(rect.height * dpr);
+    textWriteCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    renderTextCanvas();
+  }
+
+  function renderTextCanvas() {
+    if (!textWriteCanvas || !textWriteCtx) return;
+    const w = textWriteCanvas.clientWidth;
+    const h = textWriteCanvas.clientHeight;
+    textWriteCtx.clearRect(0, 0, w, h);
+    textWriteCtx.fillStyle = "#fff";
+    textWriteCtx.fillRect(0, 0, w, h);
+    textWriteCtx.strokeStyle = "#000";
+    textWriteCtx.lineWidth = 4;
+    textWriteCtx.lineCap = "round";
+    textWriteCtx.lineJoin = "round";
+    strokes.forEach((stroke) => {
+      if (!stroke || stroke.length < 2) return;
+      textWriteCtx.beginPath();
+      textWriteCtx.moveTo(stroke[0].x, stroke[0].y);
+      for (let i = 1; i < stroke.length; i++) {
+        textWriteCtx.lineTo(stroke[i].x, stroke[i].y);
+      }
+      textWriteCtx.stroke();
+    });
+  }
+
+  function pointFromEvent(e) {
+    const rect = textWriteCanvas.getBoundingClientRect();
+    return {
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    };
+  }
+
+  if (textWriteCanvas) {
+    textWriteCanvas.onpointerdown = (e) => {
+      drawing = true;
+      textWriteCanvas.setPointerCapture(e.pointerId);
+      strokes.push([pointFromEvent(e)]);
+      renderTextCanvas();
+    };
+    textWriteCanvas.onpointermove = (e) => {
+      if (!drawing) return;
+      strokes[strokes.length - 1].push(pointFromEvent(e));
+      renderTextCanvas();
+    };
+    textWriteCanvas.onpointerup = () => { drawing = false; };
+    textWriteCanvas.onpointercancel = () => { drawing = false; };
+    textWriteCanvas.onpointerleave = () => { drawing = false; };
+    setTimeout(resizeTextCanvas, 50);
+    window.addEventListener("resize", resizeTextCanvas);
+  }
 
   setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1 });
 
   btnNext.onclick = async () => {
+    if (textWriteCanvas) {
+      renderTextCanvas();
+      const writingImages = {
+        0: {
+          screenIndex: 0,
+          label: "descripcion_escrita",
+          dataUrl: textWriteCanvas.toDataURL("image/png"),
+          savedAt: new Date().toISOString()
+        }
+      };
+      setPartData(partId, { writingImages });
+    }
     setPartProgress(partId, { status: "done" });
     stopAllAudios();
-    const exported = await exportImageAssetsZip([step.image], 45, "Descripcion_escrita_de_una_imagen");
+    const exported = await exportWritingImagesZip(partId, 45, "Descripcion_escrita_de_una_imagen");
     if (exported) {
       await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
     }
@@ -5889,11 +6563,25 @@ function runLineBisection(step) {
 }
 
 function clearPartProgress(partId) {
-  localStorage.removeItem(`partProgress_${partId}`);
+  const key = "CAT_PROGRESS_V1";
+  try {
+    const data = JSON.parse(localStorage.getItem(key)) || {};
+    if (data.parts) delete data.parts[partId];
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {
+    localStorage.removeItem(`partProgress_${partId}`);
+  }
 }
 
 function clearPartData(partId) {
-  localStorage.removeItem(`partData_${partId}`);
+  const key = "CAT_PROGRESS_V1";
+  try {
+    const data = JSON.parse(localStorage.getItem(key)) || {};
+    if (data.partData) delete data.partData[partId];
+    localStorage.setItem(key, JSON.stringify(data));
+  } catch (e) {
+    localStorage.removeItem(`partData_${partId}`);
+  }
 }
 
 function stopAllAudios() {

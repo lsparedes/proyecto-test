@@ -54,7 +54,7 @@
             <div class="row gx-4 gx-lg-" id="testContainer">
                 @forelse ($tests as $test)
                     <div class="col-md-4 mb-5">
-                        <a href="{{ route('info-test', ['test_id' => $test->id]) }}" class="card h-100 text-decoration-none">
+                        <a href="{{ route('info-test', ['test_id' => $test->id, 'modulo' => $test->modulo]) }}" class="card h-100 text-decoration-none">
 
                             <div class="card-header text-center">
                                 <p class="card-text"></p>

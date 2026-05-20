@@ -155,9 +155,8 @@
     #calcPromptBox {
       position: absolute;
       left: 50%;
-      top: 23%;
+      top: 34%;
       transform: translate(-50%, -50%);
-      border: 2px solid #000;
       padding: 14px 18px;
       background: #fff;
     }
@@ -251,6 +250,28 @@
       font-size: 18px;
       resize: none;
       outline: none;
+    }
+
+    #textCanvasLabel {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: -52px;
+      text-align: center;
+      font-size: 34px;
+      font-weight: 700;
+      color: #111;
+      display: none;
+    }
+
+    #textWriteCanvas {
+      width: 100%;
+      height: 100%;
+      background: #fff;
+      border: 1px solid black;
+      touch-action: none;
+      cursor: crosshair;
+      display: none;
     }
 
     /* ===== Layout Instrucción ===== */
@@ -499,11 +520,10 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      font-size: 42px;
+      font-size: 80px;
       font-weight: 700;
       background: #fff;
       padding: 6px 12px;
-      border: 2px solid #000;
     }
 
     /* Centrar 2 audios uno al lado del otro (Test 9 pantalla 1) */
@@ -1038,7 +1058,7 @@
       <div id="repeatCenter">
         <img id="btnRepeatPlay" src="audio.png" alt="Reproducir audio" />
         <div id="repeatRecRow" style="display:none;">
-          <img id="repeatRecording" src="grabando.png" alt="Grabando" />
+          <img id="repeatRecording" src="rec.png" alt="Rec" />
           <img id="repeatStop" src="detener.png" alt="Detener" />
         </div>
       </div>
@@ -1155,7 +1175,9 @@
       </div>
 
       <div id="textBoxWrap">
+        <div id="textCanvasLabel">¿Qué ocurre en esta imagen?</div>
         <textarea id="textAnswer" spellcheck="false"></textarea>
+        <canvas id="textWriteCanvas"></canvas>
       </div>
     </div>
 

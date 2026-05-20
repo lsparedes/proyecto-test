@@ -214,7 +214,11 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
   const partData = getPartData(targetPartId);
   const takes = Object.values(partData.takes || {})
     .filter((entry) => entry && entry.key)
-    .sort((a, b) => Number(a.screenIndex || 0) - Number(b.screenIndex || 0));
+    .sort((a, b) => {
+      const screenDiff = Number(a.screenIndex || 0) - Number(b.screenIndex || 0);
+      if (screenDiff !== 0) return screenDiff;
+      return Number(a.takeNumber || 1) - Number(b.takeNumber || 1);
+    });
 
   if (!takes.length) {
     console.warn("No hay audios WAV de Repeticion de palabras para exportar.");
@@ -230,7 +234,8 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
 
     const screenNumber = String(Number(take.screenIndex || 0) + 1).padStart(2, "0");
     const label = sanitizeFilename(take.label || `pantalla_${screenNumber}`);
-    zip.file(`${screenNumber}_${label}.wav`, blob);
+    const takeSuffix = Number(take.takeNumber || 1) > 1 ? `_${Number(take.takeNumber)}` : "";
+    zip.file(`${screenNumber}_${label}${takeSuffix}.wav`, blob);
     addedFiles++;
   }
 

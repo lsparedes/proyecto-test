@@ -269,7 +269,7 @@ export const CAT = {
                                 "11",
                                 "6",
                             ],
-                            correctIndex: 0
+                            correctIndex: 1
                         },
                         {
                             id: 3,
@@ -281,7 +281,7 @@ export const CAT = {
                                 "56",
                                 "76",
                             ],
-                            correctIndex: 4
+                            correctIndex: 3
                         },
                         {
                             id: 4,
@@ -293,7 +293,7 @@ export const CAT = {
                                 "32",
                                 "3",
                             ],
-                            correctIndex: 4
+                            correctIndex: 3
                         },
                         {
                             id: 5,
@@ -305,7 +305,7 @@ export const CAT = {
                                 "29",
                                 "4",
                             ],
-                            correctIndex: 4
+                            correctIndex: 1
                         },
                         {
                             id: 6,
@@ -338,7 +338,25 @@ export const CAT = {
                     // imágenes: 1-1..1-4 práctica, 2-1..16-4 ensayos
                     firstTrial: 1,
                     lastTrial: 16,
-                    filePattern: "{t}-{o}.png", // t=1..16, o=1..4
+                    filePattern: "{t}-{o}.png", // fallback para nombres antiguos
+                    imageFiles: {
+                        1: ["1-diamante.png", "1-margarita.png", "1-roca.png", "1-rosa.png"],
+                        2: ["2-capa.png", "2-casa.png", "2-chaqueta.png", "2-edificio.png"],
+                        3: ["3-bala.png", "3-pala.png", "3-pistola.png", "3-rastrillo.png"],
+                        4: ["4-astas.png", "4-cuerno.png", "4-cuervo.png", "4-paloma.png"],
+                        5: ["5-hacha.png", "5-saturno.png", "5-sierra.png", "5-tierra.png"],
+                        6: ["6-bota.png", "6-gota.png", "6-grifo.png", "6-sandalia.png"],
+                        7: ["7-copa.png", "7-helado.png", "7-sopa.png", "7-vaso.png"],
+                        8: ["8-hoja.png", "8-lagartija.png", "8-rama.png", "8-rana.png"],
+                        9: ["9-boca.png", "9-delfin.png", "9-foca.png", "9-nariz.png"],
+                        10: ["10-gallina.png", "10-gato.png", "10-pato.png", "10-perro.png"],
+                        11: ["11-oreja.png", "11-oveja.png", "11-pendiente.png", "11-vaca.png"],
+                        12: ["12-cuna.png", "12-cura.png", "12-hamaca.png", "12-iglesia.png"],
+                        13: ["13-maleta.png", "13-mochila.png", "13-paleta.png", "13-pincel.png"],
+                        14: ["14-botella.png", "14-conejo.png", "14-rata.png", "14-vaso.png"],
+                        15: ["15-cigarro.png", "15-muro.png", "15-puro.png", "15-valla.png"],
+                        16: ["16-chimenea.png", "16-fuego.png", "16-juego.png", "16-pelota.png"],
+                    },
                     trialAudioStart: 4,
                     // Audios (tú los enlazas después)
                     instructionAudio: "/tests/modulo2/assets/Audio/Test_7/Instruccion/audio1.wav",
@@ -518,6 +536,9 @@ export const CAT = {
 
                     trialAudioPattern: "/tests/modulo2/assets/Audio/Test_12/Ensayo/audio{n}.wav",
                     trialAudioStart: 4,
+                    trialWords: [
+                        "patin"
+                    ],
 
                     totalTrials: 16
                 }
@@ -634,7 +655,7 @@ export const CAT = {
 
                     // Ejemplo (pantalla 1)
                     instrI: "/tests/modulo2/assets/Audio/Test_17/Prueba/audio1.wav",
-                    instrP: "/tests/modulo2/assets/Audio/Test_17/Prueba/audio2.wav",
+                    instrP: "",
                     instrPS: "/tests/modulo2/assets/Audio/Test_17/Prueba/audio3.wav",
                     instrPF: "/tests/modulo2/assets/Audio/Test_17/Prueba/audio4.wav",
 
@@ -737,7 +758,7 @@ export const CAT = {
             name: "Lectura de no-palabras",
             steps: [{
                 type: "audio_record_words",
-                instructionAudio: null,
+                instructionAudio: "/tests/modulo2/assets/Audio/Test_23/Instruccion/audio1.wav",
                 autoStart: true,
                 hasExample: false,
                 words: ["polma", "tarco", "fugamo", "vitero", "espisto"]
