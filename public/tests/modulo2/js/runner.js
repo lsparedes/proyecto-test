@@ -8,6 +8,8 @@ import { saveBlob } from "./blob_store_idb.js";
 import { exportSemanticPanZip, exportVerbalFluencyAudioZip, exportShortTermMemoryZip, exportPantomimeZip, exportCalculationZip, exportWrittenPhonologicalZip, exportOrationalPart9Zip, exportOrationalPart10Zip, exportOralParagraphsZip, exportRepeatAudioZip, exportWritingImagesZip, exportImageAssetsZip, exportLineBisectionZip } from "./export.js";
 
 const topBar = document.getElementById("topBar");
+const itemIndicator = document.querySelector(".item-indicator");
+const currentItem = document.getElementById("current-item");
 const btnNext = document.getElementById("btnNext");
 const btnFullscreen = document.getElementById("btnFullscreen");
 
@@ -45,6 +47,98 @@ const handFinishScreen = document.getElementById("handFinishScreen");
 const selectHandContainer = document.getElementById("selectHand");
 const handButton = document.getElementById("handButton");
 const handInputs = Array.from(document.querySelectorAll('input[name="hand"]'));
+
+function parseItemIndicatorLabel(rawText) {
+  const text = String(rawText || "")
+    .replace(/\u00c2/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!text || /^Tipo no soportado/i.test(text)) return "";
+  if (/Instrucci|Ajuste c/i.test(text)) return "";
+
+  const labelText = text
+    .replace(/^Parte\s+\d+\s*/i, "")
+    .replace(/^(?:Ã‚Â·|Â·|·|-)\s*/i, "")
+    .trim();
+
+  const pMatch = labelText.match(/^(?:Prueba|P)\s*(\d+)?(?:\s*\/\s*\d+)?\b/i);
+  const eMatch = labelText.match(/^(?:Ensayo|E)\s*(\d+)?(?:\s*\/\s*\d+)?\b/i);
+  const exerciseMatch = labelText.match(/^Ejercicio\s*(\d+)/i);
+
+  const currentPartId = Number(new URL(window.location.href).searchParams.get("part") || "0");
+
+  if (currentPartId === 15 && eMatch) {
+    const labels = ["2.1", "2.2", "3.1", "3.2", "4.1", "4.2", "5.1", "5.2", "6.1", "6.2", "7.1", "7.2"];
+    const index = Number(eMatch[1] || "1") - 1;
+    return labels[index] || "";
+  }
+
+  if (currentPartId === 16 && eMatch) {
+    const labels = ["3.1", "3.2", "4.1", "4.2", "5.1", "5.2", "6.1", "6.2"];
+    const index = Number(eMatch[1] || "1") - 1;
+    return labels[index] || "";
+  }
+
+  if (currentPartId === 24) {
+    const number = pMatch?.[1] || eMatch?.[1] || exerciseMatch?.[1] || "1";
+    return `E${number}`;
+  }
+
+  if (pMatch) return `P${pMatch[1] || "1"}`;
+  if (eMatch) return `E${eMatch[1] || "1"}`;
+  if (exerciseMatch) return `E${exerciseMatch[1]}`;
+
+  return "E1";
+}
+
+function updateItemIndicatorFromTopBar() {
+  if (!itemIndicator || !currentItem || !topBar) return;
+  const label = parseItemIndicatorLabel(topBar.textContent);
+  currentItem.textContent = label;
+  itemIndicator.style.display = label ? "block" : "none";
+}
+
+let initialFullscreenTopBarText = null;
+let fullscreenRefreshQueued = false;
+
+function scheduleFullscreenVisibilityFromTopBar() {
+  if (!topBar || !btnFullscreen || fullscreenRefreshQueued) return;
+  fullscreenRefreshQueued = true;
+
+  requestAnimationFrame(() => {
+    fullscreenRefreshQueued = false;
+    const text = String(topBar.textContent || "")
+      .replace(/\u00c2/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    if (!text || /^Tipo no soportado/i.test(text)) return;
+
+    if (initialFullscreenTopBarText === null) {
+      initialFullscreenTopBarText = text;
+      return;
+    }
+
+    if (text !== initialFullscreenTopBarText) {
+      document.body.classList.add("fullscreen-after-first");
+      btnFullscreen.style.display = "none";
+    }
+  });
+}
+
+if (topBar) {
+  new MutationObserver(() => {
+    updateItemIndicatorFromTopBar();
+    scheduleFullscreenVisibilityFromTopBar();
+  }).observe(topBar, {
+    childList: true,
+    characterData: true,
+    subtree: true
+  });
+  updateItemIndicatorFromTopBar();
+  scheduleFullscreenVisibilityFromTopBar();
+}
 
 const HAND_SELECTION_STEP_TYPES = new Set([
   "line_bisection",
@@ -287,6 +381,7 @@ function showHandSelectionScreen() {
   if (btnAudioCenter2) btnAudioCenter2.style.display = "none";
 
   topBar.style.display = "none";
+  if (itemIndicator) itemIndicator.style.display = "none";
   btnNext.style.display = "none";
   btnFullscreen.style.display = "none";
   handFinishScreen.style.display = "block";
@@ -969,11 +1064,11 @@ function runVerbalFluency(step) {
 
   const screens = [
     { type: "instruction", audio: step.instr1Audio, topBar: "Instrucción" },
-    { type: "practice", text: "Ropa", audio: step.ropaAudio, topBar: "P 1/1" },
-    { type: "test", text: "Animales", audio: step.animalesAudio, topBar: "E 1/1" },
+    { type: "practice", text: "Ropa", audio: step.ropaAudio, topBar: "P 1/2" },
+    { type: "test", text: "Animales", audio: step.animalesAudio, topBar: "E 1/2" },
     { type: "instruction", audio: step.instr2Audio, topBar: "Instrucción" },
-    { type: "practice", text: "b__________", audio: step.letraBAudio, topBar: "P 1/1" },
-    { type: "test", text: "s______", audio: step.letraSAudio, topBar: "E 1/1" }
+    { type: "practice", text: "b__________", audio: step.letraBAudio, topBar: "P 2/2" },
+    { type: "test", text: "s______", audio: step.letraSAudio, topBar: "E 2/2" }
   ];
 
   let index = 0;
@@ -3896,7 +3991,7 @@ function runRepeatAudioRecord(step) {
   }
 
   function showRecUI() {
-    btnPlay.style.display = "none";
+    btnPlay.style.display = "block";
     recRow.style.display = "flex";
 
     if (recIcon) recIcon.style.display = "block";
@@ -4371,6 +4466,15 @@ function runImageInstrAutoRecord(step) {
     if (!audioEl || !audioEl.src) return;
     pauseAllInstructionAudios();
     audioEl.currentTime = 0;
+    audioEl.onended = async () => {
+      if (!isCapturing) {
+        try {
+          await startCapture();
+        } catch (err) {
+          showMicError(err);
+        }
+      }
+    };
     audioEl.play().catch(err => {
       console.warn("No se pudo reproducir el audio:", audioEl.src, err);
     });
@@ -4590,7 +4694,8 @@ function runImageInstrAutoRecord(step) {
 
     setPartProgress(partId, { itemIndex: n });
 
-    if (step.autoStartRecording) {
+    const hasScreenAudio = [audioI, audioP, audioPS, audioPF].some((audioEl) => !!audioEl?.src);
+    if (!hasScreenAudio) {
       await startCapture();
     }
   }
@@ -4782,6 +4887,9 @@ function runImageAutoRecordSimple(step) {
       audioIcon.onclick = () => {
         audioEl.pause();
         audioEl.currentTime = 0;
+        audioEl.onended = async () => {
+          await startCapture();
+        };
         audioEl.play();
       };
     } else {
@@ -4798,7 +4906,7 @@ function runImageAutoRecordSimple(step) {
 
     setPartProgress(partId, { itemIndex: n });
 
-    if (step.autoStartRecording) {
+    if (!(n === first && step.instructionAudio) && step.autoStartRecording) {
       await startCapture();
     } else {
       setStoppedUI();
@@ -4881,7 +4989,7 @@ async function runAudioRecordImage(step) {
   let hasAudio = false;
 
   function setIdleUI() {
-    btnRec.style.display = "block";
+    btnRec.style.display = "none";
     btnStop.style.display = "none";
     btnRecording.style.display = "none";
   }

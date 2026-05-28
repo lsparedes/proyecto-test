@@ -222,24 +222,24 @@ export const MODULO3 = {
         {
           id: 1,
           kind: "title",
-          title: "Tiempo maximo espiracion"
+          title: "Tiempo máximo espiración"
         },
         {
           id: 2,
           kind: "dual_audio_record",
-          title: "Tiempo maximo espiracion",
+          title: "Tiempo máximo espiracion",
           audio1: "assets/parte1/test2/espiracion/espiracion1.wav",
           audio2: "assets/parte1/test2/espiracion/espiracion2.wav"
         },
         {
           id: 3,
           kind: "title",
-          title: "Tiempo maximo fonacion"
+          title: "Tiempo máximo fonación"
         },
         {
           id: 4,
           kind: "dual_audio_record",
-          title: "Tiempo maximo fonacion",
+          title: "Tiempo máximo fonación",
           audio1: "assets/parte1/test2/fonacion/fonacion1.wav",
           audio2: "assets/parte1/test2/fonacion/fonacion2.wav"
         },

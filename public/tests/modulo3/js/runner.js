@@ -8,6 +8,8 @@ const test2Section = document.getElementById("part-1-test-2");
 const motorSection = document.getElementById("part-2-motor");
 const test13Section = document.getElementById("part-3-test-1");
 const topBar = document.getElementById("topBar");
+const itemIndicator = document.querySelector(".item-indicator");
+const currentItem = document.getElementById("current-item");
 
 if (test1Section) {
   test1Section.style.display = "none";
@@ -26,19 +28,7 @@ if (test13Section) {
 }
 
 if (test?.id === 1) {
-  runProcesosMotoresBasicos(test, () => {
-    const integratedTest = MODULO3.tests.find((item) => item.id === 2);
-    if (test1Section) {
-      test1Section.style.display = "none";
-    }
-
-    if (integratedTest) {
-      setupPart1Test2(integratedTest, closeCurrentWindow);
-      return;
-    }
-
-    closeCurrentWindow();
-  });
+  runProcesosMotoresBasicos(test);
 }
 
 if (test?.id === 2) {
@@ -69,7 +59,7 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
 
   section.style.display = "block";
 
-  const screens = testConfig.screens || [];
+  const screens = buildPart1Test1Screens(testConfig.screens || []);
   const instructionText = document.getElementById("p1t1-instruction-text");
   const centerAudio = document.getElementById("p1t1-center-audio");
   const wordLabel = document.getElementById("p1t1-word-label");
@@ -90,7 +80,7 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
   const recordedVideos = [];
   const summaryRows = [];
 
-  const sectionCounters = buildSectionCounters(screens);
+  const sectionCounters = buildPart1Test1Counters(screens);
 
   nextBtn.addEventListener("click", async () => {
     if (nextBtn.style.display === "none") {
@@ -185,7 +175,7 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
     if (screen.kind === "instruction") {
       setScreenCounter("");
       instructionView.classList.add("is-active");
-      instructionText.textContent = screen.text || "";
+      instructionText.textContent = "";
       centerAudio.style.display = "inline-block";
       fullscreenBtn.style.display = "block";
       return;
@@ -194,16 +184,18 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
     if (screen.kind === "label") {
       setScreenCounter("");
       wordView.classList.add("is-active");
-      wordLabel.textContent = screen.text || screen.label || "";
+      wordLabel.textContent = screen.section === "praxiasorofaciales"
+        ? "Praxias orofaciales"
+        : (screen.text || screen.label || "");
       return;
     }
 
     if (screen.kind === "record") {
       setScreenCounter(sectionCounters[currentScreenIndex] || "");
       recordView.classList.add("is-active");
-      recordTitle.textContent = screen.title || screen.label || "";
+      recordTitle.textContent = "";
       audioBtn.style.display = "block";
-      showNext(nextBtn, false);
+      showNext(nextBtn, true);
       await ensureCamera();
     }
   }
@@ -291,6 +283,62 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
       mediaRecorder.stop();
     });
   }
+}
+
+function buildPart1Test1Screens(rawScreens = []) {
+  let praxiaIndex = 0;
+
+  return rawScreens
+    .filter((screen) => {
+      if (screen.kind === "label") {
+        return screen.section === "praxiasorofaciales";
+      }
+
+      if (
+        screen.section === "praxiasorofaciales" &&
+        /praxiasorofaciales1\.wav$/i.test(screen.audio || "")
+      ) {
+        return false;
+      }
+
+      return true;
+    })
+    .map((screen) => {
+      if (screen.section !== "praxiasorofaciales" || screen.kind !== "record") {
+        return screen;
+      }
+
+      praxiaIndex += 1;
+      return {
+        ...screen,
+        outputName: `modulo3_test1_praxiasorofaciales_${praxiaIndex}`
+      };
+    });
+}
+
+function buildPart1Test1Counters(screens = []) {
+  const counters = {};
+  const nonPraxiaRecords = screens.filter((screen) => screen.kind === "record" && screen.section !== "praxiasorofaciales");
+  const praxiaRecords = screens.filter((screen) => screen.kind === "record" && screen.section === "praxiasorofaciales");
+  let nonPraxiaIndex = 0;
+  let praxiaIndex = 0;
+
+  screens.forEach((screen, index) => {
+    if (screen.kind !== "record") {
+      return;
+    }
+
+    if (screen.section === "praxiasorofaciales") {
+      praxiaIndex += 1;
+      counters[index] = `E ${praxiaIndex}/${praxiaRecords.length}`;
+      return;
+    }
+
+    nonPraxiaIndex += 1;
+    counters[index] = `E ${nonPraxiaIndex}/${nonPraxiaRecords.length}`;
+  });
+
+  return counters;
 }
 
 function getVideoRecorderOptions() {
@@ -400,8 +448,6 @@ async function exportHablaConectadaZip(audios = [], rows = []) {
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const baseName = `${participantId}_${userInitials}_48_Habla_Conectada`;
   const zip = new JSZip();
-
-  zip.file("resumen.csv", toCSV(rows));
 
   audios.forEach((audio) => {
     if (audio?.blob && audio?.name) {
@@ -519,6 +565,7 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   const status = document.getElementById("p1t2-status");
   const audio1Btn = document.getElementById("p1t2-audio-1-btn");
   const audio2Btn = document.getElementById("p1t2-audio-2-btn");
+  const playRecordBtn = document.getElementById("p1t2-play-record-btn");
   const recordingIndicator = document.getElementById("p1t2-recording-indicator");
   const stopBtn = document.getElementById("p1t2-stop-btn");
   const nextBtn = document.getElementById("p1t2-next-btn");
@@ -529,8 +576,10 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   let firstRecordingActive = false;
   let secondRecordingActive = false;
   let activeAudioSlot = null;
+  let selectedAudioSlot = null;
   let endCountdownTimer = null;
   const recordedAudios = [];
+  const takeCounts = {};
   const sectionCounters = buildSectionCounters(screens);
 
   nextBtn.addEventListener("click", async () => {
@@ -562,15 +611,32 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
     await stopCurrentAudioRecording(true);
 
     if (stoppedSlot === 1) {
-      status.textContent = "Ahora reproduce el segundo audio.";
+      status.textContent = "Grabacion guardada. Puedes grabar de nuevo o reproducir el segundo audio.";
+      showPlayRecordButton(true);
       audio2Btn.classList.remove("is-disabled");
       return;
     }
 
     if (stoppedSlot === 2) {
-      status.textContent = "Ahora puedes pasar a la siguiente pantalla.";
+      status.textContent = "Grabacion guardada. Puedes grabar de nuevo o pasar a la siguiente pantalla.";
+      showPlayRecordButton(true);
       showNext(nextBtn, true);
     }
+  });
+
+  playRecordBtn?.addEventListener("click", async () => {
+    if (!selectedAudioSlot || currentRecorder) {
+      return;
+    }
+
+    currentRecorder = new WavAudioRecorder();
+    await currentRecorder.start();
+    firstRecordingActive = selectedAudioSlot === 1;
+    secondRecordingActive = selectedAudioSlot === 2;
+    activeAudioSlot = selectedAudioSlot;
+    showRecordControls(true);
+    showPlayRecordButton(false);
+    status.textContent = `Grabando audio ${selectedAudioSlot}. Presiona detener para guardar.`;
   });
 
   audio1Btn.addEventListener("click", async () => {
@@ -579,20 +645,10 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
       return;
     }
 
+    selectedAudioSlot = 1;
     showNext(nextBtn, false);
-    audio1Btn.classList.add("is-disabled");
-    audio2Btn.classList.add("is-disabled");
-
-    await playTimedAudio(audioPlayer, screen.audio1, async () => {
-      if (!firstRecordingActive) {
-        currentRecorder = new WavAudioRecorder();
-        await currentRecorder.start();
-        firstRecordingActive = true;
-        activeAudioSlot = 1;
-        showRecordControls(true);
-        status.textContent = "Grabando audio 1. Cuando inicie el segundo audio, la primera grabacion se cerrara.";
-      }
-    });
+    showPlayRecordButton(false);
+    await playTimedAudio(audioPlayer, screen.audio1, 1);
   });
 
   audio2Btn.addEventListener("click", async () => {
@@ -605,18 +661,9 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
       return;
     }
 
-    audio2Btn.classList.add("is-disabled");
-
-    await playTimedAudio(audioPlayer, screen.audio2, async () => {
-      if (!secondRecordingActive) {
-        currentRecorder = new WavAudioRecorder();
-        await currentRecorder.start();
-        secondRecordingActive = true;
-        activeAudioSlot = 2;
-        showRecordControls(true);
-        status.textContent = "Grabando audio 2. Esta grabacion se cerrara al pasar a la siguiente pantalla.";
-      }
-    });
+    selectedAudioSlot = 2;
+    showPlayRecordButton(false);
+    await playTimedAudio(audioPlayer, screen.audio2, 2);
   });
 
   renderScreen();
@@ -634,6 +681,8 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
     firstRecordingActive = false;
     secondRecordingActive = false;
     activeAudioSlot = null;
+    selectedAudioSlot = null;
+    showPlayRecordButton(false);
     showRecordControls(false);
 
     if (!screen) {
@@ -651,12 +700,12 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
     if (screen.kind === "dual_audio_record") {
       setScreenCounter(sectionCounters[currentScreenIndex] || "E 1/1");
       audioView.classList.add("is-active");
-      status.textContent = "Reproduce el primer audio. La grabacion iniciara automaticamente 2-3 segundos antes del final.";
+      status.textContent = "Reproduce un audio. Al terminar, presiona play para grabar.";
       showNext(nextBtn, false);
     }
   }
 
-  async function playTimedAudio(audioEl, audioPath, onNearEnd) {
+  async function playTimedAudio(audioEl, audioPath, slot) {
     stopAudio(audioEl);
 
     if (!audioPath) {
@@ -665,41 +714,17 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
 
     audioEl.src = audioPath;
     audioEl.load();
-
-    await new Promise((resolve) => {
-      audioEl.onloadedmetadata = () => {
-        const durationMs = Number.isFinite(audioEl.duration) ? audioEl.duration * 1000 : 0;
-        const triggerDelay = Math.max(durationMs - 1500, 0);
-
-        clearCountdown(endCountdownTimer);
-        endCountdownTimer = setTimeout(async () => {
-          await onNearEnd();
-        }, triggerDelay);
-
-        resolve();
-      };
-    });
+    audioEl.onended = () => {
+      selectedAudioSlot = slot;
+      showPlayRecordButton(true);
+      status.textContent = `Audio ${slot} terminado. Presiona play para iniciar la grabacion.`;
+    };
 
     try {
       await audioEl.play();
     } catch (error) {
       console.error("No se pudo reproducir el audio.", error);
     }
-
-    audioEl.onended = () => {
-      if (!firstRecordingActive && !secondRecordingActive) {
-        return;
-      }
-
-      if (firstRecordingActive) {
-        status.textContent = "Presiona detener para guardar la grabacion del audio 1.";
-        return;
-      }
-
-      if (secondRecordingActive) {
-        status.textContent = "Presiona detener para guardar la grabacion del audio 2.";
-      }
-    };
   }
 
   async function stopCurrentAudioRecording(shouldSave = false) {
@@ -717,7 +742,10 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
 
     if (shouldSave && blob) {
       const sectionName = sanitizeFilename(screen?.title || `pantalla_${currentScreenIndex + 1}`).toLowerCase();
-      const filename = `modulo3_test2_${sectionName}_${stoppedSlot || 1}.wav`;
+      const takeKey = `${currentScreenIndex}_${stoppedSlot || 1}`;
+      takeCounts[takeKey] = (takeCounts[takeKey] || 0) + 1;
+      const takeSuffix = takeCounts[takeKey] > 1 ? `_toma${takeCounts[takeKey]}` : "";
+      const filename = `modulo3_test2_${sectionName}_${stoppedSlot || 1}${takeSuffix}.wav`;
       recordedAudios.push({
         name: filename,
         blob,
@@ -735,7 +763,15 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
     return blob;
   }
 
+  function showPlayRecordButton(visible) {
+    if (playRecordBtn) {
+      playRecordBtn.classList.toggle("hidden", !visible);
+    }
+  }
+
   function showRecordControls(visible) {
+    showPlayRecordButton(false);
+
     if (recordingIndicator) {
       recordingIndicator.classList.toggle("hidden", !visible);
     }
@@ -768,32 +804,36 @@ function runEvaluacionMotoraHabla() {
   section.style.display = "block";
   screenView.classList.add("is-active");
 
-  const screens = buildEvaluacionMotoraHablaScreens();
-  const sectionCounters = buildMotorCounters(screens);
+  const allScreens = buildEvaluacionMotoraHablaScreens();
+  const subtests = buildMotorSubtests(allScreens);
   const audios = [];
   const summaryRows = [];
 
   let currentScreenIndex = 0;
+  let activeScreens = [];
+  let sectionCounters = {};
+  let currentMode = "menu";
   let currentRecorder = null;
 
   nextBtn.addEventListener("click", async () => {
+    if (currentMode !== "running") {
+      return;
+    }
+
     stopAudio(audioPlayer);
     await stopRecording(true);
 
-    if (currentScreenIndex < screens.length - 1) {
+    if (currentScreenIndex < activeScreens.length - 1) {
       currentScreenIndex += 1;
       await renderScreen();
       return;
     }
 
-    await exportEvaluacionMotoraHablaZip(audios, summaryRows);
-    setTimeout(() => {
-      closeCurrentWindow();
-    }, 3000);
+    renderSubtestComplete();
   });
 
   recBtn.addEventListener("click", async () => {
-    await startRecording(screens[currentScreenIndex]);
+    await startRecording(activeScreens[currentScreenIndex]);
   });
 
   stopBtn.addEventListener("click", async () => {
@@ -815,10 +855,93 @@ function runEvaluacionMotoraHabla() {
     fullscreenBtn.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
   });
 
-  renderScreen();
+  renderMenu();
+
+  function renderMenu() {
+    currentMode = "menu";
+    currentScreenIndex = 0;
+    activeScreens = [];
+    sectionCounters = {};
+    setScreenCounter("");
+    stopAudio(audioPlayer);
+    resetRecordControls();
+    recordControls.style.display = "none";
+    showNext(nextBtn, false);
+
+    titleEl.textContent = "Evaluacion Motora del Habla";
+    titleEl.style.display = "block";
+    labelEl.style.display = "none";
+    textEl.style.display = "none";
+    audiosEl.innerHTML = "";
+    audiosEl.className = "motor-menu";
+
+    subtests.forEach((subtest) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = subtest.section;
+      button.addEventListener("click", async () => {
+        await startSubtest(subtest);
+      });
+      audiosEl.appendChild(button);
+    });
+
+    if (audios.length > 0) {
+      const finishButton = document.createElement("button");
+      finishButton.type = "button";
+      finishButton.textContent = "Terminar tarea";
+      finishButton.addEventListener("click", finishMotorTask);
+      audiosEl.appendChild(finishButton);
+    }
+  }
+
+  async function startSubtest(subtest) {
+    currentMode = "running";
+    activeScreens = subtest.screens;
+    sectionCounters = buildMotorCounters(activeScreens);
+    currentScreenIndex = 0;
+    showNext(nextBtn, true);
+    await renderScreen();
+  }
+
+  function renderSubtestComplete() {
+    currentMode = "complete";
+    setScreenCounter("");
+    stopAudio(audioPlayer);
+    resetRecordControls();
+    recordControls.style.display = "none";
+    showNext(nextBtn, false);
+
+    titleEl.textContent = "Subtest terminado";
+    titleEl.style.display = "block";
+    labelEl.style.display = "none";
+    textEl.style.display = "none";
+    audiosEl.innerHTML = "";
+    audiosEl.className = "motor-menu";
+
+    const menuButton = document.createElement("button");
+    menuButton.type = "button";
+    menuButton.textContent = "Volver al menu principal";
+    menuButton.addEventListener("click", renderMenu);
+    audiosEl.appendChild(menuButton);
+
+    const finishButton = document.createElement("button");
+    finishButton.type = "button";
+    finishButton.textContent = "Terminar tarea";
+    finishButton.addEventListener("click", finishMotorTask);
+    audiosEl.appendChild(finishButton);
+  }
+
+  async function finishMotorTask() {
+    stopAudio(audioPlayer);
+    await stopRecording(true);
+    await exportEvaluacionMotoraHablaZip(audios, summaryRows);
+    setTimeout(() => {
+      closeCurrentWindow();
+    }, 3000);
+  }
 
   async function renderScreen() {
-    const screen = screens[currentScreenIndex];
+    const screen = activeScreens[currentScreenIndex];
     if (!screen) return;
 
     setScreenCounter(sectionCounters[currentScreenIndex] || "");
@@ -828,7 +951,9 @@ function runEvaluacionMotoraHabla() {
     labelEl.style.display = "none";
     textEl.textContent = screen.text || "";
     textEl.style.display = screen.text ? "block" : "none";
+    textEl.classList.toggle("is-reading", screen.section === "Lectura");
     textEl.classList.toggle("is-centered", screen.section === "Lectura de frases");
+    textEl.classList.toggle("is-phrase-reading", screen.section === "Lectura de frases");
     renderAudioButtons(screen);
     resetRecordControls();
     recordControls.style.display = screen.record ? "flex" : "none";
@@ -840,6 +965,7 @@ function runEvaluacionMotoraHabla() {
 
   function renderAudioButtons(screen) {
     audiosEl.innerHTML = "";
+    audiosEl.className = "motor-audio-list";
     const audioList = normalizeAudioList(screen.audio);
     audiosEl.classList.toggle("is-centered", Boolean(screen.centerAudio) || (!screen.record && audioList.length > 1));
 
@@ -921,7 +1047,7 @@ function runEvaluacionMotoraHabla() {
       return;
     }
 
-    const screen = screens[currentScreenIndex];
+    const screen = activeScreens[currentScreenIndex];
     const blob = await currentRecorder.stop();
 
     if (shouldSave && screen?.record && blob) {
@@ -955,6 +1081,23 @@ function runEvaluacionMotoraHabla() {
 
 function normalizeAudioList(audio) {
   return Array.isArray(audio) ? audio.filter(Boolean) : [audio].filter(Boolean);
+}
+
+function buildMotorSubtests(screens = []) {
+  const grouped = new Map();
+
+  screens.forEach((screen) => {
+    const section = screen.section || screen.title || "Subtest";
+    if (!grouped.has(section)) {
+      grouped.set(section, []);
+    }
+    grouped.get(section).push(screen);
+  });
+
+  return Array.from(grouped.entries()).map(([section, sectionScreens]) => ({
+    section,
+    screens: sectionScreens
+  }));
 }
 
 function buildEvaluacionMotoraHablaScreens() {
@@ -1183,7 +1326,7 @@ function buildMotorCounters(screens) {
   const counters = {};
 
   screens.forEach((screen, index) => {
-    if (screen.kind === "title") {
+    if (screen.kind === "title" || !screen.record) {
       return;
     }
 
@@ -1195,8 +1338,15 @@ function buildMotorCounters(screens) {
   });
 
   grouped.forEach((indexes, sectionName) => {
-    indexes.forEach((screenIndex, itemIndex) => {
-      counters[screenIndex] = `${sectionName} E ${itemIndex + 1}/${indexes.length}`;
+    const practiceIndexes = indexes.filter((screenIndex) => /Ejemplo/i.test(screens[screenIndex]?.label || ""));
+    const ensayoIndexes = indexes.filter((screenIndex) => !practiceIndexes.includes(screenIndex));
+
+    practiceIndexes.forEach((screenIndex, itemIndex) => {
+      counters[screenIndex] = `${sectionName} P ${itemIndex + 1}/${practiceIndexes.length}`;
+    });
+
+    ensayoIndexes.forEach((screenIndex, itemIndex) => {
+      counters[screenIndex] = `${sectionName} E ${itemIndex + 1}/${ensayoIndexes.length}`;
     });
   });
 
@@ -1514,12 +1664,43 @@ function showNext(buttonEl, visible) {
 }
 
 function setScreenCounter(value) {
+  const label = parseItemIndicatorLabel(value);
+  if (currentItem) {
+    currentItem.textContent = label;
+  }
+  if (itemIndicator) {
+    itemIndicator.style.display = label ? "block" : "none";
+  }
+
   if (!topBar) {
     return;
   }
 
   topBar.textContent = value || "";
-  topBar.style.display = value ? "block" : "none";
+  topBar.style.display = "none";
+}
+
+function parseItemIndicatorLabel(value) {
+  const text = String(value || "")
+    .replace(/\u00c2/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (!text || /Instrucci|Titulo|T[ií]tulo/i.test(text)) {
+    return "";
+  }
+
+  const pMatch = text.match(/\b(?:Pr[aá]ctica|Practica|Prueba|P)\s*(\d+)?(?:\s*\/\s*\d+)?\b/i);
+  if (pMatch) {
+    return `P${pMatch[1] || "1"}`;
+  }
+
+  const eMatch = text.match(/\b(?:Ensayo|E)\s*(\d+)?(?:\s*\/\s*\d+)?\b/i);
+  if (eMatch) {
+    return `E${eMatch[1] || "1"}`;
+  }
+
+  return "";
 }
 
 function normalizeSectionLabel(value) {
@@ -1530,25 +1711,19 @@ function normalizeSectionLabel(value) {
 }
 
 function buildSectionCounters(screens) {
-  const groups = new Map();
+  const recordIndexes = [];
 
   screens.forEach((screen, index) => {
     if (screen.kind !== "record" && screen.kind !== "dual_audio_record") {
       return;
     }
 
-    const key = normalizeSectionLabel(screen.label || screen.title || screen.text || screen.kind);
-    if (!groups.has(key)) {
-      groups.set(key, []);
-    }
-    groups.get(key).push(index);
+    recordIndexes.push(index);
   });
 
   const counters = {};
-  groups.forEach((indexes) => {
-    indexes.forEach((screenIndex, itemIndex) => {
-      counters[screenIndex] = `E ${itemIndex + 1}/${indexes.length}`;
-    });
+  recordIndexes.forEach((screenIndex, itemIndex) => {
+    counters[screenIndex] = `E ${itemIndex + 1}/${recordIndexes.length}`;
   });
 
   return counters;
@@ -1556,25 +1731,15 @@ function buildSectionCounters(screens) {
 
 function buildPart3Counters(screens) {
   const counters = {};
-  const storyIndexes = [];
 
   screens.forEach((screen, index) => {
-    if (screen.kind === "story_image") {
-      storyIndexes.push(index);
-      return;
-    }
-
     if (
       screen.kind === "image_single_audio_record" ||
-      screen.kind === "story_intro" ||
-      screen.kind === "final_record"
+      screen.kind === "final_record" ||
+      screen.kind === "personal_record"
     ) {
       counters[index] = "E 1/1";
     }
-  });
-
-  storyIndexes.forEach((screenIndex, itemIndex) => {
-    counters[screenIndex] = `E ${itemIndex + 1}/${storyIndexes.length}`;
   });
 
   return counters;
