@@ -503,14 +503,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const recordResponse = (videoIndex, click, responseTime) => {
         const videoData = videos[videoIndex];
+        const previousResponseIndex = responses.findIndex(response => response.videoIndex === videoIndex);
+        const firstResponseTime = previousResponseIndex >= 0
+            ? responses[previousResponseIndex].tiempoRespuesta
+            : responseTime;
+
         const response = {
+            videoIndex,
             ensayo: videoData.indicator,
             respuestaCorrecta: videoData.items.correcto.map(c => `(${c.x}, ${c.y})`).join('; '),
             errorActualizacion: '',
             errorRotacion: '',
             respuestaParticipante: `(${click.x.toFixed(2)}, ${click.y.toFixed(2)})`,
             precision: 0,
-            tiempoRespuesta: responseTime,
+            tiempoRespuesta: firstResponseTime,
             resp0puntos: 0,
             manoUtilizada: ''
         };
@@ -548,7 +554,11 @@ document.addEventListener('DOMContentLoaded', () => {
             response.resp0puntos = 1;
         }
 
-        responses.push(response);
+        if (previousResponseIndex >= 0) {
+            responses[previousResponseIndex] = response;
+        } else {
+            responses.push(response);
+        }
     };
 
 
