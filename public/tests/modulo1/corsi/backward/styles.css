@@ -35,6 +35,8 @@ body {
     height: 700px;
     border: 1px solid #ccc;
     background-color: #fff;
+    touch-action: none;
+    user-select: none;
 }
 
 .block {
@@ -44,6 +46,9 @@ body {
     cursor: pointer;
     position: absolute;
     transition: background-color 0.3s;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 #feedback {

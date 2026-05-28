@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let timer;
     let milliseconds = 0;
     let continueTest = false;
+    let lastPointerEventTime = 0;
 
     let mediaRecorder;
     let recordedChunks = [];
@@ -98,13 +99,24 @@ document.addEventListener('DOMContentLoaded', () => {
             block.style.top = fixedPositions[i].top + 'px';
             block.style.left = fixedPositions[i].left + 'px';
             blocksContainer.appendChild(block);
+            block.addEventListener('pointerup', handleBlockPointer, false);
             block.addEventListener('click', handleBlockClick);
         }
 
         blocksContainer.style.transform = 'rotate(180deg)';
     }
 
+    function handleBlockPointer(event) {
+    lastPointerEventTime = Date.now();
+    handleBlockSelection(event);
+}
+
     function handleBlockClick(event) {
+    if (Date.now() - lastPointerEventTime < 500) return;
+    handleBlockSelection(event);
+}
+
+    function handleBlockSelection(event) {
     if (sequenceDisplaying) return;
 
     const index = parseInt(event.target.dataset.index);
