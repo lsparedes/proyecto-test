@@ -250,7 +250,7 @@ fetch('/api/user-info')
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${day}_${month}_${year}`;
+        const formattedDate = `${day}${month}${String(year).slice(-2)}`;
     
         // Calcular el tiempo total en milisegundos
         const totalTime = Date.now() - startTime;
@@ -265,11 +265,11 @@ fetch('/api/user-info')
         const zip = new JSZip();
         
         // Agregar el archivo CSV al ZIP
-        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.csv`, timeBlob);
+        zip.file(`${idParticipante}_PhonFluency_unival.csv`, timeBlob);
     
         // Crear y agregar el archivo de audio al ZIP
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        zip.file(`${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.wav`, audioBlob);
+        zip.file(`PhonFluency.wav`, audioBlob);
     
         // Generar el archivo ZIP
         zip.generateAsync({ type: 'blob' }).then(content => {
@@ -277,7 +277,7 @@ fetch('/api/user-info')
             zipLink.href = URL.createObjectURL(content);
     
             // Construir el nombre del archivo ZIP con las iniciales
-            const zipFilename = `${idParticipante}_8_Fluidez_Verbal_Fonologica_${inicialesExaminador}_${formattedDate}.zip`;
+            const zipFilename = `${idParticipante}_PhonFluency_${formattedDate}_${inicialesExaminador}_(NAA).zip`;
     
             zipLink.download = zipFilename;
             zipLink.click();

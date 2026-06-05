@@ -246,6 +246,9 @@ audio-container {
     border: 1px solid #333;
     background-color: #fff;
     border-radius: 5px;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 
@@ -261,6 +264,12 @@ audio-container {
     background-color: #007bff; /* Cambia este color al que desees */
     color: white;
     outline: none; /* Opcional, para remover el borde por defecto */
+}
+
+.option-btn.selected-answer {
+    background-color: #007bff !important;
+    color: white !important;
+    outline: 4px solid rgba(0, 123, 255, 0.35);
 }
 
 #initRecordingButton1,

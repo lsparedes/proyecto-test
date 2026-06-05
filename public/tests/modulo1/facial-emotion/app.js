@@ -395,14 +395,14 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
     const txtBlob = new Blob([txtContent], { type: 'text/csv;charset=utf-8;' });
 
     const zip = new JSZip();
-    zip.file(`${idParticipante}_12_Facial_Emotion_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_12_Facial_Emotion_Unival_${fechaFormateada}.csv`, txtBlob);
+    zip.file(`${idParticipante}_MiniSEA.csv`, csvBlob);
+    zip.file(`${idParticipante}_Mini_SEA_unival.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const link = document.createElement('a');
             if (link.download !== undefined) {
-                const zipFilename = `${idParticipante}_12_Facial_Emotion_${fechaFormateada}.zip`;
+                const zipFilename = `${idParticipante}_Mini_SEA_${String(fechaFormateada).replace(/_/g, "").slice(0, 6)}_EX_(NAA).zip`;
                 const url = URL.createObjectURL(content);
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

@@ -11,6 +11,94 @@ function sanitizeFilename(name) {
     .replace(/\s+/g, "_");
 }
 
+function currentPlatformDate() {
+  const date = new Date();
+  return [
+    String(date.getDate()).padStart(2, "0"),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getFullYear()).slice(-2)
+  ].join("");
+}
+
+const PLATFORM_PART_NAMES = {
+  1: { zip: "LineB", file: "LineB" },
+  2: { zip: "SemMem", file: "SemMem" },
+  3: { zip: "VF", file: "VF" },
+  4: { zip: "RecogMem", file: "RecogMem" },
+  5: { zip: "GOU", file: "GOU" },
+  6: { zip: "Arith", file: "Arith" },
+  7: { zip: "CompSpkW", file: "CompSpkW" },
+  8: { zip: "CompWriW", file: "CompWriW" },
+  9: { zip: "CompSpkS", file: "CompSpkS" },
+  10: { zip: "CompWriS", file: "CompWriS" },
+  11: { zip: "CompSpkP", file: "CompSpkP" },
+  12: { zip: "WRep" },
+  13: { zip: "ComplxWRep" },
+  14: { zip: "NWRep" },
+  15: { zip: "DSpan" },
+  16: { zip: "SentSpan", naa: false },
+  17: { zip: "OName" },
+  18: { zip: "AName", naa: false },
+  19: { zip: "SpkPDesc_CAT" },
+  20: { zip: "WRead" },
+  21: { zip: "ComplxWRead" },
+  22: { zip: "FuncWRead" },
+  23: { zip: "NWRead" },
+  24: { zip: "WriCopy" },
+  25: { zip: "WName" },
+  26: { zip: "WriDict" },
+  27: { zip: "WriPDesc_CAT" }
+};
+
+const PLATFORM_AUDIO_NAMES = {
+  3: ["SemF", "PhonF"],
+  12: ["P_arbol", "1_patin", "2_presidente", "3_desden", "4_radio", "5_pesar", "6_ministerio", "7_servilleta", "8_planta", "9_rectangulo", "10_personaje", "11_quietud", "12_marinero", "13_evidencia", "14_sacacorchos", "15_cara", "16_castor"],
+  13: ["1_impensable", "2_descongelado", "3_conformista"],
+  14: ["1_roga", "2_cler", "3_espen", "4_trimpo", "5_prastodo"],
+  15: ["2_1", "2_2", "3_1", "3_2", "4_1", "4_2", "5_1", "5_2", "6_1", "6_2", "7_1", "7_2"],
+  16: ["3_1", "3_2", "4_1", "4_2", "5_1", "5_2", "6_1", "6_2"],
+  17: ["P_casa", "1_telefono", "2_reloj", "3_submarino", "4_semaforo", "5_pulpo", "6_microscopio", "7_lupa", "8_pera", "9_dinosaurio", "10_timon", "11_bicicleta", "12_ostra", "13_elefante", "14_raiz", "15_cisne", "16_calendario", "17_espatula", "18_barril", "19_escalera", "20_buho", "21_llama", "22_murcielago", "23_termometro", "24_tunel"],
+  18: ["P_comer", "1_leer", "2_barrer", "3_pintar", "4_nadar", "5_recortar"],
+  19: ["SpkPDesc_CAT"],
+  20: ["P_silla", "1_contenedor", "2_goce", "3_microfono", "4_pierna", "5_trecho", "6_pasaporte", "7_sonajero", "8_zorro", "9_tomar", "10_estropajo", "11_causa", "12_dormitorio", "13_culpa", "14_educacion", "15_pasar", "16_bailarina", "17_hurgar", "18_siglo", "19_television", "20_diccionario", "21_brillar", "22_porcelana", "23_pecar", "24_chocolate"],
+  21: ["1_informativo", "2_recalentado", "3_preconcebido"],
+  22: ["1_pero", "2_de", "3_y"],
+  23: ["1_polma", "2_tarco", "3_fugamo", "4_vitero", "5_espisto"]
+};
+
+const PLATFORM_IMAGE_NAMES = {
+  24: ["1_name", "2_letters", "3_words"],
+  25: ["WName"],
+  26: ["WriDict"],
+  27: ["WriPDesc_CAT"]
+};
+
+function platformZipBase(partId, participantId, initials) {
+  const spec = PLATFORM_PART_NAMES[Number(partId)] || { zip: `Parte${partId}` };
+  const suffix = spec.naa === false ? "" : "_(NAA)";
+  return `${sanitizeFilename(participantId)}_${spec.zip}_${currentPlatformDate()}_${sanitizeFilename(initials)}${suffix}`;
+}
+
+function platformResultFile(partId, participantId) {
+  const spec = PLATFORM_PART_NAMES[Number(partId)] || { file: `Parte${partId}` };
+  const code = spec.file || spec.zip;
+  return `${sanitizeFilename(participantId)}_${code}`;
+}
+
+function platformAudioName(partId, ordinal, fallback) {
+  const names = PLATFORM_AUDIO_NAMES[Number(partId)] || [];
+  return sanitizeFilename(names[ordinal - 1] || fallback || `audio_${ordinal}`);
+}
+
+function platformImageName(partId, ordinal, fallback) {
+  const names = PLATFORM_IMAGE_NAMES[Number(partId)] || [];
+  return sanitizeFilename(names[ordinal - 1] || fallback || `imagen_${ordinal}`);
+}
+
+function indexToPantomimeName(index) {
+  return index <= 1 ? "P1" : `E${index - 1}`;
+}
+
 function toCSV(rows) {
   if (!rows || rows.length === 0) return "";
 
@@ -103,7 +191,7 @@ export async function exportSemanticPanZip(usedHand = "") {
 
   const url = new URL(window.location.href);
   const participantId = url.searchParams.get("id_participante") || "participante";
-  const userName = sanitizeFilename(await getAuthenticatedUserNameFallback(participantId));
+  const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(2);
   const rows = (partData.semanticPanResponses || []).filter((row) => row.numero_item !== "Ej.");
   const hand = usedHand || partData.usedHand || "";
@@ -128,9 +216,9 @@ export async function exportSemanticPanZip(usedHand = "") {
   XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_PAN");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userName}_20_Memoria_semantica`;
+  const baseName = platformZipBase(2, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(2, participantId)}.xlsx`, excelArray);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -174,9 +262,8 @@ export async function exportVerbalFluencyAudioZip() {
     const blob = await getAudioBlob(entry.key);
     if (!blob) continue;
 
-    const screenNumber = String(Number(entry.screenIndex || 0) + 1).padStart(2, "0");
-    const label = sanitizeFilename(entry.label || `pantalla_${screenNumber}`);
-    zip.file(`${screenNumber}_${label}.wav`, blob);
+    const name = platformAudioName(3, addedFiles + 1, entry.label || `audio_${addedFiles + 1}`);
+    zip.file(`${name}.wav`, blob);
     addedFiles++;
   }
 
@@ -186,7 +273,7 @@ export async function exportVerbalFluencyAudioZip() {
   }
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
-  const baseName = `${participantId}_${userInitials}_21_Fluidez_verbal`;
+  const baseName = platformZipBase(3, participantId, userInitials);
   const link = document.createElement("a");
   const objectUrl = URL.createObjectURL(zipBlob);
   link.href = objectUrl;
@@ -232,10 +319,10 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
     const blob = await getAudioBlob(take.key);
     if (!blob) continue;
 
-    const screenNumber = String(Number(take.screenIndex || 0) + 1).padStart(2, "0");
-    const label = sanitizeFilename(take.label || `pantalla_${screenNumber}`);
+    const ordinal = Number(take.screenIndex || 0) + 1;
+    const label = platformAudioName(targetPartId, ordinal, take.label || `pantalla_${ordinal}`);
     const takeSuffix = Number(take.takeNumber || 1) > 1 ? `_${Number(take.takeNumber)}` : "";
-    zip.file(`${screenNumber}_${label}${takeSuffix}.wav`, blob);
+    zip.file(`${label}${takeSuffix}.wav`, blob);
     addedFiles++;
   }
 
@@ -244,7 +331,7 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
     return false;
   }
 
-  const baseName = `${participantId}_${userInitials}_${testNumber}_${testLabel}`;
+  const baseName = platformZipBase(targetPartId, participantId, userInitials);
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
   const objectUrl = URL.createObjectURL(zipBlob);
@@ -337,9 +424,9 @@ export async function exportWritingImagesZip(targetPartId, testNumber, testLabel
   let addedFiles = 0;
 
   for (const image of images) {
-    const screenNumber = String(Number(image.screenIndex || 0) + 1).padStart(2, "0");
-    const label = sanitizeFilename(image.label || `pantalla_${screenNumber}`);
-    zip.file(`${screenNumber}_${label}.png`, dataUrlToBlob(image.dataUrl));
+    const ordinal = Number(image.screenIndex || 0) + 1;
+    const label = platformImageName(targetPartId, ordinal, image.label || `pantalla_${ordinal}`);
+    zip.file(`${label}.png`, dataUrlToBlob(image.dataUrl));
     addedFiles++;
   }
 
@@ -348,7 +435,7 @@ export async function exportWritingImagesZip(targetPartId, testNumber, testLabel
     return false;
   }
 
-  const baseName = `${participantId}_${userInitials}_${testNumber}_${testLabel}`;
+  const baseName = platformZipBase(targetPartId, participantId, userInitials);
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
   const objectUrl = URL.createObjectURL(zipBlob);
@@ -389,7 +476,8 @@ export async function exportImageAssetsZip(imagePaths = [], testNumber, testLabe
       const blob = await response.blob();
       const filename = sanitizeFilename(String(path).split(/[\\/]/).pop()?.replace(/\.[^.]+$/, "") || `imagen_${index + 1}`);
       const extension = String(path).split(".").pop()?.split(/[?#]/)[0] || "png";
-      zip.file(`${String(index + 1).padStart(2, "0")}_${filename}.${extension}`, blob);
+      const label = platformImageName(testNumber, index + 1, filename);
+      zip.file(`${label}.${extension}`, blob);
       addedFiles++;
     } catch (err) {
       console.warn("No se pudo agregar imagen al ZIP:", path, err);
@@ -398,7 +486,7 @@ export async function exportImageAssetsZip(imagePaths = [], testNumber, testLabe
 
   if (addedFiles === 0) return false;
 
-  const baseName = `${participantId}_${userInitials}_${testNumber}_${testLabel}`;
+  const baseName = platformZipBase(testNumber, participantId, userInitials);
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
   const objectUrl = URL.createObjectURL(zipBlob);
@@ -454,12 +542,12 @@ export async function exportLineBisectionZip(usedHand = "") {
   XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_LINEAS");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userInitials}_19_Diseccion_de_lineas`;
+  const baseName = platformZipBase(1, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(1, participantId)}.xlsx`, excelArray);
 
   if (partData.patientImage) {
-    zip.file("imagen_paciente.png", dataUrlToBlob(partData.patientImage));
+    zip.file("LineB.png", dataUrlToBlob(partData.patientImage));
   }
 
   const sourceImages = [
@@ -534,9 +622,9 @@ export async function exportShortTermMemoryZip(usedHand = "") {
   XLSX.utils.book_append_sheet(workbook, worksheet, "MEMORIA_CORTO_PLAZO");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userInitials}_22_Memoria_a_corto_plazo`;
+  const baseName = platformZipBase(4, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(4, participantId)}.xlsx`, excelArray);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -583,9 +671,9 @@ export async function exportPantomimeZip() {
   XLSX.utils.book_append_sheet(workbook, worksheet, "HOJA_RESPUESTA");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userInitials}_23_Pantomima`;
+  const baseName = platformZipBase(5, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(5, participantId)}.xlsx`, excelArray);
 
   const sortedTakes = Object.entries(takes)
     .sort(([a], [b]) => Number(a) - Number(b));
@@ -593,11 +681,11 @@ export async function exportPantomimeZip() {
   for (const [screenIndex, take] of sortedTakes) {
     const answerIndex = Math.max(Number(screenIndex) - 1, 0);
     const answer = sanitizeFilename(correctAnswers[answerIndex] || `pantalla_${screenIndex}`);
-    const screenLabel = String(Number(screenIndex)).padStart(2, "0");
+    const screenLabel = indexToPantomimeName(Number(screenIndex));
 
     if (take?.sin_camara) {
       zip.file(
-        `videos/${screenLabel}_${answer}_SIN_CAMARA.txt`,
+        `videos/${screenLabel}_SIN_CAMARA.txt`,
         "No se genero video porque no habia camara disponible en este equipo."
       );
       continue;
@@ -608,7 +696,7 @@ export async function exportPantomimeZip() {
     const blob = await getBlob(take.key);
     if (!blob) continue;
 
-    zip.file(`videos/${screenLabel}_${answer}.webm`, blob);
+    zip.file(`videos/${screenLabel}.webm`, blob);
   }
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
@@ -659,9 +747,9 @@ export async function exportCalculationZip(usedHand = "") {
   XLSX.utils.book_append_sheet(workbook, worksheet, "CALCULO");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userInitials}_24_Calculo`;
+  const baseName = platformZipBase(6, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(6, participantId)}.xlsx`, excelArray);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -714,9 +802,9 @@ export async function exportWrittenPhonologicalZip(usedHand = "") {
   XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_FONOLOGICO_PART8");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userInitials}_26_Comprension_escrita_palabras_aisladas`;
+  const baseName = platformZipBase(8, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(8, participantId)}.xlsx`, excelArray);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -770,9 +858,9 @@ export async function exportOrationalPart9Zip(usedHand = "") {
   XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_ORACIONAL_PART9");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userInitials}_27_Comprension_oral_oraciones`;
+  const baseName = platformZipBase(9, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(9, participantId)}.xlsx`, excelArray);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -826,9 +914,9 @@ export async function exportOrationalPart10Zip(usedHand = "") {
   XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_ORACIONAL_PART10");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userInitials}_28_Comprension_escrita_oraciones`;
+  const baseName = platformZipBase(10, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(10, participantId)}.xlsx`, excelArray);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -893,9 +981,9 @@ export async function exportOralParagraphsZip(usedHand = "") {
   XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_COMP_ORAL_PARRAFOS");
   const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
 
-  const baseName = `${participantId}_${userInitials}_29_Comprension_oral_parrafos`;
+  const baseName = platformZipBase(11, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${baseName}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(11, participantId)}.xlsx`, excelArray);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");

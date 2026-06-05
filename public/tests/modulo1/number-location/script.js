@@ -192,10 +192,10 @@ function generateCSV() {
     const mes = String(fechaActual.getMonth() + 1).padStart(2, '0');
     const dia = String(fechaActual.getDate()).padStart(2, '0');
     // Formatear la fecha y la hora
-    const fechaHoraFormateada = `${dia}_${mes}_${año}`;
+    const fechaHoraFormateada = `${dia}${mes}${String(año).slice(-2)}`;
 
-    const csvFilename1 = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.csv`;
-    const csvFilename2 = `${idParticipante}_5_VOSP_Number_Location_Unival_${fechaHoraFormateada}.csv`;
+    const csvFilename1 = `${idParticipante}_VOSP.csv`;
+    const csvFilename2 = `${idParticipante}_VOSP_unival.csv`;
 
     const csvBlob1 = new Blob([csvContent1], { type: 'text/csv;charset=utf-8;' });
     const csvBlob2 = new Blob([csvContent2], { type: 'text/csv;charset=utf-8;' });
@@ -209,7 +209,7 @@ function generateCSV() {
             const link = document.createElement('a');
             if (link.download !== undefined) {
                 const url = URL.createObjectURL(content);
-                const zipFilename = `${idParticipante}_5_VOSP_Number_Location_${fechaHoraFormateada}.zip`;
+                const zipFilename = `${idParticipante}_VOSP_${fechaHoraFormateada}_EX_(NAA).zip`;
 
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

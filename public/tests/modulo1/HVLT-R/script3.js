@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let startTime = new Date();  // Guardar la hora de inicio automáticamente al cargar la página
     let finishTime;
     let audioEndTimes = {};
+    let lastOptionPointerEventTime = 0;
     let fecha = new Date();
     let dia = fecha.getDate();
     let mes = fecha.getMonth() + 1;
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         pauseAudios();
         mainScreen.style.display = 'none';
         audioContainer.style.display = 'block';
+        NXButton.style.display = 'none';
 
         // ✅ Asegura que solo el primer audio se vea
         audioItems.forEach((item, i) => item.style.display = (i === 0 ? 'block' : 'none'));
@@ -71,6 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
             ? idx
             : ([...audioItems].indexOf(audioItem) + 1);
 
+        audioElement.addEventListener('play', () => {
+            NXButton.style.display = 'block';
+        });
+
         audioElement.addEventListener('ended', () => {
             audioEndTimes[audioIndex] = new Date();
 
@@ -89,9 +95,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     NXButton.addEventListener('click', () => {
         pauseAudios();
+        NXButton.style.display = 'none';
 
         // 🔹 DESHABILITAR BOTONES DEL AUDIO ACTUAL
         const currentIndexForButtons = currentAudioIndex + 1; // Ojo: depende de cómo numeraste data-audio
+        if (!answers[currentIndexForButtons]?.answer) {
+            NXButton.style.display = 'block';
+            return;
+        }
+
         document
             .querySelectorAll(`.option-btn[data-audio="${currentIndexForButtons}"]`)
             .forEach(btn => {
@@ -110,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ✅ ocultar botones del audio que viene (mientras suena)
             setOptionButtonsVisible(nextAudioIndexForButtons, false);
-
             audioItems[currentAudioIndex].style.display = 'block';
         } else {
             audioContainer.style.display = 'none';
@@ -144,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         button.classList.add('disabled');
         button.style.display = 'none'; // ✅ ocultos al inicio
 
-        button.addEventListener('click', (e) => {
+        const saveAnswer = (e) => {
             if (button.disabled) return;
 
             const btn = e.currentTarget;
@@ -163,9 +174,21 @@ document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll(`.option-btn[data-audio="${audioIndex}"]`).forEach(b => {
                 b.disabled = true;
                 b.classList.add('disabled');
+                b.classList.toggle('selected-answer', b === btn);
                 // (opcional) podrías ocultarlos tras responder:
                 // b.style.display = 'none';
             });
+
+        };
+
+        button.addEventListener('pointerup', (e) => {
+            lastOptionPointerEventTime = Date.now();
+            saveAnswer(e);
+        }, false);
+
+        button.addEventListener('click', (e) => {
+            if (Date.now() - lastOptionPointerEventTime < 500) return;
+            saveAnswer(e);
         });
     });
 
@@ -175,6 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .querySelectorAll(`.option-btn[data-audio="${audioIndex}"]`)
             .forEach(btn => {
                 btn.style.display = visible ? 'inline-block' : 'none';
+                btn.classList.remove('selected-answer');
             });
     }
 
@@ -255,6 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
+    let fechaStr = `${diaStr}${mesStr}${añoStr.slice(-2)}`;
 
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
@@ -266,8 +291,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const { mainCsvContent, additionalCsvContent } = createCSV();
         // Agregar los archivos CSV al ZIP
-        zip.file("1_HVLT-R_Reconocimiento.csv", mainCsvContent);
-        zip.file("1_HVLT-R_Reconocimiento_Unival.csv", additionalCsvContent);
+        const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
+        zip.file(`${idParticipante}_HVLT-R_recog.csv`, mainCsvContent);
+        zip.file(`${idParticipante}_HVLT-R_recog_unival.csv`, additionalCsvContent);
         // // Agregar el archivo CSV al zip
         // const csvContent = createCSV();
         // zip.file('HVLT-R_Reconocimiento_.csv', csvContent);
@@ -276,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${idParticipante}_1_HVLT-R_Reconocimiento_${diaStr}_${mesStr}_${añoStr}.zip`;
+            a.download = `${idParticipante}_HVLT_recog_${fechaStr}_${inicialesExaminador}_(NAA).zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

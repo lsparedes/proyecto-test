@@ -240,7 +240,7 @@ fetch('/api/user-info')
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        const formattedDate = `${day}_${month}_${year}`;
+        const formattedDate = `${day}${month}${String(year).slice(-2)}`;
     
         const totalTime = Date.now() - startTime;
         const totalTimeMs = totalTime;
@@ -257,11 +257,11 @@ fetch('/api/user-info')
         const zip = new JSZip();
         
         // Agregar el archivo CSV al ZIP
-        zip.file(`${idParticipante}_8_Fluidez_Verbal_Semantica_${inicialesExaminador}_${formattedDate}.csv`, timeBlob);
+        zip.file(`${idParticipante}_SemFluency_unival.csv`, timeBlob);
     
         // Agregar el archivo de audio al ZIP
         const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        zip.file(`${idParticipante}_8_Fluidez_Verbal_Semantica_${inicialesExaminador}_${formattedDate}.wav`, audioBlob);
+        zip.file(`SemFluency.wav`, audioBlob);
     
         // Generar el archivo ZIP
         zip.generateAsync({ type: 'blob' }).then(content => {
@@ -269,7 +269,7 @@ fetch('/api/user-info')
             zipLink.href = URL.createObjectURL(content);
     
             // Nombre del archivo ZIP
-            const fileName = `${idParticipante}_8_Fluidez_Verbal_Semantica_${inicialesExaminador}_${formattedDate}.zip`;
+            const fileName = `${idParticipante}_SemFluency_${formattedDate}_${inicialesExaminador}_(NAA).zip`;
     
             zipLink.download = fileName;
             zipLink.click();

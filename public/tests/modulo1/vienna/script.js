@@ -734,10 +734,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const zip = new JSZip();
         const date = new Date();
-        const formattedDate = `${String(date.getDate()).padStart(2, '0')}_${String(date.getMonth() + 1).padStart(2, '0')}_${date.getFullYear()}`;
+        const formattedDate = `${String(date.getDate()).padStart(2, '0')}${String(date.getMonth() + 1).padStart(2, '0')}${String(date.getFullYear()).slice(-2)}`;
 
-        const csvFileName = `${idParticipante}_VIENNA_13_${inicialesExaminador}_${formattedDate}.csv`;
-        const txtFileName = `${idParticipante}_VIENNA_13_Metricas_${inicialesExaminador}_${formattedDate}.csv`;
+        const csvFileName = `${idParticipante}_VIENN.csv`;
+        const txtFileName = `${idParticipante}_VIENN_unival.csv`;
 
         zip.file(csvFileName, csvBlob);
         zip.file(txtFileName, txtBlob);
@@ -755,7 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const link = document.createElement('a');
                 if (link.download !== undefined) {
                     const url = URL.createObjectURL(content);
-                    const zipFileName = `${idParticipante}_13_VIENNA_${inicialesExaminador}_${formattedDate}.zip`;
+                    const zipFileName = `${idParticipante}_VIENN_${formattedDate}_${inicialesExaminador}_(NAA).zip`;
 
                     link.setAttribute('href', url);
                     link.setAttribute('download', zipFileName);

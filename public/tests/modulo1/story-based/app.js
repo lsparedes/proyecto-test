@@ -535,18 +535,18 @@ const txtContent = [["TotTime", "Hand"], [String(totalTestTime), selectedHand]]
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
-    const fechaFormateada = `${day}_${month}_${year}`;
+    const fechaFormateada = `${String(day).padStart(2, "0")}${String(month).padStart(2, "0")}${String(year).slice(-2)}`;
 
     // Crear el archivo ZIP
     const zip = new JSZip();
-    zip.file(`${idParticipante}_11_SET_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_11_SET_Unival_${fechaFormateada}.csv`, txtBlob);
+    zip.file(`${idParticipante}_SET.csv`, csvBlob);
+    zip.file(`${idParticipante}_SET_unival.csv`, txtBlob);
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const link = document.createElement('a');
             if (link.download !== undefined) {
-                const zipFilename = `${idParticipante}_11_SET_${fechaFormateada}.zip`;
+                const zipFilename = `${idParticipante}_SET_${fechaFormateada}_EX_(NAA).zip`;
                 const url = URL.createObjectURL(content);
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

@@ -365,12 +365,14 @@ async function exportProcesosMotoresBasicosZip(videos = [], rows = []) {
   const url = new URL(window.location.href);
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
-  const baseName = `${participantId}_${userInitials}_M3_T1_Procesos_Motores_Basicos_Evaluacion_Orofacial`;
+  const baseName = platformZipBase(participantId, "OroFace_comm", userInitials);
   const zip = new JSZip();
 
   videos.forEach((video) => {
     if (video?.blob && video?.name) {
-      zip.file(video.name, video.blob);
+      const base = stripExtension(video.name);
+      const officialName = OROFACE_VIDEO_NAMES[base] || base;
+      zip.file(namedWithExtension(officialName, "webm"), video.blob);
     }
   });
 
@@ -403,7 +405,7 @@ async function exportPart1Test2Zip(audios = []) {
   const url = new URL(window.location.href);
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
-  const baseName = `${participantId}_${userInitials}_M3_T2_Respiracion_Fonacion_Resonancia`;
+  const baseName = platformZipBase(participantId, "SpeechSub", userInitials);
   const zip = new JSZip();
 
   const rows = audios.map((audio) => ({
@@ -417,7 +419,7 @@ async function exportPart1Test2Zip(audios = []) {
 
   audios.forEach((audio) => {
     if (audio?.blob && audio?.name) {
-      zip.file(audio.name, audio.blob);
+      zip.file(namedWithExtension(speechSubsystemAudioName(audio), "wav"), audio.blob);
     }
   });
 
@@ -446,12 +448,13 @@ async function exportHablaConectadaZip(audios = [], rows = []) {
   const url = new URL(window.location.href);
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
-  const baseName = `${participantId}_${userInitials}_48_Habla_Conectada`;
+  const baseName = platformZipBase(participantId, "SPDesc_cat_rescue", userInitials);
   const zip = new JSZip();
 
   audios.forEach((audio) => {
     if (audio?.blob && audio?.name) {
-      zip.file(audio.name, audio.blob);
+      const base = stripExtension(audio.name);
+      zip.file(namedWithExtension(HABLA_CONECTADA_AUDIO_NAMES[base] || base, "wav"), audio.blob);
     }
   });
 
@@ -480,7 +483,7 @@ async function exportEvaluacionMotoraHablaZip(audios = [], rows = []) {
   const url = new URL(window.location.href);
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
-  const baseName = `${participantId}_${userInitials}_M3_Parte2_Evaluacion_Motora_Habla`;
+  const baseName = platformZipBase(participantId, motorZipCodeForAudios(audios), userInitials);
   const zip = new JSZip();
 
   zip.file("resumen.csv", toCSV(rows));
@@ -488,7 +491,9 @@ async function exportEvaluacionMotoraHablaZip(audios = [], rows = []) {
   audios.forEach((audio) => {
     if (audio?.blob && audio?.name) {
       const folderName = sanitizeFilename(audio.section || "audios");
-      zip.file(`${folderName}/${audio.name}`, audio.blob);
+      const base = stripExtension(audio.name);
+      const officialName = MOTOR_AUDIO_NAMES[base] || base;
+      zip.file(`${folderName}/${namedWithExtension(officialName, "wav")}`, audio.blob);
     }
   });
 
@@ -529,6 +534,137 @@ function sanitizeFilename(name) {
     .replace(/[^a-zA-Z0-9-_ ]/g, "")
     .trim()
     .replace(/\s+/g, "_");
+}
+
+function currentPlatformDate() {
+  const date = new Date();
+  return [
+    String(date.getDate()).padStart(2, "0"),
+    String(date.getMonth() + 1).padStart(2, "0"),
+    String(date.getFullYear()).slice(-2)
+  ].join("");
+}
+
+function platformZipBase(participantId, code, initials, includeNaa = true) {
+  return `${sanitizeFilename(participantId)}_${code}_${currentPlatformDate()}_${sanitizeFilename(initials)}${includeNaa ? "_(NAA)" : ""}`;
+}
+
+const OROFACE_VIDEO_NAMES = {
+  modulo3_test1_cara_1: "1_smile",
+  modulo3_test1_cara_2: "2_eyesbrows",
+  modulo3_test1_cara_3: "3_cheeks",
+  modulo3_test1_mandibula_1: "4_open_mouth",
+  modulo3_test1_lengua_1: "5_tongue_out",
+  modulo3_test1_lengua_2: "6_tongue_side",
+  modulo3_test1_lengua_3: "7_tongue_up_down",
+  modulo3_test1_paladarblando_1: "8_long_a",
+  modulo3_test1_praxiasorofaciales_1: "1_kiss",
+  modulo3_test1_praxiasorofaciales_2: "2_silence",
+  modulo3_test1_praxiasorofaciales_3: "3_blow",
+  modulo3_test1_praxiasorofaciales_4: "4_cluck_tongue",
+  modulo3_test1_praxiasorofaciales_5: "5_chew"
+};
+
+const HABLA_CONECTADA_AUDIO_NAMES = {
+  modulo3_parte3_descripcion_imagen: "SPDesc_cat_rescue",
+  modulo3_parte3_narracion_historia: "StoryNarr_frog",
+  modulo3_parte3_narracion_personal: "PersNarr_s"
+};
+
+const MOTOR_AUDIO_NAMES = {
+  modulo3_parte2_01_volumencreciente: "Count_5_incvol",
+  modulo3_parte2_02_hablaautomatica: "Count_20",
+  modulo3_parte2_03_diadococinesia_1: "1_ta",
+  modulo3_parte2_03_diadococinesia_2: "2_ka",
+  modulo3_parte2_03_diadococinesia_3: "3_pa",
+  modulo3_parte2_03_diadococinesia_4: "1_pata",
+  modulo3_parte2_03_diadococinesia_5: "2_pataka",
+  modulo3_parte2_04_lectura: "ReadParagraph",
+  modulo3_parte2_05_diptongos_1: "1_seis",
+  modulo3_parte2_05_diptongos_2: "2_ingenuo",
+  modulo3_parte2_05_diptongos_3: "3_viudo",
+  modulo3_parte2_05_diptongos_4: "4_suizo",
+  modulo3_parte2_05_diptongos_5: "5_ley",
+  modulo3_parte2_05_diptongos_6: "6_paraguas",
+  modulo3_parte2_06_polisilabicas_1: "1_paquistani",
+  modulo3_parte2_06_polisilabicas_2: "2_bicicleta",
+  modulo3_parte2_06_polisilabicas_3: "3_deposito",
+  modulo3_parte2_06_polisilabicas_4: "4_cupula",
+  modulo3_parte2_06_polisilabicas_5: "5_ceramica",
+  modulo3_parte2_06_polisilabicas_6: "6_banana",
+  modulo3_parte2_07_longitudcreciente_a: "1_maniobra",
+  modulo3_parte2_07_longitudcreciente_b: "4_peligro",
+  modulo3_parte2_07_longitudcreciente_c: "7_existencia",
+  modulo3_parte2_07_longitudcreciente_d: "10_caida",
+  modulo3_parte2_07_longitudcreciente_e: "13_estable",
+  modulo3_parte2_07_longitudcreciente_f: "16_silencio",
+  modulo3_parte2_08_pseudopalabras_1: "1_pofa",
+  modulo3_parte2_08_pseudopalabras_2: "2_zunoja",
+  modulo3_parte2_08_pseudopalabras_3: "3_pataresa",
+  modulo3_parte2_08_pseudopalabras_4: "4_batrasper",
+  modulo3_parte2_08_pseudopalabras_5: "5_trantaslerma",
+  modulo3_parte2_08_pseudopalabras_6: "6_tulasa",
+  modulo3_parte2_08_pseudopalabras_7: "7_rachu",
+  modulo3_parte2_08_pseudopalabras_8: "8_jachuyoza",
+  modulo3_parte2_08_pseudopalabras_9: "9_drisnal",
+  modulo3_parte2_08_pseudopalabras_10: "10_yerchal",
+  modulo3_parte2_08_pseudopalabras_11: "11_griscupoya",
+  modulo3_parte2_08_pseudopalabras_12: "12_prasnuzal",
+  modulo3_parte2_09_repeticionfrases_1: "SRep_1",
+  modulo3_parte2_09_repeticionfrases_2: "SRep_2",
+  modulo3_parte2_09_repeticionfrases_3: "SRep_3",
+  modulo3_parte2_09_repeticionfrases_4: "SRep_4",
+  modulo3_parte2_09_repeticionfrases_5: "SRep_5",
+  modulo3_parte2_09_repeticionfrases_6: "SRep_6",
+  modulo3_parte2_09_repeticionfrases_7: "SRep_7",
+  modulo3_parte2_09_repeticionfrases_8: "SRep_8",
+  modulo3_parte2_10_lecturafrases_1: "SRead_1",
+  modulo3_parte2_10_lecturafrases_2: "SRead_2",
+  modulo3_parte2_10_lecturafrases_3: "SRead_3",
+  modulo3_parte2_10_lecturafrases_4: "SRead_4",
+  modulo3_parte2_10_lecturafrases_5: "SRead_5",
+  modulo3_parte2_10_lecturafrases_6: "SRead_6",
+  modulo3_parte2_10_lecturafrases_7: "SRead_7",
+  modulo3_parte2_10_lecturafrases_8: "SRead_8"
+};
+
+function stripExtension(filename) {
+  return String(filename || "").replace(/\.[^.]+$/, "");
+}
+
+function namedWithExtension(base, extension) {
+  return `${sanitizeFilename(base)}.${extension}`;
+}
+
+function speechSubsystemAudioName(audio) {
+  const title = String(audio?.title || "").toLowerCase();
+  const slot = Number(String(audio?.name || "").match(/_(\d+)(?:_toma\d+)?\.wav$/i)?.[1] || "1");
+  const take = String(audio?.name || "").match(/(_toma\d+)\.wav$/i)?.[1] || "";
+
+  if (title.includes("espiracion")) return `S_${slot}${take}`;
+  if (title.includes("fonacion")) return `A_${slot}${take}`;
+  if (title.includes("resonancia")) return `Resonance_${slot}${take}`;
+
+  return `${stripExtension(audio?.name || "SpeechSub")}${take}`;
+}
+
+function motorZipCodeForAudios(audios = []) {
+  const sections = new Set(audios.map((audio) => String(audio?.section || "")));
+  if (sections.size !== 1) return "SpeechMotor";
+
+  const section = Array.from(sections)[0].toLowerCase();
+  if (section.includes("volumen")) return "Count_5_incvol";
+  if (section.includes("autom")) return "Count_20";
+  if (section.includes("diadococinesia")) return "AMR";
+  if (section.includes("lectura de frases")) return "SRead";
+  if (section === "lectura") return "ReadParagraph";
+  if (section.includes("diptongos")) return "WRep_multi_3";
+  if (section.includes("polisil")) return "WRep_multi_5";
+  if (section.includes("longitud")) return "WRep_inclength";
+  if (section.includes("pseudopalabras")) return "PseudoRep";
+  if (section.includes("frases")) return "SRep";
+
+  return "SpeechMotor";
 }
 
 async function getAuthenticatedUserInitialsFallback(fallback) {

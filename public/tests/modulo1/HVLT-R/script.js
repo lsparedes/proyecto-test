@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audioE1.addEventListener('timeupdate', () => {
         if (audioE1.currentTime >= audioE1.duration ) {
             if (!is_recording) {
-                startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.wav');
+                startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT_E1.wav');
             }
         }
     });
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audioE2.addEventListener('timeupdate', () => {
         if (audioE2.currentTime >= audioE2.duration ) {
             if (!is_recording) {
-                startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.wav');
+                startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT_E2.wav');
             }
         }
     });
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
     audioE3.addEventListener('timeupdate', () => {
         if (audioE3.currentTime >= audioE3.duration ) {
             if (!is_recording) {
-                startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.wav');
+                startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT_E3.wav');
             }
         }
     });
@@ -200,17 +200,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     initRecordingButton1.addEventListener('click', () => {
-        startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT-R Ensayo 1.wav');
+        startRecording(initRecordingButton1, stopRecordingButton1, 'HVLT_E1.wav');
         FinishRecordingImage.style.display = 'block';
     });
 
     initRecordingButton2.addEventListener('click', () => {
-        startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT-R Ensayo 2.wav');
+        startRecording(initRecordingButton2, stopRecordingButton2, 'HVLT_E2.wav');
         FinishRecordingImage.style.display = 'block';
     });
 
     initRecordingButton3.addEventListener('click', () => {
-        startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT-R Ensayo 3.wav');
+        startRecording(initRecordingButton3, stopRecordingButton3, 'HVLT_E3.wav');
         FinishRecordingImage.style.display = 'block';
     });
  
@@ -336,6 +336,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
+    let fechaStr = `${diaStr}${mesStr}${añoStr.slice(-2)}`;
 
     function downloadZip() {
         if (typeof JSZip === 'undefined') {
@@ -347,11 +348,12 @@ document.addEventListener('DOMContentLoaded', () => {
             zip.file(file.fileName, file.blob);
         });
         const csvContent = saveToCSV();
-        zip.file('1_HVLT-R_Inmediato.csv', csvContent);
+        const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
+        zip.file(`${idParticipante}_HVLT-R_imm.csv`, csvContent);
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${idParticipante}_1_HVLT-R_Inmediato_${diaStr}_${mesStr}_${añoStr}.zip`;
+            a.download = `${idParticipante}_HVLT_imm_${fechaStr}_${inicialesExaminador}_(NAA).zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

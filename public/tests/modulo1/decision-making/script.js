@@ -461,14 +461,14 @@ function generatePracticeTrials() {
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-        const date = `${day}_${month}_${year}`;
+        const year = String(now.getFullYear()).slice(-2);
+        const date = `${day}${month}${year}`;
 
         // Añadir archivos al ZIP
-        zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.csv`, csvContent);
-        zip.file(`${idParticipante}_16_Dos_Maquinas_Tragamonedas_Metricas_${date}.csv`, txtContent);
+        zip.file(`${idParticipante}_TwoArmBandit.csv`, csvContent);
+        zip.file(`${idParticipante}_TwoArmBandit_unival.csv`, txtContent);
 
-        const fileName = `${idParticipante}_16_Dos_Maquinas_Tragamonedas_${date}.zip`;
+        const fileName = `${idParticipante}_TwoArmBandit_${date}_${initials}_(NAA).zip`;
 
         // Generar y descargar el archivo ZIP
         zip.generateAsync({ type: 'blob' }).then((content) => {

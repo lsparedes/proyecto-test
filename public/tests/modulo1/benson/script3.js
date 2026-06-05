@@ -182,14 +182,16 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('No se puede generar el CSV');
             return;
         }
-        zip.file(`${idParticipante}_6_Benson_Reconocimiento_${diaStr}_${mesStr}_${añoStr}.csv`, csvContent);
+        zip.file(`${idParticipante}_Benson_recog.csv`, csvContent);
 
         // Crear el archivo zip y forzar la descarga
         zip.generateAsync({ type: 'blob' })
             .then(function(content) {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
-                a.download = `${idParticipante}_6_Benson_Reconocimiento_${diaStr}_${mesStr}_${añoStr}.zip`;
+                const fecha = `${diaStr}${mesStr}${String(añoStr).slice(-2)}`;
+                const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
+                a.download = `${idParticipante}_Benson_recog_${fecha}_${inicialesExaminador}_(NAA).zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);

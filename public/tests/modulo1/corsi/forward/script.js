@@ -439,8 +439,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-        return `${day}_${month}_${year}`;
+        const year = String(now.getFullYear()).slice(-2);
+        return `${day}${month}${year}`;
     }
 
     let userInfo;
@@ -503,7 +503,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const csvContent = headers.join(";") + "\n" + rows.map(e => e.join(";")).join("\n");
         return {
             content: csvContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_VisSpan_forw.csv`
         };
     }
 
@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: txtContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Directo_Unival_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_VisSpan_forw_unival.csv`
         };
     }
 
@@ -548,13 +548,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!videoBlob || videoBlob.size === 0) {
             console.error("Error: No se grabó el video o está vacío.");
         } else {
-            zip.file(`${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.webm`, videoBlob);
+            zip.file(`VisSpan_forw_recording.webm`, videoBlob);
         }
 
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
-        link.setAttribute("download", `${idParticipante}_10_Span_Visuoespacial_Directo_${getCurrentDate()}.zip`);
+        const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
+        link.setAttribute("download", `${idParticipante}_VisSpan_forw_${getCurrentDate()}_${inicialesExaminador}_(NAA).zip`);
         document.body.appendChild(link);
 
         link.click();

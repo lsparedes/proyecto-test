@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
         const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
         const [day, month, year] = fechaHoraChilena.split('-');
-        const fechaFormateada = `${day}_${month}_${year}`;
+        const fechaFormateada = `${String(day).padStart(2, "0")}${String(month).padStart(2, "0")}${String(year).slice(-2)}`;
 
         const zip = new JSZip();
         const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const liftTime = liftTotalTime / 1000;
         const csvContent = `TotTime;ExecTime;NoIncLines;NoCorrLines;NoLiftPen;ExecLiftTime;Hand\n` +
             `${totTime.toFixed(2)};${execTime.toFixed(2)};${incorrectLinesPartB};${correctLinesPartB};${liftCount};${liftTime.toFixed(2)};${selectedHand}\n`;
-        zip.file("2_TMT_Part_B.csv", csvContent);
+        zip.file(`${idParticipante}_TMTB.csv`, csvContent);
 
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = canvasPartB.width;
@@ -483,16 +483,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const imageDataUrl = tempCanvas.toDataURL("image/png");
         const imageBlob = await (await fetch(imageDataUrl)).blob();
-        zip.file("2_TMT_Part_B_Canvas_Screenshot.png", imageBlob);
+        zip.file("TMTB_screen.png", imageBlob);
 
         const videoBlob = new Blob(recordedChunks, { type: "video/webm" });
-        zip.file("2_TMT_Part_B_Canvas_Recording.webm", videoBlob);
+        zip.file("TMTB_recording.webm", videoBlob);
 
         const zipBlob = await zip.generateAsync({ type: "blob" });
         const zipUrl = URL.createObjectURL(zipBlob);
         const link = document.createElement("a");
         link.href = zipUrl;
-        link.download = `${idParticipante}_2_TMT_PartB_${inicialesExaminador}_${fechaFormateada}.zip`;
+        link.download = `${idParticipante}_TMTB_${fechaFormateada}_${inicialesExaminador}_(NAA).zip`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

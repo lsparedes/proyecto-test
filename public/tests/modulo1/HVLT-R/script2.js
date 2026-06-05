@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mainScreen2.style.display = 'none';
         mainScreen3.style.display = 'block';
         recordingControls4.style.display = 'block';
-        startRecording('HVLT-R Ensayo 2.wav', false); // false para que no se reproduzca el beep
+        startRecording('HVLT_delay.wav', false); // false para que no se reproduzca el beep
         startFinishTimer();
     });
 
@@ -80,10 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const remainingTime = audio1_ej2.duration - audio1_ej2.currentTime;
         if (remainingTime > 2) {
             setTimeout(() => {
-                startRecording('HVLT-R Ensayo 2.wav');
+                startRecording('HVLT_delay.wav');
             }, (remainingTime - 2) * 1000);
         } else {
-            startRecording('HVLT-R Ensayo 2.wav');
+            startRecording('HVLT_delay.wav');
         }
     });
 
@@ -93,10 +93,10 @@ document.addEventListener('DOMContentLoaded', () => {
         recordingControls4.style.display = 'block';
 
         beep.play().then(() => {
-            startRecording('HVLT-R Ensayo 2.wav');
+            startRecording('HVLT_delay.wav');
         }).catch((error) => {
             console.error("Error al reproducir el beep:", error);
-            startRecording('HVLT-R Ensayo 2.wav'); // continuar de todas formas
+            startRecording('HVLT_delay.wav'); // continuar de todas formas
         });
 
     });
@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
         generateZip();
     });
 
-    async function startRecording(fileName) {
+    async function startRecording(fileName = 'HVLT_delay.wav') {
         micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
 
@@ -222,6 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let diaStr = dia.toString().padStart(2, '0');
     let mesStr = mes.toString().padStart(2, '0');
     let añoStr = año.toString().padStart(4, '0');
+    let fechaStr = `${diaStr}${mesStr}${añoStr.slice(-2)}`;
 
     function generateZip() {
         if (typeof JSZip === 'undefined') {
@@ -235,12 +236,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const csvContent = saveToCSV();
-        zip.file('1_HVLT-R_Diferido.csv', csvContent);
+        const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
+        zip.file(`${idParticipante}_HVLT-R_delay.csv`, csvContent);
 
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${idParticipante}_1_HVLT-R_Diferido_${diaStr}_${mesStr}_${añoStr}.zip`;
+            a.download = `${idParticipante}_HVLT_delay_${fechaStr}_${inicialesExaminador}_(NAA).zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

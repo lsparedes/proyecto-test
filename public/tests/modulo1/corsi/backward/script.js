@@ -448,8 +448,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
         const day = String(now.getDate()).padStart(2, '0');
         const month = String(now.getMonth() + 1).padStart(2, '0');
-        const year = now.getFullYear();
-        return `${day}_${month}_${year}`;
+        const year = String(now.getFullYear()).slice(-2);
+        return `${day}${month}${year}`;
     }
 
     let userInfo;
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: csvContent,
-            filename: `${idParticipante}10_Span_Visuoespacial_Inverso_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_VisSpan_back.csv`
         };
     }
 
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             content: txtContent,
-            filename: `${idParticipante}_10_Span_Visuoespacial_Inverso_Unival_${getCurrentDate()}.csv`
+            filename: `${idParticipante}_VisSpan_back_unival.csv`
         };
     }
 
@@ -567,14 +567,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
         const videoBlob = await stopScreenRecording();
-        zip.file(`${idParticipante}_corsi_inverso_${getCurrentDate()}.webm`, videoBlob);
+        zip.file(`VisSpan_back_recording.webm`, videoBlob);
 
         const zipContent = await zip.generateAsync({ type: "blob" });
 
 
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
-        link.setAttribute("download", `${idParticipante}_corsi_inverso_${getCurrentDate()}.zip`);
+        const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
+        link.setAttribute("download", `${idParticipante}_VisSpan_back_${getCurrentDate()}_${inicialesExaminador}_(NAA).zip`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
