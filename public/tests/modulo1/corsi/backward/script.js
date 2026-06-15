@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let milliseconds = 0;
     let continueTest = false;
     let lastPointerEventTime = 0;
-    const BLOCK_CAPTURE_TOLERANCE = 32;
+    const BLOCK_CAPTURE_TOLERANCE = 2;
 
     let mediaRecorder;
     let recordedChunks = [];
