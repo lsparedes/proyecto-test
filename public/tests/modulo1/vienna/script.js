@@ -464,6 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const responses = []; // Array para almacenar las respuestas de los ensayos
+    const HIT_RADIUS = 14;
     let trialStartTime = Date.now(); // Tiempo de inicio de la prueba
 
 
@@ -524,7 +525,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.error_actualizacion.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 7) {
+            if (Math.sqrt(dx * dx + dy * dy) <= HIT_RADIUS) {
                 response.errorActualizacion = `(${item.x}, ${item.y})`;
             }
         });
@@ -532,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.error_rotacion.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 7) {
+            if (Math.sqrt(dx * dx + dy * dy) <= HIT_RADIUS) {
                 response.errorRotacion = `(${item.x}, ${item.y})`;
             }
         });
@@ -540,7 +541,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoData.items.correcto.forEach(item => {
             const dx = click.x - item.x;
             const dy = click.y - item.y;
-            if (Math.sqrt(dx * dx + dy * dy) < 7) {
+            if (Math.sqrt(dx * dx + dy * dy) <= HIT_RADIUS) {
                 response.precision = 2;
             }
         });
@@ -582,7 +583,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.correcto.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 7) {
+                    if (Math.sqrt(dx * dx + dy * dy) <= HIT_RADIUS) {
                         isCorrect = true;
                         correctClicks++;
                     }
@@ -591,7 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.error_rotacion.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 7) {
+                    if (Math.sqrt(dx * dx + dy * dy) <= HIT_RADIUS) {
                         isRotationError = true;
                         rotationErrors++;
                     }
@@ -600,7 +601,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 videos[videoIndex].items.error_actualizacion.forEach(item => {
                     const dx = click.x - item.x;
                     const dy = click.y - item.y;
-                    if (Math.sqrt(dx * dx + dy * dy) < 7) {
+                    if (Math.sqrt(dx * dx + dy * dy) <= HIT_RADIUS) {
                         isUpdateError = true;
                         updateErrors++;
                     }

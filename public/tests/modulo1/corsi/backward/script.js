@@ -35,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let milliseconds = 0;
     let continueTest = false;
     let lastPointerEventTime = 0;
+    const BLOCK_CAPTURE_TOLERANCE = 32;
 
     let mediaRecorder;
     let recordedChunks = [];
@@ -101,8 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
             block.style.top = fixedPositions[i].top + 'px';
             block.style.left = fixedPositions[i].left + 'px';
             blocksContainer.appendChild(block);
-            block.addEventListener('pointerup', handleBlockPointer, false);
-            block.addEventListener('click', handleBlockClick);
         }
 
         // Rotar el container de los bloques
@@ -119,10 +118,16 @@ document.addEventListener('DOMContentLoaded', () => {
         handleBlockSelection(event);
     }
 
+    blocksContainer.addEventListener('pointerup', handleBlockPointer, false);
+    blocksContainer.addEventListener('click', handleBlockClick);
+
     function handleBlockSelection(event) {
         if (sequenceDisplaying) return;
 
-        const index = parseInt(event.target.dataset.index);
+        const selectedBlock = getSelectedBlockFromEvent(event);
+        if (!selectedBlock) return;
+
+        const index = parseInt(selectedBlock.dataset.index);
 
         if (playerSequence.length === 0 && !isPractice) {
         stopTimer();
@@ -132,8 +137,38 @@ document.addEventListener('DOMContentLoaded', () => {
         resetBlocks();
 
         playerSequence.push(index);
-        event.target.classList.add('selected');
+        selectedBlock.classList.add('selected');
 
+    }
+
+    function getSelectedBlockFromEvent(event) {
+        const directBlock = event.target.closest?.('.block');
+        if (directBlock && blocksContainer.contains(directBlock)) {
+            return directBlock;
+        }
+
+        const pointX = event.clientX;
+        const pointY = event.clientY;
+        let nearestBlock = null;
+        let nearestDistance = Infinity;
+
+        Array.from(blocksContainer.children).forEach((block) => {
+            const rect = block.getBoundingClientRect();
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+            const halfWidth = rect.width / 2;
+            const halfHeight = rect.height / 2;
+            const dxOutside = Math.max(Math.abs(pointX - centerX) - halfWidth, 0);
+            const dyOutside = Math.max(Math.abs(pointY - centerY) - halfHeight, 0);
+            const distance = Math.sqrt(dxOutside * dxOutside + dyOutside * dyOutside);
+
+            if (distance < nearestDistance) {
+                nearestDistance = distance;
+                nearestBlock = block;
+            }
+        });
+
+        return nearestDistance <= BLOCK_CAPTURE_TOLERANCE ? nearestBlock : null;
     }
 
     function getQueryParam(param) {

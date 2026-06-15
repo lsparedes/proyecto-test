@@ -490,7 +490,7 @@ async function exportEvaluacionMotoraHablaZip(audios = [], rows = []) {
 
   audios.forEach((audio) => {
     if (audio?.blob && audio?.name) {
-      const folderName = sanitizeFilename(audio.section || "audios");
+      const folderName = motorFolderName(audio.section || "audios");
       const base = stripExtension(audio.name);
       const officialName = MOTOR_AUDIO_NAMES[base] || base;
       zip.file(`${folderName}/${namedWithExtension(officialName, "wav")}`, audio.blob);
@@ -627,6 +627,24 @@ const MOTOR_AUDIO_NAMES = {
   modulo3_parte2_10_lecturafrases_7: "SRead_7",
   modulo3_parte2_10_lecturafrases_8: "SRead_8"
 };
+
+const MOTOR_FOLDER_NAMES = {
+  "Volumen creciente": "Volumen creciente",
+  "Habla automática": "Habla automática",
+  "Diadococinesia": "Repetición de sílabas-. Diadococinesia",
+  "Lectura": "Lectura",
+  "Diptongos": "Diptongos",
+  "Palabras polisilábicas": "palabras Polisilábicas",
+  "Palabras con longitud creciente": "Palabras con longitud creciente",
+  "Pseudopalabras": "Pseudopalabras",
+  "Repetición de frases": "Repetición de frase",
+  "Lectura de frases": "Lectura de frases"
+};
+
+function motorFolderName(section) {
+  const name = MOTOR_FOLDER_NAMES[section] || section || "audios";
+  return String(name).replace(/[\\/]/g, "-").trim() || "audios";
+}
 
 function stripExtension(filename) {
   return String(filename || "").replace(/\.[^.]+$/, "");
