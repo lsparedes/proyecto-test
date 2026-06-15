@@ -270,7 +270,7 @@ function mostrarImagenPrincipal() {
 
     storyImage.src = imagenes[indiceActual].src;
     storyImage.style.display = 'block';
-    continueButton.style.display = 'block';
+    continueButton.style.display = 'none';
 
     optionsContainer.innerHTML = '';
     imagenes[indiceActual].options.forEach((option, index) => {
@@ -278,7 +278,12 @@ function mostrarImagenPrincipal() {
         optionImage.src = option.src;
         optionImage.classList.add('option');
 
+        optionImage.addEventListener('pointerup', () => {
+            lastOptionPointerEventTime = Date.now();
+            verificarRespuesta(index);
+        }, false);
         optionImage.addEventListener('click', () => {
+            if (Date.now() - lastOptionPointerEventTime < 500) return;
             verificarRespuesta(index);
         });
 
@@ -292,7 +297,13 @@ function mostrarImagenPrincipal() {
 }
 
 function handleContinueClick() {
+    if (isAdvancing) return;
+    const itemActual = imagenes[indiceActual];
+    const isPractice = itemActual?.textoDistintivo === "P1";
+    if (!respuestaSeleccionada || (!seleccionActual && !isPractice)) return;
+    isAdvancing = true;
     cambiarImagen();
+    isAdvancing = false;
 }
 
 
@@ -368,6 +379,8 @@ document.getElementById('showMainButton').addEventListener('click', function () 
 let respuestaSeleccionada = false; // Variable para verificar si se seleccionó una respuesta
 let seleccionActual = null;
 let respuestasSeleccionadas = []; // Array para almacenar las respuestas seleccionadas
+let isAdvancing = false;
+let lastOptionPointerEventTime = 0;
 
 function verificarRespuesta(selectedOptionIndex) {
     const itemActual = imagenes[indiceActual];
@@ -394,10 +407,12 @@ function verificarRespuesta(selectedOptionIndex) {
             tiempo: tiempoTranscurrido
         };
         respuestaSeleccionada = true;
+        document.getElementById('continueButton').style.display = 'block';
     } else {
         // En práctica, no persistimos nada
         seleccionActual = null;
-        respuestaSeleccionada = false;
+        respuestaSeleccionada = true;
+        document.getElementById('continueButton').style.display = 'block';
     }
 }
 

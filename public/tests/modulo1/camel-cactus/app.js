@@ -410,6 +410,8 @@ let startTimeE;
 let endTimeE;
 let timer;
 let milliseconds = 0;
+let isAdvancing = false;
+let lastOptionPointerEventTime = 0;
 
 fullscreenButton.addEventListener('click', () => {
     if (document.fullscreenEnabled && !document.fullscreenElement) {
@@ -468,7 +470,7 @@ function iniciarPresentacion() {
     imageContainer.style.display = 'block';
     instructionText.style.display = 'none';
     startButton.style.display = 'none';
-    nextButton.style.display = 'block'; // Mostrar el botón "Next"
+    nextButton.style.display = 'none';
     fullscreenButton.style.display = 'none'; // Ocultar el botón al iniciar la presentación
 
     document.getElementById('instructionAudio').pause();
@@ -481,6 +483,7 @@ function mostrarImagen(indice) {
     const imagenInfo = imagenes[indice];
     const storyImage = document.getElementById('storyImage');
     const optionsContainer = document.getElementById('optionsContainer');
+    nextButton.style.display = 'none';
 
     // Limpiar contenedor de opciones antes de mostrar nuevas imágenes
     optionsContainer.innerHTML = '';
@@ -528,7 +531,14 @@ function agregarTextoYOpciones(imagenInfo) {
         optionImg.dataset.correct = option.correct ? '1' : '0';
         optionImg.dataset.item = option.item ?? '';
         optionImg.dataset.index = String(index);
-        optionImg.addEventListener('click', verificarRespuesta);
+        optionImg.addEventListener('pointerup', (event) => {
+            lastOptionPointerEventTime = Date.now();
+            verificarRespuesta(event);
+        }, false);
+        optionImg.addEventListener('click', (event) => {
+            if (Date.now() - lastOptionPointerEventTime < 500) return;
+            verificarRespuesta(event);
+        });
         optionsContainer.appendChild(optionImg);
         optionImg.style.opacity = '0';
     });
@@ -566,9 +576,15 @@ function verificarRespuesta(event) {
     };
 
     respuestaSeleccionada = true; // si quieres mantener esta bandera
+    nextButton.style.display = 'block';
 }
 
 nextButton.addEventListener('click', function () {
+    if (isAdvancing) return;
+    if (!respuestaPorTrial[indiceActual]) return;
+    isAdvancing = true;
+    nextButton.style.display = 'none';
+
     const imgActual = imagenes[indiceActual];
     const correcta = imgActual.options.find(o => o.correct);
 
@@ -610,6 +626,7 @@ nextButton.addEventListener('click', function () {
     delete respuestaPorTrial[indiceActual]; // opcional, por limpieza
 
     cambiarImagen();
+    isAdvancing = false;
 });
 
 function cambiarImagen() {

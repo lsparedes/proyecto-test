@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let endTimeExecution = null; 
     let audioEndTime = null; // Tiempo cuando termina el audio3
     let selectionAnswer = null;
+    let responseTime = "";
+    let lastSelectablePointerEventTime = 0;
     let correctAnswer = "3";
     let participantAnswer = "";
     let selectedFigure = null;
@@ -68,8 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
         calculateAccuracy(); // Calcular el accuracy cuando se termina de identificar la figura
     });
 
-    selectableImages.forEach(image => {
-        image.addEventListener('click', (event) => {
+    function selectFigure(event) {
             if (selectedFigure) {
                 selectedFigure.classList.remove('selected');
             }
@@ -84,6 +85,17 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.warn("No se registró el tiempo final del audio.");
             }
+    }
+
+    selectableImages.forEach(image => {
+        image.addEventListener('pointerup', (event) => {
+            lastSelectablePointerEventTime = Date.now();
+            selectFigure(event);
+        }, false);
+
+        image.addEventListener('click', (event) => {
+            if (Date.now() - lastSelectablePointerEventTime < 500) return;
+            selectFigure(event);
         });
     });
 

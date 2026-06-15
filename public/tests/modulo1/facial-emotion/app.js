@@ -1,4 +1,6 @@
 document.getElementById('next-button').addEventListener('click', cambiarImagen);
+let isAdvancing = false;
+let lastEmotionPointerEventTime = 0;
 
 const imagenes = [
     {
@@ -198,7 +200,24 @@ function mostrarEmociones() {
         const listItem = document.createElement('li');
         listItem.textContent = emocion;
         listItem.style.cursor = 'pointer';
+        listItem.addEventListener('pointerup', function () {
+            lastEmotionPointerEventTime = Date.now();
+            guardarSeleccion(emocion);
+            document.getElementById('next-button').style.display = 'block';
+
+            const items = listaEmociones.getElementsByTagName('li');
+            for (let item of items) {
+                item.classList.remove('selected');
+            }
+
+            listItem.classList.add('selected');
+
+            let ahora = new Date();
+            time = responseTime(ahora);
+            tiemposRespuesta[indiceActual] = time;
+        }, false);
         listItem.addEventListener('click', function () {
+            if (Date.now() - lastEmotionPointerEventTime < 500) return;
             guardarSeleccion(emocion);
             document.getElementById('next-button').style.display = 'block'; // Mostrar el botón "next-button"
 
@@ -283,7 +302,7 @@ function iniciarPresentacion() {
         document.getElementById('instructionAudio').pause();
         imagenNumero.style.display = 'block';
         imageContainer.style.display = 'block';
-        next_button.style.display = 'block';
+        next_button.style.display = 'none';
         instructionText.style.display = 'none';
         startButton.style.display = 'none';
         mostrarImagen(indiceActual);
@@ -302,7 +321,10 @@ function guardarSeleccion(emocion) {
 }
 
 function cambiarImagen() {
-    document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button"
+    if (isAdvancing) return;
+    if (!emocionesSeleccionadas[indiceActual]) return;
+    isAdvancing = true;
+    document.getElementById('next-button').style.display = 'none';
     indiceActual++;
     if (indiceActual === imagenes.length) {
         document.getElementById('fin').style.display = 'block'; // Ocultar el botón "next-button"
@@ -320,6 +342,7 @@ function cambiarImagen() {
         for (let item of items) {
             item.classList.remove('selected');
         }
+        isAdvancing = false;
     }
 }
 
@@ -450,7 +473,7 @@ document.addEventListener('keydown', (event) => {
 });
 
 window.onload = function () {
-    document.getElementById('next-button').style.display = 'block'; // Ocultar el botón "next-button" al cargar la página
+    document.getElementById('next-button').style.display = 'none';
     iniciarPresentacion();
 };
 
@@ -492,7 +515,7 @@ function confirmHandSelection() {
     console.log('holi holi holi' + selectedHand);
     selectHandContainer.style.display = "none";
     handButton.style.display = "none";
-    document.getElementById('next-button').style.display = 'block';
+    document.getElementById('next-button').style.display = 'none';
     document.getElementById('fin').style.display = 'none';
     mostrarFinalizacion();
 }

@@ -7,8 +7,11 @@ document.getElementById('startButton').addEventListener('click', () => {
 
 document.getElementById('submit-btn').addEventListener('click', submitAnswer);
 document.getElementById('next-button').addEventListener('click', () => {
+    if (isAdvancing) return;
+    isAdvancing = true;
     submitAnswer();
     showNextImage();
+    isAdvancing = false;
 });
 
 let firstKeypressTime = null;
@@ -32,6 +35,7 @@ let currentImageIndex = -1;
 let startTime;
 let answers = [];
 let itemStartTime;
+let isAdvancing = false;
 
 const finalButton = document.getElementById('final-button');
 
@@ -93,13 +97,13 @@ function submitAnswer() {
 
     const rt = firstKeypressTime ? ((firstKeypressTime - itemStartTime) / 1000) : 0;
 
-    answers.push({
+    answers[currentImageIndex] = {
         title: images[currentImageIndex].title,
         userAnswer: userAnswer,
         correctAnswer: correctAnswer,
         precision: precision,
         timeTaken: rt // Tiempo desde que aparece el ítem hasta que se empieza a escribir
-    });
+    };
 
     if (currentImageIndex < 2) { // Si es uno de los ítems de práctica
         if (userAnswer === correctAnswer) {

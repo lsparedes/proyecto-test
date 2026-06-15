@@ -1,7 +1,5 @@
 document.getElementById('start-button').addEventListener('click', startTest);
 
-document.getElementById('next-button').addEventListener('click', nextImage);
-
 const images = [
     { src: 'same/76b.png', numero: 'E1', isSame: true },
     { src: 'same/55a.png', numero: 'E2', isSame: true },
@@ -53,6 +51,8 @@ let endTime;
 let optionSelected = false;
 let startTimeTotal;
 let endTimeTotal;
+let isAdvancing = false;
+let lastOptionPointerEventTime = 0;
 
 function startTest() {
     document.getElementById('instruction-screen').style.display = 'none';
@@ -82,6 +82,7 @@ function showImage() {
         const image = images[currentImageIndex];
         document.getElementById('image').src = image.src;
         document.getElementById('trialIndicator').textContent = image.numero;
+        document.getElementById('next-button').style.display = 'none';
         currentResponse = null;
         optionSelected = false;
         startTime = new Date();
@@ -90,29 +91,38 @@ function showImage() {
     }
 }
 
-document.getElementById('same-button').addEventListener('click', () => {
+function selectResponse(response) {
     if (!optionSelected) {
         endTime = new Date();
         optionSelected = true;
     }
-    currentResponse = 'same';
-    document.getElementById('same-button').classList.add('selected');
-    document.getElementById('different-button').classList.remove('selected');
-});
+    currentResponse = response;
+    document.getElementById('same-button').classList.toggle('selected', response === 'same');
+    document.getElementById('different-button').classList.toggle('selected', response === 'different');
+    document.getElementById('next-button').style.display = 'block';
+}
 
-document.getElementById('different-button').addEventListener('click', () => {
-    if (!optionSelected) {
-        endTime = new Date();
-        optionSelected = true;
-    }
-    currentResponse = 'different';
-    document.getElementById('different-button').classList.add('selected');
-    document.getElementById('same-button').classList.remove('selected');
-});
+function bindResponseButton(buttonId, response) {
+    const button = document.getElementById(buttonId);
+    button.addEventListener('pointerup', () => {
+        lastOptionPointerEventTime = Date.now();
+        selectResponse(response);
+    }, false);
+    button.addEventListener('click', () => {
+        if (Date.now() - lastOptionPointerEventTime < 500) return;
+        selectResponse(response);
+    });
+}
+
+bindResponseButton('same-button', 'same');
+bindResponseButton('different-button', 'different');
 
 document.getElementById('next-button').addEventListener('click', nextImage);
 
 function nextImage() {
+    if (isAdvancing) return;
+    if (currentResponse === null) return;
+    isAdvancing = true;
 
     if (currentResponse !== null) {
         responses.push({
@@ -139,10 +149,12 @@ function nextImage() {
     if (currentImageIndex < images.length - 1) {
         currentImageIndex++;
         showImage();
+        isAdvancing = false;
     } else {
         document.getElementById('test-screen').style.display = 'none';
         endTimeTotal = new Date();
         showHandSelection();
+        isAdvancing = false;
     }
 }
 
