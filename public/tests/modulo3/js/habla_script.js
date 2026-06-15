@@ -226,34 +226,61 @@ export const MODULO3 = {
         },
         {
           id: 2,
-          kind: "dual_audio_record",
+          kind: "single_audio_record",
           title: "Tiempo máximo espiracion",
-          audio1: "assets/parte1/test2/espiracion/espiracion1.wav",
-          audio2: "assets/parte1/test2/espiracion/espiracion2.wav"
+          label: "Audio 1",
+          slot: 1,
+          audio: "assets/parte1/test2/espiracion/espiracion1.wav"
         },
         {
           id: 3,
+          kind: "single_audio_record",
+          title: "Tiempo maximo espiracion",
+          label: "Audio 2",
+          slot: 2,
+          audio: "assets/parte1/test2/espiracion/espiracion2.wav"
+        },
+        {
+          id: 4,
           kind: "title",
           title: "Tiempo máximo fonación"
         },
         {
-          id: 4,
-          kind: "dual_audio_record",
+          id: 5,
+          kind: "single_audio_record",
           title: "Tiempo máximo fonación",
-          audio1: "assets/parte1/test2/fonacion/fonacion1.wav",
-          audio2: "assets/parte1/test2/fonacion/fonacion2.wav"
+          label: "Audio 1",
+          slot: 1,
+          audio: "assets/parte1/test2/fonacion/fonacion1.wav"
         },
         {
-          id: 5,
+          id: 6,
+          kind: "single_audio_record",
+          title: "Tiempo maximo fonacion",
+          label: "Audio 2",
+          slot: 2,
+          audio: "assets/parte1/test2/fonacion/fonacion2.wav"
+        },
+        {
+          id: 7,
           kind: "title",
           title: "Resonancia"
         },
         {
-          id: 6,
-          kind: "dual_audio_record",
+          id: 8,
+          kind: "single_audio_record",
           title: "Resonancia",
-          audio1: "assets/parte1/test2/resonancia/resonancia1.wav",
-          audio2: "assets/parte1/test2/resonancia/resonancia2.wav"
+          label: "Audio 1",
+          slot: 1,
+          audio: "assets/parte1/test2/resonancia/resonancia1.wav"
+        },
+        {
+          id: 9,
+          kind: "single_audio_record",
+          title: "Resonancia",
+          label: "Audio 2",
+          slot: 2,
+          audio: "assets/parte1/test2/resonancia/resonancia2.wav"
         }
       ]
     },

@@ -719,6 +719,9 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   const status = document.getElementById("p1t2-status");
   const audio1Btn = document.getElementById("p1t2-audio-1-btn");
   const audio2Btn = document.getElementById("p1t2-audio-2-btn");
+  const audio1Row = audio1Btn?.closest(".audio-choice-row");
+  const audio2Row = audio2Btn?.closest(".audio-choice-row");
+  const audio1Label = audio1Row?.querySelector(".audio-choice-label");
   const playRecordBtn = document.getElementById("p1t2-play-record-btn");
   const recordingIndicator = document.getElementById("p1t2-recording-indicator");
   const stopBtn = document.getElementById("p1t2-stop-btn");
@@ -764,6 +767,14 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
     stopAudio(audioPlayer);
     await stopCurrentAudioRecording(true);
 
+    const screen = screens[currentScreenIndex];
+    if (screen?.kind === "single_audio_record") {
+      status.textContent = "Grabacion guardada. Puedes grabar de nuevo o pasar a la siguiente pantalla.";
+      showPlayRecordButton(true);
+      showNext(nextBtn, true);
+      return;
+    }
+
     if (stoppedSlot === 1) {
       status.textContent = "Grabacion guardada. Puedes grabar de nuevo o reproducir el segundo audio.";
       showPlayRecordButton(true);
@@ -795,14 +806,14 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
 
   audio1Btn.addEventListener("click", async () => {
     const screen = screens[currentScreenIndex];
-    if (!screen || screen.kind !== "dual_audio_record") {
+    if (!screen || !["dual_audio_record", "single_audio_record"].includes(screen.kind)) {
       return;
     }
 
-    selectedAudioSlot = 1;
+    selectedAudioSlot = screen.kind === "single_audio_record" ? (screen.slot || 1) : 1;
     showNext(nextBtn, false);
     showPlayRecordButton(false);
-    await playTimedAudio(audioPlayer, screen.audio1, 1);
+    await playTimedAudio(audioPlayer, screen.audio || screen.audio1, selectedAudioSlot);
   });
 
   audio2Btn.addEventListener("click", async () => {
@@ -829,6 +840,8 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
     audioView.classList.remove("is-active");
     audio1Btn.classList.remove("is-disabled");
     audio2Btn.classList.add("is-disabled");
+    if (audio1Row) audio1Row.style.display = "";
+    if (audio2Row) audio2Row.style.display = "";
     clearCountdown(endCountdownTimer);
     stopAudio(audioPlayer);
     showNext(nextBtn, true);
@@ -851,10 +864,17 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
       return;
     }
 
-    if (screen.kind === "dual_audio_record") {
+    if (screen.kind === "dual_audio_record" || screen.kind === "single_audio_record") {
       setScreenCounter(sectionCounters[currentScreenIndex] || "E 1/1");
       audioView.classList.add("is-active");
-      status.textContent = "Reproduce un audio. Al terminar, presiona play para grabar.";
+      status.textContent = "Reproduce el audio. Al terminar, presiona play para grabar.";
+      if (screen.kind === "single_audio_record") {
+        if (audio2Row) audio2Row.style.display = "none";
+        if (audio1Label) audio1Label.textContent = `${screen.slot || 1}. `;
+        audio1Btn.alt = screen.label || `Audio ${screen.slot || 1}`;
+      } else if (audio1Label) {
+        audio1Label.textContent = "1. ";
+      }
       showNext(nextBtn, false);
     }
   }
@@ -904,7 +924,7 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
         name: filename,
         blob,
         title: screen?.title || "",
-        audio: stoppedSlot === 2 ? screen?.audio2 : screen?.audio1,
+        audio: screen?.audio || (stoppedSlot === 2 ? screen?.audio2 : screen?.audio1),
         timestamp: new Date().toISOString()
       });
     }
@@ -1868,7 +1888,7 @@ function buildSectionCounters(screens) {
   const recordIndexes = [];
 
   screens.forEach((screen, index) => {
-    if (screen.kind !== "record" && screen.kind !== "dual_audio_record") {
+    if (screen.kind !== "record" && screen.kind !== "dual_audio_record" && screen.kind !== "single_audio_record") {
       return;
     }
 
