@@ -346,7 +346,7 @@ window.onload = function () {
             return new Blob([], { type: 'text/csv' });
         }
 
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
         let csvContent = `TotTime;ExecTime;Hand;Examinador\n`;
 
@@ -371,6 +371,27 @@ window.onload = function () {
     // Obtener el id_participante de la URL
     const idParticipante = getQueryParam('id_participante');
 
+    function currentPlatformDate() {
+        const now = new Date();
+        return `${String(now.getDate()).padStart(2, '0')}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getFullYear()).slice(-2)}`;
+    }
+
+    function examinerInitialsForFile() {
+        const initials = userInfo?.initials || [userInfo?.name, userInfo?.last_name]
+            .filter(Boolean)
+            .join(' ')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .map(part => part.charAt(0).toUpperCase())
+            .join('');
+        return String(initials || 'NAA')
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-zA-Z0-9-_ ]/g, '')
+            .trim()
+            .replace(/\s+/g, '_');
+    }
+
     function testFinalizado() {
         // Detener las grabaciones (ya se hace dentro de startPracticeRecording y startRecording)
         stopPracticeRecording();
@@ -379,24 +400,26 @@ window.onload = function () {
         setTimeout(() => {
             const zip = new JSZip();
             const date = new Date();
+            const dateCode = currentPlatformDate();
+            const examinerName = examinerInitialsForFile();
 
             // Añadir los videos grabados al ZIP
-            zip.file("3_Design_Fluency_Canvas_Recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
+            zip.file("Design_recording.webm", new Blob(recordedChunks, { type: 'video/webm' }));
 
             // Generar y añadir el archivo TXT al ZIP
             const csvContent = generateCSV(data);
-            zip.file(`${idParticipante}_3_Design_Fluency_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.csv`, csvContent);
+            zip.file(`${idParticipante}_Design.csv`, csvContent);
 
             // Capturar las imágenes de los canvas y añadir al ZIP
             canvas.toBlob(function (blob) {
-                zip.file("3_Design_Fluency_Canvas_Screenshot.png", blob);
+                zip.file("Design_screen.png", blob);
 
                 practiceCanvas.toBlob(function (blobPractice) {
                     // zip.file("canvasPracticeScreenshot.png", blobPractice);
 
                     // Generar el archivo ZIP y descargarlo
                     zip.generateAsync({ type: 'blob' }).then(function (content) {
-                        saveAs(content, `${idParticipante}_3_Design_Fluency_Metricas_${date.getDate()}_${date.getMonth() + 1}_${date.getFullYear()}.zip`);
+                        saveAs(content, `${idParticipante}_Design_${dateCode}_${examinerName}.zip`);
 
                         setTimeout(() => {
                             window.close();

@@ -243,7 +243,7 @@ fetch('/api/user-info')
         }
     
         // Obtener las iniciales del examinador
-        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
     
         // Obtener la fecha actual en formato DD_MM_YYYY
         const date = new Date();
@@ -277,7 +277,7 @@ fetch('/api/user-info')
             zipLink.href = URL.createObjectURL(content);
     
             // Construir el nombre del archivo ZIP con las iniciales
-            const zipFilename = `${idParticipante}_PhonFluency_${formattedDate}_${inicialesExaminador}_(NAA).zip`;
+            const zipFilename = `${idParticipante}_PhonFluency_${formattedDate}_${inicialesExaminador}.zip`;
     
             zipLink.download = zipFilename;
             zipLink.click();

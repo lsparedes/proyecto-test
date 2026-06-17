@@ -208,8 +208,28 @@ function getCurrentDate() {
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    return `${day}_${month}_${year}`;
+    const year = String(now.getFullYear()).slice(-2);
+    return `${day}${month}${year}`;
+}
+
+function sanitizePlatformName(value) {
+    return String(value || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9-_ ]/g, '')
+        .trim()
+        .replace(/\s+/g, '_');
+}
+
+function examinerInitialsForFile() {
+    const initials = userInfo?.initials || [userInfo?.name, userInfo?.last_name]
+        .filter(Boolean)
+        .join(' ')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(part => part.charAt(0).toUpperCase())
+        .join('');
+    return sanitizePlatformName(initials) || 'NAA';
 }
 
 
@@ -245,7 +265,7 @@ function generateCSV(results) {
         return;
     }
 
-    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     const csvData = [['Trial', 'CorrResp', 'PartResp', 'Acc', 'RT', 'Examinador']];
 
@@ -280,7 +300,7 @@ function generateCSV(results) {
     const csvContent = csvData.map(row => row.join(';')).join('\n');
     return {
         content: csvContent,
-        filename: `${idParticipante}_14_GFMT2_Low_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_GFMT2_low.csv`
     };
 }
 
@@ -292,7 +312,7 @@ function generateCSV2(startTimeTotal, selectedHand) {
         return; // Salir si userInfo no está disponible
     }
 
-    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     const totalTime = String(new Date() - startTimeTotal); // ms
 
@@ -303,7 +323,7 @@ function generateCSV2(startTimeTotal, selectedHand) {
 
     return {
         content: txtContent,
-        filename: `${idParticipante}_14_GFMT2_Low_Unival_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_GFMT2_low_unival.csv`
     };
 }
 
@@ -316,7 +336,7 @@ async function downloadZip(csvFile, txtFile) {
     const zipContent = await zip.generateAsync({ type: "blob" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipContent);
-    link.setAttribute("download", `${idParticipante}_14_GFMT2_Low_${getCurrentDate()}.zip`);
+    link.setAttribute("download", `${idParticipante}_GFMT2_Low_${getCurrentDate()}_${examinerInitialsForFile()}.zip`);
     document.body.appendChild(link);
     link.click();
     setTimeout(() => {

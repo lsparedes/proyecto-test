@@ -696,8 +696,28 @@ function getCurrentDate() {
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    return `${day}_${month}_${year}`;
+    const year = String(now.getFullYear()).slice(-2);
+    return `${day}${month}${year}`;
+}
+
+function sanitizePlatformName(value) {
+    return String(value || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9-_ ]/g, '')
+        .trim()
+        .replace(/\s+/g, '_');
+}
+
+function examinerInitialsForFile() {
+    const initials = userInfo?.initials || [userInfo?.name, userInfo?.last_name]
+        .filter(Boolean)
+        .join(' ')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(part => part.charAt(0).toUpperCase())
+        .join('');
+    return sanitizePlatformName(initials) || 'NAA';
 }
 
 let userInfo;
@@ -722,9 +742,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function generateCSV(results) {
-    const initials = (userInfo && userInfo.name && userInfo.last_name)
-        ? (userInfo.name[0] + userInfo.last_name[0]).toUpperCase()
-        : 'NA';
+    const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     let csvContent = "Trial;Item;CorrResp;PartResp;Acc;RT;Examinador\n";
 
@@ -751,7 +769,7 @@ function generateCSV(results) {
 
     return {
         content: csvContent,
-        filename: `${idParticipante}_7_mCCT_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_mCCT.csv`
     };
 }
 
@@ -761,7 +779,7 @@ function generateTxt(startTimeTotal, selectedHand) {
     const txtContent = `TotTime;Hand\n${totalTime};${selectedHand}\n`;
     return {
         content: txtContent,
-        filename: `${idParticipante}_7_mCCT_Unival_${getCurrentDate()}.csv`
+        filename: `${idParticipante}_mCCT_unival.csv`
     };
 }
 
@@ -773,7 +791,7 @@ async function downloadZip(csvFile, txtFile) {
     const zipContent = await zip.generateAsync({ type: "blob" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipContent);
-    link.setAttribute("download", `${idParticipante}_7_mCCT_${getCurrentDate()}.zip`);
+    link.setAttribute("download", `${idParticipante}_mCCT_${getCurrentDate()}_${examinerInitialsForFile()}.zip`);
     document.body.appendChild(link);
     link.click();
     setTimeout(() => {

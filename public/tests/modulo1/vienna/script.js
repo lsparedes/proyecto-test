@@ -716,7 +716,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
         const csvData = responses.map(response => ({
             Trial: response.ensayo,
@@ -756,7 +756,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const link = document.createElement('a');
                 if (link.download !== undefined) {
                     const url = URL.createObjectURL(content);
-                    const zipFileName = `${idParticipante}_VIENN_${formattedDate}_${inicialesExaminador}_(NAA).zip`;
+                    const zipFileName = `${idParticipante}_VIENN_${formattedDate}_${inicialesExaminador}.zip`;
 
                     link.setAttribute('href', url);
                     link.setAttribute('download', zipFileName);

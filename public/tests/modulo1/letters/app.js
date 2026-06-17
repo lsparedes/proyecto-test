@@ -1009,10 +1009,10 @@ function validateClicks() {
     const totalDuration = ((endTime - totalStartTime) / 1000).toFixed(3).replace('.', ',');
 
     const fechaActual = new Date();
-    const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
-    const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
-    const [day, month, year] = fechaHoraChilena.split('-');
-    const fechaFormateada = `${day}_${month}_${year}`;
+    const day = String(fechaActual.getDate()).padStart(2, '0');
+    const month = String(fechaActual.getMonth() + 1).padStart(2, '0');
+    const year = String(fechaActual.getFullYear()).slice(-2);
+    const fechaFormateada = `${day}${month}${year}`;
 
     const searchDistancePromedio = promedio.length > 0
         ? (searchDistance / promedio.length)
@@ -1030,7 +1030,7 @@ function validateClicks() {
         return;
     }
 
-    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     csvContent += `${testDuration};${correctClicks};${erroresComision};${omisionesDerecha};${omisionesIzquierda};${CoC};${searchSpeedFormatted};${searchDistanceFormatted};${strategy};${inicialesExaminador}\n`;
 
@@ -1039,6 +1039,14 @@ function validateClicks() {
 
     const csvBlob = downloadCSV(csvContent);
     const csvunival = downloadCSV(csv2);
+    const examinerName = String(userInfo?.initials || [userInfo?.name, userInfo?.last_name].filter(Boolean).join(' ')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(part => part.charAt(0).toUpperCase())
+        .join('') || 'NAA')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9-_]/g, '');
 
     // 👉 Convertimos la imagen original (sin corrección) a Blob
     const originalPngBlob = dataURLtoBlob(originalImageDataURL);
@@ -1050,19 +1058,19 @@ function validateClicks() {
     // 👉 Ahora tomamos el canvas CORREGIDO como PNG
     imageCanvas.toBlob(function (correctedPngBlob) {
         const zip = new JSZip();
-        const baseName = `${idParticipante}_4_Cancelación_Letras_A_${fechaFormateada}`;
+        const officialBaseName = `${idParticipante}_CancelA_${fechaFormateada}_${examinerName}`;
 
-        zip.file(`${baseName}.csv`, csvBlob);
-        zip.file(`${baseName}_Unival.csv`, csvunival);
-        zip.file(`${baseName}_SinCorrección.png`, originalPngBlob);
-        zip.file(`${baseName}_Corregida.png`, correctedPngBlob);
-        zip.file(`${baseName}.webm`, videoBlob);
+        zip.file(`${idParticipante}_CancelA.csv`, csvBlob);
+        zip.file(`${idParticipante}_CancelA_unival.csv`, csvunival);
+        zip.file(`CancelA_screen_point.png`, originalPngBlob);
+        zip.file(`CancelA_screen_line.png`, correctedPngBlob);
+        zip.file(`CancelA_recording.webm`, videoBlob);
 
         zip.generateAsync({ type: 'blob' }).then(content => {
             const url = URL.createObjectURL(content);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `${baseName}.zip`;
+            link.download = `${officialBaseName}.zip`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);

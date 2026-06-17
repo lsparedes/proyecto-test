@@ -546,7 +546,7 @@ function currentPlatformDate() {
 }
 
 function platformZipBase(participantId, code, initials, includeNaa = true) {
-  return `${sanitizeFilename(participantId)}_${code}_${currentPlatformDate()}_${sanitizeFilename(initials)}${includeNaa ? "_(NAA)" : ""}`;
+  return `${sanitizeFilename(participantId)}_${code}_${currentPlatformDate()}_${sanitizeFilename(initials)}`;
 }
 
 const OROFACE_VIDEO_NAMES = {
@@ -691,11 +691,12 @@ async function getAuthenticatedUserInitialsFallback(fallback) {
     if (!response.ok) return fallback;
 
     const user = await response.json();
-    const parts = [user?.name, user?.last_name]
+    const initials = user?.initials || `${user?.name || ""} ${user?.last_name || ""}`
+      .trim()
+      .split(/\s+/)
       .filter(Boolean)
-      .map((part) => String(part).trim())
-      .filter(Boolean);
-    const initials = parts.map((part) => part.charAt(0).toUpperCase()).join("");
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("");
 
     return initials || fallback;
   } catch (_) {

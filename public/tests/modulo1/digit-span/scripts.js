@@ -334,7 +334,7 @@ fetch('/api/user-info')
     })
     .then(data => {
         userInfo = data;
-        initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
         console.log("Usuario autenticado:", userInfo);
 
@@ -351,7 +351,7 @@ fetch('/api/user-info')
             return "";
         }
     
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
     
         let csvContent = "";
         csvContent += "Trial;RT;BeepToStopTime;Examinador\n";
@@ -378,6 +378,30 @@ function generarCSV2(taskTime) {
     const txtContent = `TotTime;Examinador\n${taskTime.toFixed(3).replace('.', ',')};${initials}\n`;
     
     return new Blob([txtContent], { type: 'text/csv;charset=utf-8' });
+}
+
+function sanitizePlatformName(value) {
+    return String(value || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9-_ ]/g, '')
+        .trim()
+        .replace(/\s+/g, '_');
+}
+
+function examinerInitialsForFile() {
+    const initials = userInfo?.initials || [userInfo?.name, userInfo?.last_name]
+        .filter(Boolean)
+        .join(' ')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(part => part.charAt(0).toUpperCase())
+        .join('');
+    return sanitizePlatformName(initials) || 'NAA';
+}
+
+function verbalSpanCode(type) {
+    return type === 'forward' ? 'VerbSpan_forw' : 'VerbSpan_back';
 }
 
 
@@ -417,18 +441,18 @@ function crearZip(type) {
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    const fechaFormateada = `${day}_${month}_${year}`;
+    const year = String(now.getFullYear()).slice(-2);
+    const fechaFormateada = `${day}${month}${year}`;
+    const code = verbalSpanCode(type);
 
-    // zip.file(`${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}.csv`, csvBlob);
-    zip.file(`${idParticipante}_9_Span_Verbal_Unival_${type}_${fechaFormateada}.csv`, txtBlob); 
+    zip.file(`${idParticipante}_${code}_unival.csv`, txtBlob); 
 
 
     zip.generateAsync({ type: "blob" })
         .then(content => {
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(content);
-            downloadLink.download = `${idParticipante}_9_Span_Verbal_${type}_${fechaFormateada}.zip`;
+            downloadLink.download = `${idParticipante}_${code}_${fechaFormateada}_${examinerInitialsForFile()}.zip`;
             downloadLink.textContent = 'Descargar todas las grabaciones';
             document.body.appendChild(downloadLink);
 

@@ -448,7 +448,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const fechaFormateada = `${String(day).padStart(2, "0")}${String(month).padStart(2, "0")}${String(year).slice(-2)}`;
 
         const zip = new JSZip();
-        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
         const totTime = (execEndTime - testStartTime) / 1000;
         const execTime = execStartTime ? (execEndTime - execStartTime) / 1000 : 0;
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const zipUrl = URL.createObjectURL(zipBlob);
         const link = document.createElement("a");
         link.href = zipUrl;
-        link.download = `${idParticipante}_TMTA_${fechaFormateada}_${inicialesExaminador}_(NAA).zip`;
+        link.download = `${idParticipante}_TMTA_${fechaFormateada}_${inicialesExaminador}.zip`;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);

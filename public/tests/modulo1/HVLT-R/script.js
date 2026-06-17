@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         // Obtener las iniciales del participante
-        const inicialesParticipante = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const inicialesParticipante = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
     
         // Configurar las opciones de formato de fecha
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', timeZoneName: 'short' };
@@ -348,12 +348,12 @@ document.addEventListener('DOMContentLoaded', () => {
             zip.file(file.fileName, file.blob);
         });
         const csvContent = saveToCSV();
-        const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
+        const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
         zip.file(`${idParticipante}_HVLT-R_imm.csv`, csvContent);
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${idParticipante}_HVLT_imm_${fechaStr}_${inicialesExaminador}_(NAA).zip`;
+            a.download = `${idParticipante}_HVLT_imm_${fechaStr}_${inicialesExaminador}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

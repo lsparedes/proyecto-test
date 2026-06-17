@@ -332,7 +332,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
     const fechaHoraChilena = fechaActual.toLocaleString('es-CL', options);
     const [day, month, year] = fechaHoraChilena.split('-');
-    const fechaFormateada = `${day}_${month}_${year}`;
+    const fechaFormateada = `${String(fechaActual.getDate()).padStart(2, '0')}${String(fechaActual.getMonth() + 1).padStart(2, '0')}${String(fechaActual.getFullYear()).slice(-2)}`;
+    function examinerInitialsForFile() {
+        const initials = userInfo?.initials || [userInfo?.name, userInfo?.last_name]
+            .filter(Boolean)
+            .join(' ')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean)
+            .map(part => part.charAt(0).toUpperCase())
+            .join('');
+        return String(initials || 'NAA')
+            .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-zA-Z0-9-_ ]/g, '')
+            .trim()
+            .replace(/\s+/g, '_');
+    }
     function createTxtFile() {
         // Asegurarse de que userInfo esté disponible
         if (!userInfo || !userInfo.name || !userInfo.last_name) {
@@ -341,10 +356,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Obtener las iniciales del examinador
-        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
         // Formatear la fecha
-        const filename = `${idParticipante}_17_Pantomima_del_uso_de_objetos_${fechaFormateada}.csv`;
+        const filename = `${idParticipante}_Pantomime_unival.csv`;
 
         // Definir el contenido del archivo CSV
 
@@ -367,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
         createTxtFile();
         zip.generateAsync({ type: 'blob' }).then(content => {
             const link = document.createElement('a');
-            const zipname = `${idParticipante}_17_Pantomima_del_uso_de_objetos_${fechaFormateada}.zip`;
+            const zipname = `${idParticipante}_Pantomime_${fechaFormateada}_${examinerInitialsForFile()}.zip`;
 
             link.href = URL.createObjectURL(content);
             link.download = zipname;

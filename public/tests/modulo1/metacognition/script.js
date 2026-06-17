@@ -605,8 +605,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
     const month = String(now.getMonth() + 1).padStart(2, '0');
-    const year = now.getFullYear();
-    return `${day}_${month}_${year}`;
+    const year = String(now.getFullYear()).slice(-2);
+    return `${day}${month}${year}`;
+  }
+
+  function sanitizePlatformName(value) {
+    return String(value || '')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-zA-Z0-9-_ ]/g, '')
+      .trim()
+      .replace(/\s+/g, '_');
+  }
+
+  function examinerInitialsForFile() {
+    const initials = userInfo?.initials || [userInfo?.name, userInfo?.last_name]
+      .filter(Boolean)
+      .join(' ')
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
+      .map(part => part.charAt(0).toUpperCase())
+      .join('');
+    return sanitizePlatformName(initials) || 'NAA';
   }
 
   let userInfo;
@@ -635,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Obtener las iniciales del examinador
-    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     // Definir los encabezados del CSV
     const csvData = [["Block", "Trial", "CorrResp", "PartResp", "ConfRa", "Acc", "DiffLvl", "RTDecision", "RTConfRa", "PauseTime", "RedDotSide", "Examinador"]]; // Agregar columna Examinador
@@ -655,7 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Retornar el archivo CSV con el nombre adecuado
     return {
       content: csvContent,
-      filename: `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.csv`
+      filename: `${idParticipante}_MetaCog.csv`
     };
   }
 
@@ -667,7 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Obtener las iniciales del examinador
-    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     // Crear el contenido del archivo de métricas
     const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
@@ -680,7 +700,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Retornar el archivo de métricas con el nombre adecuado
     return {
       content: txtContent,
-      filename: `${idParticipante}_15_Discriminacion_Perceptua_Unival_${getCurrentDate()}.csv`
+      filename: `${idParticipante}_MetaCog_unival.csv`
     };
   }
 
@@ -728,7 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const zipContent = await zip.generateAsync({ type: "blob" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(zipContent);
-    link.setAttribute("download", `${idParticipante}_15_Discriminacion_Perceptua_${getCurrentDate()}.zip`);
+    link.setAttribute("download", `${idParticipante}_MetaCog_${getCurrentDate()}_${examinerInitialsForFile()}.zip`);
     document.body.appendChild(link);
     link.click();
     setTimeout(() => {

@@ -507,7 +507,7 @@ function generarArchivoCSV() {
         return; // Salir si userInfo no está disponible
     }
 
-    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     // Encabezados del CSV, agregando "Examinador"
     csvContent += "Trial;CorrResp;PartResp;Acc;RT;Examinador\n";
@@ -561,7 +561,7 @@ const txtContent = [["TotTime", "Hand"], [String(totalTestTime), selectedHand]]
         .then(content => {
             const link = document.createElement('a');
             if (link.download !== undefined) {
-                const zipFilename = `${idParticipante}_SET_${fechaFormateada}_EX_(NAA).zip`;
+                const zipFilename = `${idParticipante}_SET_${fechaFormateada}_${inicialesExaminador}.zip`;
                 const url = URL.createObjectURL(content);
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

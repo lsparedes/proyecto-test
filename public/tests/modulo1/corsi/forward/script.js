@@ -504,7 +504,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
         const headers = ["Trial", "CorrResp", "PartResp", "Acc", "RT", "Examinador"];
         const rows = results.map(data => {
             const correctAnswerIncremented = data.correctAnswer.map(num => num + 1);
@@ -552,7 +552,7 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         }
 
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
         const headers = ["TotTime", "Hand", "Examinador"];
         const totalTimeSeconds = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
 
@@ -589,8 +589,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const zipContent = await zip.generateAsync({ type: "blob" });
         const link = document.createElement("a");
         link.href = URL.createObjectURL(zipContent);
-        const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
-        link.setAttribute("download", `${idParticipante}_VisSpan_forw_${getCurrentDate()}_${inicialesExaminador}_(NAA).zip`);
+        const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
+        link.setAttribute("download", `${idParticipante}_VisSpan_forw_${getCurrentDate()}_${inicialesExaminador}.zip`);
         document.body.appendChild(link);
 
         link.click();

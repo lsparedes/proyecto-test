@@ -75,8 +75,7 @@ const PLATFORM_IMAGE_NAMES = {
 
 function platformZipBase(partId, participantId, initials) {
   const spec = PLATFORM_PART_NAMES[Number(partId)] || { zip: `Parte${partId}` };
-  const suffix = spec.naa === false ? "" : "_(NAA)";
-  return `${sanitizeFilename(participantId)}_${spec.zip}_${currentPlatformDate()}_${sanitizeFilename(initials)}${suffix}`;
+  return `${sanitizeFilename(participantId)}_${spec.zip}_${currentPlatformDate()}_${sanitizeFilename(initials)}`;
 }
 
 function platformResultFile(partId, participantId) {
@@ -152,12 +151,10 @@ async function getAuthenticatedUserInitialsFallback(fallback) {
     if (!response.ok) return fallback;
 
     const user = await response.json();
-    const parts = [user?.name, user?.last_name]
+    const initials = user?.initials || `${user?.name || ""} ${user?.last_name || ""}`
+      .trim()
+      .split(/\s+/)
       .filter(Boolean)
-      .map((part) => String(part).trim())
-      .filter(Boolean);
-
-    const initials = parts
       .map((part) => part.charAt(0).toUpperCase())
       .join("");
 

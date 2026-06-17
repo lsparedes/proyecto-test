@@ -442,7 +442,7 @@ function generatePracticeTrials() {
             return;
         }
 
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase(); // Obtener iniciales
+        const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
         const zip = new JSZip();
 
@@ -468,7 +468,7 @@ function generatePracticeTrials() {
         zip.file(`${idParticipante}_TwoArmBandit.csv`, csvContent);
         zip.file(`${idParticipante}_TwoArmBandit_unival.csv`, txtContent);
 
-        const fileName = `${idParticipante}_TwoArmBandit_${date}_${initials}_(NAA).zip`;
+        const fileName = `${idParticipante}_TwoArmBandit_${date}_${initials}.zip`;
 
         // Generar y descargar el archivo ZIP
         zip.generateAsync({ type: 'blob' }).then((content) => {

@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
             drawingTime = (endDrawingTime - startDrawingTime);
         }
     
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
     
         csvContent += `${timeTotal.toFixed(3).replace('.', ',')};${execTime};${selectedHand};${initials}\n`;
     
@@ -363,8 +363,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const link = document.createElement('a');
                     link.href = URL.createObjectURL(content);
                     const fecha = `${diaStr}${mesStr}${String(añoStr).slice(-2)}`;
-                    const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
-                    link.download = `${idParticipante}_Benson_delay_${fecha}_${inicialesExaminador}_(NAA).zip`;
+                    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
+                    link.download = `${idParticipante}_Benson_delay_${fecha}_${inicialesExaminador}.zip`;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
@@ -379,8 +379,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(content);
                 const fecha = `${diaStr}${mesStr}${String(añoStr).slice(-2)}`;
-                const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
-                link.download = `${idParticipante}_Benson_delay_${fecha}_${inicialesExaminador}_(NAA).zip`;
+                const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
+                link.download = `${idParticipante}_Benson_delay_${fecha}_${inicialesExaminador}.zip`;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);

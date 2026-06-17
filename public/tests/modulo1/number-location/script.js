@@ -159,6 +159,26 @@ fetch('/api/user-info')
     });
 
 
+function sanitizePlatformName(value) {
+    return String(value || '')
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9-_ ]/g, '')
+        .trim()
+        .replace(/\s+/g, '_');
+}
+
+function examinerInitialsForFile() {
+    const initials = userInfo?.initials || [userInfo?.name, userInfo?.last_name]
+        .filter(Boolean)
+        .join(' ')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map(part => part.charAt(0).toUpperCase())
+        .join('');
+    return sanitizePlatformName(initials) || 'NAA';
+}
+
 function generateCSV() {
     document.getElementById('final-button').style.display = 'none';
     const endTime = new Date();
@@ -171,7 +191,7 @@ function generateCSV() {
     }
 
     // Obtener las iniciales del examinador
-    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     // Contenido del primer CSV
     let csvContent1 = "Trial;CorrResp;PartResp;Acc;RT;Examinador\n";
@@ -213,7 +233,7 @@ function generateCSV() {
             const link = document.createElement('a');
             if (link.download !== undefined) {
                 const url = URL.createObjectURL(content);
-                const zipFilename = `${idParticipante}_VOSP_${fechaHoraFormateada}_EX_(NAA).zip`;
+                const zipFilename = `${idParticipante}_VOSP_${fechaHoraFormateada}_${examinerInitialsForFile()}.zip`;
 
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

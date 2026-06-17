@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
         const total = Object.keys(correctAnswers).length;
 
         let mainCsvContent = 'Trial;Word;CorrResp;PartResp;RT;Acc\n';
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const { mainCsvContent, additionalCsvContent } = createCSV();
         // Agregar los archivos CSV al ZIP
-        const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
+        const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
         zip.file(`${idParticipante}_HVLT-R_recog.csv`, mainCsvContent);
         zip.file(`${idParticipante}_HVLT-R_recog_unival.csv`, additionalCsvContent);
         // // Agregar el archivo CSV al zip
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zip.generateAsync({ type: 'blob' }).then((content) => {
             const a = document.createElement('a');
             a.href = URL.createObjectURL(content);
-            a.download = `${idParticipante}_HVLT_recog_${fechaStr}_${inicialesExaminador}_(NAA).zip`;
+            a.download = `${idParticipante}_HVLT_recog_${fechaStr}_${inicialesExaminador}.zip`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);

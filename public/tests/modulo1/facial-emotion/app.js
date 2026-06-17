@@ -381,7 +381,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
         return;
     }
 
-    const inicialesExaminador = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+    const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     const fechaActual = new Date();
     const options = { timeZone: 'America/Santiago', year: 'numeric', month: 'numeric', day: 'numeric' };
@@ -425,7 +425,7 @@ function generarCSV(tiempoTranscurrido, tiemposRespuesta) {
         .then(content => {
             const link = document.createElement('a');
             if (link.download !== undefined) {
-                const zipFilename = `${idParticipante}_Mini_SEA_${String(fechaFormateada).replace(/_/g, "").slice(0, 6)}_EX_(NAA).zip`;
+                const zipFilename = `${idParticipante}_Mini_SEA_${String(fechaFormateada).replace(/_/g, "").slice(0, 6)}_${inicialesExaminador}.zip`;
                 const url = URL.createObjectURL(content);
                 link.setAttribute('href', url);
                 link.setAttribute('download', zipFilename);

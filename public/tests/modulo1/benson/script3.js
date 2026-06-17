@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let csvContent = "TotTime;RT;Hand;CorrResp;PartResp;Acc;Examinador\n"; //Activity
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000;
-        const initials = userInfo.name[0].toUpperCase() + userInfo.last_name[0].toUpperCase();
+        const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
         csvContent += `${timeTotal.toFixed(3).replace('.', ',')};${responseTime};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`; //FiguraIdentificada
 
         return csvContent;
@@ -202,8 +202,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const a = document.createElement('a');
                 a.href = URL.createObjectURL(content);
                 const fecha = `${diaStr}${mesStr}${String(añoStr).slice(-2)}`;
-                const inicialesExaminador = userInfo ? `${userInfo.name?.[0] || ""}${userInfo.last_name?.[0] || ""}`.toUpperCase() : "EX";
-                a.download = `${idParticipante}_Benson_recog_${fecha}_${inicialesExaminador}_(NAA).zip`;
+                const examinerName = String(userInfo?.initials || [userInfo?.name, userInfo?.last_name].filter(Boolean).join(' ')
+                    .trim()
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .map(part => part.charAt(0).toUpperCase())
+                    .join('') || 'NAA')
+                    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+                    .replace(/[^a-zA-Z0-9-_]/g, '');
+                a.download = `${idParticipante}_Benson_recog_${fecha}_${examinerName}.zip`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
