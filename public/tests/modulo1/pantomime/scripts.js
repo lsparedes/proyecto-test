@@ -224,9 +224,9 @@ document.addEventListener('DOMContentLoaded', () => {
             mediaRecorder.onstop = () => {
                 const blob = new Blob(chunks, { type: 'video/mp4' });
                 chunks = [];
-                const dateTime = new Date().toLocaleString("es-CL", { timeZone: "America/Santiago" }).replace(/:/g, "-").replace(/\//g, "_");
 
-                zip.file(`grabaciones/pantomima_video_${dateTime}_${currentImageIndex + 1}.mp4`, blob);
+                // Nomenclatura del documento: un video por ítem E1..E20 en la raíz del ZIP
+                zip.file(`E${currentImageIndex + 1}.mp4`, blob);
 
                 const stream = videoPreviewTest.srcObject;
                 const tracks = stream.getTracks();

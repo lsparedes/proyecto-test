@@ -356,26 +356,9 @@ function getVideoRecorderOptions() {
   return mimeType ? { mimeType } : undefined;
 }
 
-async function exportProcesosMotoresBasicosZip(videos = [], rows = []) {
-  if (typeof JSZip === "undefined") {
-    console.error("JSZip no esta disponible para exportar Procesos Motores Basicos.");
-    return false;
-  }
-
-  const url = new URL(window.location.href);
-  const participantId = url.searchParams.get("id_participante") || "participante";
-  const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
-  const baseName = platformZipBase(participantId, "OroFace_comm", userInitials);
-  const zip = new JSZip();
-
-  videos.forEach((video) => {
-    if (video?.blob && video?.name) {
-      const base = stripExtension(video.name);
-      const officialName = OROFACE_VIDEO_NAMES[base] || base;
-      zip.file(namedWithExtension(officialName, "webm"), video.blob);
-    }
-  });
-
+// Descarga un JSZip ya armado con el nombre indicado. Reutilizable para los casos
+// en que el documento exige varias carpetas ZIP separadas en una misma prueba.
+async function downloadZipWithName(zip, baseName) {
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const objectUrl = URL.createObjectURL(zipBlob);
   const link = document.createElement("a");
@@ -388,8 +371,52 @@ async function exportProcesosMotoresBasicosZip(videos = [], rows = []) {
   setTimeout(() => {
     URL.revokeObjectURL(objectUrl);
   }, 5000);
+}
 
-  return true;
+function delayMs(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function exportProcesosMotoresBasicosZip(videos = [], rows = []) {
+  if (typeof JSZip === "undefined") {
+    console.error("JSZip no esta disponible para exportar Procesos Motores Basicos.");
+    return false;
+  }
+
+  const url = new URL(window.location.href);
+  const participantId = url.searchParams.get("id_participante") || "participante";
+  const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
+
+  // El documento exige DOS carpetas ZIP separadas: OroFace_comm y OroFace_praxis
+  const commZip = new JSZip();
+  const praxisZip = new JSZip();
+  let hasComm = false;
+  let hasPraxis = false;
+
+  videos.forEach((video) => {
+    if (video?.blob && video?.name) {
+      const base = stripExtension(video.name);
+      const officialName = OROFACE_VIDEO_NAMES[base] || base;
+      const fileEntry = namedWithExtension(officialName, "webm");
+      if (/praxiasorofaciales/i.test(base)) {
+        praxisZip.file(fileEntry, video.blob);
+        hasPraxis = true;
+      } else {
+        commZip.file(fileEntry, video.blob);
+        hasComm = true;
+      }
+    }
+  });
+
+  if (hasComm) {
+    await downloadZipWithName(commZip, platformZipBase(participantId, "OroFace_comm", userInitials));
+  }
+  if (hasPraxis) {
+    if (hasComm) await delayMs(400);
+    await downloadZipWithName(praxisZip, platformZipBase(participantId, "OroFace_praxis", userInitials));
+  }
+
+  return hasComm || hasPraxis;
 }
 
 async function exportPart1Test2Zip(audios = []) {
@@ -448,30 +475,23 @@ async function exportHablaConectadaZip(audios = [], rows = []) {
   const url = new URL(window.location.href);
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
-  const baseName = platformZipBase(participantId, "SPDesc_cat_rescue", userInitials);
-  const zip = new JSZip();
 
-  audios.forEach((audio) => {
+  // El documento exige una carpeta ZIP por tarea:
+  // SPDesc_cat_rescue, StoryNarr_frog y PersNarr_s (separadas).
+  let exported = false;
+  for (const audio of audios) {
     if (audio?.blob && audio?.name) {
       const base = stripExtension(audio.name);
-      zip.file(namedWithExtension(HABLA_CONECTADA_AUDIO_NAMES[base] || base, "wav"), audio.blob);
+      const officialName = HABLA_CONECTADA_AUDIO_NAMES[base] || base;
+      const zip = new JSZip();
+      zip.file(namedWithExtension(officialName, "wav"), audio.blob);
+      if (exported) await delayMs(400);
+      await downloadZipWithName(zip, platformZipBase(participantId, officialName, userInitials));
+      exported = true;
     }
-  });
+  }
 
-  const zipBlob = await zip.generateAsync({ type: "blob" });
-  const objectUrl = URL.createObjectURL(zipBlob);
-  const link = document.createElement("a");
-  link.href = objectUrl;
-  link.download = `${baseName}.zip`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  setTimeout(() => {
-    URL.revokeObjectURL(objectUrl);
-  }, 5000);
-
-  return true;
+  return exported;
 }
 
 async function exportEvaluacionMotoraHablaZip(audios = [], rows = []) {
@@ -483,32 +503,38 @@ async function exportEvaluacionMotoraHablaZip(audios = [], rows = []) {
   const url = new URL(window.location.href);
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
-  const baseName = platformZipBase(participantId, motorZipCodeForAudios(audios), userInitials);
-  const zip = new JSZip();
 
-  zip.file("resumen.csv", toCSV(rows));
-
+  // Agrupar por código de ZIP. Esto separa AMR (1_ta,2_ka,3_pa) de SMR (1_pata,2_pataka),
+  // que el documento exige en carpetas ZIP distintas aunque provengan de la misma sección.
+  const groups = new Map();
   audios.forEach((audio) => {
     if (audio?.blob && audio?.name) {
+      const code = motorZipCodeForAudio(audio);
+      if (!groups.has(code)) groups.set(code, []);
+      groups.get(code).push(audio);
+    }
+  });
+
+  if (!groups.size) {
+    return false;
+  }
+
+  let first = true;
+  for (const [code, groupAudios] of groups) {
+    const zip = new JSZip();
+    zip.file("resumen.csv", toCSV(rows));
+
+    groupAudios.forEach((audio) => {
       const folderName = motorFolderName(audio.section || "audios");
       const base = stripExtension(audio.name);
       const officialName = MOTOR_AUDIO_NAMES[base] || base;
       zip.file(`${folderName}/${namedWithExtension(officialName, "wav")}`, audio.blob);
-    }
-  });
+    });
 
-  const zipBlob = await zip.generateAsync({ type: "blob" });
-  const objectUrl = URL.createObjectURL(zipBlob);
-  const link = document.createElement("a");
-  link.href = objectUrl;
-  link.download = `${baseName}.zip`;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  setTimeout(() => {
-    URL.revokeObjectURL(objectUrl);
-  }, 5000);
+    if (!first) await delayMs(400);
+    await downloadZipWithName(zip, platformZipBase(participantId, code, userInitials));
+    first = false;
+  }
 
   return true;
 }
@@ -592,12 +618,24 @@ const MOTOR_AUDIO_NAMES = {
   modulo3_parte2_06_polisilabicas_4: "4_cupula",
   modulo3_parte2_06_polisilabicas_5: "5_ceramica",
   modulo3_parte2_06_polisilabicas_6: "6_banana",
-  modulo3_parte2_07_longitudcreciente_a: "1_maniobra",
-  modulo3_parte2_07_longitudcreciente_b: "4_peligro",
-  modulo3_parte2_07_longitudcreciente_c: "7_existencia",
-  modulo3_parte2_07_longitudcreciente_d: "10_caida",
-  modulo3_parte2_07_longitudcreciente_e: "13_estable",
-  modulo3_parte2_07_longitudcreciente_f: "16_silencio",
+  modulo3_parte2_07_longitudcreciente_1: "1_maniobra",
+  modulo3_parte2_07_longitudcreciente_2: "2_maniobrable",
+  modulo3_parte2_07_longitudcreciente_3: "3_maniobrabilidad",
+  modulo3_parte2_07_longitudcreciente_4: "4_peligro",
+  modulo3_parte2_07_longitudcreciente_5: "5_peligroso",
+  modulo3_parte2_07_longitudcreciente_6: "6_peligrosamente",
+  modulo3_parte2_07_longitudcreciente_7: "7_existencia",
+  modulo3_parte2_07_longitudcreciente_8: "8_existencial",
+  modulo3_parte2_07_longitudcreciente_9: "9_existencialismo",
+  modulo3_parte2_07_longitudcreciente_10: "10_caida",
+  modulo3_parte2_07_longitudcreciente_11: "11_paracaidas",
+  modulo3_parte2_07_longitudcreciente_12: "12_paracaidismo",
+  modulo3_parte2_07_longitudcreciente_13: "13_estable",
+  modulo3_parte2_07_longitudcreciente_14: "14_inestable",
+  modulo3_parte2_07_longitudcreciente_15: "15_inestabilidad",
+  modulo3_parte2_07_longitudcreciente_16: "16_silencio",
+  modulo3_parte2_07_longitudcreciente_17: "17_silenciosa",
+  modulo3_parte2_07_longitudcreciente_18: "18_silenciosamente",
   modulo3_parte2_08_pseudopalabras_1: "1_pofa",
   modulo3_parte2_08_pseudopalabras_2: "2_zunoja",
   modulo3_parte2_08_pseudopalabras_3: "3_pataresa",
@@ -683,6 +721,19 @@ function motorZipCodeForAudios(audios = []) {
   if (section.includes("frases")) return "SRep";
 
   return "SpeechMotor";
+}
+
+// Código de ZIP para UN audio individual. Necesario para separar AMR y SMR,
+// que comparten la sección "Diadococinesia" pero deben ir en ZIP distintos.
+function motorZipCodeForAudio(audio) {
+  const section = String(audio?.section || "").toLowerCase();
+  if (section.includes("diadococinesia")) {
+    const base = stripExtension(audio?.name || "");
+    const official = MOTOR_AUDIO_NAMES[base] || "";
+    if (official === "1_pata" || official === "2_pataka") return "SMR";
+    return "AMR";
+  }
+  return motorZipCodeForAudios([audio]);
 }
 
 async function getAuthenticatedUserInitialsFallback(fallback) {
@@ -1386,18 +1437,18 @@ function buildEvaluacionMotoraHablaScreens() {
       centerAudio: true,
       record: false
     },
-    {
+    // Grupo "a" (ejemplo): cada palabra se graba por separado -> índices 1, 2, 3
+    ...[1, 2, 3].map((number) => ({
       section: "Palabras con longitud creciente",
       title: "Palabras con longitud creciente",
-      label: "Ejemplo a",
-      audio: [1, 2, 3].map((number) => `${base}/7_longitudcreciente/${number}a_longitudcreciente.wav`),
+      label: `Ejemplo a (${number}/3)`,
+      audio: `${base}/7_longitudcreciente/${number}a_longitudcreciente.wav`,
       record: true,
       autoStartOnEnter: true,
-      playSequential: false,
       centerAudio: true,
-      trial: "a",
-      outputName: "modulo3_parte2_07_longitudcreciente_a"
-    },
+      trial: `a${number}`,
+      outputName: `modulo3_parte2_07_longitudcreciente_${number}`
+    })),
     {
       section: "Palabras con longitud creciente",
       title: "Palabras con longitud creciente",
@@ -1406,18 +1457,23 @@ function buildEvaluacionMotoraHablaScreens() {
       centerAudio: true,
       record: false
     },
-    ...["b", "c", "d", "e", "f"].map((letter) => ({
-      section: "Palabras con longitud creciente",
-      title: "Palabras con longitud creciente",
-      label: `Letra ${letter}`,
-      audio: [1, 2, 3].map((number) => `${base}/7_longitudcreciente/${number}${letter}_longitudcreciente.wav`),
-      record: true,
-      autoStartOnEnter: true,
-      playSequential: false,
-      centerAudio: true,
-      trial: letter,
-      outputName: `modulo3_parte2_07_longitudcreciente_${letter}`
-    })),
+    // Grupos b..f: cada palabra se graba por separado -> índices 4..18 (documento: guardar todos por separado)
+    ...["b", "c", "d", "e", "f"].flatMap((letter, groupIndex) =>
+      [1, 2, 3].map((number) => {
+        const docIndex = (groupIndex + 1) * 3 + number; // b -> 4..6, c -> 7..9, ... f -> 16..18
+        return {
+          section: "Palabras con longitud creciente",
+          title: "Palabras con longitud creciente",
+          label: `Letra ${letter} (${number}/3)`,
+          audio: `${base}/7_longitudcreciente/${number}${letter}_longitudcreciente.wav`,
+          record: true,
+          autoStartOnEnter: true,
+          centerAudio: true,
+          trial: `${letter}${number}`,
+          outputName: `modulo3_parte2_07_longitudcreciente_${docIndex}`
+        };
+      })
+    ),
     {
       section: "Pseudopalabras",
       title: "Pseudopalabras",

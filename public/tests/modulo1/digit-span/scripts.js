@@ -409,18 +409,14 @@ function crearZip(type) {
     document.getElementById('final-button').style.display = 'none';
 
     const zip = new JSZip();
-    const audioFolder = zip.folder('audios');
-
-    if (!audioFolder) {
-        console.error("No se pudo crear la carpeta 'audios' en el archivo ZIP.");
-        return;
-    }
 
     if (downloadLinks.length > 0) {
         downloadLinks.forEach(linkData => {
             if (linkData.title && linkData.blob) {
-                const fileName = `${type}_${linkData.title}.wav`;
-                audioFolder.file(fileName, linkData.blob);
+                // Nomenclatura del documento: 3_1, 3_2, ... (sin prefijo "S", "_" en vez de "-", en la raíz del ZIP)
+                const docName = String(linkData.title).replace(/^S/i, '').replace(/-/g, '_');
+                const fileName = `${docName}.wav`;
+                zip.file(fileName, linkData.blob);
                 console.log(`Archivo añadido al ZIP: ${fileName}`);
             } else {
                 console.warn("Datos incompletos en linkData:", linkData);

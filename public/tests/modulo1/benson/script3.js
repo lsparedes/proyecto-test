@@ -168,12 +168,18 @@ document.addEventListener('DOMContentLoaded', () => {
             return ""; 
         }
 
-        let csvContent = "TotTime;RT;Hand;CorrResp;PartResp;Acc;Examinador\n"; //Activity
         let timeTotal = (endTimeExecution - startTimeExecution) / 1000;
         const initials = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
-        csvContent += `${timeTotal.toFixed(3).replace('.', ',')};${responseTime};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`; //FiguraIdentificada
 
-        return csvContent;
+        // CSV principal (detallado, por ítem)
+        let mainCsvContent = "TotTime;RT;Hand;CorrResp;PartResp;Acc;Examinador\n"; //Activity
+        mainCsvContent += `${timeTotal.toFixed(3).replace('.', ',')};${responseTime};${selectedHand};${correctAnswer};${participantAnswer};${accuracy};${initials}\n`; //FiguraIdentificada
+
+        // CSV univariado (resumen), requerido por la nomenclatura: ID_Benson_recog_unival
+        let univalCsvContent = "Hand;TotTime;Examinador\n";
+        univalCsvContent += `${selectedHand};${timeTotal.toFixed(3).replace('.', ',')};${initials}\n`;
+
+        return { mainCsvContent, univalCsvContent };
     }
 
     let diaStr = dia.toString().padStart(2, '0');
@@ -189,12 +195,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const zip = new JSZip();
 
         // Generar el contenido del CSV
-        const csvContent = generateCSV();
-        if (!csvContent) {
+        const csvData = generateCSV();
+        if (!csvData) {
             console.error('No se puede generar el CSV');
             return;
         }
-        zip.file(`${idParticipante}_Benson_recog.csv`, csvContent);
+        zip.file(`${idParticipante}_Benson_recog.csv`, csvData.mainCsvContent);
+        zip.file(`${idParticipante}_Benson_recog_unival.csv`, csvData.univalCsvContent);
 
         // Crear el archivo zip y forzar la descarga
         zip.generateAsync({ type: 'blob' })
