@@ -316,7 +316,8 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
     const blob = await getAudioBlob(take.key);
     if (!blob) continue;
 
-    const ordinal = Number(take.screenIndex || 0) + 1;
+    const screenIndex = Number(take.screenIndex || 0);
+    const ordinal = targetPartId === 12 ? screenIndex : screenIndex + 1;
     const label = platformAudioName(targetPartId, ordinal, take.label || `pantalla_${ordinal}`);
     const takeSuffix = Number(take.takeNumber || 1) > 1 ? `_${Number(take.takeNumber)}` : "";
     zip.file(`${label}${takeSuffix}.wav`, blob);
