@@ -67,7 +67,7 @@ const PLATFORM_AUDIO_NAMES = {
 };
 
 const PLATFORM_IMAGE_NAMES = {
-  24: ["1_name", "2_letters", "3_words"],
+  24: ["1_name", "2_letters", "3_letters", "4_words"],
   25: ["WName"],
   26: ["WriDict"],
   27: ["WriPDesc_CAT"]
@@ -317,7 +317,8 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
     if (!blob) continue;
 
     const screenIndex = Number(take.screenIndex || 0);
-    const ordinal = targetPartId === 12 ? screenIndex : screenIndex + 1;
+    const screenAlignedParts = new Set([12, 14, 15, 16]);
+    const ordinal = screenAlignedParts.has(Number(targetPartId)) ? screenIndex : screenIndex + 1;
     const label = platformAudioName(targetPartId, ordinal, take.label || `pantalla_${ordinal}`);
     const takeSuffix = Number(take.takeNumber || 1) > 1 ? `_${Number(take.takeNumber)}` : "";
     zip.file(`${label}${takeSuffix}.wav`, blob);

@@ -678,7 +678,7 @@ export const CAT = {
 
                     basePath: "assets/parte18",
                     firstImage: 1,
-                    lastImage: 5,
+                    lastImage: 6,
                     imagePattern: "{n}.png",
 
                     // Solo pantalla 1
