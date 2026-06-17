@@ -6625,12 +6625,21 @@ function runLineBisection(step) {
     });
   }
 
+  function savePracticeImage() {
+    const data = getPartData(partId) || {};
+    setPartData(partId, {
+      ...data,
+      practiceImage: canvas.toDataURL("image/png")
+    });
+  }
+
   btnNext.onclick = async () => {
     if (screenIndex === 1) {
       savePatientData();
     }
 
     if (screenIndex === 0) {
+      savePracticeImage();
       demoStrokes = [];
     }
 

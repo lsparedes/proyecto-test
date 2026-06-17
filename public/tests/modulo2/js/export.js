@@ -543,30 +543,12 @@ export async function exportLineBisectionZip(usedHand = "") {
   const zip = new JSZip();
   zip.file(`${platformResultFile(1, participantId)}.xlsx`, excelArray);
 
+  if (partData.practiceImage) {
+    zip.file("LineB_practice.png", dataUrlToBlob(partData.practiceImage));
+  }
+
   if (partData.patientImage) {
     zip.file("LineB.png", dataUrlToBlob(partData.patientImage));
-  }
-
-  const sourceImages = [
-    { path: partData.baseImage, name: "lineas.png" },
-    { path: partData.scaleImage, name: "escala.png" }
-  ];
-
-  const comparisonBlob = await createLineBisectionComparisonBlob(partData.baseImage, partData.scaleImage);
-  if (comparisonBlob) {
-    zip.file("comparacion_lineas_escala.png", comparisonBlob);
-  }
-
-  for (const image of sourceImages) {
-    if (!image.path) continue;
-    try {
-      const response = await fetch(image.path);
-      if (response.ok) {
-        zip.file(image.name, await response.blob());
-      }
-    } catch (err) {
-      console.warn("No se pudo agregar imagen fuente al ZIP:", image.path, err);
-    }
   }
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
