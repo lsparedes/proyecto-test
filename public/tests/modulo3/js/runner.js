@@ -197,6 +197,8 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
       audioBtn.style.display = "block";
       showNext(nextBtn, true);
       await ensureCamera();
+      // Feedback: comenzar a grabar apenas aparece la pantalla (quitar la demora de 2-3s).
+      await startRecorder();
     }
   }
 
@@ -435,15 +437,7 @@ async function exportPart1Test2Zip(audios = []) {
   const baseName = platformZipBase(participantId, "SpeechSub", userInitials);
   const zip = new JSZip();
 
-  const rows = audios.map((audio) => ({
-    pantalla: audio.title,
-    archivo_audio_usado: audio.audio,
-    nombre_audio_generado: audio.name,
-    fecha_hora: audio.timestamp
-  }));
-
-  zip.file("resumen.csv", toCSV(rows));
-
+  // Nomenclatura: dentro del ZIP solo los audios solicitados (sin resumen.csv ni subcarpetas)
   audios.forEach((audio) => {
     if (audio?.blob && audio?.name) {
       zip.file(namedWithExtension(speechSubsystemAudioName(audio), "wav"), audio.blob);
@@ -522,13 +516,12 @@ async function exportEvaluacionMotoraHablaZip(audios = [], rows = []) {
   let first = true;
   for (const [code, groupAudios] of groups) {
     const zip = new JSZip();
-    zip.file("resumen.csv", toCSV(rows));
 
+    // Nomenclatura: dentro del ZIP solo los audios con sus nombres (sin resumen.csv ni subcarpetas)
     groupAudios.forEach((audio) => {
-      const folderName = motorFolderName(audio.section || "audios");
       const base = stripExtension(audio.name);
       const officialName = MOTOR_AUDIO_NAMES[base] || base;
-      zip.file(`${folderName}/${namedWithExtension(officialName, "wav")}`, audio.blob);
+      zip.file(namedWithExtension(officialName, "wav"), audio.blob);
     });
 
     if (!first) await delayMs(400);
@@ -693,7 +686,11 @@ function namedWithExtension(base, extension) {
 }
 
 function speechSubsystemAudioName(audio) {
-  const title = String(audio?.title || "").toLowerCase();
+  // Normalizar acentos: los títulos vienen como "fonación"/"espiración" y sin esto
+  // el match fallaba y el archivo quedaba con un nombre larguísimo en vez de A_1/S_1.
+  const title = String(audio?.title || "")
+    .normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .toLowerCase();
   const slot = Number(String(audio?.name || "").match(/_(\d+)(?:_toma\d+)?\.wav$/i)?.[1] || "1");
   const take = String(audio?.name || "").match(/(_toma\d+)\.wav$/i)?.[1] || "";
 
@@ -1184,7 +1181,9 @@ function runEvaluacionMotoraHabla() {
     resetRecordControls();
     recordControls.style.display = screen.record ? "flex" : "none";
 
-    if (screen.record && (screen.autoStartOnEnter || normalizeAudioList(screen.audio).length === 0)) {
+    // Feedback: eliminar botón REC y grabar desde que aparece la pantalla del estímulo
+    // hasta que se presiona la flecha para avanzar. Toda pantalla de grabación inicia sola.
+    if (screen.record) {
       await startRecording(screen);
     }
   }
@@ -1202,7 +1201,9 @@ function runEvaluacionMotoraHabla() {
         : (index === 0 ? "audio.png" : `audio${Math.min(index + 1, 4)}.png`);
       button.alt = `Audio ${index + 1}`;
       button.addEventListener("click", async () => {
-        await playMotorAudios(screen.playSequential === false ? [audioPath] : audioList.slice(index), screen);
+        // Feedback: los audios de estímulo deben reproducirse de forma independiente
+        // (solo el que el examinador toca), no encadenarse automáticamente.
+        await playMotorAudios([audioPath], screen);
       });
       audiosEl.appendChild(button);
     });
@@ -1298,9 +1299,12 @@ function runEvaluacionMotoraHabla() {
   }
 
   function resetRecordControls() {
-    recBtn.classList.remove("hidden");
-    recordingIndicator.classList.add("hidden");
+    // Feedback: eliminar el botón REC manual. La grabación se controla por la aparición
+    // de la pantalla y la flecha de avanzar; solo se muestra el indicador de grabación.
+    recBtn.classList.add("hidden");
+    stopBtn.classList.add("hidden");
     stopBtn.classList.add("is-disabled");
+    recordingIndicator.classList.add("hidden");
   }
 
 }
@@ -1759,6 +1763,8 @@ function runHablaConectada(testConfig) {
       mainImage.src = screen.image || "";
       singleAudioBtn.style.display = "block";
       placeRecordControls(imageAudioView);
+      // Feedback: grabar desde que aparece la lámina hasta presionar avanzar.
+      await startAudioRecording(screen);
       return;
     }
 
@@ -1795,6 +1801,8 @@ function runHablaConectada(testConfig) {
       personalView.classList.add("is-active");
       personalAudioBtn.style.display = "block";
       placeRecordControls(personalView);
+      // Feedback: grabar desde que aparece la lámina hasta presionar avanzar.
+      await startAudioRecording(screen);
     }
   }
 

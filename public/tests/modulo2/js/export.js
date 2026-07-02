@@ -67,9 +67,9 @@ const PLATFORM_AUDIO_NAMES = {
 };
 
 const PLATFORM_IMAGE_NAMES = {
-  24: ["1_name", "2_letters", "3_letters", "4_words"],
-  25: ["WName"],
-  26: ["WriDict"],
+  24: ["1_name", "2_letters_copy", "3_letters_upper", "4_words"],
+  25: ["P_1", "E_1", "E_2", "E_3", "E_4", "E_5"],
+  26: ["P_1", "E_1", "E_2", "E_3", "E_4", "E_5"],
   27: ["WriPDesc_CAT"]
 };
 
@@ -208,14 +208,11 @@ export async function exportSemanticPanZip(usedHand = "") {
   sheetRows.push({});
   sheetRows.push({ "numero de item": "mano utilizada", "puntaje": hand });
 
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(sheetRows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_PAN");
-  const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const csvContent = toCSV(sheetRows);
 
   const baseName = platformZipBase(2, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(2, participantId)}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(2, participantId)}.csv`, csvContent);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -580,14 +577,14 @@ export async function exportShortTermMemoryZip(usedHand = "") {
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(4);
   const hand = usedHand || partData.usedHand || "";
+  // Feedback: dejar solo N item, respuesta correcta, respuesta participante, RT, puntaje
+  // (eliminar el resto de columnas).
   const rows = (partData.shortTermMemoryResponses || []).map((row) => ({
     "numero de item": row.numero_item,
-    "pantalla": row.pantalla,
-    "opcion seleccionada": row.opcion_seleccionada,
-    "opcion correcta": row.opcion_correcta,
-    "es correcta": row.es_correcta ? "si" : "no",
-    "puntaje": row.puntaje,
-    "es ejemplo": row.es_ejemplo ? "si" : "no"
+    "respuesta correcta": row.opcion_correcta,
+    "respuesta participante": row.opcion_seleccionada,
+    "RT": row.RT,
+    "puntaje": row.puntaje
   }));
 
   if (!rows.length) {
@@ -598,14 +595,11 @@ export async function exportShortTermMemoryZip(usedHand = "") {
   rows.push({});
   rows.push({ "numero de item": "mano usada", "puntaje": hand });
 
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "MEMORIA_CORTO_PLAZO");
-  const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const csvContent = toCSV(rows);
 
   const baseName = platformZipBase(4, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(4, participantId)}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(4, participantId)}.csv`, csvContent);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -647,14 +641,11 @@ export async function exportPantomimeZip() {
     };
   });
 
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(responseRows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "HOJA_RESPUESTA");
-  const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const csvContent = toCSV(responseRows);
 
   const baseName = platformZipBase(5, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(5, participantId)}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(5, participantId)}.csv`, csvContent);
 
   const sortedTakes = Object.entries(takes)
     .sort(([a], [b]) => Number(a) - Number(b));
@@ -665,8 +656,9 @@ export async function exportPantomimeZip() {
     const screenLabel = indexToPantomimeName(Number(screenIndex));
 
     if (take?.sin_camara) {
+      // Sin subcarpetas dentro del ZIP (nomenclatura): archivos en la raiz
       zip.file(
-        `videos/${screenLabel}_SIN_CAMARA.txt`,
+        `${screenLabel}_SIN_CAMARA.txt`,
         "No se genero video porque no habia camara disponible en este equipo."
       );
       continue;
@@ -677,7 +669,8 @@ export async function exportPantomimeZip() {
     const blob = await getBlob(take.key);
     if (!blob) continue;
 
-    zip.file(`videos/${screenLabel}.webm`, blob);
+    // Sin subcarpetas dentro del ZIP (nomenclatura): video en la raiz
+    zip.file(`${screenLabel}.webm`, blob);
   }
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
@@ -707,9 +700,14 @@ export async function exportCalculationZip(usedHand = "") {
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(6);
   const hand = usedHand || partData.usedHand || "";
+  // Feedback: CSV con N item (1-6), respuesta correcta, respuesta participante, RT, puntaje, mano
   const rows = (partData.calculationResponses || []).map((row) => ({
-    "Operacion aritmetica": row.operacion_aritmetica,
-    "Opcion elegida": row.opcion_elegida
+    "numero de item": row.ejercicio,
+    "respuesta correcta": row.respuesta_correcta,
+    "respuesta participante": row.opcion_elegida,
+    "RT": row.RT,
+    "puntaje": row.puntaje,
+    "mano seleccionada": row.mano_seleccionada || hand
   }));
 
   if (!rows.length) {
@@ -717,20 +715,72 @@ export async function exportCalculationZip(usedHand = "") {
     return false;
   }
 
-  rows.push({});
-  rows.push({
-    "Operacion aritmetica": "Mano seleccionada",
-    "Opcion elegida": hand
-  });
-
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "CALCULO");
-  const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const csvContent = toCSV(rows);
 
   const baseName = platformZipBase(6, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(6, participantId)}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(6, participantId)}.csv`, csvContent);
+
+  const zipBlob = await zip.generateAsync({ type: "blob" });
+  const link = document.createElement("a");
+  const objectUrl = URL.createObjectURL(zipBlob);
+  link.href = objectUrl;
+  link.download = `${baseName}.zip`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => {
+    URL.revokeObjectURL(objectUrl);
+  }, 5000);
+
+  return true;
+}
+
+export async function exportComprehensionSpokenWordsZip() {
+  // Parte 7: Comprension oral de palabras aisladas (CompSpkW).
+  // El test no dispone de clave de respuesta correcta en su configuracion
+  // (solo imageFiles), por lo que el CSV registra la respuesta del participante
+  // (numero de item, opcion elegida 1-4 e imagen elegida). La correccion se
+  // realiza de forma manual con estos datos.
+  if (typeof JSZip === "undefined") {
+    console.error("JSZip no esta disponible para exportar Comprension oral de palabras (Parte 7).");
+    return false;
+  }
+
+  const url = new URL(window.location.href);
+  const participantId = url.searchParams.get("id_participante") || "participante";
+  const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
+  const partData = getPartData(7);
+  const responses = partData.responses || {};
+
+  const orderedKeys = Object.keys(responses)
+    .map(Number)
+    .filter((k) => Number.isFinite(k))
+    .sort((a, b) => a - b);
+
+  const rows = orderedKeys.map((key) => {
+    const r = responses[String(key)] || {};
+    const selectedIdx = (r.selected === null || r.selected === undefined)
+      ? ""
+      : (Number(r.selected) + 1);
+    return {
+      "numero de item": r.item ?? (key === 1 ? "Ej." : key - 1),
+      "opcion seleccionada (1-4)": selectedIdx,
+      "imagen seleccionada": r.selectedFile || ""
+    };
+  });
+
+  if (!rows.length) {
+    console.warn("No hay respuestas de Comprension oral de palabras (Parte 7) para exportar.");
+    return false;
+  }
+
+  const csvContent = toCSV(rows);
+
+  const baseName = platformZipBase(7, participantId, userInitials);
+  const zip = new JSZip();
+  zip.file(`${platformResultFile(7, participantId)}.csv`, csvContent);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -778,14 +828,11 @@ export async function exportWrittenPhonologicalZip(usedHand = "") {
   rows.push({});
   rows.push({ itemNumber: "mano utilizada", assignedScore: hand });
 
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_FONOLOGICO_PART8");
-  const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const csvContent = toCSV(rows);
 
   const baseName = platformZipBase(8, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(8, participantId)}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(8, participantId)}.csv`, csvContent);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -834,14 +881,11 @@ export async function exportOrationalPart9Zip(usedHand = "") {
   rows.push({});
   rows.push({ itemNumber: "mano utilizada", "puntaje obtenido": hand });
 
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_ORACIONAL_PART9");
-  const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const csvContent = toCSV(rows);
 
   const baseName = platformZipBase(9, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(9, participantId)}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(9, participantId)}.csv`, csvContent);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -890,14 +934,11 @@ export async function exportOrationalPart10Zip(usedHand = "") {
   rows.push({});
   rows.push({ itemNumber: "mano utilizada", "puntaje obtenido": hand });
 
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_ORACIONAL_PART10");
-  const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const csvContent = toCSV(rows);
 
   const baseName = platformZipBase(10, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(10, participantId)}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(10, participantId)}.csv`, csvContent);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");
@@ -957,14 +998,11 @@ export async function exportOralParagraphsZip(usedHand = "") {
   rows.push({ "historia": "total correcto sobre 4", "puntaje obtenido": totalScore });
   rows.push({ "historia": "mano utilizada", "puntaje obtenido": hand });
 
-  const workbook = XLSX.utils.book_new();
-  const worksheet = XLSX.utils.json_to_sheet(rows);
-  XLSX.utils.book_append_sheet(workbook, worksheet, "RESULTADOS_COMP_ORAL_PARRAFOS");
-  const excelArray = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+  const csvContent = toCSV(rows);
 
   const baseName = platformZipBase(11, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(11, participantId)}.xlsx`, excelArray);
+  zip.file(`${platformResultFile(11, participantId)}.csv`, csvContent);
 
   const zipBlob = await zip.generateAsync({ type: "blob" });
   const link = document.createElement("a");

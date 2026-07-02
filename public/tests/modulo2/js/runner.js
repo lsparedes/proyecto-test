@@ -5,7 +5,7 @@ import { WavRecorder } from "./audio_recorder_wav.js";
 import { saveAudioBlob } from "./audio_store_idb.js";
 import { VideoRecorder } from "./video_recorder.js";
 import { saveBlob } from "./blob_store_idb.js";
-import { exportSemanticPanZip, exportVerbalFluencyAudioZip, exportShortTermMemoryZip, exportPantomimeZip, exportCalculationZip, exportWrittenPhonologicalZip, exportOrationalPart9Zip, exportOrationalPart10Zip, exportOralParagraphsZip, exportRepeatAudioZip, exportWritingImagesZip, exportImageAssetsZip, exportLineBisectionZip } from "./export.js";
+import { exportSemanticPanZip, exportVerbalFluencyAudioZip, exportShortTermMemoryZip, exportPantomimeZip, exportCalculationZip, exportComprehensionSpokenWordsZip, exportWrittenPhonologicalZip, exportOrationalPart9Zip, exportOrationalPart10Zip, exportOralParagraphsZip, exportRepeatAudioZip, exportWritingImagesZip, exportImageAssetsZip, exportLineBisectionZip } from "./export.js";
 
 const topBar = document.getElementById("topBar");
 const itemIndicator = document.querySelector(".item-indicator");
@@ -1517,6 +1517,8 @@ function runMCQ4ImageTrials(step) {
   });
 
   let selectedIndex = null;
+  let trialStartTime = null; // Feedback: capturar RT (tiempo de respuesta) por item
+  let selectionRT = "";
 
   function fileFor(t, o) {
     return `${basePath}/${pattern.replace("{t}", String(t)).replace("{o}", String(o))}`;
@@ -1540,6 +1542,7 @@ function runMCQ4ImageTrials(step) {
       imagen_correcta: correctImage,
       es_correcta: isCorrect,
       puntaje: isPractice ? 0 : (isCorrect ? 1 : 0),
+      RT: selectionRT,
       es_ejemplo: isPractice,
       mano_usada: getPartData(partId).usedHand || ""
     };
@@ -1626,6 +1629,10 @@ function runMCQ4ImageTrials(step) {
       optImgs[o - 1].src = fileFor(trialIndex, o);
     }
 
+    // Feedback: RT medido desde que aparece el item hasta la primera seleccion
+    trialStartTime = Date.now();
+    selectionRT = "";
+
     setPartProgress(partId, { trialIndex });
   }
 
@@ -1633,6 +1640,10 @@ function runMCQ4ImageTrials(step) {
     box.onclick = () => {
       const idx = Number(box.dataset.opt); // 0..3
       selectedIndex = idx;
+
+      if (selectionRT === "" && trialStartTime) {
+        selectionRT = ((Date.now() - trialStartTime) / 1000).toFixed(3).replace(".", ",");
+      }
 
       optBoxes.forEach((b, imgIndex) => {
         b.classList.remove("selected");
@@ -2109,6 +2120,8 @@ function runCalcMCQ(step) {
   setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, trialIndex });
 
   let selectedIndex = null;
+  let trialStartTime = null; // Feedback: capturar RT por ejercicio
+  let selectionRT = "";
 
   // AUDIO
   if (btnAudio && instructionAudio && step.instructionAudio) {
@@ -2188,6 +2201,9 @@ function runCalcMCQ(step) {
       }
     }
     updateTop();
+    // Feedback: RT medido desde que aparece el ejercicio hasta la primera seleccion
+    trialStartTime = Date.now();
+    selectionRT = "";
     setPartProgress(partId, { trialIndex });
   }
 
@@ -2195,6 +2211,10 @@ function runCalcMCQ(step) {
     box.onclick = () => {
       const idx = Number(box.dataset.opt);
       selectedIndex = idx;
+
+      if (selectionRT === "" && trialStartTime) {
+        selectionRT = ((Date.now() - trialStartTime) / 1000).toFixed(3).replace(".", ",");
+      }
 
       optBoxes.forEach(b => b.classList.remove("selected"));
       box.classList.add("selected");
@@ -2211,10 +2231,14 @@ function runCalcMCQ(step) {
     const calculationResponses = (data.calculationResponses || [])
       .filter((response) => Number(response.ejercicio) !== trialIndex + 1);
 
+    const correctIdx = currentTrial.correctIndex;
     calculationResponses.push({
       ejercicio: trialIndex + 1,
       operacion_aritmetica: CALCULATION_OPERATIONS[trialIndex] || currentTrial.promptImg || "",
+      respuesta_correcta: currentTrial.options?.[correctIdx] ?? "",
       opcion_elegida: currentTrial.options?.[selectedIndex] ?? "",
+      RT: selectionRT,
+      puntaje: (selectedIndex === correctIdx) ? 1 : 0,
       mano_seleccionada: data.usedHand || ""
     });
 
@@ -2435,21 +2459,34 @@ function runAudioMCQ4Trials(step) {
   });
 
   // flecha avanza
-  btnNext.onclick = () => {
+  btnNext.onclick = async () => {
     // si estamos en práctica/ensayo, exigir selección
     if (screenIndex !== 0 && requireSel && selectedIndex === null) return;
 
-    // guardar selección para ZIP futuro
+    // guardar selección para el ZIP (item, opción elegida e imagen elegida)
     if (screenIndex !== 0) {
       const data = getPartData(partId);
       const responses = data.responses || {};
-      responses[String(screenIndex)] = { selected: selectedIndex }; // 0..3
+      const t = screenIndex; // 1 = práctica, 2..16 = ensayos
+      const selectedFile = (selectedIndex !== null)
+        ? (step.imageFiles?.[t]?.[selectedIndex] || "")
+        : "";
+      responses[String(screenIndex)] = {
+        selected: selectedIndex,                 // 0..3
+        item: t === practiceT ? "Ej." : t - 1,   // ensayo 1..15
+        selectedFile
+      };
       setPartData(partId, { responses });
     }
 
     screenIndex++;
     if (screenIndex >= totalScreens) {
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
+      // Parte 7 no tiene pantalla de selección de mano: exportamos al cerrar.
+      const exported = await exportComprehensionSpokenWordsZip();
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
       finishCurrentPart();
       return;
     }

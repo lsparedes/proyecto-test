@@ -3,7 +3,7 @@ export const MODULO3 = {
     {
       id: 1,
       groupId: 1,
-      groupTitle: "Procesos Motores Basicos",
+      groupTitle: "Subsistemas del Habla",
       name: "Evaluacion Orofacial",
       note: "Base inicial de pantallas para la secuencia orofacial.",
       instructions: "Primero se muestra una instruccion con audio al centro. Luego avanza por pantallas de palabra, audio y camara.",
@@ -213,7 +213,7 @@ export const MODULO3 = {
     {
       id: 2,
       groupId: 1,
-      groupTitle: "Procesos Motores Basicos",
+      groupTitle: "Subsistemas del Habla",
       name: "Evaluacion Integrada de la Respiracion, la Fonacion y la Resonancia",
       note: "Secuencia base con dos audios por bloque y grabacion automatica.",
       instructions: "Cada bloque tiene una pantalla de titulo y una pantalla con dos audios. La grabacion se activa automaticamente cerca del final de cada audio.",
