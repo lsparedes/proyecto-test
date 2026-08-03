@@ -1206,8 +1206,8 @@ return array (
     45 => 
     array (
       'id' => 46,
-      'name_test' => 'Procesos Motores Basicos',
-      'nombre_espa' => 'Procesos Motores Basicos',
+      'name_test' => 'Subsistemas del Habla',
+      'nombre_espa' => 'Subsistemas del Habla',
       'descripcion_individual' => 'Incluye Evaluacion Orofacial y Evaluacion Integrada de la Respiracion, la Fonacion y la Resonancia.',
       'points' => 0,
       'duracion_minutos' => 15,
@@ -1266,8 +1266,8 @@ return array (
     0 => 
     array (
       'id' => 1,
-      'slug' => 'procesos-motores-basicos',
-      'title' => 'Part 1: Procesos Motores Basicos',
+      'slug' => 'subsistemas-del-habla',
+      'title' => 'Subsistemas del Habla',
       'description' => 'Base estructural para pruebas de evaluacion orofacial y de respiracion, fonacion y resonancia.',
       'sort_order' => 1,
       'is_active' => 1,

@@ -175,9 +175,11 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
     if (screen.kind === "instruction") {
       setScreenCounter("");
       instructionView.classList.add("is-active");
-      instructionText.textContent = "";
+      instructionText.textContent = "Evaluación Orofacial";
       centerAudio.style.display = "inline-block";
       fullscreenBtn.style.display = "block";
+      // Preparar la cámara desde el inicio evita la espera al entrar al primer estímulo.
+      await ensureCamera();
       return;
     }
 
@@ -381,13 +383,13 @@ function delayMs(ms) {
 
 async function exportProcesosMotoresBasicosZip(videos = [], rows = []) {
   if (typeof JSZip === "undefined") {
-    console.error("JSZip no esta disponible para exportar Procesos Motores Basicos.");
+    console.error("JSZip no esta disponible para exportar Subsistemas del Habla.");
     return false;
   }
 
   const url = new URL(window.location.href);
   const participantId = url.searchParams.get("id_participante") || "participante";
-  const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
+  const userInitials = sanitizeFilename(await getExaminerThreeInitials(participantId));
 
   // El documento exige DOS carpetas ZIP separadas: OroFace_comm y OroFace_praxis
   const commZip = new JSZip();
@@ -693,10 +695,11 @@ function speechSubsystemAudioName(audio) {
     .toLowerCase();
   const slot = Number(String(audio?.name || "").match(/_(\d+)(?:_toma\d+)?\.wav$/i)?.[1] || "1");
   const take = String(audio?.name || "").match(/(_toma\d+)\.wav$/i)?.[1] || "";
+  const normalizedTitle = sanitizeFilename(audio?.title || "").toLowerCase();
 
-  if (title.includes("espiracion")) return `S_${slot}${take}`;
-  if (title.includes("fonacion")) return `A_${slot}${take}`;
-  if (title.includes("resonancia")) return `Resonance_${slot}${take}`;
+  if (normalizedTitle.includes("espiracion")) return `S_${slot}${take}`;
+  if (normalizedTitle.includes("fonacion")) return `A_${slot}${take}`;
+  if (normalizedTitle.includes("resonancia")) return `Resonance_${slot}${take}`;
 
   return `${stripExtension(audio?.name || "SpeechSub")}${take}`;
 }
@@ -752,6 +755,25 @@ async function getAuthenticatedUserInitialsFallback(fallback) {
   }
 }
 
+async function getExaminerThreeInitials(fallback) {
+  try {
+    const response = await fetch("/api/user-info");
+    if (!response.ok) return fallback;
+
+    const user = await response.json();
+    const firstName = String(user?.name || "").trim().split(/\s+/).filter(Boolean)[0] || "";
+    const surnames = String(user?.last_name || "").trim().split(/\s+/).filter(Boolean).slice(0, 2);
+    const initials = [firstName, ...surnames]
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase())
+      .join("");
+
+    return initials || user?.initials || fallback;
+  } catch (_) {
+    return fallback;
+  }
+}
+
 function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   const section = document.getElementById("part-1-test-2");
   const titleView = document.getElementById("p1t2-screen-title");
@@ -774,6 +796,7 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   const playRecordBtn = document.getElementById("p1t2-play-record-btn");
   const recordingIndicator = document.getElementById("p1t2-recording-indicator");
   const stopBtn = document.getElementById("p1t2-stop-btn");
+  const fullscreenBtn = document.getElementById("p1t2-fullscreen-btn");
   const nextBtn = document.getElementById("p1t2-next-btn");
   const audioPlayer = document.getElementById("p1t2-audio-player");
 
@@ -787,6 +810,20 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   const recordedAudios = [];
   const takeCounts = {};
   const sectionCounters = buildSectionCounters(screens);
+
+  fullscreenBtn?.addEventListener("click", async () => {
+    if (!document.fullscreenElement) {
+      await document.documentElement.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  });
+
+  document.addEventListener("fullscreenchange", () => {
+    if (fullscreenBtn) {
+      fullscreenBtn.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+    }
+  });
 
   nextBtn.addEventListener("click", async () => {
     if (nextBtn.style.display === "none") {
@@ -836,21 +873,6 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
       showPlayRecordButton(true);
       showNext(nextBtn, true);
     }
-  });
-
-  playRecordBtn?.addEventListener("click", async () => {
-    if (!selectedAudioSlot || currentRecorder) {
-      return;
-    }
-
-    currentRecorder = new WavAudioRecorder();
-    await currentRecorder.start();
-    firstRecordingActive = selectedAudioSlot === 1;
-    secondRecordingActive = selectedAudioSlot === 2;
-    activeAudioSlot = selectedAudioSlot;
-    showRecordControls(true);
-    showPlayRecordButton(false);
-    status.textContent = `Grabando audio ${selectedAudioSlot}. Presiona detener para guardar.`;
   });
 
   audio1Btn.addEventListener("click", async () => {
@@ -916,7 +938,7 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
     if (screen.kind === "dual_audio_record" || screen.kind === "single_audio_record") {
       setScreenCounter(sectionCounters[currentScreenIndex] || "E 1/1");
       audioView.classList.add("is-active");
-      status.textContent = "Reproduce el audio. Al terminar, presiona play para grabar.";
+      status.textContent = "Reproduce el audio. La grabación comenzará tres segundos antes de que termine.";
       if (screen.kind === "single_audio_record") {
         if (audio2Row) audio2Row.style.display = "none";
         if (audio1Label) audio1Label.textContent = `${screen.slot || 1}. `;
@@ -937,14 +959,45 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
 
     audioEl.src = audioPath;
     audioEl.load();
-    audioEl.onended = () => {
+
+    const startScheduledRecording = async () => {
+      if (currentRecorder) return;
       selectedAudioSlot = slot;
-      showPlayRecordButton(true);
-      status.textContent = `Audio ${slot} terminado. Presiona play para iniciar la grabacion.`;
+      currentRecorder = new WavAudioRecorder();
+      await currentRecorder.start();
+      firstRecordingActive = slot === 1;
+      secondRecordingActive = slot === 2;
+      activeAudioSlot = slot;
+      status.textContent = `Grabando audio ${slot}. Presiona la flecha para guardar y continuar.`;
+    };
+
+    const scheduleFromDuration = () => {
+      clearCountdown(endCountdownTimer);
+      const duration = Number(audioEl.duration);
+      if (!Number.isFinite(duration) || duration <= 0) return;
+      endCountdownTimer = setTimeout(() => {
+        startScheduledRecording().catch(console.error);
+      }, Math.max(0, (duration - 3) * 1000));
+    };
+
+    audioEl.onloadedmetadata = scheduleFromDuration;
+    audioEl.ontimeupdate = () => {
+      const remaining = Number(audioEl.duration) - Number(audioEl.currentTime);
+      if (!currentRecorder && Number.isFinite(remaining) && remaining <= 3) {
+        clearCountdown(endCountdownTimer);
+        startScheduledRecording().catch(console.error);
+      }
+    };
+    audioEl.onended = async () => {
+      if (!currentRecorder) await startScheduledRecording();
+      selectedAudioSlot = slot;
+      showNext(nextBtn, true);
+      status.textContent = `Grabando audio ${slot}. Presiona la flecha para guardar y continuar.`;
     };
 
     try {
       await audioEl.play();
+      scheduleFromDuration();
     } catch (error) {
       console.error("No se pudo reproducir el audio.", error);
     }
@@ -996,11 +1049,11 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
     showPlayRecordButton(false);
 
     if (recordingIndicator) {
-      recordingIndicator.classList.toggle("hidden", !visible);
+      recordingIndicator.classList.add("hidden");
     }
 
     if (stopBtn) {
-      stopBtn.classList.toggle("hidden", !visible);
+      stopBtn.classList.add("hidden");
     }
   }
 }
@@ -2023,6 +2076,8 @@ function stopAudio(audioEl) {
   audioEl.pause();
   audioEl.currentTime = 0;
   audioEl.onended = null;
+  audioEl.onloadedmetadata = null;
+  audioEl.ontimeupdate = null;
 }
 
 function clearCountdown(timerId) {

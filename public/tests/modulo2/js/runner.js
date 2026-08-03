@@ -42,6 +42,7 @@ const layoutImageRecordSimple = document.getElementById("layoutImageRecordSimple
 
 const layoutFluency = document.getElementById("layoutFluency");
 
+const layoutLineBisectionInstructions = document.getElementById("layoutLineBisectionInstructions");
 const layoutLineBisection = document.getElementById("layoutLineBisection");
 const handFinishScreen = document.getElementById("handFinishScreen");
 const selectHandContainer = document.getElementById("selectHand");
@@ -55,7 +56,7 @@ function parseItemIndicatorLabel(rawText) {
     .trim();
 
   if (!text || /^Tipo no soportado/i.test(text)) return "";
-  if (/Instrucci|Ajuste c/i.test(text)) return "";
+  if (/Instrucci|Ajuste c|Encuadre/i.test(text)) return "";
 
   const labelText = text
     .replace(/^Parte\s+\d+\s*/i, "")
@@ -170,6 +171,7 @@ function showLayout(which) {
   layoutImageInstrRecord.style.display = (which === "img_instr_record") ? "block" : "none";
   layoutImageRecordSimple.style.display = (which === "img_record_simple") ? "block" : "none";
   layoutFluency.style.display = (which === "fluency") ? "block" : "none";
+  layoutLineBisectionInstructions.style.display = (which === "line_bisection_instructions") ? "block" : "none";
   layoutLineBisection.style.display = (which === "line_bisection") ? "block" : "none";
 }
 
@@ -213,10 +215,14 @@ function setupInstructionAudio(audioSrc, centered = false, position = "bottom-le
   btnAudio.style.right = "";
   btnAudio.style.left = "";
   btnAudio.style.transform = "";
+  btnAudio.style.width = "56px";
+  btnAudio.style.height = "56px";
 
   if (!audioSrc) return;
 
   btnAudio.style.display = "block";
+  btnAudio.style.width = "90px";
+  btnAudio.style.height = "90px";
 
   if (centered) {
     // CENTRADO
@@ -254,6 +260,9 @@ function setupInstructionAudio(audioSrc, centered = false, position = "bottom-le
 }
 function setupAudio(buttonEl, audioEl, audioPath, options = {}) {
   const { forceShow = false } = options;
+  const normalizedAudioPath = String(audioPath || "").toLowerCase();
+  const isInstructionAudio = normalizedAudioPath.includes("/instruccion/")
+    || normalizedAudioPath.includes("/intruccion/");
 
   function stopAllAudios() {
     document.querySelectorAll("audio").forEach(a => {
@@ -277,7 +286,11 @@ function setupAudio(buttonEl, audioEl, audioPath, options = {}) {
     return;
   }
 
-  if (buttonEl) buttonEl.style.display = "block";
+  if (buttonEl) {
+    buttonEl.style.display = "block";
+    buttonEl.style.width = isInstructionAudio ? "90px" : "56px";
+    buttonEl.style.height = isInstructionAudio ? "90px" : "56px";
+  }
 
   if (audioEl) {
     audioEl.src = audioPath;
@@ -297,6 +310,14 @@ function setupAudio(buttonEl, audioEl, audioPath, options = {}) {
   }
 }
 
+function stopAudioElement(audioEl) {
+  if (!audioEl) return;
+  try {
+    audioEl.pause();
+    audioEl.currentTime = 0;
+  } catch (e) { }
+}
+
 function setupCenterAudios(audioList) {
   const list = audioList || [];
   const audios = [cAudioEl1, cAudioEl2, cAudioEl3];
@@ -304,13 +325,23 @@ function setupCenterAudios(audioList) {
 
   for (let i = 0; i < 3; i++) {
     const path = list[i] || "";
-    audios[i].src = path;
+    stopAudioElement(audios[i]);
+    audios[i].removeAttribute("src");
+    if (path) {
+      audios[i].src = path;
+      audios[i].load();
+    }
 
     // Mostrar u ocultar ícono: en este test queremos que se vea aunque sea null,
     // pero solo para la cantidad que corresponde (1 o 3).
     btns[i].style.display = (i < list.length) ? "block" : "none";
 
-    btns[i].onclick = () => {
+    btns[i].onclick = (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      audios.forEach((audioEl, audioIndex) => {
+        if (audioIndex !== i) stopAudioElement(audioEl);
+      });
 
       if (!audios[i].src) return; // cuando pegues el audio, funcionará
       audios[i].currentTime = 0;
@@ -475,6 +506,19 @@ function showHandSelectionScreen() {
         }
       }
 
+      if (partId === 7) {
+        const currentData = getPartData(partId);
+        setPartData(partId, {
+          ...currentData,
+          usedHand
+        });
+
+        const exported = await exportComprehensionSpokenWordsZip(usedHand);
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
       if (partId === 8) {
         const currentData = getPartData(partId);
         const writtenPhonologicalResponses = (currentData.writtenPhonologicalResponses || []).map((response) => ({
@@ -571,6 +615,33 @@ function showHandSelectionScreen() {
         }
       }
 
+      if (partId === 24) {
+        const currentData = getPartData(partId);
+        setPartData(partId, { ...currentData, usedHand });
+        const exported = await exportWritingImagesZip(24, 42, "Copia");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 25) {
+        const currentData = getPartData(partId);
+        setPartData(partId, { ...currentData, usedHand });
+        const exported = await exportWritingImagesZip(25, 43, "Etiquetado_de_imagenes");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
+      if (partId === 26) {
+        const currentData = getPartData(partId);
+        setPartData(partId, { ...currentData, usedHand });
+        const exported = await exportWritingImagesZip(26, 44, "Escritura_al_dictado");
+        if (exported) {
+          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+        }
+      }
+
       hideHandSelectionScreen();
       closeCurrentWindow();
     });
@@ -607,6 +678,13 @@ function runSemanticMatch(step) {
     document.getElementById("img2"),
     document.getElementById("img3"),
   ];
+  [centerImg, ...optImgs].forEach((imgEl) => {
+    if (!imgEl) return;
+    imgEl.setAttribute("data-visual-search", "disabled");
+    imgEl.setAttribute("draggable", "false");
+    imgEl.addEventListener("dragstart", (event) => event.preventDefault());
+    imgEl.addEventListener("contextmenu", (event) => event.preventDefault());
+  });
   const backButtonId = "btnSemanticBack";
   let btnBack = document.getElementById(backButtonId);
 
@@ -677,6 +755,7 @@ function runSemanticMatch(step) {
 
   let trialIndex = 0;
   const saved = getPartProgress(partId);
+  let showingTitleScreen = !(resume && saved?.status === "in_progress");
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.trialIndex)) {
     trialIndex = Math.min(Math.max(saved.trialIndex, 0), trials.length - 1);
   }
@@ -684,6 +763,8 @@ function runSemanticMatch(step) {
   setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, trialIndex });
 
   let selectedIndex = null;
+  let trialStartedAt = 0;
+  let selectedRt = null;
   const panResponses = [];
 
   function hideInstructionAudio() {
@@ -732,6 +813,7 @@ function runSemanticMatch(step) {
     });
     btnNext.style.display = "none";
     selectedIndex = null;
+    selectedRt = null;
   }
 
   function updateTopBar() {
@@ -757,6 +839,8 @@ function runSemanticMatch(step) {
   }
 
   function renderTrial() {
+    document.body.classList.remove("centeredInstruction");
+    showLayout("semantic");
     clearMarks();
 
     const t = trials[trialIndex];
@@ -775,14 +859,40 @@ function runSemanticMatch(step) {
 
     centerImg.src = t.center;
     for (let i = 0; i < 4; i++) optImgs[i].src = t.options[i];
+    trialStartedAt = performance.now();
 
     updateTopBar();
     updateFullscreenButton();
     updateBackButton();
 
-    setupInstructionAudio(trialIndex === 0 ? step.instructionAudio : null, false, "bottom-left");
+    setupInstructionAudio(trialIndex === 0 ? step.instructionAudio : null, false, "top-right");
 
     setPartProgress(partId, { trialIndex });
+  }
+
+  function renderTitleScreen() {
+    hideInstructionAudio();
+    showLayout("instruction");
+    document.body.classList.add("centeredInstruction");
+
+    const title = document.getElementById("instructionTitle");
+    const body = document.getElementById("instructionBody");
+    if (title) {
+      title.textContent = "Memoria semántica";
+      title.style.left = "50%";
+      title.style.right = "auto";
+      title.style.top = "50%";
+      title.style.transform = "translate(-50%, -50%)";
+      title.style.width = "90vw";
+      title.style.fontSize = "52px";
+      title.style.textAlign = "center";
+    }
+    if (body) body.textContent = "";
+
+    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Instrucciones`;
+    btnFullscreen.style.display = "block";
+    btnBack.style.display = "none";
+    btnNext.style.display = "block";
   }
 
   btnFullscreen.onclick = () => toggleFullscreen();
@@ -791,6 +901,9 @@ function runSemanticMatch(step) {
     box.onclick = () => {
       const idx = Number(box.dataset.opt);
       selectedIndex = idx;
+      if (!Number.isFinite(selectedRt)) {
+        selectedRt = Math.round(performance.now() - trialStartedAt);
+      }
 
       optBoxes.forEach((b, imgIndex) => {
         b.classList.remove("selected");
@@ -824,12 +937,18 @@ function runSemanticMatch(step) {
   };
 
   btnNext.onclick = () => {
+    if (showingTitleScreen) {
+      showingTitleScreen = false;
+      renderTrial();
+      return;
+    }
+
     if (selectedIndex === null) return;
 
     hideInstructionAudio();
 
     const currentTrial = trials[trialIndex];
-    panResponses[trialIndex] = buildSemanticPanResult(currentTrial, trialIndex, selectedIndex);
+    panResponses[trialIndex] = buildSemanticPanResult(currentTrial, trialIndex, selectedIndex, selectedRt);
     setPartData(partId, {
       semanticPanResponses: panResponses.filter(Boolean)
     });
@@ -847,7 +966,11 @@ function runSemanticMatch(step) {
     renderTrial();
   };
 
-  renderTrial();
+  if (showingTitleScreen) {
+    renderTitleScreen();
+  } else {
+    renderTrial();
+  }
 }
 
 const SEMANTIC_PAN_ITEMS = [
@@ -875,12 +998,15 @@ function getPanCategory(meta, selectedIndex) {
   return "distractor no relacionado";
 }
 
-function buildSemanticPanResult(trial, trialIndex, selectedIndex) {
+function buildSemanticPanResult(trial, trialIndex, selectedIndex, rt) {
   const meta = SEMANTIC_PAN_ITEMS[trialIndex] || {};
   const category = getPanCategory(meta, selectedIndex);
 
   return {
     numero_item: meta.item ?? trial?.id ?? trialIndex + 1,
+    respuesta_correcta: optionLetter(meta.correct),
+    respuesta_participante: optionLetter(selectedIndex),
+    RT: Number.isFinite(rt) ? rt : "",
     target_mostrado: meta.target || trial?.center || "",
     opcion_seleccionada: optionLetter(selectedIndex),
     imagen_seleccionada: trial?.options?.[selectedIndex] || "",
@@ -1037,6 +1163,11 @@ const ORAL_PARAGRAPHS_QUESTIONS = {
 //test 3 Revisar
 
 function runVerbalFluency(step) {
+  if (!resume) {
+    clearPartProgress(partId);
+    clearPartData(partId);
+  }
+
   showLayout("fluency");
 
   const centerText = document.getElementById("t3CenterText");
@@ -1045,17 +1176,23 @@ function runVerbalFluency(step) {
   const audioEl = document.getElementById("t3AudioEl");
   const recRow = document.getElementById("t3RecRow");
   const recordingIcon = document.getElementById("t3Recording");
+  const cameraWrap = document.getElementById("t3CameraWrap");
+  const cameraPreview = document.getElementById("t3CameraPreview");
+  const cameraSetupTitle = document.getElementById("t3CameraSetupTitle");
+  const thanksText = document.getElementById("t3ThanksText");
 
   const stopBtn = document.getElementById("t3Stop");
 
   const recorder = new WavRecorder();
+  const videoRecorder = new VideoRecorder();
   let prepared = false;
+  let cameraPrepared = false;
   let isCapturing = false;
-  let timer = null;
   let promptLeadTimer = null;
   let nextRedTimer = null;
   let minuteElapsed = false;
   let promptFinished = false;
+  let isExporting = false;
 
   const duration = step.recordDurationMs || 60000;
   const captureDurationMs = duration + 3000;
@@ -1063,12 +1200,14 @@ function runVerbalFluency(step) {
   let beepConnected = false;
 
   const screens = [
+    { type: "camera", topBar: "Encuadre" },
     { type: "instruction", audio: step.instr1Audio, topBar: "Instrucción" },
     { type: "practice", text: "Ropa", audio: step.ropaAudio, topBar: "P 1/2" },
     { type: "test", text: "Animales", audio: step.animalesAudio, topBar: "E 1/2" },
     { type: "instruction", audio: step.instr2Audio, topBar: "Instrucción" },
     { type: "practice", text: "b__________", audio: step.letraBAudio, topBar: "P 2/2" },
-    { type: "test", text: "s______", audio: step.letraSAudio, topBar: "E 2/2" }
+    { type: "test", text: "s______", audio: step.letraSAudio, topBar: "E 2/2" },
+    { type: "thanks", topBar: "Fin" }
   ];
 
   let index = 0;
@@ -1080,10 +1219,10 @@ function runVerbalFluency(step) {
   centerText.style.lineHeight = "1";
 
   topAudio.style.position = "fixed";
-  topAudio.style.left = "14px";
-  topAudio.style.bottom = "95px";
-  topAudio.style.top = "auto";
-  topAudio.style.right = "auto";
+  topAudio.style.left = "auto";
+  topAudio.style.bottom = "auto";
+  topAudio.style.top = "14px";
+  topAudio.style.right = "14px";
   topAudio.style.width = "56px";
   topAudio.style.height = "56px";
   topAudio.style.zIndex = "80";
@@ -1100,6 +1239,20 @@ function runVerbalFluency(step) {
         console.warn("No se pudo conectar beep.wav a la grabacion:", e);
       }
     }
+  }
+
+  async function ensureCameraPrepared() {
+    if (cameraPrepared) return;
+    await videoRecorder.startStream(cameraPreview);
+    cameraPrepared = true;
+  }
+
+  function showCameraError(err) {
+    console.error("Error al acceder a la cámara:", err);
+    const message = err?.name === "NotAllowedError"
+      ? "El navegador bloqueó el permiso de la cámara. Debes permitirlo para continuar."
+      : "No se pudo acceder a la cámara. Verifica que esté conectada y disponible.";
+    alert(message);
   }
 
   function showMicError(err) {
@@ -1156,16 +1309,13 @@ function runVerbalFluency(step) {
     clearTimeout(nextRedTimer);
     await ensurePrepared();
     recorder.beginCapture();
+    if (cameraPrepared) {
+      await videoRecorder.startRecording();
+    }
     isCapturing = true;
     minuteElapsed = false;
     nextRedTimer = setTimeout(() => {
       markNextButtonAsReady();
-    }, captureDurationMs);
-
-    timer = setTimeout(async () => {
-      markNextButtonAsReady();
-      await stopAndSave();
-      setStoppedState();
     }, captureDurationMs);
   }
 
@@ -1173,30 +1323,47 @@ function runVerbalFluency(step) {
     if (!isCapturing) return;
     isCapturing = false;
 
-    clearTimeout(timer);
     clearTimeout(promptLeadTimer);
     clearTimeout(nextRedTimer);
 
-    const blob = await recorder.stop();
-    if (blob) {
-      const screen = screens[index] || {};
-      if (screen.type !== "test") {
-        return;
-      }
+    const audioBlob = await recorder.stop();
+    const videoBlob = videoRecorder.recording
+      ? await videoRecorder.stopRecording()
+      : null;
+    const screen = screens[index] || {};
+    if (screen.type !== "test") return;
 
+    const data = getPartData(partId);
+    const verbalFluencyAudios = data.verbalFluencyAudios || {};
+    const verbalFluencyVideos = data.verbalFluencyVideos || {};
+
+    if (audioBlob) {
       const key = `part03_screen${index + 1}.wav`;
-      await saveAudioBlob(key, blob);
-
-      const data = getPartData(partId);
-      const verbalFluencyAudios = data.verbalFluencyAudios || {};
+      await saveAudioBlob(key, audioBlob);
       verbalFluencyAudios[String(index)] = {
         key,
         screenIndex: index,
         label: screen.text || screen.topBar || `pantalla_${index + 1}`,
         type: screen.type || "",
       };
-      setPartData(partId, { verbalFluencyAudios });
     }
+
+    if (videoBlob) {
+      const key = `part03_screen${index + 1}.webm`;
+      await saveBlob(key, videoBlob);
+      verbalFluencyVideos[String(index)] = {
+        key,
+        screenIndex: index,
+        label: screen.text || screen.topBar || `pantalla_${index + 1}`,
+        type: screen.type || "",
+      };
+    }
+
+    setPartData(partId, {
+      ...data,
+      verbalFluencyAudios,
+      verbalFluencyVideos
+    });
   }
 
   function stopPromptAudio() {
@@ -1250,7 +1417,7 @@ function runVerbalFluency(step) {
     promptFinished = false;
     resetNextButtonState();
     recRow.style.display = "flex";
-    stopBtn.style.display = "block";
+    stopBtn.style.display = "none";
     if (recordingIcon) {
       recordingIcon.style.display = "none";
       recordingIcon.src = "grabando.png";
@@ -1264,7 +1431,7 @@ function runVerbalFluency(step) {
       recordingIcon.style.display = "block";
       recordingIcon.src = "grabando.png";
     }
-    stopBtn.style.display = "block";
+    stopBtn.style.display = "none";
   }
 
   function setStoppedState() {
@@ -1306,9 +1473,16 @@ function runVerbalFluency(step) {
   async function render() {
     const s = screens[index];
 
+    topAudio.style.width = s.type === "instruction" ? "90px" : "56px";
+    topAudio.style.height = s.type === "instruction" ? "90px" : "56px";
+
+    document.getElementById("layoutFluency").classList.remove("fluency-camera-setup");
     centerText.style.display = "none";
     centerAudio.style.display = "none";
     topAudio.style.display = "none";
+    cameraSetupTitle.style.display = "none";
+    thanksText.style.display = "none";
+    cameraWrap.style.display = "none";
     recRow.style.display = "none";
     if (recordingIcon) recordingIcon.style.display = "none";
     stopPromptAudio();
@@ -1317,9 +1491,31 @@ function runVerbalFluency(step) {
     resetNextButtonState();
     updateTopBar(s.topBar || "");
 
+    if (s.type === "camera") {
+      document.getElementById("layoutFluency").classList.add("fluency-camera-setup");
+      cameraSetupTitle.style.display = "block";
+      cameraWrap.style.display = "flex";
+      try {
+        await ensureCameraPrepared();
+      } catch (err) {
+        showCameraError(err);
+      }
+      return;
+    }
+
+    if (s.type === "thanks") {
+      thanksText.style.display = "block";
+      btnFullscreen.style.display = "none";
+      return;
+    }
+
+    if (cameraPrepared) {
+      cameraWrap.style.display = "flex";
+    }
+
     if (s.type === "instruction") {
-      centerAudio.style.display = "block";
-      centerAudio.onclick = () => {
+      topAudio.style.display = s.audio ? "block" : "none";
+      topAudio.onclick = () => {
         if (!s.audio) return;
         audioEl.src = s.audio;
         audioEl.currentTime = 0;
@@ -1354,10 +1550,7 @@ function runVerbalFluency(step) {
       topAudio.style.display = "block";
       topAudio.onclick = async () => {
         if (!s.audio) return;
-
-        if (isCapturing) {
-          await stopAndSave();
-        }
+        if (isCapturing) return;
 
         stopPromptAudio();
         setPromptState();
@@ -1381,6 +1574,20 @@ function runVerbalFluency(step) {
   };
 
   btnNext.onclick = async () => {
+    if (screens[index]?.type === "thanks") {
+      if (isExporting) return;
+      isExporting = true;
+      if (prepared) await recorder.close();
+      videoRecorder.stopStream();
+      cameraPrepared = false;
+      const exported = await exportVerbalFluencyAudioZip();
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      }
+      finishCurrentPart();
+      return;
+    }
+
     stopPromptAudio();
     clearTimeout(nextRedTimer);
     if (isCapturing) {
@@ -1392,17 +1599,15 @@ function runVerbalFluency(step) {
 
     index++;
     if (index >= screens.length) {
-      await recorder.close();
-      await exportVerbalFluencyAudioZip();
-      setTimeout(() => {
-        finishCurrentPart();
-      }, ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      finishCurrentPart();
       return;
     }
-    render();
+    await render();
   };
 
-  render();
+  render().catch((err) => {
+    console.error("Error al iniciar Fluidez verbal:", err);
+  });
 }
 
 //Memoria a corto plazo
@@ -1503,6 +1708,7 @@ function runMCQ4ImageTrials(step) {
   // Progreso
   const saved = getPartProgress(partId);
   let trialIndex = 1; // 1..total
+  let showingTitleScreen = !(resume && saved?.status === "in_progress");
 
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.trialIndex)) {
     trialIndex = Math.min(Math.max(saved.trialIndex, 1), total);
@@ -1601,7 +1807,7 @@ function runMCQ4ImageTrials(step) {
 
     // PRUEBA
     if (trialIndex === practiceIndex) {
-      setupInstructionAudio(step.instructionAudio);
+      setupInstructionAudio(step.instructionAudio, false, "top-right");
 
       btnAudio.style.display = "block";
       instructionAudio.src = step.instructionAudio || "";
@@ -1621,6 +1827,8 @@ function runMCQ4ImageTrials(step) {
   }
 
   function renderTrial() {
+    document.body.classList.remove("centeredInstruction");
+    showLayout("semantic");
     clearSelection();
     updateTopBar();
     updateAudioButton();
@@ -1634,6 +1842,30 @@ function runMCQ4ImageTrials(step) {
     selectionRT = "";
 
     setPartProgress(partId, { trialIndex });
+  }
+
+  function renderTitleScreen() {
+    setupInstructionAudio(null);
+    hidePatientAudio();
+    showLayout("instruction");
+    document.body.classList.add("centeredInstruction");
+
+    const title = document.getElementById("instructionTitle");
+    const body = document.getElementById("instructionBody");
+    if (title) {
+      title.textContent = "Memoria a corto plazo";
+      title.style.left = "50%";
+      title.style.right = "auto";
+      title.style.top = "50%";
+      title.style.transform = "translate(-50%, -50%)";
+      title.style.width = "90vw";
+      title.style.fontSize = "52px";
+      title.style.textAlign = "center";
+    }
+    if (body) body.textContent = "";
+
+    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Instrucciones`;
+    btnNext.style.display = "block";
   }
 
   optBoxes.forEach(box => {
@@ -1668,6 +1900,12 @@ function runMCQ4ImageTrials(step) {
   });
 
   btnNext.onclick = () => {
+    if (showingTitleScreen) {
+      showingTitleScreen = false;
+      renderTrial();
+      return;
+    }
+
     if (requireSel && selectedIndex === null) return;
 
     const data = getPartData(partId);
@@ -1704,7 +1942,11 @@ function runMCQ4ImageTrials(step) {
     renderTrial();
   };
 
-  renderTrial();
+  if (showingTitleScreen) {
+    renderTitleScreen();
+  } else {
+    renderTrial();
+  }
 }
 
 // PANTOMIMA
@@ -2113,6 +2355,7 @@ function runCalcMCQ(step) {
 
   let trialIndex = 0;
   const saved = getPartProgress(partId);
+  let showingInstructionScreen = !(resume && saved?.status === "in_progress");
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.trialIndex)) {
     trialIndex = Math.min(Math.max(saved.trialIndex, 0), trials.length - 1);
   }
@@ -2130,13 +2373,13 @@ function runCalcMCQ(step) {
 
     btnAudio.style.display = "block";
     btnAudio.style.position = "fixed";
-    btnAudio.style.left = "14px";
-    btnAudio.style.bottom = "84px";
-    btnAudio.style.top = "auto";
-    btnAudio.style.right = "auto";
+    btnAudio.style.left = "auto";
+    btnAudio.style.bottom = "auto";
+    btnAudio.style.top = "14px";
+    btnAudio.style.right = "14px";
     btnAudio.style.zIndex = "9999";
-    btnAudio.style.width = "56px";
-    btnAudio.style.height = "56px";
+    btnAudio.style.width = "90px";
+    btnAudio.style.height = "90px";
 
     btnAudio.onclick = () => {
       instructionAudio.currentTime = 0;
@@ -2175,6 +2418,13 @@ function runCalcMCQ(step) {
   }
 
   function renderTrial() {
+    document.body.classList.remove("centeredInstruction");
+    showLayout("calc");
+    if (btnAudio) btnAudio.style.display = "none";
+    if (instructionAudio) {
+      instructionAudio.pause();
+      instructionAudio.currentTime = 0;
+    }
     clearMarks();
     const t = trials[trialIndex];
     if (promptImg) {
@@ -2207,6 +2457,32 @@ function runCalcMCQ(step) {
     setPartProgress(partId, { trialIndex });
   }
 
+  function renderInstructionScreen() {
+    showLayout("instruction");
+    document.body.classList.add("centeredInstruction");
+
+    const title = document.getElementById("instructionTitle");
+    const body = document.getElementById("instructionBody");
+    if (title) title.textContent = "";
+    if (body) {
+      body.textContent = "¿Puede decirme o señalarme el resultado de estas sumas, por favor?";
+      body.style.left = "50%";
+      body.style.right = "auto";
+      body.style.top = "50%";
+      body.style.transform = "translate(-50%, -50%)";
+      body.style.width = "82vw";
+      body.style.fontSize = "38px";
+      body.style.lineHeight = "1.45";
+      body.style.textAlign = "center";
+    }
+
+    topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Instrucciones`;
+    btnNext.style.display = "block";
+    if (btnAudio && step.instructionAudio) {
+      btnAudio.style.display = "block";
+    }
+  }
+
   optBoxes.forEach(box => {
     box.onclick = () => {
       const idx = Number(box.dataset.opt);
@@ -2224,6 +2500,12 @@ function runCalcMCQ(step) {
   });
 
   btnNext.onclick = () => {
+    if (showingInstructionScreen) {
+      showingInstructionScreen = false;
+      renderTrial();
+      return;
+    }
+
     if (selectedIndex === null) return;
 
     const currentTrial = trials[trialIndex];
@@ -2259,7 +2541,11 @@ function runCalcMCQ(step) {
     renderTrial();
   };
 
-  renderTrial();
+  if (showingInstructionScreen) {
+    renderInstructionScreen();
+  } else {
+    renderTrial();
+  }
 }
 
 // 7.- Comprensión oral de palabras aisladas
@@ -2284,10 +2570,10 @@ function runAudioMCQ4Trials(step) {
   ];
 
   const compactOptionPositions = [
-    { left: "38%", top: "36%" },
-    { left: "62%", top: "36%" },
-    { left: "38%", top: "66%" },
-    { left: "62%", top: "66%" },
+    { left: "27%", top: "28%" },
+    { left: "73%", top: "28%" },
+    { left: "27%", top: "72%" },
+    { left: "73%", top: "72%" },
   ];
 
   optBoxes.forEach((box, boxIndex) => {
@@ -2296,9 +2582,9 @@ function runAudioMCQ4Trials(step) {
     box.style.right = "auto";
     box.style.bottom = "auto";
     box.style.transform = "translate(-50%, -50%)";
-    box.style.width = "min(32vw, 380px)";
-    box.style.height = "min(29vh, 300px)";
-    box.style.padding = "10px";
+    box.style.width = "min(43vw, 520px)";
+    box.style.height = "min(39vh, 370px)";
+    box.style.padding = "6px";
   });
 
   optImgs.forEach((imgEl) => {
@@ -2320,15 +2606,14 @@ function runAudioMCQ4Trials(step) {
   const totalTestTrials = Math.max(lastTrial - 1, 0); // 2..16 => 15
 
   // screenIndex:
-  // 0 = instrucción
   // 1 = práctica (t=1)
-  // 2..16 = ensayos (t=2..16)  -> en general, screenIndex == t
-  const totalScreens = 1 + (lastTrial - firstTrial + 1); // 1 + 16 = 17
+  // 2..16 = ensayos (t=2..16) -> en general, screenIndex == t
+  const totalScreens = lastTrial + 1; // límite exclusivo al avanzar
 
   const saved = getPartProgress(partId);
-  let screenIndex = 0;
+  let screenIndex = firstTrial;
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
-    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+    screenIndex = Math.min(Math.max(saved.screenIndex, firstTrial), totalScreens - 1);
   }
 
   setPartProgress(partId, {
@@ -2345,6 +2630,11 @@ function runAudioMCQ4Trials(step) {
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
 
   let selectedIndex = null;
+  let trialStartTime = 0;
+  let selectionRT = "";
+  let audioPlayCount = 0;
+  let repeatedAudio = false;
+  let correctedAnswer = false;
 
   function fileFor(t, o) {
     const mappedFile = step.imageFiles?.[t]?.[o - 1];
@@ -2365,6 +2655,19 @@ function runAudioMCQ4Trials(step) {
     return p.replace("{t}", String(audioNum));
   }
 
+  function setupTrackedAudio(buttonEl, audioEl, audioPath, options = {}) {
+    setupAudio(buttonEl, audioEl, audioPath, options);
+
+    if (!buttonEl || !audioPath || typeof buttonEl.onclick !== "function") return;
+
+    const playAudio = buttonEl.onclick;
+    buttonEl.onclick = async (event) => {
+      audioPlayCount++;
+      if (audioPlayCount >= 2) repeatedAudio = true;
+      return playAudio.call(buttonEl, event);
+    };
+  }
+
   function clearSelection() {
     optBoxes.forEach(b => b.classList.remove("selected"));
     selectedIndex = null;
@@ -2373,11 +2676,6 @@ function runAudioMCQ4Trials(step) {
 
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
-
-    if (screenIndex === 0) {
-      topBar.textContent = `${partLabel} · Instrucción`;
-      return;
-    }
 
     if (screenIndex === 1) {
       topBar.textContent = `${partLabel} · P 1/1`;
@@ -2397,25 +2695,6 @@ function runAudioMCQ4Trials(step) {
     btnAudioCenter.style.display = "none";
     btnAudio2.style.display = "none";
 
-    if (screenIndex === 0) {
-      // Pantalla instrucción: solo audio centrado
-      clearSelection();
-      optBoxes.forEach(b => (b.style.display = "none")); // ocultar opciones
-
-      // audio centrado (forzar ícono visible aunque aún no exista el mp3)
-      setupAudio(btnAudioCenter, instructionAudio, step.instructionAudio, { forceShow: true });
-
-      // ocultar solo los otros botones, sin tocar instructionAudio
-      btnAudio.style.display = "none";
-      btnAudio.onclick = null;
-
-      setupAudio(btnAudio2, instructionAudio2, null);
-
-      // flecha para pasar a práctica
-      btnNext.style.display = "block";
-      return;
-    }
-
     // Pantallas con 4 imágenes (práctica y ensayos)
     optBoxes.forEach(b => (b.style.display = "block"));
     clearSelection();
@@ -2425,12 +2704,17 @@ function runAudioMCQ4Trials(step) {
     for (let o = 1; o <= 4; o++) {
       optImgs[o - 1].src = fileFor(t, o);
     }
+    trialStartTime = performance.now();
+    selectionRT = "";
+    audioPlayCount = 0;
+    repeatedAudio = false;
+    correctedAnswer = false;
 
     // Audio arriba derecha:
     if (t === practiceT) {
       // práctica: 2 iconos
-      setupAudio(btnAudio, instructionAudio, step.practiceAudio1, { forceShow: true });
-      setupAudio(btnAudio2, instructionAudio2, step.practiceAudio2, { forceShow: true });
+      setupTrackedAudio(btnAudio, instructionAudio, step.practiceAudio1, { forceShow: true });
+      setupTrackedAudio(btnAudio2, instructionAudio2, step.practiceAudio2, { forceShow: true });
     } else {
       const ensayoAudio = trialAudioFor(t);
 
@@ -2439,7 +2723,7 @@ function runAudioMCQ4Trials(step) {
       instructionAudio.src = ensayoAudio;
       instructionAudio.load();
 
-      setupAudio(btnAudio, instructionAudio, ensayoAudio, { forceShow: true });
+      setupTrackedAudio(btnAudio, instructionAudio, ensayoAudio, { forceShow: true });
       setupAudio(btnAudio2, instructionAudio2, null);
     }
   }
@@ -2447,9 +2731,14 @@ function runAudioMCQ4Trials(step) {
   // elegir opción
   optBoxes.forEach(box => {
     box.onclick = () => {
-      if (screenIndex === 0) return;
       const idx = Number(box.dataset.opt);
+      if (selectedIndex !== null && selectedIndex !== idx) {
+        correctedAnswer = true;
+      }
       selectedIndex = idx;
+      if (selectionRT === "" && trialStartTime) {
+        selectionRT = Math.round(performance.now() - trialStartTime);
+      }
 
       optBoxes.forEach(b => b.classList.remove("selected"));
       box.classList.add("selected");
@@ -2460,33 +2749,37 @@ function runAudioMCQ4Trials(step) {
 
   // flecha avanza
   btnNext.onclick = async () => {
-    // si estamos en práctica/ensayo, exigir selección
-    if (screenIndex !== 0 && requireSel && selectedIndex === null) return;
+    if (requireSel && selectedIndex === null) return;
 
     // guardar selección para el ZIP (item, opción elegida e imagen elegida)
-    if (screenIndex !== 0) {
-      const data = getPartData(partId);
-      const responses = data.responses || {};
-      const t = screenIndex; // 1 = práctica, 2..16 = ensayos
-      const selectedFile = (selectedIndex !== null)
-        ? (step.imageFiles?.[t]?.[selectedIndex] || "")
-        : "";
-      responses[String(screenIndex)] = {
-        selected: selectedIndex,                 // 0..3
-        item: t === practiceT ? "Ej." : t - 1,   // ensayo 1..15
-        selectedFile
-      };
-      setPartData(partId, { responses });
-    }
+    const data = getPartData(partId);
+    const responses = data.responses || {};
+    const t = screenIndex; // 1 = práctica, 2..16 = ensayos
+    const selectedFile = (selectedIndex !== null)
+      ? (step.imageFiles?.[t]?.[selectedIndex] || "")
+      : "";
+    const correctIndex = Number(step.correctIndexes?.[t]);
+    const isCorrect = selectedIndex === correctIndex;
+    const responseModes = [];
+    if (Number(selectionRT) >= 6000) responseModes.push("D");
+    if (repeatedAudio) responseModes.push("R");
+    if (correctedAnswer) responseModes.push("Acc");
+    responses[String(screenIndex)] = {
+      selected: selectedIndex,                 // 0..3
+      item: t === practiceT ? "Ej." : t - 1,   // ensayo 1..15
+      selectedFile,
+      correctIndex,
+      correctLetter: optionLetter(correctIndex),
+      selectedLetter: optionLetter(selectedIndex),
+      RT: selectionRT,
+      responseMode: responseModes.join("+"),
+      score: t === practiceT ? 0 : (isCorrect ? 1 : 0)
+    };
+    setPartData(partId, { responses });
 
     screenIndex++;
     if (screenIndex >= totalScreens) {
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
-      // Parte 7 no tiene pantalla de selección de mano: exportamos al cerrar.
-      const exported = await exportComprehensionSpokenWordsZip();
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
       finishCurrentPart();
       return;
     }
@@ -2520,17 +2813,30 @@ function runAudioMCQ4WordsOnScreen(step) {
     document.getElementById("img3"),
   ];
 
-  optBoxes.forEach((box) => {
-    box.style.width = "360px";
-    box.style.height = "280px";
-    box.style.padding = "12px";
+  const part8OptionPositions = [
+    { left: "25%", top: "27%" },
+    { left: "75%", top: "27%" },
+    { left: "25%", top: "70%" },
+    { left: "75%", top: "70%" },
+  ];
+
+  optBoxes.forEach((box, boxIndex) => {
+    box.style.left = part8OptionPositions[boxIndex].left;
+    box.style.top = part8OptionPositions[boxIndex].top;
+    box.style.right = "auto";
+    box.style.bottom = "auto";
+    box.style.transform = "translate(-50%, -50%)";
+    box.style.width = "min(34vw, 360px)";
+    box.style.height = "min(25vh, 240px)";
+    box.style.padding = "8px";
   });
   function applyPart8ImageStyle(imgEl, selected = false) {
     if (!imgEl) return;
-    imgEl.style.maxWidth = "400px";
-    imgEl.style.maxHeight = "300px";
-    imgEl.style.width = "130%";
-    imgEl.style.height = "130%";
+    imgEl.style.maxWidth = "100%";
+    imgEl.style.maxHeight = "100%";
+    imgEl.style.width = "100%";
+    imgEl.style.height = "100%";
+    imgEl.style.objectFit = "contain";
     imgEl.style.filter = "none";
     imgEl.style.border = "2px solid black";
     imgEl.style.boxShadow = selected
@@ -2555,12 +2861,12 @@ function runAudioMCQ4WordsOnScreen(step) {
   // screenIndex:
   // 0 = instrucción
   // 1..16 = trials
-  const totalScreens = 1 + (lastTrial - firstTrial + 1); // 17
+  const totalScreens = lastTrial + 1;
 
   const saved = getPartProgress(partId);
-  let screenIndex = 0;
+  let screenIndex = firstTrial;
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
-    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+    screenIndex = Math.min(Math.max(saved.screenIndex, firstTrial), totalScreens - 1);
   }
 
   setPartProgress(partId, { status: "in_progress", stepIndex: 0, totalSteps: 1, screenIndex, totalScreens });
@@ -2571,6 +2877,9 @@ function runAudioMCQ4WordsOnScreen(step) {
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
 
   let selectedIndex = null;
+  let trialStartTime = 0;
+  let selectionRT = "";
+  let correctedAnswer = false;
 
   function fileFor(t, o) {
     const mappedFile = WRITTEN_PHONOLOGICAL_IMAGE_OPTIONS[t]?.[o - 1];
@@ -2587,15 +2896,24 @@ function runAudioMCQ4WordsOnScreen(step) {
     const selectedImage = optImgs[currentSelectedIndex]?.getAttribute("src") || "";
     const selectedWord = wordFromSelectedImage(selectedImage);
     const selectedCategory = writtenPhonologicalCategory(meta, selectedWord);
-    const responseMode = "D";
+    const correctIndex = Array.from({ length: 4 }, (_, index) => index)
+      .find((index) => {
+        const imagePath = fileFor(t, index + 1);
+        return writtenPhonologicalCategory(meta, wordFromSelectedImage(imagePath)) === "correcta";
+      });
+    const responseModes = [];
+    if (Number(selectionRT) >= 6000) responseModes.push("D");
+    if (correctedAnswer) responseModes.push("Acc");
 
     return {
       itemNumber: meta.itemNumber,
       targetWord: meta.targetWord,
       selectedImage,
       selectedOption: optionLetter(currentSelectedIndex),
+      correctOption: optionLetter(correctIndex),
       selectedCategory,
-      responseMode,
+      RT: selectionRT,
+      responseMode: responseModes.join("+"),
       assignedScore: selectedCategory === "correcta" ? 2 : 0,
       phonologicalDistinctiveFeatures: selectedCategory === "distractor fonológico" ? meta.features : "",
       phonologicalPosition: selectedCategory === "distractor fonológico" ? meta.position : "",
@@ -2623,10 +2941,10 @@ function runAudioMCQ4WordsOnScreen(step) {
   function positionCornerAudio() {
     if (!btnAudio) return;
     btnAudio.style.position = "fixed";
-    btnAudio.style.left = "14px";
-    btnAudio.style.bottom = "84px";
-    btnAudio.style.top = "auto";
-    btnAudio.style.right = "auto";
+    btnAudio.style.left = "auto";
+    btnAudio.style.bottom = "auto";
+    btnAudio.style.top = "14px";
+    btnAudio.style.right = "14px";
     btnAudio.style.width = "56px";
     btnAudio.style.height = "56px";
     btnAudio.style.transform = "none";
@@ -2663,8 +2981,9 @@ function runAudioMCQ4WordsOnScreen(step) {
       optBoxes.forEach(b => (b.style.display = "none"));
       centerWord.style.display = "none";
 
-      setupAudio(btnAudioCenter, instructionAudio, step.instructionAudio, { forceShow: true });
       setupInstructionAudio(null);
+      setupAudio(btnAudio, instructionAudio, step.instructionAudio, { forceShow: true });
+      positionCornerAudio();
       btnNext.style.display = "block";
       return;
     }
@@ -2681,6 +3000,9 @@ function runAudioMCQ4WordsOnScreen(step) {
       optImgs[o - 1].src = fileFor(t, o);
       applyPart8ImageStyle(optImgs[o - 1], false);
     }
+    trialStartTime = performance.now();
+    selectionRT = "";
+    correctedAnswer = false;
 
     mountAudioForTrial(t);
   }
@@ -2690,7 +3012,13 @@ function runAudioMCQ4WordsOnScreen(step) {
     box.onclick = () => {
       if (screenIndex === 0) return;
       const idx = Number(box.dataset.opt);
+      if (selectedIndex !== null && selectedIndex !== idx) {
+        correctedAnswer = true;
+      }
       selectedIndex = idx;
+      if (selectionRT === "" && trialStartTime) {
+        selectionRT = Math.round(performance.now() - trialStartTime);
+      }
 
       optBoxes.forEach((b, imgIndex) => {
         b.classList.remove("selected");
@@ -2776,10 +3104,10 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
   ];
 
   const part9OptionPositions = [
-    { left: "33%", top: "28%" },
-    { left: "67%", top: "28%" },
-    { left: "33%", top: "72%" },
-    { left: "67%", top: "72%" },
+    { left: "25%", top: "27%" },
+    { left: "75%", top: "27%" },
+    { left: "25%", top: "70%" },
+    { left: "75%", top: "70%" },
   ];
 
   optBoxes.forEach((box, boxIndex) => {
@@ -2788,16 +3116,16 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     box.style.right = "auto";
     box.style.bottom = "auto";
     box.style.transform = "translate(-50%, -50%)";
-    box.style.width = "400px";
-    box.style.height = "330px";
+    box.style.width = "min(40vw, 400px)";
+    box.style.height = "min(32vh, 300px)";
     box.style.padding = "0";
     box.style.border = "none";
     box.style.background = "transparent";
     box.style.boxShadow = "none";
   });
   optImgs.forEach((imgEl) => {
-    imgEl.style.maxWidth = "400px";
-    imgEl.style.maxHeight = "310px";
+    imgEl.style.maxWidth = "100%";
+    imgEl.style.maxHeight = "100%";
     imgEl.style.width = "100%";
     imgEl.style.height = "100%";
     imgEl.style.border = "none";
@@ -2835,6 +3163,11 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
 
   let selectedIndex = null;
+  let trialStartTime = 0;
+  let selectionRT = "";
+  let audioPlayCount = 0;
+  let repeatedAudio = false;
+  let correctedAnswer = false;
 
   function ensurePart9VoiceLabel(id, imageSrc, title) {
     let label = document.getElementById(id);
@@ -2850,8 +3183,8 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       label.style.position = "absolute";
       label.style.left = "50%";
       label.style.top = "calc(50% + 82px)";
-      label.style.width = "54px";
-      label.style.height = "54px";
+      label.style.width = "90px";
+      label.style.height = "90px";
       label.style.border = "none";
       label.style.borderRadius = "0";
       label.style.background = `transparent url("${imageSrc}") center / contain no-repeat`;
@@ -2883,7 +3216,10 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
 
     const selectedLetter = optionLetter(currentSelectedIndex);
     const isCorrect = currentSelectedIndex === meta.correctIndex;
-    const responseMode = "D";
+    const responseModes = [];
+    if (Number(selectionRT) >= 6000) responseModes.push("D");
+    if (repeatedAudio) responseModes.push("R");
+    if (correctedAnswer) responseModes.push("Acc");
 
     return {
       itemNumber: meta.itemNumber,
@@ -2895,14 +3231,15 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       selectedSentence: isCorrect ? meta.correctSentence : "",
       correctSentence: meta.correctSentence,
       isCorrect,
-      responseMode,
+      RT: selectionRT,
+      responseMode: responseModes.join("+"),
       assignedScore: meta.itemNumber === "Ej." ? 0 : (isCorrect ? 2 : 0),
       usedHand: getPartData(partId).usedHand || ""
     };
   }
 
   function stopAllAudios() {
-    const audios = [instructionAudio];
+    const audios = [instructionAudio, instructionAudio2];
 
     audios.forEach(audio => {
       if (!audio) return;
@@ -2948,7 +3285,11 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     }
 
     buttonEl.style.display = forceShow ? "block" : "";
-    buttonEl.onclick = () => playExclusive(audioEl, src);
+    buttonEl.onclick = () => {
+      audioPlayCount++;
+      if (audioPlayCount >= 2) repeatedAudio = true;
+      playExclusive(audioEl, src);
+    };
   }
 
   function clearSelection() {
@@ -2966,17 +3307,17 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     btnNext.style.display = requireSel ? "none" : "block";
   }
 
-  function positionCornerAudio() {
-    if (!btnAudio) return;
-    btnAudio.style.position = "fixed";
-    btnAudio.style.left = "14px";
-    btnAudio.style.bottom = "84px";
-    btnAudio.style.top = "auto";
-    btnAudio.style.right = "auto";
-    btnAudio.style.width = "56px";
-    btnAudio.style.height = "56px";
-    btnAudio.style.transform = "none";
-    btnAudio.style.zIndex = "9999";
+  function positionCornerAudio(buttonEl, top = 14) {
+    if (!buttonEl) return;
+    buttonEl.style.position = "fixed";
+    buttonEl.style.left = "auto";
+    buttonEl.style.bottom = "auto";
+    buttonEl.style.top = `${top}px`;
+    buttonEl.style.right = "14px";
+    buttonEl.style.width = "56px";
+    buttonEl.style.height = "56px";
+    buttonEl.style.transform = "none";
+    buttonEl.style.zIndex = "9999";
   }
 
   function updateTopBar() {
@@ -3001,6 +3342,10 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
 
     updateTopBar();
     setPartProgress(partId, { screenIndex });
+    audioPlayCount = 0;
+    repeatedAudio = false;
+    correctedAnswer = false;
+    selectionRT = "";
 
     document.body.classList.remove("twoCenterAudios");
     setPart9IntroVoiceLabelsVisible(false);
@@ -3034,7 +3379,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       setPart9IntroVoiceLabelsVisible(true);
 
       setupExclusiveAudio(btnAudioCenter, instructionAudio, step.introAudio1, { forceShow: true });
-      setupExclusiveAudio(btnAudioCenter2, instructionAudio, step.introAudio2, { forceShow: true });
+      setupExclusiveAudio(btnAudioCenter2, instructionAudio2, step.introAudio2, { forceShow: true });
 
       btnNext.style.display = "block";
       return;
@@ -3050,11 +3395,12 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       optImgs[o - 1].style.boxShadow = "none";
       optImgs[o - 1].style.borderRadius = "0";
     }
+    trialStartTime = performance.now();
 
     // screenIndex 1 = ejemplo => practiceAudio1 (audio3.wav)
     if (screenIndex === 1) {
       setupExclusiveAudio(btnAudio, instructionAudio, step.practiceAudio1, { forceShow: true });
-      positionCornerAudio();
+      positionCornerAudio(btnAudio);
       return;
     }
 
@@ -3066,7 +3412,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       : null;
 
     setupExclusiveAudio(btnAudio, instructionAudio, ensayoAudioSrc, { forceShow: true });
-    positionCornerAudio();
+    positionCornerAudio(btnAudio);
   }
 
   optBoxes.forEach(box => {
@@ -3074,7 +3420,13 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       if (screenIndex === 0) return;
 
       const idx = Number(box.dataset.opt);
+      if (selectedIndex !== null && selectedIndex !== idx) {
+        correctedAnswer = true;
+      }
       selectedIndex = idx;
+      if (selectionRT === "" && trialStartTime) {
+        selectionRT = Math.round(performance.now() - trialStartTime);
+      }
 
       optBoxes.forEach((b, imgIndex) => {
         b.classList.remove("selected");
@@ -3172,35 +3524,22 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
   centerWord.style.textAlign = "center";
   centerWord.style.zIndex = "60";
 
-  optBoxes[0].style.inset = "26% auto auto 34%";
-  optBoxes[0].style.left = "34%";
-  optBoxes[0].style.top = "26%";
-  optBoxes[0].style.right = "auto";
-  optBoxes[0].style.bottom = "auto";
-  optBoxes[0].style.transform = "translate(-50%, -50%)";
+  const part10OptionPositions = [
+    { left: "25%", top: "25%" },
+    { left: "75%", top: "25%" },
+    { left: "25%", top: "72%" },
+    { left: "75%", top: "72%" },
+  ];
 
-  optBoxes[1].style.inset = "26% auto auto 66%";
-  optBoxes[1].style.left = "66%";
-  optBoxes[1].style.top = "26%";
-  optBoxes[1].style.right = "auto";
-  optBoxes[1].style.bottom = "auto";
-  optBoxes[1].style.transform = "translate(-50%, -50%)";
-
-  optBoxes[2].style.left = "34%";
-  optBoxes[2].style.top = "74%";
-  optBoxes[2].style.right = "auto";
-  optBoxes[2].style.bottom = "auto";
-  optBoxes[2].style.transform = "translate(-50%, -50%)";
-
-  optBoxes[3].style.left = "66%";
-  optBoxes[3].style.top = "74%";
-  optBoxes[3].style.right = "auto";
-  optBoxes[3].style.bottom = "auto";
-  optBoxes[3].style.transform = "translate(-50%, -50%)";
-
-  optBoxes.forEach((box) => {
-    box.style.width = "400px";
-    box.style.height = "330px";
+  optBoxes.forEach((box, boxIndex) => {
+    box.style.inset = "";
+    box.style.left = part10OptionPositions[boxIndex].left;
+    box.style.top = part10OptionPositions[boxIndex].top;
+    box.style.right = "auto";
+    box.style.bottom = "auto";
+    box.style.transform = "translate(-50%, -50%)";
+    box.style.width = "min(40vw, 400px)";
+    box.style.height = "min(26vh, 260px)";
     box.style.padding = "0";
     box.style.border = "none";
     box.style.background = "transparent";
@@ -3208,8 +3547,8 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
   });
 
   optImgs.forEach((imgEl) => {
-    imgEl.style.maxWidth = "400px";
-    imgEl.style.maxHeight = "310px";
+    imgEl.style.maxWidth = "100%";
+    imgEl.style.maxHeight = "100%";
     imgEl.style.width = "100%";
     imgEl.style.height = "100%";
     imgEl.style.border = "none";
@@ -3248,6 +3587,9 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
 
   let selectedIndex = null;
+  let trialStartTime = 0;
+  let selectionRT = "";
+  let correctedAnswer = false;
 
   function ensurePart10PracticeVoiceIcon(id, imageSrc, title) {
     let icon = document.getElementById(id);
@@ -3259,15 +3601,15 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
       screenEl.appendChild(icon);
     }
     if (icon) {
-      icon.style.position = "absolute";
+      icon.style.position = "fixed";
       icon.style.top = "74px";
-      icon.style.width = "44px";
-      icon.style.height = "44px";
+      icon.style.width = "90px";
+      icon.style.height = "90px";
       icon.style.border = "none";
       icon.style.borderRadius = "0";
       icon.style.background = `transparent url("${imageSrc}") center / contain no-repeat`;
       icon.style.display = "none";
-      icon.style.zIndex = "72";
+      icon.style.zIndex = "10000";
       icon.style.pointerEvents = "none";
     }
     return icon;
@@ -3315,7 +3657,9 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
 
     const selectedLetter = optionLetter(currentSelectedIndex);
     const isCorrect = currentSelectedIndex === meta.correctIndex;
-    const responseMode = "D";
+    const responseModes = [];
+    if (Number(selectionRT) >= 6000) responseModes.push("D");
+    if (correctedAnswer) responseModes.push("Acc");
 
     return {
       itemNumber: meta.itemNumber,
@@ -3327,7 +3671,8 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
       selectedSentence: sentences[t - 1] || "",
       correctSentence: meta.correctSentence,
       isCorrect,
-      responseMode,
+      RT: selectionRT,
+      responseMode: responseModes.join("+"),
       assignedScore: meta.itemNumber === "Ej." ? 0 : (isCorrect ? 2 : 0),
       usedHand: getPartData(partId).usedHand || ""
     };
@@ -3427,6 +3772,8 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
     pauseAllAudios();
     hideAllAudioButtons();
     setPart10PracticeVoiceIconsVisible(false);
+    selectionRT = "";
+    correctedAnswer = false;
 
     if (screenIndex === 0) {
       // Instrucción
@@ -3459,6 +3806,7 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
       optImgs[o - 1].style.boxShadow = "none";
       optImgs[o - 1].style.borderRadius = "0";
     }
+    trialStartTime = performance.now();
 
     // t=1: ejemplo con 2 audios
     if (t === 1) {
@@ -3486,7 +3834,13 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
       if (screenIndex === 0) return;
 
       const idx = Number(box.dataset.opt);
+      if (selectedIndex !== null && selectedIndex !== idx) {
+        correctedAnswer = true;
+      }
       selectedIndex = idx;
+      if (selectionRT === "" && trialStartTime) {
+        selectionRT = Math.round(performance.now() - trialStartTime);
+      }
 
       optBoxes.forEach((b, imgIndex) => {
         b.classList.remove("selected");
@@ -3564,6 +3918,79 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
 // 11.- Comprensión oral de párrafos
 
 function runStoryYesNoFlow(step) {
+  const screenEl = document.getElementById("screen");
+  const paragraphAudioStack = document.getElementById("centerAudiosStack");
+  const paragraphVoiceIcons = [
+    ensureParagraphVoiceIcon("part11Female", "femenino.jpg", "Voz femenina", 2),
+    ensureParagraphVoiceIcon("part11Male", "masculino.jpg", "Voz masculina", 3)
+  ];
+
+  function ensureParagraphVoiceIcon(id, imageSrc, title, row) {
+    let icon = document.getElementById(id);
+    if (!icon && paragraphAudioStack) {
+      icon = document.createElement("div");
+      icon.id = id;
+      icon.title = title;
+      icon.setAttribute("aria-label", title);
+      paragraphAudioStack.appendChild(icon);
+    }
+    if (icon) {
+      icon.style.position = "static";
+      icon.style.width = "90px";
+      icon.style.height = "90px";
+      icon.style.background = `transparent url("${imageSrc}") center / contain no-repeat`;
+      icon.style.display = "none";
+      icon.style.zIndex = "10000";
+      icon.style.pointerEvents = "none";
+      icon.style.gridColumn = "2";
+      icon.style.gridRow = String(row);
+      icon.style.alignSelf = "center";
+      icon.style.justifySelf = "center";
+    }
+    return icon;
+  }
+
+  function setParagraphVoiceIconsVisible(visible) {
+    paragraphVoiceIcons.forEach((icon) => {
+      if (icon) icon.style.display = visible ? "block" : "none";
+    });
+  }
+
+  function setParagraphVoiceIconRows(rows) {
+    paragraphVoiceIcons.forEach((icon, index) => {
+      if (icon) icon.style.gridRow = String(rows[index]);
+    });
+  }
+
+  function positionParagraphAudioButtons(count, centered = false) {
+    if (paragraphAudioStack) {
+      paragraphAudioStack.style.position = "fixed";
+      paragraphAudioStack.style.top = centered ? "50%" : "14px";
+      paragraphAudioStack.style.right = centered ? "auto" : "18px";
+      paragraphAudioStack.style.left = centered ? "50%" : "auto";
+      paragraphAudioStack.style.transform = centered ? "translate(-50%, -50%)" : "none";
+      paragraphAudioStack.style.display = "grid";
+      paragraphAudioStack.style.gridTemplateColumns = "90px 90px";
+      paragraphAudioStack.style.gridTemplateRows = "repeat(3, 90px)";
+      paragraphAudioStack.style.columnGap = "8px";
+      paragraphAudioStack.style.rowGap = "8px";
+      paragraphAudioStack.style.alignItems = "center";
+    }
+
+    [cAudio1, cAudio2, cAudio3].forEach((button, index) => {
+      if (!button || index >= count) return;
+      button.style.position = "static";
+      button.style.width = "90px";
+      button.style.height = "90px";
+      button.style.transform = "none";
+      button.style.zIndex = "9999";
+      button.style.gridColumn = "1";
+      button.style.gridRow = String(index + 1);
+      button.style.alignSelf = "center";
+      button.style.justifySelf = "center";
+    });
+  }
+
   // ---------- helpers de audio ----------
   function stopAudioEl(audioEl) {
     if (!audioEl) return;
@@ -3722,6 +4149,7 @@ function runStoryYesNoFlow(step) {
 
     // ocultar audio superior derecho por defecto
     setupInstructionAudio(null);
+    setParagraphVoiceIconsVisible(false);
 
     const s = screens[screenIndex];
 
@@ -3730,7 +4158,11 @@ function runStoryYesNoFlow(step) {
       clearYesNo();
 
       // aquí se muestran los audios centrados
-      setupCenterAudios((s.centerAudios || []).filter(Boolean));
+      const centerAudios = (s.centerAudios || []).filter(Boolean);
+      setupCenterAudios(centerAudios);
+      positionParagraphAudioButtons(centerAudios.length, centerAudios.length === 3);
+      setParagraphVoiceIconRows(screenIndex === 0 ? [2, 3] : [1, 2]);
+      setParagraphVoiceIconsVisible(centerAudios.length === 3);
       return;
     }
 
@@ -3742,10 +4174,10 @@ function runStoryYesNoFlow(step) {
       setupAudio(btnAudio, instructionAudio, s.audio, { forceShow: true });
       if (btnAudio) {
         btnAudio.style.position = "fixed";
-        btnAudio.style.left = "14px";
-        btnAudio.style.bottom = "84px";
-        btnAudio.style.top = "auto";
-        btnAudio.style.right = "auto";
+        btnAudio.style.left = "auto";
+        btnAudio.style.bottom = "auto";
+        btnAudio.style.top = "14px";
+        btnAudio.style.right = "14px";
         btnAudio.style.width = "56px";
         btnAudio.style.height = "56px";
         btnAudio.style.transform = "none";
@@ -3822,14 +4254,17 @@ function runStoryYesNoFlow(step) {
 function runRepeatAudioRecord(step) {
   const hasIntro = Array.isArray(step.introAudios) && step.introAudios.length > 0;
   const noExample = step.noExample === true;
+  const hasCameraSetup = partId === 12 || partId === 13 || partId === 14 || partId === 15 || partId === 16;
+  const cameraOffset = hasCameraSetup ? 1 : 0;
+  const titleOffset = partId === 13 ? 1 : 0;
 
   const trialAudios = Array.isArray(step.trialAudios) ? step.trialAudios : [];
   const totalTrials = Number(step.totalTrials ?? trialAudios.length ?? 0);
 
-  const totalScreens = (hasIntro ? 1 : 0) + (noExample ? 0 : 1) + totalTrials;
+  const totalScreens = cameraOffset + titleOffset + (hasIntro ? 1 : 0) + (noExample ? 0 : 1) + totalTrials;
 
   if (!resume) {
-    setPartData(partId, { takes: {} });
+    setPartData(partId, { takes: {}, videos: {} });
   }
 
   const saved = getPartProgress(partId);
@@ -3859,11 +4294,14 @@ function runRepeatAudioRecord(step) {
   const stopBtn = document.getElementById("repeatStop");
   const promptAudio = document.getElementById("repeatPromptAudio");
   const screenEl = document.getElementById("screen");
+  const repeatCameraWrap = ensureRepeatCameraWrap();
+  const repeatCameraPreview = document.getElementById("repeatCameraPreview");
+  const repeatTaskTitle = ensureRepeatTaskTitle();
 
   const introA1 = step.introAudios?.[0] ?? null;
   const introA2 = step.introAudios?.[1] ?? null;
   const startBeep = (partId === 15 || partId === 16) ? new Audio("/tests/modulo2/assets/beep.wav") : null;
-  const repeatIntroGenderIcons = partId === 12
+  const repeatIntroGenderIcons = (partId === 12 || partId === 15 || partId === 16)
     ? [
       ensureRepeatIntroGenderIcon("repeatIntroFemale", "femenino.jpg", "Audio femenino"),
       ensureRepeatIntroGenderIcon("repeatIntroMale", "masculino.jpg", "Audio masculino")
@@ -3871,12 +4309,81 @@ function runRepeatAudioRecord(step) {
     : [];
 
   const recorder = new WavRecorder();
+  const videoRecorder = new VideoRecorder();
   let prepared = false;
+  let cameraPrepared = false;
   let isCapturing = false;
   let psRedTimer = null;
   let isClosing = false;
   let hasRecordedCurrentScreen = false;
   let captureLeadTimer = null;
+
+  function ensureRepeatCameraWrap() {
+    let wrap = document.getElementById("repeatCameraWrap");
+    if (!wrap && screenEl) {
+      wrap = document.createElement("div");
+      wrap.id = "repeatCameraWrap";
+      const video = document.createElement("video");
+      video.id = "repeatCameraPreview";
+      video.autoplay = true;
+      video.muted = true;
+      video.playsInline = true;
+      video.style.width = "100%";
+      video.style.height = "100%";
+      video.style.objectFit = "cover";
+      wrap.appendChild(video);
+      screenEl.appendChild(wrap);
+    }
+    if (wrap) {
+      wrap.style.display = "none";
+      wrap.style.overflow = "hidden";
+      wrap.style.background = "#000";
+      wrap.style.border = "2px solid #222";
+      wrap.style.borderRadius = "8px";
+      wrap.style.zIndex = "9000";
+    }
+    return wrap;
+  }
+
+  function ensureRepeatTaskTitle() {
+    let title = document.getElementById("repeatTaskTitle");
+    if (!title && screenEl) {
+      title = document.createElement("div");
+      title.id = "repeatTaskTitle";
+      screenEl.appendChild(title);
+    }
+    if (title) {
+      title.style.display = "none";
+      title.style.position = "fixed";
+      title.style.left = "50%";
+      title.style.top = "50%";
+      title.style.transform = "translate(-50%, -50%)";
+      title.style.width = "90vw";
+      title.style.textAlign = "center";
+      title.style.fontSize = "52px";
+      title.style.fontWeight = "700";
+      title.style.zIndex = "100";
+    }
+    return title;
+  }
+
+  function positionRepeatCamera(setupMode = false) {
+    if (!repeatCameraWrap) return;
+    repeatCameraWrap.style.display = "block";
+    repeatCameraWrap.style.position = "fixed";
+    repeatCameraWrap.style.width = setupMode ? "min(46vw, 520px)" : "120px";
+    repeatCameraWrap.style.height = setupMode ? "min(52vh, 390px)" : "90px";
+    repeatCameraWrap.style.top = setupMode ? "50%" : "110px";
+    repeatCameraWrap.style.left = setupMode ? "50%" : "auto";
+    repeatCameraWrap.style.right = setupMode ? "auto" : "14px";
+    repeatCameraWrap.style.transform = setupMode ? "translate(-50%, -50%)" : "none";
+  }
+
+  async function ensureCameraPrepared() {
+    if (cameraPrepared || !hasCameraSetup) return;
+    await videoRecorder.startStream(repeatCameraPreview);
+    cameraPrepared = true;
+  }
 
   function ensureRepeatIntroGenderIcon(id, imageSrc, title) {
     let icon = document.getElementById(id);
@@ -3890,8 +4397,8 @@ function runRepeatAudioRecord(step) {
     if (icon) {
       icon.style.position = "absolute";
       icon.style.left = "50%";
-      icon.style.width = "54px";
-      icon.style.height = "54px";
+      icon.style.width = "90px";
+      icon.style.height = "90px";
       icon.style.border = "none";
       icon.style.borderRadius = "0";
       icon.style.background = `transparent url("${imageSrc}") center / contain no-repeat`;
@@ -3906,7 +4413,7 @@ function runRepeatAudioRecord(step) {
     repeatIntroGenderIcons.forEach((icon, index) => {
       if (!icon) return;
       icon.style.display = visible ? "block" : "none";
-      icon.style.top = index === 0 ? "calc(50% - 58px)" : "calc(50% + 82px)";
+      icon.style.top = index === 0 ? "calc(50% - 120px)" : "calc(50% + 20px)";
       icon.style.transform = "translate(76px, 0)";
     });
   }
@@ -3954,7 +4461,7 @@ function runRepeatAudioRecord(step) {
   }
 
   function audioForCurrentScreen() {
-    const introOffset = hasIntro ? 1 : 0;
+    const introOffset = cameraOffset + titleOffset + (hasIntro ? 1 : 0);
 
     if (!noExample) {
       const exampleScreen = introOffset;
@@ -3986,7 +4493,7 @@ function runRepeatAudioRecord(step) {
   }
 
   function labelForCurrentScreen() {
-    const introOffset = hasIntro ? 1 : 0;
+    const introOffset = cameraOffset + titleOffset + (hasIntro ? 1 : 0);
 
     if (!noExample && screenIndex === introOffset) {
       return "ejemplo";
@@ -4001,6 +4508,15 @@ function runRepeatAudioRecord(step) {
     return `pantalla_${String(screenIndex + 1).padStart(2, "0")}`;
   }
 
+  function exportOrdinalForCurrentScreen() {
+    const introOffset = cameraOffset + titleOffset + (hasIntro ? 1 : 0);
+    if (!noExample && screenIndex === introOffset) return 1;
+
+    const trialsStart = introOffset + (noExample ? 0 : 1);
+    const trialNumber = (screenIndex - trialsStart) + 1;
+    return noExample ? trialNumber : trialNumber + 1;
+  }
+
   function takeNumberForCurrentScreen() {
     const data = getPartData(partId);
     const takes = Object.values(data.takes || {});
@@ -4010,12 +4526,22 @@ function runRepeatAudioRecord(step) {
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
 
-    if (hasIntro && screenIndex === 0) {
+    if (cameraOffset && screenIndex === 0) {
+      topBar.textContent = "";
+      return;
+    }
+
+    if (titleOffset && screenIndex === cameraOffset) {
       topBar.textContent = `${partLabel} · Instrucción`;
       return;
     }
 
-    const introOffset = hasIntro ? 1 : 0;
+    if (hasIntro && screenIndex === cameraOffset + titleOffset) {
+      topBar.textContent = `${partLabel} · Instrucción`;
+      return;
+    }
+
+    const introOffset = cameraOffset + titleOffset + (hasIntro ? 1 : 0);
 
     if (!noExample && screenIndex === introOffset) {
       topBar.textContent = `${partLabel} · Prueba`;
@@ -4031,8 +4557,8 @@ function runRepeatAudioRecord(step) {
     btnPlay.style.display = "block";
     recRow.style.display = "flex";
 
-    if (recIcon) recIcon.style.display = "block";
-    if (stopBtn) stopBtn.style.display = "block";
+    if (recIcon) recIcon.style.display = (partId === 12 || partId === 13 || partId === 14 || partId === 16) ? "none" : "block";
+    if (stopBtn) stopBtn.style.display = partId === 16 ? "none" : "block";
   }
 
   function hideRecUI() {
@@ -4046,12 +4572,22 @@ function runRepeatAudioRecord(step) {
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
 
-    if (hasIntro && screenIndex === 0) {
+    if (cameraOffset && screenIndex === 0) {
+      topBar.textContent = "";
+      return;
+    }
+
+    if (titleOffset && screenIndex === cameraOffset) {
       topBar.textContent = `${partLabel} · Instrucción`;
       return;
     }
 
-    const introOffset = hasIntro ? 1 : 0;
+    if (hasIntro && screenIndex === cameraOffset + titleOffset) {
+      topBar.textContent = `${partLabel} · Instrucción`;
+      return;
+    }
+
+    const introOffset = cameraOffset + titleOffset + (hasIntro ? 1 : 0);
 
     if (!noExample && screenIndex === introOffset) {
       topBar.textContent = `${partLabel} · P 1/1`;
@@ -4066,6 +4602,12 @@ function runRepeatAudioRecord(step) {
   async function ensurePrepared() {
     if (prepared) return;
     await recorder.prepare({ numChannels: 1 });
+    if ((partId === 12 || partId === 13 || partId === 14 || partId === 15 || partId === 16) && promptAudio) {
+      recorder.connectAudioElement(promptAudio);
+    }
+    if (partId === 15 && startBeep) {
+      recorder.connectAudioElement(startBeep);
+    }
     prepared = true;
   }
 
@@ -4097,7 +4639,11 @@ function runRepeatAudioRecord(step) {
     }
 
     await ensurePrepared();
+    await ensureCameraPrepared();
     recorder.beginCapture();
+    if (hasCameraSetup && cameraPrepared) {
+      await videoRecorder.startRecording();
+    }
     isCapturing = true;
     hasRecordedCurrentScreen = false;
 
@@ -4112,6 +4658,9 @@ function runRepeatAudioRecord(step) {
     if (!isCapturing) return false;
 
     const blob = await recorder.stop();
+    const videoBlob = (hasCameraSetup && videoRecorder.recording)
+      ? await videoRecorder.stopRecording()
+      : null;
     isCapturing = false;
     hideRecUI();
 
@@ -4122,16 +4671,31 @@ function runRepeatAudioRecord(step) {
 
       const data = getPartData(partId);
       const takes = data.takes || {};
+      const videos = data.videos || {};
       const takeId = `${screenIndex}_${takeNumber}`;
       const label = labelForCurrentScreen();
+      const exportOrdinal = exportOrdinalForCurrentScreen();
       takes[takeId] = {
         key,
         screenIndex,
+        exportOrdinal,
         label,
         takeNumber,
         isExample: label === "ejemplo"
       };
-      setPartData(partId, { takes });
+      if (videoBlob) {
+        const videoKey = key.replace(/\.wav$/i, ".webm");
+        await saveBlob(videoKey, videoBlob);
+        videos[takeId] = {
+          key: videoKey,
+          screenIndex,
+          exportOrdinal,
+          label,
+          takeNumber,
+          isExample: label === "ejemplo"
+        };
+      }
+      setPartData(partId, { takes, videos });
 
       hasRecordedCurrentScreen = true;
       console.log("Grabación guardada:", key);
@@ -4156,14 +4720,24 @@ function runRepeatAudioRecord(step) {
 
     stopAllAudios();
     clearPromptAudio();
+    btnPlay.style.display = "none";
+    recRow.style.display = "none";
+    btnNext.style.display = "none";
 
     if (isCapturing) {
       await stopAndSave();
     }
 
+    btnPlay.style.display = "none";
+    recRow.style.display = "none";
+    btnNext.style.display = "none";
+
     try {
       await recorder.close();
     } catch (_) { }
+    videoRecorder.stopStream();
+    cameraPrepared = false;
+    if (repeatCameraWrap) repeatCameraWrap.style.display = "none";
 
     setPartProgress(partId, {
       status: "done",
@@ -4223,22 +4797,57 @@ function runRepeatAudioRecord(step) {
     document.body.classList.remove("twoCenterAudios");
     document.body.classList.remove("stackCenterAudios");
     setRepeatIntroGenderIconsVisible(false);
+    if (repeatCameraWrap) repeatCameraWrap.style.display = "none";
+    if (repeatTaskTitle) repeatTaskTitle.style.display = "none";
 
     isCapturing = false;
     hideRecUI();
     hasRecordedCurrentScreen = false;
 
-    if (hasIntro && screenIndex === 0) {
+    if (cameraOffset && screenIndex === 0) {
+      btnPlay.style.display = "none";
+      recRow.style.display = "none";
+      positionRepeatCamera(true);
+      try {
+        await ensureCameraPrepared();
+      } catch (err) {
+        showMicError(err);
+      }
+      return;
+    }
+
+    if (cameraOffset) {
+      positionRepeatCamera(false);
+    }
+
+    if (titleOffset && screenIndex === cameraOffset) {
+      btnPlay.style.display = "none";
+      recRow.style.display = "none";
+      if (repeatTaskTitle) {
+        repeatTaskTitle.textContent = "Repetición de palabras complejas";
+        repeatTaskTitle.style.display = "block";
+      }
+      return;
+    }
+
+    if (hasIntro && screenIndex === cameraOffset + titleOffset) {
       btnPlay.style.display = "none";
       recRow.style.display = "none";
 
       if (Array.isArray(step.introAudios) && step.introAudios.length === 2) {
         document.body.classList.add("stackCenterAudios");
-        setRepeatIntroGenderIconsVisible(partId === 12);
+        setRepeatIntroGenderIconsVisible(partId === 12 || partId === 15 || partId === 16);
       }
 
       setupAudio(btnAudioCenter, instructionAudio, introA1, { forceShow: true });
       setupAudio(btnAudioCenter2, instructionAudioCenter2, introA2, { forceShow: true });
+      if (partId === 12 || partId === 15 || partId === 16) {
+        [btnAudioCenter, btnAudioCenter2].forEach((button) => {
+          if (!button) return;
+          button.style.width = "90px";
+          button.style.height = "90px";
+        });
+      }
       return;
     }
 
@@ -4271,20 +4880,25 @@ function runRepeatAudioRecord(step) {
         clearPromptAudio();
 
         promptAudio.onended = async () => {
-          if (isCapturing) {
-            showRecUI();
-          } else {
-            console.log("audio terminado -> startCapture()");
-            if (startBeep) {
-              try {
-                startBeep.currentTime = 0;
-                await startBeep.play();
-              } catch (e) {
-                console.warn("No se pudo reproducir beep.wav", e);
-              }
+          if (startBeep) {
+            try {
+              startBeep.currentTime = 0;
+              await new Promise((resolve) => {
+                startBeep.onended = resolve;
+                startBeep.onerror = resolve;
+                const playPromise = startBeep.play();
+                if (playPromise?.catch) playPromise.catch(resolve);
+              });
+            } catch (e) {
+              console.warn("No se pudo reproducir beep.wav", e);
             }
-            await startCapture(true);
           }
+
+          if (!isCapturing) {
+            console.log("audio y alarma terminados -> startCapture()");
+            await startCapture(false);
+          }
+          showRecUI();
         };
 
         promptAudio.onerror = () => {
@@ -4324,6 +4938,9 @@ function runRepeatAudioRecord(step) {
         promptAudio.load();
         promptAudio.currentTime = 0;
         scheduleEarlyCapture();
+        if (partId !== 16) {
+          await startCapture(false);
+        }
         await promptAudio.play();
         console.log("audio reproduciéndose...");
       } catch (err) {
@@ -4339,6 +4956,8 @@ function runRepeatAudioRecord(step) {
   btnNext.onclick = async () => {
     stopAllAudios();
     clearPromptAudio();
+    btnPlay.style.display = "none";
+    recRow.style.display = "none";
 
     // si está grabando, detener, guardar y avanzar inmediatamente
     if (isCapturing) {
@@ -4349,6 +4968,9 @@ function runRepeatAudioRecord(step) {
     }
 
     if (screenIndex >= totalScreens) {
+      btnPlay.style.display = "none";
+      recRow.style.display = "none";
+      btnNext.style.display = "none";
       await finishAndClose();
       return;
     }
@@ -4391,6 +5013,7 @@ function runImageInstrAutoRecord(step) {
 
   const recIcon = document.getElementById("t17Recording");
   const stopBtn = document.getElementById("t17Stop");
+  const screenEl = document.getElementById("screen");
 
   // config
   const basePath = step.basePath || "assets/parte17";
@@ -4406,9 +5029,13 @@ function runImageInstrAutoRecord(step) {
   // progreso reanudar
   const saved = getPartProgress(partId);
   let n = first;
+  let cameraSetupScreen = true;
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.itemIndex)) {
     n = Math.min(Math.max(saved.itemIndex, first), last);
+    cameraSetupScreen = false;
   }
+
+  if (!resume) setPartData(partId, { takes: {}, videos: {} });
 
   setPartProgress(partId, {
     status: "in_progress",
@@ -4426,9 +5053,47 @@ function runImageInstrAutoRecord(step) {
 
   // WAV recorder
   const recorder = new WavRecorder();
+  const videoRecorder = new VideoRecorder();
   let prepared = false;
+  let cameraPrepared = false;
   let isCapturing = false;
   let psRedTimer = null;
+
+  const cameraWrap = document.createElement("div");
+  cameraWrap.id = "t17CameraWrap";
+  const cameraPreview = document.createElement("video");
+  cameraPreview.autoplay = true;
+  cameraPreview.muted = true;
+  cameraPreview.playsInline = true;
+  cameraPreview.style.cssText = "width:100%;height:100%;object-fit:cover";
+  cameraWrap.appendChild(cameraPreview);
+  screenEl.appendChild(cameraWrap);
+
+  function positionCamera(setupMode) {
+    cameraWrap.style.cssText = [
+      "display:block", "position:fixed", "overflow:hidden", "background:#000",
+      "border:2px solid #222", "border-radius:8px", "z-index:9000",
+      `width:${setupMode ? "min(46vw, 520px)" : "120px"}`,
+      `height:${setupMode ? "min(52vh, 390px)" : "90px"}`,
+      `top:${setupMode ? "50%" : "280px"}`,
+      `left:${setupMode ? "50%" : "auto"}`,
+      `right:${setupMode ? "auto" : "14px"}`,
+      `transform:${setupMode ? "translate(-50%, -50%)" : "none"}`
+    ].join(";");
+  }
+
+  function positionCameraBelowCues() {
+    const cuesBottom = document.getElementById("t17InstrCol")?.getBoundingClientRect().bottom;
+    if (Number.isFinite(cuesBottom)) {
+      cameraWrap.style.top = `${Math.ceil(cuesBottom + 12)}px`;
+    }
+  }
+
+  async function ensureCameraPrepared() {
+    if (cameraPrepared) return;
+    await videoRecorder.startStream(cameraPreview);
+    cameraPrepared = true;
+  }
 
   async function ensurePrepared() {
     if (prepared) return;
@@ -4663,11 +5328,14 @@ function runImageInstrAutoRecord(step) {
   }
 
   async function startCapture() {
+    if (isCapturing) return;
     await connectObjectCueAudiosToRecorder();
+    await ensureCameraPrepared();
     recorder.beginCapture();
+    await videoRecorder.startRecording();
     isCapturing = true;
-    if (recIcon) recIcon.style.display = "block";
-    if (stopBtn) stopBtn.style.display = "block";
+    if (recIcon) recIcon.style.display = "none";
+    if (stopBtn) stopBtn.style.display = "none";
   }
 
   async function stopAndSave() {
@@ -4677,20 +5345,34 @@ function runImageInstrAutoRecord(step) {
     if (recIcon) recIcon.style.display = "none";
     if (stopBtn) stopBtn.style.display = "none";
 
+    const currentN = n;
     const blob = await recorder.stop();
+    const videoBlob = videoRecorder.recording ? await videoRecorder.stopRecording() : null;
     if (blob) {
-      const key = wavKey(n);
+      const key = wavKey(currentN);
       await saveAudioBlob(key, blob);
 
       const data = getPartData(partId);
       const takes = data.takes || {};
-      takes[String(n)] = {
+      const videos = data.videos || {};
+      takes[String(currentN)] = {
         key,
-        image: imageFile(n),
-        screenIndex: n - 1,
-        label: n === 1 ? "ejemplo" : `ensayo_${String(n - 1).padStart(2, "0")}`
+        image: imageFile(currentN),
+        screenIndex: currentN - 1,
+        exportOrdinal: currentN,
+        label: currentN === 1 ? "ejemplo" : `ensayo_${String(currentN - 1).padStart(2, "0")}`
       };
-      setPartData(partId, { takes });
+      if (videoBlob) {
+        const videoKey = key.replace(/\.wav$/i, ".webm");
+        await saveBlob(videoKey, videoBlob);
+        videos[String(currentN)] = {
+          key: videoKey,
+          screenIndex: currentN - 1,
+          exportOrdinal: currentN,
+          label: takes[String(currentN)].label
+        };
+      }
+      setPartData(partId, { takes, videos });
     }
   }
 
@@ -4722,19 +5404,32 @@ function runImageInstrAutoRecord(step) {
     if (recIcon) recIcon.style.display = "none";
     if (stopBtn) stopBtn.style.display = "none";
 
+    if (cameraSetupScreen) {
+      topBar.textContent = "";
+      imgEl.style.display = "none";
+      [boxI, boxP, boxPS, boxPF].forEach((box) => setBoxVisibility(box, false));
+      positionCamera(true);
+      await Promise.all([ensureCameraPrepared(), ensurePrepared()]);
+      return;
+    }
+
+    positionCamera(false);
     updateTopBar();
-    imgEl.src = imageFile(n);
+    imgEl.style.display = "block";
+    await new Promise((resolve, reject) => {
+      imgEl.onload = resolve;
+      imgEl.onerror = () => reject(new Error(`No se pudo cargar la imagen: ${imageFile(n)}`));
+      imgEl.src = imageFile(n);
+    });
 
     mountInstr(n);
     reorderInstructionBoxes(n);
+    positionCameraBelowCues();
     schedulePsRedState();
 
     setPartProgress(partId, { itemIndex: n });
 
-    const hasScreenAudio = [audioI, audioP, audioPS, audioPF].some((audioEl) => !!audioEl?.src);
-    if (!hasScreenAudio) {
-      await startCapture();
-    }
+    await startCapture();
   }
 
   stopBtn.onclick = async () => {
@@ -4742,8 +5437,15 @@ function runImageInstrAutoRecord(step) {
   };
 
   btnNext.onclick = async () => {
+    if (cameraSetupScreen) {
+      cameraSetupScreen = false;
+      await render();
+      return;
+    }
+
     pauseAllInstructionAudios();
     resetPsVisualState();
+    imgEl.style.display = "none";
 
     if (isCapturing) {
       await stopAndSave();
@@ -4752,6 +5454,8 @@ function runImageInstrAutoRecord(step) {
     n++;
 
     if (n > last) {
+      btnNext.style.display = "none";
+      [boxI, boxP, boxPS, boxPF].forEach((box) => setBoxVisibility(box, false));
       pauseAllInstructionAudios();
       resetPsVisualState();
 
@@ -4761,6 +5465,9 @@ function runImageInstrAutoRecord(step) {
       });
 
       await recorder.close();
+      videoRecorder.stopStream();
+      cameraPrepared = false;
+      cameraWrap.remove();
 
       clearPartProgress(partId);
       const exported = await exportRepeatAudioZip("", 17, 35, "Denominacion_de_objetos");
@@ -4792,6 +5499,7 @@ function runImageAutoRecordSimple(step) {
   const audioEl = document.getElementById("t18AudioEl");
   const recIcon = document.getElementById("t18Recording");
   const stopBtn = document.getElementById("t18Stop");
+  const screenEl = document.getElementById("screen");
 
   const basePath = step.basePath;
   const first = Number(step.firstImage);
@@ -4802,10 +5510,14 @@ function runImageAutoRecordSimple(step) {
 
   const saved = getPartProgress(partId);
   let n = first;
+  let cameraSetupScreen = true;
 
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.itemIndex)) {
     n = Math.min(Math.max(saved.itemIndex, first), last);
+    cameraSetupScreen = false;
   }
+
+  if (!resume) setPartData(partId, { takes: {}, videos: {} });
 
   setPartProgress(partId, {
     status: "in_progress",
@@ -4821,9 +5533,40 @@ function runImageAutoRecordSimple(step) {
   btnNext.style.display = "block";
 
   const recorder = new WavRecorder();
+  const videoRecorder = new VideoRecorder();
   let prepared = false;
+  let cameraPrepared = false;
   let isCapturing = false;
   let isTransitioning = false;
+
+  const cameraWrap = document.createElement("div");
+  cameraWrap.id = "t18CameraWrap";
+  const cameraPreview = document.createElement("video");
+  cameraPreview.autoplay = true;
+  cameraPreview.muted = true;
+  cameraPreview.playsInline = true;
+  cameraPreview.style.cssText = "width:100%;height:100%;object-fit:cover";
+  cameraWrap.appendChild(cameraPreview);
+  screenEl.appendChild(cameraWrap);
+
+  function positionCamera(setupMode) {
+    cameraWrap.style.cssText = [
+      "display:block", "position:fixed", "overflow:hidden", "background:#000",
+      "border:2px solid #222", "border-radius:8px", "z-index:9000",
+      `width:${setupMode ? "min(46vw, 520px)" : "120px"}`,
+      `height:${setupMode ? "min(52vh, 390px)" : "90px"}`,
+      `top:${setupMode ? "50%" : "110px"}`,
+      `left:${setupMode ? "50%" : "auto"}`,
+      `right:${setupMode ? "auto" : "14px"}`,
+      `transform:${setupMode ? "translate(-50%, -50%)" : "none"}`
+    ].join(";");
+  }
+
+  async function ensureCameraPrepared() {
+    if (cameraPrepared) return;
+    await videoRecorder.startStream(cameraPreview);
+    cameraPrepared = true;
+  }
 
   function setRecordingUI() {
     if (recIcon) recIcon.style.display = "block";
@@ -4879,9 +5622,11 @@ function runImageAutoRecordSimple(step) {
   async function startCapture() {
     if (isCapturing) return;
     await connectSimpleInstructionAudioToRecorder();
+    await ensureCameraPrepared();
     recorder.beginCapture();
+    await videoRecorder.startRecording();
     isCapturing = true;
-    setRecordingUI();
+    setStoppedUI();
   }
 
   async function stopAndSave() {
@@ -4892,19 +5637,32 @@ function runImageAutoRecordSimple(step) {
     const currentN = n;
 
     const blob = await recorder.stop();
+    const videoBlob = videoRecorder.recording ? await videoRecorder.stopRecording() : null;
     if (blob) {
       const key = wavKey(currentN);
       await saveAudioBlob(key, blob);
 
       const data = getPartData(partId);
       const takes = data.takes || {};
+      const videos = data.videos || {};
       takes[String(currentN)] = {
         key,
         image: imageFile(currentN),
         screenIndex: currentN - first,
+        exportOrdinal: (currentN - first) + 1,
         label: currentN === first ? "ejemplo" : `ensayo_${String(currentN - first).padStart(2, "0")}`
       };
-      setPartData(partId, { takes });
+      if (videoBlob) {
+        const videoKey = key.replace(/\.wav$/i, ".webm");
+        await saveBlob(videoKey, videoBlob);
+        videos[String(currentN)] = {
+          key: videoKey,
+          screenIndex: currentN - first,
+          exportOrdinal: (currentN - first) + 1,
+          label: takes[String(currentN)].label
+        };
+      }
+      setPartData(partId, { takes, videos });
     }
   }
 
@@ -4914,6 +5672,17 @@ function runImageAutoRecordSimple(step) {
   }
 
   async function render() {
+    if (cameraSetupScreen) {
+      topBar.textContent = "";
+      imgEl.style.display = "none";
+      audioIcon.style.display = "none";
+      setStoppedUI();
+      positionCamera(true);
+      await Promise.all([ensureCameraPrepared(), ensurePrepared()]);
+      return;
+    }
+
+    positionCamera(false);
     updateTopBar();
 
     stopInstructionAudio();
@@ -4943,11 +5712,7 @@ function runImageAutoRecordSimple(step) {
 
     setPartProgress(partId, { itemIndex: n });
 
-    if (!(n === first && step.instructionAudio) && step.autoStartRecording) {
-      await startCapture();
-    } else {
-      setStoppedUI();
-    }
+    await startCapture();
   }
 
   stopBtn.onclick = async () => {
@@ -4959,13 +5724,25 @@ function runImageAutoRecordSimple(step) {
     isTransitioning = true;
 
     try {
+      if (cameraSetupScreen) {
+        cameraSetupScreen = false;
+        await render();
+        return;
+      }
+
       stopInstructionAudio();
+      imgEl.style.display = "none";
+      audioIcon.style.display = "none";
       await stopAndSave();
 
       n++;
       if (n > last) {
+        btnNext.style.display = "none";
         setPartProgress(partId, { status: "done", itemIndex: last });
         await recorder.close();
+        videoRecorder.stopStream();
+        cameraPrepared = false;
+        cameraWrap.remove();
         const exported = await exportRepeatAudioZip("", 18, 36, "Denominacion_de_acciones");
         if (exported) {
           await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
@@ -5224,6 +6001,203 @@ async function runAudioRecordImage(step) {
   });
 }
 
+async function runOralImageDescription(step) {
+  showLayout("audio_record");
+
+  const arImageWrap = document.getElementById("arImageWrap");
+  const arImage = document.getElementById("arImage");
+  const arWordWrap = document.getElementById("arWordWrap");
+  const btnRec = document.getElementById("btnRec");
+  const btnStop = document.getElementById("btnStop");
+  const btnRecording = document.getElementById("btnRecording");
+  const screenEl = document.getElementById("screen");
+
+  btnFullscreen.style.display = "block";
+  btnFullscreen.onclick = () => toggleFullscreen();
+  btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
+  btnNext.style.display = "block";
+  [btnRec, btnStop, btnRecording].forEach((control) => {
+    if (control) control.style.display = "none";
+  });
+
+  if (!resume) setPartData(partId, { takes: {}, videos: {} });
+
+  const recorder = new WavRecorder();
+  const videoRecorder = new VideoRecorder();
+  let screenIndex = 0;
+  let isRecording = false;
+  let isTransitioning = false;
+  let captureTimer = null;
+
+  const saved = getPartProgress(partId);
+  if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
+    screenIndex = Math.min(Math.max(saved.screenIndex, 0), 2);
+  }
+
+  const cameraWrap = document.createElement("div");
+  cameraWrap.id = "oralDescriptionCameraWrap";
+  cameraWrap.style.cssText = "display:block;position:fixed;width:120px;height:90px;top:110px;right:14px;overflow:hidden;background:#000;border:2px solid #222;border-radius:8px;z-index:9000";
+  const cameraPreview = document.createElement("video");
+  cameraPreview.autoplay = true;
+  cameraPreview.muted = true;
+  cameraPreview.playsInline = true;
+  cameraPreview.style.cssText = "width:100%;height:100%;object-fit:cover";
+  cameraWrap.appendChild(cameraPreview);
+  screenEl.appendChild(cameraWrap);
+
+  const finishMessage = document.createElement("div");
+  finishMessage.id = "oralDescriptionFinish";
+  finishMessage.textContent = "¡Ha completado esta tarea con éxito!\n¡Muchas gracias!";
+  finishMessage.style.cssText = "display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:90vw;text-align:center;white-space:pre-line;font-size:48px;font-weight:700;line-height:1.35";
+  screenEl.appendChild(finishMessage);
+
+  function stopInstruction() {
+    clearTimeout(captureTimer);
+    captureTimer = null;
+    instructionAudio.ontimeupdate = null;
+    try {
+      instructionAudio.pause();
+      instructionAudio.currentTime = 0;
+    } catch (_) { }
+  }
+
+  async function ensurePrepared() {
+    if (!recorder.prepared) {
+      await recorder.prepare({ numChannels: 1 });
+      recorder.connectAudioElement(instructionAudio);
+    }
+    await videoRecorder.startStream(cameraPreview);
+  }
+
+  async function startCapture() {
+    if (isRecording) return;
+    await ensurePrepared();
+    recorder.beginCapture();
+    await videoRecorder.startRecording();
+    isRecording = true;
+  }
+
+  async function stopAndSave() {
+    if (!isRecording) return;
+    isRecording = false;
+    const audioBlob = await recorder.stop();
+    const videoBlob = videoRecorder.recording ? await videoRecorder.stopRecording() : null;
+    const audioKey = step.audioKey || `part${partId}_take1`;
+    const videoKey = `${audioKey}.webm`;
+
+    if (audioBlob) await saveAudioBlob(audioKey, audioBlob);
+    if (videoBlob) await saveBlob(videoKey, videoBlob);
+
+    const takes = audioBlob ? {
+      "0": { key: audioKey, screenIndex: 0, exportOrdinal: 1, label: "descripcion_oral_imagen" }
+    } : {};
+    const videos = videoBlob ? {
+      "0": { key: videoKey, screenIndex: 0, exportOrdinal: 1, label: "descripcion_oral_imagen" }
+    } : {};
+    setPartData(partId, { takes, videos });
+  }
+
+  function scheduleCaptureThreeSecondsBeforeEnd() {
+    clearTimeout(captureTimer);
+    captureTimer = null;
+    const duration = Number(instructionAudio.duration);
+    if (!Number.isFinite(duration) || duration <= 0) return;
+    captureTimer = setTimeout(() => {
+      startCapture().catch(console.error);
+    }, Math.max(0, (duration - 3) * 1000));
+  }
+
+  function configureInstructionAudio() {
+    btnAudio.style.display = "block";
+    btnAudio.style.position = "fixed";
+    btnAudio.style.left = "50%";
+    btnAudio.style.top = "50%";
+    btnAudio.style.right = "auto";
+    btnAudio.style.transform = "translate(-50%, -50%)";
+    btnAudio.style.width = "90px";
+    btnAudio.style.height = "90px";
+    instructionAudio.src = step.instructionAudio;
+    instructionAudio.load();
+    btnAudio.onclick = async () => {
+      stopInstruction();
+      instructionAudio.src = step.instructionAudio;
+      instructionAudio.load();
+      instructionAudio.onloadedmetadata = scheduleCaptureThreeSecondsBeforeEnd;
+      instructionAudio.ontimeupdate = () => {
+        const remaining = Number(instructionAudio.duration) - Number(instructionAudio.currentTime);
+        if (!isRecording && Number.isFinite(remaining) && remaining <= 3) {
+          clearTimeout(captureTimer);
+          startCapture().catch(console.error);
+        }
+      };
+      await instructionAudio.play();
+      scheduleCaptureThreeSecondsBeforeEnd();
+    };
+  }
+
+  async function render() {
+    arWordWrap.style.display = "none";
+    arImageWrap.style.display = "none";
+    arImage.style.display = "none";
+    finishMessage.style.display = "none";
+    btnAudio.style.display = "none";
+    btnAudio.onclick = null;
+    cameraWrap.style.display = screenIndex === 2 ? "none" : "block";
+
+    if (screenIndex === 0) {
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Instrucción`;
+      configureInstructionAudio();
+      await ensurePrepared();
+    } else if (screenIndex === 1) {
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · E 1/1`;
+      arImageWrap.style.display = "flex";
+      arImage.style.display = "block";
+      arImage.src = step.image;
+      if (!isRecording) await startCapture();
+    } else {
+      topBar.textContent = "";
+      finishMessage.style.display = "block";
+    }
+
+    setPartProgress(partId, { status: "in_progress", screenIndex, totalScreens: 3 });
+  }
+
+  btnNext.onclick = async () => {
+    if (isTransitioning) return;
+    isTransitioning = true;
+    try {
+      if (screenIndex === 0) {
+        stopInstruction();
+        screenIndex = 1;
+        await render();
+        return;
+      }
+
+      if (screenIndex === 1) {
+        arImageWrap.style.display = "none";
+        await stopAndSave();
+        screenIndex = 2;
+        await render();
+        return;
+      }
+
+      btnNext.style.display = "none";
+      setPartProgress(partId, { status: "done", screenIndex: 2 });
+      await recorder.close();
+      videoRecorder.stopStream();
+      cameraWrap.remove();
+      const exported = await exportRepeatAudioZip("", 19, 37, "Descripcion_oral_de_una_imagen");
+      if (exported) await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
+      clearPartData(partId);
+      finishCurrentPart();
+    } finally {
+      isTransitioning = false;
+    }
+  };
+
+  await render();
+}
+
 // 20 al 23 Lectura de palabras aisladas
 
 async function runAudioRecordWords(step) {
@@ -5236,6 +6210,9 @@ async function runAudioRecordWords(step) {
   const btnRec = document.getElementById("btnRec");
   const btnStop = document.getElementById("btnStop");
   const btnRecording = document.getElementById("btnRecording");
+  const screenEl = document.getElementById("screen");
+  const enhancedWordReading = partId >= 20 && partId <= 23;
+  const hasInstructionScreen = enhancedWordReading && !!step.instructionAudio;
 
   arImageWrap.style.display = "none";
   arWordWrap.style.display = "flex";
@@ -5260,8 +6237,10 @@ async function runAudioRecordWords(step) {
 
   const saved = getPartProgress(partId);
   let screenIndex = 0;
+  let instructionScreen = hasInstructionScreen;
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
     screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+    instructionScreen = false;
   }
 
   setPartProgress(partId, {
@@ -5272,11 +6251,36 @@ async function runAudioRecordWords(step) {
     totalScreens
   });
 
+  if (!resume && enhancedWordReading) setPartData(partId, { takes: {}, videos: {} });
   const partData = getPartData(partId);
   const takes = partData.takes || {};
+  const videos = partData.videos || {};
 
   const recorder = new WavRecorder();
+  const videoRecorder = new VideoRecorder();
+  const wordInstructionAudio = enhancedWordReading ? new Audio() : null;
   let isRecording = false;
+  let preparePromise = null;
+  let cameraReady = false;
+
+  const cameraWrap = document.createElement("div");
+  const cameraPreview = document.createElement("video");
+  const finishMessage = document.createElement("div");
+  if (enhancedWordReading) {
+    cameraWrap.id = "wordReadingCameraWrap";
+    cameraWrap.style.cssText = "display:block;position:fixed;width:120px;height:90px;top:110px;right:14px;overflow:hidden;background:#000;border:2px solid #222;border-radius:8px;z-index:9000";
+    cameraPreview.autoplay = true;
+    cameraPreview.muted = true;
+    cameraPreview.playsInline = true;
+    cameraPreview.style.cssText = "width:100%;height:100%;object-fit:cover";
+    cameraWrap.appendChild(cameraPreview);
+    screenEl.appendChild(cameraWrap);
+
+    finishMessage.id = "wordReadingFinish";
+    finishMessage.textContent = "";
+    finishMessage.style.cssText = "display:none;position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:90vw;text-align:center;white-space:pre-line;font-size:48px;font-weight:700;line-height:1.35";
+    screenEl.appendChild(finishMessage);
+  }
 
   function keyForScreen(i) {
     return `part${String(partId).padStart(2, "0")}_w${String(i + 1).padStart(3, "0")}`;
@@ -5302,6 +6306,11 @@ async function runAudioRecordWords(step) {
         if (typeof instructionAudio.load === "function") instructionAudio.load();
       }
 
+      if (wordInstructionAudio) {
+        wordInstructionAudio.pause();
+        wordInstructionAudio.currentTime = 0;
+      }
+
       if (typeof btnAudio !== "undefined" && btnAudio) {
         btnAudio.style.display = "none";
         btnAudio.onclick = null;
@@ -5314,7 +6323,7 @@ async function runAudioRecordWords(step) {
   function setupAudioForCurrentScreen() {
     stopInstructionAudioOnly();
 
-    if ((isExampleScreen() || (!hasExample && screenIndex === 0)) && step.instructionAudio) {
+    if (!enhancedWordReading && (isExampleScreen() || (!hasExample && screenIndex === 0)) && step.instructionAudio) {
       setupInstructionAudio(step.instructionAudio);
     } else {
       if (typeof btnAudio !== "undefined" && btnAudio) {
@@ -5337,8 +6346,8 @@ async function runAudioRecordWords(step) {
 
   function setRecordingUI() {
     btnRec.style.display = "none";
-    btnStop.style.display = "block";
-    btnRecording.style.display = "block";
+    btnStop.style.display = enhancedWordReading ? "none" : "block";
+    btnRecording.style.display = enhancedWordReading ? "none" : "block";
   }
 
   function setStoppedUI() {
@@ -5347,15 +6356,48 @@ async function runAudioRecordWords(step) {
   }
 
   async function ensurePrepared() {
+    if (recorder.prepared) return;
+    if (!preparePromise) {
+      preparePromise = recorder.prepare({ numChannels: 1 }).finally(() => {
+        preparePromise = null;
+      });
+    }
+    await preparePromise;
+    if (enhancedWordReading && wordInstructionAudio) {
+      recorder.connectAudioElement(wordInstructionAudio);
+    }
+    return;
     if (!recorder.prepared) {
       await recorder.prepare({ numChannels: 1 });
+      if (partId === 20 && wordInstructionAudio) recorder.connectAudioElement(wordInstructionAudio);
     }
+    // El WAV ya mantiene el micrófono abierto; pedirlo nuevamente para el
+    // video puede producir NotReadableError en algunos navegadores.
+    if (partId === 20) await videoRecorder.startStream(cameraPreview, { audio: false });
+  }
+
+  async function ensureWordCamera() {
+    if (!enhancedWordReading || cameraReady) return cameraReady;
+    try {
+      await videoRecorder.startStream(cameraPreview, { audio: false });
+      cameraReady = true;
+    } catch (err) {
+      console.error("No se pudo acceder a la cámara:", err);
+      cameraReady = false;
+    }
+    return cameraReady;
   }
 
   async function startRecAuto() {
     try {
+      if (isRecording) {
+        setRecordingUI();
+        return;
+      }
       await ensurePrepared();
+      await ensureWordCamera();
       recorder.beginCapture();
+      if (enhancedWordReading && cameraReady) await videoRecorder.startRecording();
       isRecording = true;
       setRecordingUI();
     } catch (err) {
@@ -5371,6 +6413,9 @@ async function runAudioRecordWords(step) {
     try {
       isRecording = false;
       const blob = await recorder.stop();
+      const videoBlob = enhancedWordReading && videoRecorder.recording
+        ? await videoRecorder.stopRecording()
+        : null;
 
       if (blob) {
         const currentWord = getCurrentWord();
@@ -5386,7 +6431,19 @@ async function runAudioRecordWords(step) {
           isExample: isExampleScreen()
         };
 
-        setPartData(partId, { takes });
+        if (videoBlob) {
+          const videoKey = `${key}.webm`;
+          await saveBlob(videoKey, videoBlob);
+          videos[String(screenIndex)] = {
+            key: videoKey,
+            screenIndex,
+            exportOrdinal: screenIndex + 1,
+            label: takes[String(screenIndex)].label,
+            isExample: isExampleScreen()
+          };
+        }
+
+        setPartData(partId, { takes, videos });
       }
 
       setStoppedUI();
@@ -5407,7 +6464,39 @@ async function runAudioRecordWords(step) {
   }
 
   async function renderScreen() {
+    if (instructionScreen) {
+      topBar.textContent = `Parte ${String(partId).padStart(2, "0")} · Instrucción`;
+      arWordWrap.style.display = "none";
+      finishMessage.style.display = "none";
+      btnAudio.style.display = "block";
+      btnAudio.style.position = "fixed";
+      btnAudio.style.left = "50%";
+      btnAudio.style.top = "50%";
+      btnAudio.style.right = "auto";
+      btnAudio.style.bottom = "auto";
+      btnAudio.style.transform = "translate(-50%, -50%)";
+      btnAudio.style.width = "90px";
+      btnAudio.style.height = "90px";
+      wordInstructionAudio.src = step.instructionAudio;
+      wordInstructionAudio.load();
+      btnAudio.onclick = async () => {
+        try {
+          wordInstructionAudio.pause();
+          wordInstructionAudio.currentTime = 0;
+          if (!isRecording) await startRecAuto();
+          await wordInstructionAudio.play();
+        } catch (err) {
+          console.error("No se pudo reproducir la instrucción:", err);
+        }
+      };
+      setIdleUI();
+      await ensureWordCamera();
+      setPartProgress(partId, { screenIndex, totalScreens, instructionScreen: true });
+      return;
+    }
+
     stopInstructionAudioOnly();
+    arWordWrap.style.display = "flex";
     updateTopBar();
     arWord.textContent = getCurrentWord();
 
@@ -5428,7 +6517,18 @@ async function runAudioRecordWords(step) {
   };
 
   btnNext.onclick = async () => {
+    if (instructionScreen) {
+      stopInstructionAudioOnly();
+      instructionScreen = false;
+      await renderScreen();
+      return;
+    }
+
     stopInstructionAudioOnly();
+
+    if (enhancedWordReading && screenIndex === totalScreens - 1) {
+      arWordWrap.style.display = "none";
+    }
 
     if (isRecording) {
       await stopRecAndSaveCurrent();
@@ -5437,6 +6537,13 @@ async function runAudioRecordWords(step) {
     screenIndex++;
 
     if (screenIndex >= totalScreens) {
+      arWordWrap.style.display = "none";
+      btnNext.style.display = "none";
+      if (enhancedWordReading) {
+        cameraWrap.style.display = "none";
+        finishMessage.style.display = "block";
+        topBar.textContent = "";
+      }
       setPartProgress(partId, {
         status: "done",
         screenIndex: totalScreens - 1
@@ -5448,6 +6555,10 @@ async function runAudioRecordWords(step) {
         await recorder.close();
       } catch (e) {
         console.warn("No se pudo cerrar recorder:", e);
+      }
+      if (enhancedWordReading) {
+        videoRecorder.stopStream();
+        cameraWrap.remove();
       }
 
       if (partId === 20) {
@@ -5499,6 +6610,10 @@ function runWritingCanvasFlow(step, config = {}) {
   const ctx = canvas.getContext("2d");
 
   const screens = config.screens || [{ label: "P 1/1", image: null, audio: null }];
+  if (!resume) {
+    const initialData = getPartData(partId);
+    setPartData(partId, { ...initialData, writingImages: {} });
+  }
   let screenIndex = 0;
   let drawing = false;
   let strokes = [];
@@ -5687,11 +6802,15 @@ function runWritingCanvasFlow(step, config = {}) {
 
   function saveCurrentCanvasImage() {
     const screen = screens[screenIndex] || {};
+    if (screen.save === false) return;
     const data = getPartData(partId);
     const writingImages = data.writingImages || {};
+    const exportIndex = Number.isFinite(Number(screen.exportIndex))
+      ? Number(screen.exportIndex)
+      : screenIndex;
 
-    writingImages[String(screenIndex)] = {
-      screenIndex,
+    writingImages[String(exportIndex)] = {
+      screenIndex: exportIndex,
       label: screen.label || `pantalla_${screenIndex + 1}`,
       dataUrl: canvas.toDataURL("image/png"),
       savedAt: new Date().toISOString()
@@ -5701,8 +6820,8 @@ function runWritingCanvasFlow(step, config = {}) {
       ...data,
       writingImages,
       screenIndex,
-      lastImage: writingImages[String(screenIndex)].dataUrl,
-      savedAt: writingImages[String(screenIndex)].savedAt
+      lastImage: writingImages[String(exportIndex)].dataUrl,
+      savedAt: writingImages[String(exportIndex)].savedAt
     });
   }
 
@@ -5759,7 +6878,25 @@ function runWritingCanvasFlow(step, config = {}) {
       totalScreens: screens.length
     });
 
-    setupInstructionAudio(screen.audio || null);
+    setupInstructionAudio(
+      screen.audio || null,
+      screen.audioCentered === true,
+      screen.audioPosition || "bottom-left"
+    );
+    setupAudio(btnAudio2, instructionAudio2, screen.secondaryAudio || null, {
+      forceShow: !!screen.secondaryAudio
+    });
+    if (screen.secondaryAudio && btnAudio2) {
+      btnAudio2.style.position = "fixed";
+      btnAudio2.style.top = "70px";
+      btnAudio2.style.right = "14px";
+      btnAudio2.style.left = "auto";
+      btnAudio2.style.bottom = "auto";
+      btnAudio2.style.transform = "none";
+      btnAudio2.style.width = "90px";
+      btnAudio2.style.height = "90px";
+      btnAudio2.style.zIndex = "100";
+    }
     await loadImage(screen.image || null);
     renderCanvas();
   }
@@ -5773,7 +6910,9 @@ function runWritingCanvasFlow(step, config = {}) {
     screenIndex++;
     if (screenIndex >= screens.length) {
       setPartProgress(partId, { status: "done", screenIndex: screens.length - 1 });
-      await exportCurrentWritingZip();
+      if (partId !== 24 && partId !== 25 && partId !== 26) {
+        await exportCurrentWritingZip();
+      }
       finishCurrentPart();
       return;
     }
@@ -5791,15 +6930,21 @@ function runCopyCanvas(step) {
       {
         label: "P 1/3",
         mode: "copy_prompt",
-        promptLines: ["Por favor, escriba su nombre"],
+        audio: "/tests/modulo2/assets/Audio/Test_24/Instruccion/audio1.wav",
+        audioPosition: "top-right",
+        promptLines: ["POR FAVOR, ESCRIBA SU NOMBRE"],
         writingLines: [0.48]
       },
       {
         label: "P 2/4",
         mode: "copy_prompt",
+        audio: "/tests/modulo2/assets/Audio/Test_24/Instruccion/audio2.wav",
+        audioPosition: "top-right",
         layout: "letter_columns",
         promptFont: "700 52px Arial, sans-serif",
-        letters: ["T", "C", "H", "A", "Y"],
+        letters: ["d", "e", "r", "b", "f", "g"],
+        letterLabels: ["Ejemplo"],
+        labelY: 0.14,
         letterY: 0.24,
         lineY: 0.43
       },
@@ -5808,9 +6953,7 @@ function runCopyCanvas(step) {
         mode: "copy_prompt",
         layout: "letter_columns",
         promptFont: "700 52px Arial, sans-serif",
-        letters: ["d", "e", "r", "b", "f", "g"],
-        letterLabels: ["Ejemplo"],
-        labelY: 0.14,
+        letters: ["T", "C", "H", "A", "Y"],
         letterY: 0.24,
         lineY: 0.43
       },
@@ -5831,6 +6974,8 @@ function runImageLabelingCanvas(step) {
     label: index === 0 ? "P 1/1" : `E ${index}/${Math.max(images.length - 1, 1)}`,
     mode: "label",
     image,
+    audio: index === 0 ? (step.instructionAudio || null) : null,
+    audioPosition: "top-right",
     imageMaxW: 0.86,
     imageMaxH: 0.62,
     imageY: 0.04
@@ -5840,13 +6985,31 @@ function runImageLabelingCanvas(step) {
 }
 
 function runDictationCanvas(step) {
-  const screens = [];
+  const screens = [{
+    label: "Instrucción",
+    mode: "instruction",
+    audio: step.instructionAudio || null,
+    audioCentered: true,
+    save: false
+  }];
   if (step.exampleAudio) {
-    screens.push({ label: "P 1/1", mode: "dictation", audio: step.exampleAudio });
+    screens.push({
+      label: "P 1/1",
+      mode: "dictation",
+      audio: step.exampleAudio,
+      audioPosition: "top-right",
+      exportIndex: 0
+    });
   }
 
   (step.trialAudios || []).forEach((audio, index, arr) => {
-    screens.push({ label: `E ${index + 1}/${arr.length}`, mode: "dictation", audio });
+    screens.push({
+      label: `E ${index + 1}/${arr.length}`,
+      mode: "dictation",
+      audio,
+      audioPosition: "top-right",
+      exportIndex: index + 1
+    });
   });
 
   runWritingCanvasFlow(step, { screens });
@@ -6196,16 +7359,20 @@ function runTextImage(step) {
   textInstruction.textContent = "";
   textImage.src = step.image;
   if (textImageWrap) {
-    textImageWrap.style.left = "25%";
+    textImageWrap.style.left = "26%";
     textImageWrap.style.top = "50%";
-    textImageWrap.style.width = "58vw";
-    textImageWrap.style.maxWidth = "835px";
+    textImageWrap.style.width = "48vw";
+    textImageWrap.style.maxWidth = "820px";
+    textImageWrap.style.height = "78vh";
+    textImageWrap.style.alignItems = "center";
     textImageWrap.style.transform = "translate(-50%, -50%)";
   }
   if (textImage) {
     textImage.style.width = "100%";
-    textImage.style.maxWidth = "835px";
-    textImage.style.maxHeight = "92vh";
+    textImage.style.height = "100%";
+    textImage.style.maxWidth = "820px";
+    textImage.style.maxHeight = "78vh";
+    textImage.style.objectFit = "contain";
   }
   if (textAnswer) {
     textAnswer.value = "";
@@ -6316,10 +7483,11 @@ function runLineBisection(step) {
     clearPartData(partId);
   }
 
-  // 2 pantallas:
-  // 0 = demostración (2 audios abajo izquierda + dibujo)
-  // 1 = paciente (1 audio abajo izquierda + dibujo)
-  const totalScreens = 2;
+  // 3 pantallas:
+  // 0 = instrucciones (texto + 2 audios)
+  // 1 = demostración / práctica (dibujo)
+  // 2 = paciente (1 audio + dibujo)
+  const totalScreens = 3;
 
   // === progreso / resume ===
   const saved = getPartProgress(partId);
@@ -6376,8 +7544,8 @@ function runLineBisection(step) {
   }
 
   function getCurrentStrokes() {
-    if (screenIndex === 0) return demoStrokes;
-    if (screenIndex === 1) return patientStrokes;
+    if (screenIndex === 1) return demoStrokes;
+    if (screenIndex === 2) return patientStrokes;
     return [];
   }
 
@@ -6565,8 +7733,9 @@ function runLineBisection(step) {
 
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
-    if (screenIndex === 0) topBar.textContent = `${partLabel} · P1`;
-    if (screenIndex === 1) topBar.textContent = `${partLabel} · E1`;
+    if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucciones`;
+    if (screenIndex === 1) topBar.textContent = `${partLabel} · P1`;
+    if (screenIndex === 2) topBar.textContent = `${partLabel} · E1`;
   }
 
   function hideCornerAudios() {
@@ -6593,20 +7762,20 @@ function runLineBisection(step) {
     if (btnAudio) {
       btnAudio.style.display = "block";
       btnAudio.style.position = "fixed";
-      btnAudio.style.left = "20px";
-      btnAudio.style.bottom = "130px";
-      btnAudio.style.top = "auto";
-      btnAudio.style.right = "auto";
+      btnAudio.style.left = "auto";
+      btnAudio.style.bottom = "auto";
+      btnAudio.style.top = "20px";
+      btnAudio.style.right = "20px";
       btnAudio.style.zIndex = "9999";
     }
 
     if (btnAudio2) {
       btnAudio2.style.display = "block";
       btnAudio2.style.position = "fixed";
-      btnAudio2.style.left = "20px";
-      btnAudio2.style.bottom = "70px";
-      btnAudio2.style.top = "auto";
-      btnAudio2.style.right = "auto";
+      btnAudio2.style.left = "auto";
+      btnAudio2.style.bottom = "auto";
+      btnAudio2.style.top = "80px";
+      btnAudio2.style.right = "20px";
       btnAudio2.style.zIndex = "9999";
     }
   }
@@ -6619,10 +7788,10 @@ function runLineBisection(step) {
     if (btnAudio) {
       btnAudio.style.display = "block";
       btnAudio.style.position = "fixed";
-      btnAudio.style.left = "20px";
-      btnAudio.style.bottom = "70px";
-      btnAudio.style.top = "auto";
-      btnAudio.style.right = "auto";
+      btnAudio.style.left = "auto";
+      btnAudio.style.bottom = "auto";
+      btnAudio.style.top = "20px";
+      btnAudio.style.right = "20px";
       btnAudio.style.zIndex = "9999";
     }
   }
@@ -6631,16 +7800,25 @@ function runLineBisection(step) {
     updateTopBar();
     setPartProgress(partId, { screenIndex });
 
-    showLayout("line_bisection");
-    renderCanvas();
-    enableDrawing(true);
-
     if (screenIndex === 0) {
+      showLayout("line_bisection_instructions");
+      enableDrawing(false);
       showDemoAudios();
       return;
     }
 
     if (screenIndex === 1) {
+      hideCornerAudios();
+      showLayout("line_bisection");
+      renderCanvas();
+      enableDrawing(true);
+      return;
+    }
+
+    if (screenIndex === 2) {
+      showLayout("line_bisection");
+      renderCanvas();
+      enableDrawing(true);
       showPatientAudio();
       return;
     }
@@ -6671,11 +7849,11 @@ function runLineBisection(step) {
   }
 
   btnNext.onclick = async () => {
-    if (screenIndex === 1) {
+    if (screenIndex === 2) {
       savePatientData();
     }
 
-    if (screenIndex === 0) {
+    if (screenIndex === 1) {
       savePracticeImage();
       demoStrokes = [];
     }
@@ -6683,7 +7861,7 @@ function runLineBisection(step) {
     screenIndex++;
 
     if (screenIndex >= totalScreens) {
-      if ((screenIndex - 1) === 1) {
+      if ((screenIndex - 1) === 2) {
         savePatientData();
       }
 
@@ -6752,7 +7930,7 @@ else if (step.type === "text_image") runTextImage(step);
 else if (step.type === "dictation_text") runDictationCanvas(step);
 else if (step.type === "image_labeling") runImageLabelingCanvas(step);
 else if (step.type === "writing_copy_canvas") runCopyCanvas(step);
-else if (step.type === "audio_record_image") runAudioRecordImage(step);
+else if (step.type === "audio_record_image") runOralImageDescription(step);
 else if (step.type === "audio_record_words") runAudioRecordWords(step);
 else if (step.type === "mcq4_image_trials") runMCQ4ImageTrials(step);
 else if (step.type === "video_record_trials") runVideoRecordTrials(step);

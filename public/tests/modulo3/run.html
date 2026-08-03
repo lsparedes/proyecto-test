@@ -39,14 +39,19 @@
     }
 
     .instruction-text {
-      font-size: 1.2rem;
+      font-size: 2rem;
+      font-weight: 700;
       line-height: 1.6;
       margin-bottom: 32px;
     }
 
     .center-audio {
-      width: 120px;
-      height: 120px;
+      position: fixed;
+      top: 70px;
+      right: 18px;
+      width: 90px;
+      height: 90px;
+      z-index: 95;
       cursor: pointer;
       user-select: none;
       -webkit-user-drag: none;
@@ -392,7 +397,7 @@
   <div id="topBar"></div>
   <div class="item-indicator"><span id="current-item"></span></div>
 
-  <!-- Procesos Motores Basicos -->
+  <!-- Subsistemas del Habla -->
 
   <!-- Parte 1 - Test 1 -->
   <section id="part-1-test-1" style="display:none;">
@@ -462,6 +467,7 @@
       </div>
     </div>
 
+    <img id="p1t2-fullscreen-btn" class="corner-icon corner-bottom-left" src="full-screen.png" alt="Pantalla completa">
     <img id="p1t2-next-btn" class="corner-icon corner-bottom-right" src="flecha.png" alt="Siguiente">
     <audio id="p1t2-audio-player"></audio>
   </section>

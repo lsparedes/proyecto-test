@@ -7,12 +7,12 @@ export class VideoRecorder {
     this.recording = false;
   }
 
-  async startStream(videoEl) {
+  async startStream(videoEl, { audio = true } = {}) {
     if (!this.stream) {
       try {
         this.stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: "user" },
-          audio: true
+          audio
         });
       } catch (error) {
         if (error?.name !== "NotFoundError" && error?.name !== "OverconstrainedError") {

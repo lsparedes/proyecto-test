@@ -117,7 +117,8 @@ function toCSV(rows) {
   for (const r of rows) {
     lines.push(headers.map(h => esc(r[h])).join(","));
   }
-  return lines.join("\n");
+  // Excel usa el BOM para detectar UTF-8 y conservar tildes, ñ y símbolos.
+  return `\uFEFF${lines.join("\r\n")}`;
 }
 
 function downloadText(filename, text) {
@@ -194,19 +195,13 @@ export async function exportSemanticPanZip(usedHand = "") {
   const hand = usedHand || partData.usedHand || "";
 
   const sheetRows = rows.map((row) => ({
-    "numero de item": row.numero_item,
-    "target mostrado": row.target_mostrado,
-    "opcion seleccionada": row.opcion_seleccionada,
-    "categoria de la opcion seleccionada": row.categoria_opcion_seleccionada,
-    "puntaje": row.puntaje,
-    "respuesta correcta": row.conteo_respuesta_correcta,
-    "distractor semantico cercano": row.conteo_distractor_semantico_cercano,
-    "distractor semantico lejano": row.conteo_distractor_semantico_lejano,
-    "distractor no relacionado": row.conteo_distractor_no_relacionado
+    "N° Ítem": row.numero_item,
+    "Respuesta correcta": row.respuesta_correcta,
+    "Respuesta del participante": row.respuesta_participante,
+    "RT": row.RT,
+    "Puntaje": row.puntaje,
+    "Mano seleccionada": hand
   }));
-
-  sheetRows.push({});
-  sheetRows.push({ "numero de item": "mano utilizada", "puntaje": hand });
 
   const csvContent = toCSV(sheetRows);
 
@@ -243,26 +238,43 @@ export async function exportVerbalFluencyAudioZip() {
   const audioEntries = Object.values(partData.verbalFluencyAudios || {})
     .filter((entry) => entry && entry.key)
     .sort((a, b) => Number(a.screenIndex || 0) - Number(b.screenIndex || 0));
+  const videoEntries = Object.values(partData.verbalFluencyVideos || {})
+    .filter((entry) => entry && entry.key)
+    .sort((a, b) => Number(a.screenIndex || 0) - Number(b.screenIndex || 0));
+  const stimulusIndexes = Array.from(new Set(
+    [...audioEntries, ...videoEntries].map((entry) => Number(entry.screenIndex || 0))
+  )).sort((a, b) => a - b);
 
-  if (!audioEntries.length) {
-    console.warn("No hay audios WAV de Fluidez verbal para exportar.");
+  if (!stimulusIndexes.length) {
+    console.warn("No hay grabaciones de Fluidez verbal para exportar.");
     return false;
   }
 
   const zip = new JSZip();
   let addedFiles = 0;
+  const officialName = (entry) => {
+    const ordinal = stimulusIndexes.indexOf(Number(entry.screenIndex || 0)) + 1;
+    return platformAudioName(3, ordinal, entry.label || `estimulo_${ordinal}`);
+  };
 
   for (const entry of audioEntries) {
     const blob = await getAudioBlob(entry.key);
     if (!blob) continue;
 
-    const name = platformAudioName(3, addedFiles + 1, entry.label || `audio_${addedFiles + 1}`);
-    zip.file(`${name}.wav`, blob);
+    zip.file(`${officialName(entry)}.wav`, blob);
+    addedFiles++;
+  }
+
+  for (const entry of videoEntries) {
+    const blob = await getBlob(entry.key);
+    if (!blob) continue;
+
+    zip.file(`${officialName(entry)}.webm`, blob);
     addedFiles++;
   }
 
   if (addedFiles === 0) {
-    console.warn("No se encontraron blobs WAV guardados para Fluidez verbal.");
+    console.warn("No se encontraron grabaciones guardadas para Fluidez verbal.");
     return false;
   }
 
@@ -300,9 +312,16 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
       if (screenDiff !== 0) return screenDiff;
       return Number(a.takeNumber || 1) - Number(b.takeNumber || 1);
     });
+  const videos = Object.values(partData.videos || {})
+    .filter((entry) => entry && entry.key)
+    .sort((a, b) => {
+      const screenDiff = Number(a.screenIndex || 0) - Number(b.screenIndex || 0);
+      if (screenDiff !== 0) return screenDiff;
+      return Number(a.takeNumber || 1) - Number(b.takeNumber || 1);
+    });
 
-  if (!takes.length) {
-    console.warn("No hay audios WAV de Repeticion de palabras para exportar.");
+  if (!takes.length && !videos.length) {
+    console.warn("No hay grabaciones de Repeticion de palabras para exportar.");
     return false;
   }
 
@@ -315,15 +334,34 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
 
     const screenIndex = Number(take.screenIndex || 0);
     const screenAlignedParts = new Set([12, 14, 15, 16]);
-    const ordinal = screenAlignedParts.has(Number(targetPartId)) ? screenIndex : screenIndex + 1;
+    const storedOrdinal = Number(take.exportOrdinal);
+    const ordinal = Number.isFinite(storedOrdinal) && storedOrdinal > 0
+      ? storedOrdinal
+      : (screenAlignedParts.has(Number(targetPartId)) ? screenIndex : screenIndex + 1);
     const label = platformAudioName(targetPartId, ordinal, take.label || `pantalla_${ordinal}`);
     const takeSuffix = Number(take.takeNumber || 1) > 1 ? `_${Number(take.takeNumber)}` : "";
     zip.file(`${label}${takeSuffix}.wav`, blob);
     addedFiles++;
   }
 
+  for (const video of videos) {
+    const blob = await getBlob(video.key);
+    if (!blob) continue;
+
+    const screenIndex = Number(video.screenIndex || 0);
+    const screenAlignedParts = new Set([12, 14, 15, 16]);
+    const storedOrdinal = Number(video.exportOrdinal);
+    const ordinal = Number.isFinite(storedOrdinal) && storedOrdinal > 0
+      ? storedOrdinal
+      : (screenAlignedParts.has(Number(targetPartId)) ? screenIndex : screenIndex + 1);
+    const label = platformAudioName(targetPartId, ordinal, video.label || `pantalla_${ordinal}`);
+    const takeSuffix = Number(video.takeNumber || 1) > 1 ? `_${Number(video.takeNumber)}` : "";
+    zip.file(`${label}${takeSuffix}.webm`, blob);
+    addedFiles++;
+  }
+
   if (addedFiles === 0) {
-    console.warn("No se encontraron blobs WAV guardados para Repeticion de palabras.");
+    console.warn("No se encontraron grabaciones guardadas para Repeticion de palabras.");
     return false;
   }
 
@@ -407,8 +445,13 @@ export async function exportWritingImagesZip(targetPartId, testNumber, testLabel
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(targetPartId);
+  const expectedImageCounts = { 24: 4, 25: 6, 26: 6, 27: 1 };
+  const expectedCount = expectedImageCounts[Number(targetPartId)] || Infinity;
   const images = Object.values(partData.writingImages || {})
-    .filter((entry) => entry && entry.dataUrl)
+    .filter((entry) => entry
+      && entry.dataUrl
+      && Number(entry.screenIndex) >= 0
+      && Number(entry.screenIndex) < expectedCount)
     .sort((a, b) => Number(a.screenIndex || 0) - Number(b.screenIndex || 0));
 
   if (!images.length) {
@@ -580,20 +623,17 @@ export async function exportShortTermMemoryZip(usedHand = "") {
   // Feedback: dejar solo N item, respuesta correcta, respuesta participante, RT, puntaje
   // (eliminar el resto de columnas).
   const rows = (partData.shortTermMemoryResponses || []).map((row) => ({
-    "numero de item": row.numero_item,
-    "respuesta correcta": row.opcion_correcta,
-    "respuesta participante": row.opcion_seleccionada,
+    "N° Ítem": row.numero_item,
+    "Respuesta correcta": row.opcion_correcta,
+    "Respuesta participante": row.opcion_seleccionada,
     "RT": row.RT,
-    "puntaje": row.puntaje
+    "Puntaje": row.puntaje
   }));
 
   if (!rows.length) {
     console.warn("No hay respuestas de Memoria a corto plazo para exportar.");
     return false;
   }
-
-  rows.push({});
-  rows.push({ "numero de item": "mano usada", "puntaje": hand });
 
   const csvContent = toCSV(rows);
 
@@ -702,12 +742,12 @@ export async function exportCalculationZip(usedHand = "") {
   const hand = usedHand || partData.usedHand || "";
   // Feedback: CSV con N item (1-6), respuesta correcta, respuesta participante, RT, puntaje, mano
   const rows = (partData.calculationResponses || []).map((row) => ({
-    "numero de item": row.ejercicio,
-    "respuesta correcta": row.respuesta_correcta,
-    "respuesta participante": row.opcion_elegida,
+    "N° Ítem": row.ejercicio,
+    "Respuesta correcta": row.respuesta_correcta,
+    "Respuesta del participante": row.opcion_elegida,
     "RT": row.RT,
-    "puntaje": row.puntaje,
-    "mano seleccionada": row.mano_seleccionada || hand
+    "Puntaje": row.puntaje,
+    "Mano seleccionada": row.mano_seleccionada || hand
   }));
 
   if (!rows.length) {
@@ -737,12 +777,7 @@ export async function exportCalculationZip(usedHand = "") {
   return true;
 }
 
-export async function exportComprehensionSpokenWordsZip() {
-  // Parte 7: Comprension oral de palabras aisladas (CompSpkW).
-  // El test no dispone de clave de respuesta correcta en su configuracion
-  // (solo imageFiles), por lo que el CSV registra la respuesta del participante
-  // (numero de item, opcion elegida 1-4 e imagen elegida). La correccion se
-  // realiza de forma manual con estos datos.
+export async function exportComprehensionSpokenWordsZip(usedHand = "") {
   if (typeof JSZip === "undefined") {
     console.error("JSZip no esta disponible para exportar Comprension oral de palabras (Parte 7).");
     return false;
@@ -752,22 +787,24 @@ export async function exportComprehensionSpokenWordsZip() {
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(7);
+  const hand = usedHand || partData.usedHand || "";
   const responses = partData.responses || {};
 
   const orderedKeys = Object.keys(responses)
     .map(Number)
-    .filter((k) => Number.isFinite(k))
+    .filter((k) => Number.isFinite(k) && k > 1)
     .sort((a, b) => a - b);
 
   const rows = orderedKeys.map((key) => {
     const r = responses[String(key)] || {};
-    const selectedIdx = (r.selected === null || r.selected === undefined)
-      ? ""
-      : (Number(r.selected) + 1);
     return {
-      "numero de item": r.item ?? (key === 1 ? "Ej." : key - 1),
-      "opcion seleccionada (1-4)": selectedIdx,
-      "imagen seleccionada": r.selectedFile || ""
+      "N° Ítem": r.item ?? key - 1,
+      "Respuesta correcta": r.correctLetter || "",
+      "Respuesta del participante": r.selectedLetter || "",
+      "RT": r.RT ?? "",
+      "Modo de respuesta": r.responseMode || "",
+      "Puntaje": r.score ?? "",
+      "Mano seleccionada": hand
     };
   });
 
@@ -809,24 +846,22 @@ export async function exportWrittenPhonologicalZip(usedHand = "") {
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(8);
   const hand = usedHand || partData.usedHand || "";
-  const rows = (partData.writtenPhonologicalResponses || []).map((row) => ({
-    itemNumber: row.itemNumber,
-    targetWord: row.targetWord,
-    selectedOption: row.selectedOption,
-    selectedCategory: row.selectedCategory,
-    responseMode: row.responseMode,
-    assignedScore: row.assignedScore,
-    phonologicalDistinctiveFeatures: row.phonologicalDistinctiveFeatures,
-    phonologicalPosition: row.phonologicalPosition
-  }));
+  const rows = (partData.writtenPhonologicalResponses || [])
+    .filter((row) => row.itemNumber !== "Ej.")
+    .map((row) => ({
+      "N° Ítem": row.itemNumber,
+      "Respuesta correcta": row.correctOption || "",
+      "Respuesta del participante": row.selectedOption || "",
+      "RT": row.RT ?? "",
+      "Modo de respuesta": row.responseMode || "",
+      "Puntaje": row.assignedScore ?? "",
+      "Mano seleccionada": row.usedHand || hand
+    }));
 
   if (!rows.length) {
     console.warn("No hay respuestas del Test Fonologico Parte 8 para exportar.");
     return false;
   }
-
-  rows.push({});
-  rows.push({ itemNumber: "mano utilizada", assignedScore: hand });
 
   const csvContent = toCSV(rows);
 
@@ -861,25 +896,22 @@ export async function exportOrationalPart9Zip(usedHand = "") {
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(9);
   const hand = usedHand || partData.usedHand || "";
-  const rows = (partData.orationalPart9Responses || []).map((row) => ({
-    itemNumber: row.itemNumber,
-    screenNumber: row.screenNumber,
-    "tipo de oración": row.sentenceType,
-    "letra correcta": row.correctLetter,
-    "letra seleccionada": row.selectedLetter,
-    "respuesta correcta textual": row.correctSentence,
-    "correcto/incorrecto": row.isCorrect ? "correcto" : "incorrecto",
-    "modo de respuesta": row.responseMode,
-    "puntaje obtenido": row.assignedScore
-  }));
+  const rows = (partData.orationalPart9Responses || [])
+    .filter((row) => row.itemNumber !== "Ej.")
+    .map((row) => ({
+      "N° Ítem": row.itemNumber,
+      "Respuesta correcta": row.correctLetter || "",
+      "Respuesta del participante": row.selectedLetter || "",
+      "RT": row.RT ?? "",
+      "Modo de respuesta": row.responseMode || "",
+      "Puntaje": row.assignedScore ?? "",
+      "Mano seleccionada": row.usedHand || hand
+    }));
 
   if (!rows.length) {
     console.warn("No hay respuestas del Test Oracional Parte 9 para exportar.");
     return false;
   }
-
-  rows.push({});
-  rows.push({ itemNumber: "mano utilizada", "puntaje obtenido": hand });
 
   const csvContent = toCSV(rows);
 
@@ -914,25 +946,22 @@ export async function exportOrationalPart10Zip(usedHand = "") {
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(10);
   const hand = usedHand || partData.usedHand || "";
-  const rows = (partData.orationalPart10Responses || []).map((row) => ({
-    itemNumber: row.itemNumber,
-    screenNumber: row.screenNumber,
-    "tipo de oración": row.sentenceType,
-    "letra correcta": row.correctLetter,
-    "letra seleccionada": row.selectedLetter,
-    "respuesta correcta textual": row.correctSentence,
-    "correcto/incorrecto": row.isCorrect ? "correcto" : "incorrecto",
-    "modo de respuesta": row.responseMode,
-    "puntaje obtenido": row.assignedScore
-  }));
+  const rows = (partData.orationalPart10Responses || [])
+    .filter((row) => row.itemNumber !== "Ej.")
+    .map((row) => ({
+      "N° Ítem": row.itemNumber,
+      "Respuesta correcta": row.correctLetter || "",
+      "Respuesta del participante": row.selectedLetter || "",
+      "RT": row.RT ?? "",
+      "Modo de respuesta": row.responseMode || "",
+      "Puntaje": row.assignedScore ?? "",
+      "Mano seleccionada": row.usedHand || hand
+    }));
 
   if (!rows.length) {
     console.warn("No hay respuestas del Test Oracional Parte 10 para exportar.");
     return false;
   }
-
-  rows.push({});
-  rows.push({ itemNumber: "mano utilizada", "puntaje obtenido": hand });
 
   const csvContent = toCSV(rows);
 
@@ -966,37 +995,17 @@ export async function exportOralParagraphsZip(usedHand = "") {
   const participantId = url.searchParams.get("id_participante") || "participante";
   const userInitials = sanitizeFilename(await getAuthenticatedUserInitialsFallback(participantId));
   const partData = getPartData(11);
-  const hand = usedHand || partData.usedHand || "";
   const rows = (partData.oralParagraphResponses || []).map((row) => ({
-    "historia": row.storyNumber,
-    "numero de pregunta": row.questionNumber,
-    "pregunta": row.questionText,
-    "respuesta seleccionada": row.selectedAnswer,
-    "respuesta correcta": row.correctAnswer,
-    "correcto/incorrecto": row.isCorrect ? "correcto" : "incorrecto",
-    "puntua": row.countsForScore ? "si" : "no",
-    "puntaje obtenido": row.assignedScore
+    "N° párrafo": row.storyNumber,
+    "N° ítem": row.questionNumber,
+    "Respuesta correcta": row.correctAnswer,
+    "Respuesta del participante": row.selectedAnswer
   }));
 
   if (!rows.length) {
     console.warn("No hay respuestas de Comprension oral de parrafos para exportar.");
     return false;
   }
-
-  const scoredResponses = partData.oralParagraphResponses || [];
-  const story1Score = scoredResponses
-    .filter((row) => Number(row.storyNumber) === 1)
-    .reduce((total, row) => total + Number(row.assignedScore || 0), 0);
-  const story2Score = scoredResponses
-    .filter((row) => Number(row.storyNumber) === 2)
-    .reduce((total, row) => total + Number(row.assignedScore || 0), 0);
-  const totalScore = story1Score + story2Score;
-
-  rows.push({});
-  rows.push({ "historia": "puntaje historia 1 sobre 2", "puntaje obtenido": story1Score });
-  rows.push({ "historia": "puntaje historia 2 sobre 2", "puntaje obtenido": story2Score });
-  rows.push({ "historia": "total correcto sobre 4", "puntaje obtenido": totalScore });
-  rows.push({ "historia": "mano utilizada", "puntaje obtenido": hand });
 
   const csvContent = toCSV(rows);
 

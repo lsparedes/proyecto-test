@@ -12,8 +12,8 @@ class Modulo3SystemTestSeeder extends Seeder
     {
         $tests = [
             [
-                'name_test' => 'Procesos Motores Basicos',
-                'nombre_espa' => 'Procesos Motores Basicos',
+                'name_test' => 'Subsistemas del Habla',
+                'nombre_espa' => 'Subsistemas del Habla',
                 'descripcion_individual' => 'Incluye Evaluacion Orofacial y Evaluacion Integrada de la Respiracion, la Fonacion y la Resonancia.',
                 'points' => 0,
                 'duracion_minutos' => 15,
@@ -57,7 +57,7 @@ class Modulo3SystemTestSeeder extends Seeder
             $test = array_intersect_key($test, $validColumns);
 
             DB::table('test')->updateOrInsert(
-                ['name_test' => $test['name_test']],
+                ['url_test' => $test['url_test']],
                 array_intersect_key(array_merge($test, [
                     'link_millisecond' => null,
                     'link_millisecond2' => null,

@@ -357,6 +357,24 @@ export const CAT = {
                         15: ["15-cigarro.png", "15-muro.png", "15-puro.png", "15-valla.png"],
                         16: ["16-chimenea.png", "16-fuego.png", "16-juego.png", "16-pelota.png"],
                     },
+                    correctIndexes: {
+                        1: 3,
+                        2: 0,
+                        3: 0,
+                        4: 1,
+                        5: 2,
+                        6: 0,
+                        7: 0,
+                        8: 2,
+                        9: 2,
+                        10: 1,
+                        11: 0,
+                        12: 0,
+                        13: 0,
+                        14: 3,
+                        15: 1,
+                        16: 1,
+                    },
                     trialAudioStart: 4,
                     // Audios (tú los enlazas después)
                     instructionAudio: "/tests/modulo2/assets/Audio/Test_7/Instruccion/audio1.wav",
@@ -732,7 +750,7 @@ export const CAT = {
             name: "Lectura de palabras complejas",
             steps: [{
                 type: "audio_record_words",
-                instructionAudio: null,
+                instructionAudio: "/tests/modulo2/assets/Audio/Test_20/Prueba/audio1.wav",
                 autoStart: true,
                 hasExample: false,
                 words: ["informativo", "recalentado", "preconcebido"]
@@ -745,7 +763,7 @@ export const CAT = {
             name: "Lectura de palabras funcionales",
             steps: [{
                 type: "audio_record_words",
-                instructionAudio: null,
+                instructionAudio: "/tests/modulo2/assets/Audio/Test_20/Prueba/audio1.wav",
                 autoStart: true,
                 hasExample: false,
                 words: ["pero", "de", "y"]
