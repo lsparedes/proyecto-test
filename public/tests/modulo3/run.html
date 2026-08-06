@@ -38,6 +38,10 @@
       margin: 0 auto;
     }
 
+    #p2motor-screen .screen-panel {
+      max-width: none;
+    }
+
     .instruction-text {
       font-size: 2rem;
       font-weight: 700;
@@ -309,8 +313,10 @@
     }
 
     .motor-text.is-phrase-reading {
-      font-size: 2.35rem;
+      font-size: clamp(2.8rem, 4.2vw, 4.25rem);
       line-height: 1.35;
+      max-width: min(94vw, 1280px);
+      text-align: center;
     }
 
     .motor-audio-list {
@@ -333,6 +339,10 @@
       justify-content: center;
       align-items: center;
       margin: 18px auto;
+    }
+
+    .motor-audio-list.is-centered.is-multiple {
+      gap: 48px;
     }
 
     .motor-audio-list img {
@@ -364,6 +374,21 @@
 
     .motor-menu button:hover {
       background: #f3f4f6;
+    }
+
+    .motor-menu.is-task-finish {
+      position: absolute;
+      left: 50%;
+      bottom: 96px;
+      transform: translateX(-50%);
+      display: flex;
+      justify-content: center;
+      width: auto;
+      margin: 0;
+    }
+
+    .motor-menu.is-task-finish button {
+      min-width: 260px;
     }
 
     #topBar {
@@ -539,6 +564,12 @@
         <div class="title-label">Narración personal</div>
       </div>
       <img id="p3-personal-audio-btn" class="single-audio-right" src="audio.png" alt="Audio narracion personal">
+    </div>
+
+    <div id="p3-screen-complete" class="screen-view">
+      <div class="screen-panel">
+        <div class="title-label">¡Ha completado esta tarea con éxito!<br>¡Muchas gracias!</div>
+      </div>
     </div>
 
     <div id="p3-record-controls" class="record-controls-right hidden">

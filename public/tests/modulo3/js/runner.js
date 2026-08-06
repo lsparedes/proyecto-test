@@ -1090,8 +1090,16 @@ function runEvaluacionMotoraHabla() {
   let sectionCounters = {};
   let currentMode = "menu";
   let currentRecorder = null;
+  let currentRecordingScreen = null;
+  let currentSubtestAudioStart = 0;
+  let currentSubtestSummaryStart = 0;
 
   nextBtn.addEventListener("click", async () => {
+    if (currentMode === "downloaded") {
+      renderMenu();
+      return;
+    }
+
     if (currentMode !== "running") {
       return;
     }
@@ -1161,13 +1169,6 @@ function runEvaluacionMotoraHabla() {
       audiosEl.appendChild(button);
     });
 
-    if (audios.length > 0) {
-      const finishButton = document.createElement("button");
-      finishButton.type = "button";
-      finishButton.textContent = "Terminar tarea";
-      finishButton.addEventListener("click", finishMotorTask);
-      audiosEl.appendChild(finishButton);
-    }
   }
 
   async function startSubtest(subtest) {
@@ -1175,6 +1176,8 @@ function runEvaluacionMotoraHabla() {
     activeScreens = subtest.screens;
     sectionCounters = buildMotorCounters(activeScreens);
     currentScreenIndex = 0;
+    currentSubtestAudioStart = audios.length;
+    currentSubtestSummaryStart = summaryRows.length;
     showNext(nextBtn, true);
     await renderScreen();
   }
@@ -1187,33 +1190,41 @@ function runEvaluacionMotoraHabla() {
     recordControls.style.display = "none";
     showNext(nextBtn, false);
 
-    titleEl.textContent = "Subtest terminado";
+    const currentSection = activeScreens[0]?.section || "";
+    titleEl.textContent = ["Volumen creciente", "Habla automática", "Diadococinesia", "Lectura", "Diptongos", "Palabras polisilábicas", "Palabras con longitud creciente", "Pseudopalabras", "Repetición de frases", "Lectura de frases"].includes(currentSection)
+      ? "¡Ha completado esta tarea con éxito! ¡Muchas gracias!"
+      : "Subtest terminado";
+    titleEl.style.display = "block";
+    labelEl.style.display = "none";
+    textEl.style.display = "none";
+    audiosEl.innerHTML = "";
+    audiosEl.className = "motor-menu is-task-finish";
+
+    const finishButton = document.createElement("button");
+    finishButton.type = "button";
+    finishButton.textContent = "Terminar tarea";
+    finishButton.addEventListener("click", finishCurrentSubtest);
+    audiosEl.appendChild(finishButton);
+  }
+
+  async function finishCurrentSubtest(event) {
+    const finishButton = event?.currentTarget;
+    if (finishButton) finishButton.disabled = true;
+    stopAudio(audioPlayer);
+    await stopRecording(true);
+    const taskAudios = audios.slice(currentSubtestAudioStart);
+    const taskRows = summaryRows.slice(currentSubtestSummaryStart);
+    await exportEvaluacionMotoraHablaZip(taskAudios, taskRows);
+
+    currentMode = "downloaded";
+    setScreenCounter("");
+    titleEl.textContent = "Tarea finalizada";
     titleEl.style.display = "block";
     labelEl.style.display = "none";
     textEl.style.display = "none";
     audiosEl.innerHTML = "";
     audiosEl.className = "motor-menu";
-
-    const menuButton = document.createElement("button");
-    menuButton.type = "button";
-    menuButton.textContent = "Volver al menu principal";
-    menuButton.addEventListener("click", renderMenu);
-    audiosEl.appendChild(menuButton);
-
-    const finishButton = document.createElement("button");
-    finishButton.type = "button";
-    finishButton.textContent = "Terminar tarea";
-    finishButton.addEventListener("click", finishMotorTask);
-    audiosEl.appendChild(finishButton);
-  }
-
-  async function finishMotorTask() {
-    stopAudio(audioPlayer);
-    await stopRecording(true);
-    await exportEvaluacionMotoraHablaZip(audios, summaryRows);
-    setTimeout(() => {
-      closeCurrentWindow();
-    }, 3000);
+    showNext(nextBtn, true);
   }
 
   async function renderScreen() {
@@ -1221,8 +1232,9 @@ function runEvaluacionMotoraHabla() {
     if (!screen) return;
 
     setScreenCounter(sectionCounters[currentScreenIndex] || "");
-    titleEl.textContent = screen.kind === "title" ? (screen.title || "") : "";
-    titleEl.style.display = screen.kind === "title" ? "block" : "none";
+    const showScreenTitle = screen.kind === "title" || screen.showTitle === true;
+    titleEl.textContent = showScreenTitle ? (screen.title || "") : "";
+    titleEl.style.display = showScreenTitle ? "block" : "none";
     labelEl.textContent = screen.kind === "title" ? "" : "";
     labelEl.style.display = "none";
     textEl.textContent = screen.text || "";
@@ -1236,7 +1248,7 @@ function runEvaluacionMotoraHabla() {
 
     // Feedback: eliminar botón REC y grabar desde que aparece la pantalla del estímulo
     // hasta que se presiona la flecha para avanzar. Toda pantalla de grabación inicia sola.
-    if (screen.record) {
+    if (screen.record && !screen.recordOnAudioPlay) {
       await startRecording(screen);
     }
   }
@@ -1246,6 +1258,7 @@ function runEvaluacionMotoraHabla() {
     audiosEl.className = "motor-audio-list";
     const audioList = normalizeAudioList(screen.audio);
     audiosEl.classList.toggle("is-centered", Boolean(screen.centerAudio) || (!screen.record && audioList.length > 1));
+    audiosEl.classList.toggle("is-multiple", audioList.length > 1);
 
     audioList.forEach((audioPath, index) => {
       const button = document.createElement("img");
@@ -1254,6 +1267,18 @@ function runEvaluacionMotoraHabla() {
         : (index === 0 ? "audio.png" : `audio${Math.min(index + 1, 4)}.png`);
       button.alt = `Audio ${index + 1}`;
       button.addEventListener("click", async () => {
+        if (screen.outputNames?.[index] && currentRecordingScreen?.outputName !== screen.outputNames[index]) {
+          await stopRecording(true);
+          await startRecording({
+            ...screen,
+            trial: screen.trials?.[index] || screen.trial,
+            audio: audioPath,
+            outputName: screen.outputNames[index]
+          });
+        }
+        if (screen.recordOnAudioPlay) {
+          await startRecording(screen);
+        }
         // Feedback: los audios de estímulo deben reproducirse de forma independiente
         // (solo el que el examinador toca), no encadenarse automáticamente.
         await playMotorAudios([audioPath], screen);
@@ -1267,11 +1292,16 @@ function runEvaluacionMotoraHabla() {
 
     for (let index = 0; index < audioList.length; index += 1) {
       const audioPath = audioList[index];
-      const shouldStartNearEnd = Boolean(screen.record && screen.autoStartAfterAudio !== false && index === audioList.length - 1);
+      const shouldStartNearEnd = Boolean(
+        screen.record
+        && !screen.recordOnAudioPlay
+        && screen.autoStartAfterAudio !== false
+        && index === audioList.length - 1
+      );
       await playAudioAndWait(audioPlayer, audioPath, shouldStartNearEnd ? () => startRecording(screen) : null);
     }
 
-    if (screen.record && screen.autoStartAfterAudio !== false) {
+    if (screen.record && !screen.recordOnAudioPlay && screen.autoStartAfterAudio !== false) {
       await startRecording(screen);
     }
   }
@@ -1311,6 +1341,7 @@ function runEvaluacionMotoraHabla() {
     try {
       currentRecorder = new WavAudioRecorder();
       await currentRecorder.start();
+      currentRecordingScreen = screen;
       recBtn.classList.add("hidden");
       recordingIndicator.classList.remove("hidden");
       stopBtn.classList.remove("is-disabled");
@@ -1323,11 +1354,12 @@ function runEvaluacionMotoraHabla() {
 
   async function stopRecording(shouldSave = false) {
     if (!currentRecorder) {
+      currentRecordingScreen = null;
       resetRecordControls();
       return;
     }
 
-    const screen = activeScreens[currentScreenIndex];
+    const screen = currentRecordingScreen || activeScreens[currentScreenIndex];
     const blob = await currentRecorder.stop();
 
     if (shouldSave && screen?.record && blob) {
@@ -1348,6 +1380,7 @@ function runEvaluacionMotoraHabla() {
     }
 
     currentRecorder = null;
+    currentRecordingScreen = null;
     resetRecordControls();
   }
 
@@ -1399,9 +1432,30 @@ function buildEvaluacionMotoraHablaScreens() {
   const screens = [
     {
       section: "Volumen creciente",
-      title: "Volumen creciente",
+      title: "Instrucciones",
       label: "Instrucción",
       audio: `${base}/1_volumencreciente/instruccion1.wav`,
+      kind: "title",
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Volumen creciente",
+      title: "Ejemplo",
+      label: "Ejemplo",
+      text: "",
+      showTitle: true,
+      audio: `${base}/1_volumencreciente/instruccion1.wav`,
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Volumen creciente",
+      title: "Ahora es su turno",
+      label: "Ahora es su turno",
+      text: "",
+      showTitle: true,
+      audio: null,
       record: true,
       autoStartAfterAudio: false,
       trial: "1",
@@ -1409,22 +1463,51 @@ function buildEvaluacionMotoraHablaScreens() {
     },
     {
       section: "Habla automática",
-      title: "Habla automática",
+      title: "Instrucciones",
       label: "Instrucción",
       audio: `${base}/2_hablaautomatica/habla_automatica.wav`,
+      kind: "title",
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Habla automática",
+      title: "Ahora es su turno",
+      label: "Ahora es su turno",
+      text: "",
+      showTitle: true,
+      audio: `${base}/5_diptongos/instruccion2_diptongos.wav`,
+      centerAudio: true,
       record: true,
+      autoStartAfterAudio: false,
       trial: "1",
       outputName: "modulo3_parte2_02_hablaautomatica"
     },
     {
       section: "Diadococinesia",
-      title: "Repetición de sílabas - Diadococinesia",
-      label: "Instrucciones y ejemplo",
-      audio: [
-        `${base}/3_diadococinesia/instruccion1_diadococinesia.wav`,
-        `${base}/3_diadococinesia/ejemplo_diadococinesia.wav`,
-        `${base}/3_diadococinesia/instruccion2_diadococinesia.wav`
-      ],
+      title: "Instrucciones",
+      label: "Instrucciones",
+      audio: `${base}/3_diadococinesia/instruccion1_diadococinesia.wav`,
+      kind: "title",
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Diadococinesia",
+      title: "Ejemplo",
+      label: "Ejemplo",
+      showTitle: true,
+      audio: `${base}/3_diadococinesia/ejemplo_diadococinesia.wav`,
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Diadococinesia",
+      title: "Ahora es su turno",
+      label: "Ahora es su turno",
+      showTitle: true,
+      audio: `${base}/3_diadococinesia/instruccion2_diadocinesia.wav`,
+      centerAudio: true,
       record: false
     },
     ...[1, 2, 3, 4, 5].map((trial) => ({
@@ -1433,28 +1516,56 @@ function buildEvaluacionMotoraHablaScreens() {
       label: `Ensayo ${String.fromCharCode(96 + trial)}`,
       audio: `${base}/3_diadococinesia/${trial}_diadococinesia.wav`,
       record: true,
+      recordOnAudioPlay: true,
+      autoStartAfterAudio: false,
       trial: String(trial),
       outputName: `modulo3_parte2_03_diadococinesia_${trial}`
     })),
     {
       section: "Lectura",
+      title: "Instrucciones",
+      label: "Instrucciones",
+      audio: `${base}/4_lectura/instruccion_lectura.wav`,
+      kind: "title",
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Lectura",
       title: "Lectura",
       label: "Lea el texto en pantalla",
-      audio: `${base}/4_lectura/instruccion_lectura.wav`,
+      audio: null,
       record: true,
+      autoStartAfterAudio: false,
       trial: "1",
       text: lecturaTexto,
       outputName: "modulo3_parte2_04_lectura"
     },
     {
       section: "Diptongos",
-      title: "Diptongos",
-      label: "Instrucciones y ejemplo",
-      audio: [
-        `${base}/5_diptongos/instruccion_diptongos.mp3`,
-        `${base}/5_diptongos/ejemplo_diptongos.wav`,
-        `${base}/5_diptongos/instruccion2_diptongos.wav`
-      ],
+      title: "Instrucciones",
+      label: "Instrucciones",
+      audio: `${base}/5_diptongos/instruccion_diptongos.mp3`,
+      kind: "title",
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Diptongos",
+      title: "Ejemplo",
+      label: "Ejemplo",
+      showTitle: true,
+      audio: `${base}/5_diptongos/ejemplo_diptongos.wav`,
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Diptongos",
+      title: "Ahora es su turno",
+      label: "Ahora es su turno",
+      showTitle: true,
+      audio: `${base}/5_diptongos/instruccion2_diptongos.wav`,
+      centerAudio: true,
       record: false
     },
     ...[1, 2, 3, 4, 5, 6].map((trial) => ({
@@ -1463,18 +1574,36 @@ function buildEvaluacionMotoraHablaScreens() {
       label: `Ensayo ${String.fromCharCode(96 + trial)}`,
       audio: `${base}/5_diptongos/${trial}_diptongo.mp3`,
       record: true,
+      recordOnAudioPlay: true,
+      autoStartAfterAudio: false,
       trial: String(trial),
       outputName: `modulo3_parte2_05_diptongos_${trial}`
     })),
     {
       section: "Palabras polisilábicas",
-      title: "Palabras polisilábicas",
-      label: "Instrucciones y ejemplo",
-      audio: [
-        `${base}/6_polisilabicas/instruccion1_polisilabicas.mp3`,
-        `${base}/6_polisilabicas/ejemplo_polisibalicas.wav`,
-        `${base}/6_polisilabicas/instruccion2_polisibalicas.wav`
-      ],
+      title: "Instrucciones",
+      label: "Instrucciones",
+      audio: `${base}/6_polisilabicas/instruccion1_polisilabicas.mp3`,
+      kind: "title",
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Palabras polisilábicas",
+      title: "Ejemplo",
+      label: "Ejemplo",
+      showTitle: true,
+      audio: `${base}/6_polisilabicas/ejemplo_polisibalicas.wav`,
+      centerAudio: true,
+      record: false
+    },
+    {
+      section: "Palabras polisilábicas",
+      title: "Ahora es su turno",
+      label: "Ahora es su turno",
+      showTitle: true,
+      audio: `${base}/6_polisilabicas/instruccion2_polisibalicas.wav`,
+      centerAudio: true,
       record: false
     },
     ...[1, 2, 3, 4, 5, 6].map((trial) => ({
@@ -1483,59 +1612,51 @@ function buildEvaluacionMotoraHablaScreens() {
       label: `Ensayo ${String.fromCharCode(96 + trial)}`,
       audio: `${base}/6_polisilabicas/${trial}_polisibalicas.${trial === 1 ? "wav" : "mp3"}`,
       record: true,
+      recordOnAudioPlay: true,
+      autoStartAfterAudio: false,
       trial: String(trial),
       outputName: `modulo3_parte2_06_polisilabicas_${trial}`
     })),
     {
       section: "Palabras con longitud creciente",
-      title: "Palabras con longitud creciente",
-      label: "Instrucción",
+      title: "Instrucciones",
+      label: "Instrucciones",
       audio: `${base}/7_longitudcreciente/instruccion1_longitudcreciente.wav`,
+      kind: "title",
       centerAudio: true,
       record: false
     },
-    // Grupo "a" (ejemplo): cada palabra se graba por separado -> índices 1, 2, 3
-    ...[1, 2, 3].map((number) => ({
-      section: "Palabras con longitud creciente",
-      title: "Palabras con longitud creciente",
-      label: `Ejemplo a (${number}/3)`,
-      audio: `${base}/7_longitudcreciente/${number}a_longitudcreciente.wav`,
-      record: true,
-      autoStartOnEnter: true,
-      centerAudio: true,
-      trial: `a${number}`,
-      outputName: `modulo3_parte2_07_longitudcreciente_${number}`
-    })),
     {
       section: "Palabras con longitud creciente",
-      title: "Palabras con longitud creciente",
-      label: "Instrucción 2",
+      title: "Ahora es su turno",
+      label: "Ahora es su turno",
+      showTitle: true,
       audio: `${base}/7_longitudcreciente/instruccion2_longitudcreciente.wav`,
       centerAudio: true,
       record: false
     },
-    // Grupos b..f: cada palabra se graba por separado -> índices 4..18 (documento: guardar todos por separado)
-    ...["b", "c", "d", "e", "f"].flatMap((letter, groupIndex) =>
-      [1, 2, 3].map((number) => {
-        const docIndex = (groupIndex + 1) * 3 + number; // b -> 4..6, c -> 7..9, ... f -> 16..18
-        return {
-          section: "Palabras con longitud creciente",
-          title: "Palabras con longitud creciente",
-          label: `Letra ${letter} (${number}/3)`,
-          audio: `${base}/7_longitudcreciente/${number}${letter}_longitudcreciente.wav`,
-          record: true,
-          autoStartOnEnter: true,
-          centerAudio: true,
-          trial: `${letter}${number}`,
-          outputName: `modulo3_parte2_07_longitudcreciente_${docIndex}`
-        };
-      })
-    ),
+    ...["a", "b", "c", "d", "e", "f"].map((letter, groupIndex) => {
+      const firstIndex = groupIndex * 3 + 1;
+      return {
+        section: "Palabras con longitud creciente",
+        title: "Palabras con longitud creciente",
+        label: `Grupo ${letter}`,
+        audio: [1, 2, 3].map((number) => `${base}/7_longitudcreciente/${number}${letter}_longitudcreciente.wav`),
+        record: true,
+        autoStartOnEnter: true,
+        autoStartAfterAudio: false,
+        centerAudio: true,
+        trials: [1, 2, 3].map((number) => `${letter}${number}`),
+        outputName: `modulo3_parte2_07_longitudcreciente_${firstIndex}`,
+        outputNames: [0, 1, 2].map((offset) => `modulo3_parte2_07_longitudcreciente_${firstIndex + offset}`)
+      };
+    }),
     {
       section: "Pseudopalabras",
-      title: "Pseudopalabras",
-      label: "Instrucción",
+      title: "Instrucciones",
+      label: "Instrucciones",
       audio: `${base}/8_pseudopalabras/instruccion_pseudopalabras.wav`,
+      kind: "title",
       centerAudio: true,
       record: false
     },
@@ -1545,14 +1666,18 @@ function buildEvaluacionMotoraHablaScreens() {
       label: `Ensayo ${index + 1}`,
       audio: `${base}/8_pseudopalabras/${fileNumber}_pseudopalabras.wav`,
       record: true,
+      centerAudio: true,
+      autoStartAfterAudio: false,
       trial: String(index + 1),
       outputName: `modulo3_parte2_08_pseudopalabras_${index + 1}`
     })),
     {
       section: "Repetición de frases",
-      title: "Repetición de frases",
-      label: "Instrucción",
+      title: "Instrucciones",
+      label: "Instrucciones",
       audio: `${base}/9_repeticionfrases/instruccion1_repeticionfrases.wav`,
+      kind: "title",
+      centerAudio: true,
       record: false
     },
     ...[1, 2, 3, 4, 5, 6, 7, 8].map((trial) => ({
@@ -1561,14 +1686,18 @@ function buildEvaluacionMotoraHablaScreens() {
       label: `Ensayo ${trial}`,
       audio: `${base}/9_repeticionfrases/${trial}_${trial === 7 ? "repeticionfraes" : "repeticionfrases"}.wav`,
       record: true,
+      centerAudio: true,
+      autoStartAfterAudio: false,
       trial: String(trial),
       outputName: `modulo3_parte2_09_repeticionfrases_${trial}`
     })),
     {
       section: "Lectura de frases",
-      title: "Lectura de frases",
-      label: "Instrucción",
+      title: "Instrucciones",
+      label: "Instrucciones",
       audio: `${base}/10_lecturafrases/instruccion_lecturafrases.wav`,
+      kind: "title",
+      centerAudio: true,
       record: false
     },
     ...lecturaFrases.map((text, index) => ({
@@ -1577,6 +1706,7 @@ function buildEvaluacionMotoraHablaScreens() {
       label: `Frase ${String.fromCharCode(97 + index)}`,
       audio: "",
       record: true,
+      autoStartAfterAudio: false,
       trial: String(index + 1),
       text,
       outputName: `modulo3_parte2_10_lecturafrases_${index + 1}`
@@ -1593,14 +1723,16 @@ function withMotorTitleScreens(screens) {
   screens.forEach((screen) => {
     if (screen.section && !seenSections.has(screen.section)) {
       seenSections.add(screen.section);
-      result.push({
-        kind: "title",
-        section: screen.section,
-        title: screen.section,
-        label: "",
-        audio: "",
-        record: false
-      });
+      if (screen.kind !== "title") {
+        result.push({
+          kind: "title",
+          section: screen.section,
+          title: screen.section,
+          label: "",
+          audio: "",
+          record: false
+        });
+      }
     }
 
     result.push(screen);
@@ -1648,14 +1780,15 @@ function runHablaConectada(testConfig) {
   const storyImageView = document.getElementById("p3-screen-story-image");
   const finalView = document.getElementById("p3-screen-final");
   const personalView = document.getElementById("p3-screen-personal");
+  const completeView = document.getElementById("p3-screen-complete");
 
-  if (!section || !imageAudioView || !storyIntroView || !storyImageView || !finalView || !personalView) {
+  if (!section || !imageAudioView || !storyIntroView || !storyImageView || !finalView || !personalView || !completeView) {
     return;
   }
 
   section.style.display = "block";
 
-  const screens = testConfig.screens || [];
+  const screens = [...(testConfig.screens || []), { kind: "complete", section: "final" }];
   const mainImage = document.getElementById("p3-main-image");
   const storyIntroImage = document.getElementById("p3-story-intro-image");
   const storyImage = document.getElementById("p3-story-image");
@@ -1670,6 +1803,7 @@ function runHablaConectada(testConfig) {
   const prevBtn = document.getElementById("p3-prev-btn");
   const nextBtn = document.getElementById("p3-next-btn");
   const audioPlayer = document.getElementById("p3-audio-player");
+  const alarmPlayer = new Audio("../modulo2/assets/beep.wav");
 
   let currentScreenIndex = 0;
   let currentRecorder = null;
@@ -1679,6 +1813,7 @@ function runHablaConectada(testConfig) {
   const summaryRows = [];
   const sectionCounters = buildPart3Counters(screens);
   const storyIntroIndex = screens.findIndex((screen) => screen.kind === "story_intro");
+  const alarmedScreens = new Set();
 
   nextBtn.addEventListener("click", async () => {
     if (nextBtn.style.display === "none") {
@@ -1793,6 +1928,7 @@ function runHablaConectada(testConfig) {
     storyImageView.classList.remove("is-active");
     finalView.classList.remove("is-active");
     personalView.classList.remove("is-active");
+    completeView.classList.remove("is-active");
 
     singleAudioBtn.style.display = "none";
     audioTopBtn.classList.remove("is-disabled");
@@ -1845,17 +1981,37 @@ function runHablaConectada(testConfig) {
     if (screen.kind === "final_record") {
       finalView.classList.add("is-active");
       finalAudioBtn.style.display = "block";
-      placeRecordControls(finalView);
       showNext(prevBtn, currentScreenIndex > storyIntroIndex);
+      await startAudioRecording(screen);
+      await playStartAlarmOnce(currentScreenIndex);
       return;
     }
 
     if (screen.kind === "personal_record") {
       personalView.classList.add("is-active");
       personalAudioBtn.style.display = "block";
-      placeRecordControls(personalView);
       // Feedback: grabar desde que aparece la lámina hasta presionar avanzar.
       await startAudioRecording(screen);
+      await playStartAlarmOnce(currentScreenIndex);
+      return;
+    }
+
+    if (screen.kind === "complete") {
+      completeView.classList.add("is-active");
+      setScreenCounter("");
+      showNext(nextBtn, true);
+    }
+  }
+
+  async function playStartAlarmOnce(screenIndex) {
+    if (alarmedScreens.has(screenIndex)) return;
+    alarmedScreens.add(screenIndex);
+    stopAudio(alarmPlayer);
+    alarmPlayer.currentTime = 0;
+    try {
+      await alarmPlayer.play();
+    } catch (error) {
+      console.error("No se pudo reproducir la alarma de inicio.", error);
     }
   }
 
@@ -1935,7 +2091,8 @@ function runHablaConectada(testConfig) {
 
   function showRecordControls(visible) {
     if (recordControls) {
-      recordControls.classList.toggle("hidden", !visible);
+      recordControls.classList.add("hidden");
+      recordControls.style.display = "none";
     }
   }
 
