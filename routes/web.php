@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use App\Http\Controllers\Admin\ExaminadorPersonaTestController;
-
+use App\Http\Controllers\GeminiController;
 
 Auth::routes();
 Route::get('/', function () {
@@ -14,6 +14,8 @@ Route::get('/', function () {
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
+
+Route::match(['get', 'post'], '/gemini-test', [GeminiController::class, 'generarTexto']);
 
 Route::get('/emails.welcome', [App\Http\Controllers\Admin\UserController::class, 'store'])->name('emails.welcome');
 Route::get('/password/change', [App\Http\Controllers\Auth\PasswordController::class, 'showChangePasswordForm'])->name('password.change');
