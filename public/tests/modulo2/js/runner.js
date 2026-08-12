@@ -7568,11 +7568,10 @@ function runLineBisection(step) {
     }
   }
 
-  function showDemoAudios() {
+  function showLineBisectionAudio(audioSrc) {
     hideCornerAudios();
 
-    setupAudio(btnAudio, instructionAudio, step.demoAudios?.[0] ?? null, { forceShow: true });
-    setupAudio(btnAudio2, instructionAudio2, step.demoAudios?.[1] ?? null, { forceShow: true });
+    setupAudio(btnAudio, instructionAudio, audioSrc ?? null, { forceShow: true });
 
     if (btnAudio) {
       btnAudio.style.display = "block";
@@ -7581,34 +7580,15 @@ function runLineBisection(step) {
       btnAudio.style.bottom = "auto";
       btnAudio.style.top = "20px";
       btnAudio.style.right = "20px";
+      btnAudio.style.width = "90px";
+      btnAudio.style.height = "90px";
+      btnAudio.style.objectFit = "contain";
       btnAudio.style.zIndex = "9999";
-    }
-
-    if (btnAudio2) {
-      btnAudio2.style.display = "block";
-      btnAudio2.style.position = "fixed";
-      btnAudio2.style.left = "auto";
-      btnAudio2.style.bottom = "auto";
-      btnAudio2.style.top = "80px";
-      btnAudio2.style.right = "20px";
-      btnAudio2.style.zIndex = "9999";
     }
   }
 
   function showPatientAudio() {
-    hideCornerAudios();
-
-    setupAudio(btnAudio, instructionAudio, step.patientAudio ?? null, { forceShow: true });
-
-    if (btnAudio) {
-      btnAudio.style.display = "block";
-      btnAudio.style.position = "fixed";
-      btnAudio.style.left = "auto";
-      btnAudio.style.bottom = "auto";
-      btnAudio.style.top = "20px";
-      btnAudio.style.right = "20px";
-      btnAudio.style.zIndex = "9999";
-    }
+    showLineBisectionAudio(step.patientAudio);
   }
 
   function renderScreen() {
@@ -7618,15 +7598,15 @@ function runLineBisection(step) {
     if (screenIndex === 0) {
       showLayout("line_bisection_instructions");
       enableDrawing(false);
-      showDemoAudios();
+      showLineBisectionAudio(step.demoAudios?.[0]);
       return;
     }
 
     if (screenIndex === 1) {
-      hideCornerAudios();
       showLayout("line_bisection");
       renderCanvas();
       enableDrawing(true);
+      showLineBisectionAudio(step.demoAudios?.[1]);
       return;
     }
 
