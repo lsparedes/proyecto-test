@@ -658,8 +658,8 @@ export async function exportShortTermMemoryZip(usedHand = "") {
 }
 
 export async function exportPantomimeZip() {
-  if (typeof XLSX === "undefined" || typeof JSZip === "undefined") {
-    console.error("XLSX o JSZip no estan disponibles para exportar Pantomima.");
+  if (typeof JSZip === "undefined") {
+    console.error("JSZip no esta disponible para exportar Pantomima.");
     return false;
   }
 

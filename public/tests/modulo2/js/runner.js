@@ -416,8 +416,12 @@ function showHandSelectionScreen() {
   btnNext.style.display = "none";
   btnFullscreen.style.display = "none";
   handFinishScreen.style.display = "block";
-  if (selectHandContainer) selectHandContainer.style.display = "block";
-  if (handButton) handButton.style.display = "none";
+  const needsHand = requiresHandSelection(step);
+  if (selectHandContainer) selectHandContainer.style.display = needsHand ? "block" : "none";
+  if (handButton) {
+    handButton.disabled = false;
+    handButton.style.display = needsHand ? "none" : "block";
+  }
 
   handInputs.forEach((inputEl) => {
     inputEl.checked = false;
@@ -427,41 +431,30 @@ function showHandSelectionScreen() {
 
   handInputs.forEach((inputEl) => {
     inputEl.addEventListener("change", () => {
-      if (handButton) handButton.style.display = "block";
+      if (requiresHandSelection(step) && handButton) handButton.style.display = "block";
     });
   });
 
   if (handButton) {
     handButton.addEventListener("click", async () => {
       const usedHand = document.querySelector('input[name="hand"]:checked')?.value || "";
-      if (!usedHand) return;
+      if (requiresHandSelection(step) && !usedHand) return;
+      handButton.disabled = true;
 
-      addResult(partId, {
-        event: "hand_selection",
-        step_type: step.type,
-        used_hand: usedHand,
-        completed_at: new Date().toISOString()
-      });
-
-      const data = getPartData(partId);
-      setPartData(partId, { ...data, usedHand });
-      setPartProgress(partId, { usedHand });
-
-      if (partId === 1) {
-        const currentData = getPartData(partId);
-        setPartData(partId, {
-          ...currentData,
-          usedHand
+      if (usedHand) {
+        addResult(partId, {
+          event: "hand_selection",
+          step_type: step.type,
+          used_hand: usedHand,
+          completed_at: new Date().toISOString()
         });
 
-        const exported = await exportLineBisectionZip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-        clearPartData(partId);
+        const data = getPartData(partId);
+        setPartData(partId, { ...data, usedHand });
+        setPartProgress(partId, { usedHand });
       }
 
-      if (partId === 4) {
+      if (partId === 4 && usedHand) {
         const currentData = getPartData(partId);
         const shortTermMemoryResponses = (currentData.shortTermMemoryResponses || []).map((response) => ({
           ...response,
@@ -474,20 +467,9 @@ function showHandSelectionScreen() {
           shortTermMemoryResponses
         });
 
-        const exported = await exportShortTermMemoryZip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
       }
 
-      if (partId === 2) {
-        const exported = await exportSemanticPanZip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 6) {
+      if (partId === 6 && usedHand) {
         const currentData = getPartData(partId);
         const calculationResponses = (currentData.calculationResponses || []).map((response) => ({
           ...response,
@@ -500,26 +482,9 @@ function showHandSelectionScreen() {
           calculationResponses
         });
 
-        const exported = await exportCalculationZip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
       }
 
-      if (partId === 7) {
-        const currentData = getPartData(partId);
-        setPartData(partId, {
-          ...currentData,
-          usedHand
-        });
-
-        const exported = await exportComprehensionSpokenWordsZip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 8) {
+      if (partId === 8 && usedHand) {
         const currentData = getPartData(partId);
         const writtenPhonologicalResponses = (currentData.writtenPhonologicalResponses || []).map((response) => ({
           ...response,
@@ -532,13 +497,9 @@ function showHandSelectionScreen() {
           writtenPhonologicalResponses
         });
 
-        const exported = await exportWrittenPhonologicalZip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
       }
 
-      if (partId === 9) {
+      if (partId === 9 && usedHand) {
         const currentData = getPartData(partId);
         const orationalPart9Responses = (currentData.orationalPart9Responses || []).map((response) => ({
           ...response,
@@ -551,13 +512,9 @@ function showHandSelectionScreen() {
           orationalPart9Responses
         });
 
-        const exported = await exportOrationalPart9Zip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
       }
 
-      if (partId === 10) {
+      if (partId === 10 && usedHand) {
         const currentData = getPartData(partId);
         const orationalPart10Responses = (currentData.orationalPart10Responses || []).map((response) => ({
           ...response,
@@ -570,76 +527,11 @@ function showHandSelectionScreen() {
           orationalPart10Responses
         });
 
-        const exported = await exportOrationalPart10Zip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
       }
 
-      if (partId === 11) {
-        const currentData = getPartData(partId);
-        setPartData(partId, {
-          ...currentData,
-          usedHand
-        });
-
-        const exported = await exportOralParagraphsZip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 12) {
-        const currentData = getPartData(partId);
-        setPartData(partId, {
-          ...currentData,
-          usedHand
-        });
-
-        const exported = await exportRepeatAudioZip(usedHand);
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 13) {
-        const currentData = getPartData(partId);
-        setPartData(partId, {
-          ...currentData,
-          usedHand
-        });
-
-        const exported = await exportRepeatAudioZip(usedHand, 13, 31, "Repeticion_de_palabras_complejas");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 24) {
-        const currentData = getPartData(partId);
-        setPartData(partId, { ...currentData, usedHand });
-        const exported = await exportWritingImagesZip(24, 42, "Copia");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 25) {
-        const currentData = getPartData(partId);
-        setPartData(partId, { ...currentData, usedHand });
-        const exported = await exportWritingImagesZip(25, 43, "Etiquetado_de_imagenes");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 26) {
-        const currentData = getPartData(partId);
-        setPartData(partId, { ...currentData, usedHand });
-        const exported = await exportWritingImagesZip(26, 44, "Escritura_al_dictado");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
+      const exported = await exportCurrentPartAtFinish(usedHand);
+      if (exported) {
+        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
       }
 
       hideHandSelectionScreen();
@@ -651,12 +543,45 @@ function showHandSelectionScreen() {
 }
 
 function finishCurrentPart() {
-  if (requiresHandSelection(step)) {
-    showHandSelectionScreen();
-    return;
-  }
+  showHandSelectionScreen();
+}
 
-  closeCurrentWindow();
+async function exportCurrentPartAtFinish(usedHand = "") {
+  const repeatExports = {
+    12: [12, 30, "Repeticion_de_palabras"],
+    13: [13, 31, "Repeticion_de_palabras_complejas"],
+    14: [14, 32, "Repeticion_de_no_palabras"],
+    15: [15, 33, "Repeticion_de_digitos"],
+    16: [16, 34, "Repeticion_de_oraciones"],
+    17: [17, 35, "Denominacion_de_objetos"],
+    18: [18, 36, "Denominacion_de_acciones"],
+    19: [19, 37, "Descripcion_oral_de_una_imagen"],
+    20: [20, 38, "Lectura_de_palabras_aisladas"],
+    21: [21, 39, "Lectura_de_palabras_complejas"],
+    22: [22, 40, "Lectura_de_palabras_funcionales"],
+    23: [23, 41, "Lectura_de_no_palabras"]
+  };
+  const writingExports = {
+    24: [24, 42, "Copia"],
+    25: [25, 43, "Etiquetado_de_imagenes"],
+    26: [26, 44, "Escritura_al_dictado"],
+    27: [27, 45, "Descripcion_escrita_de_una_imagen"]
+  };
+
+  if (partId === 1) return exportLineBisectionZip(usedHand);
+  if (partId === 2) return exportSemanticPanZip(usedHand);
+  if (partId === 3) return exportVerbalFluencyAudioZip();
+  if (partId === 4) return exportShortTermMemoryZip(usedHand);
+  if (partId === 5) return exportPantomimeZip();
+  if (partId === 6) return exportCalculationZip(usedHand);
+  if (partId === 7) return exportComprehensionSpokenWordsZip(usedHand);
+  if (partId === 8) return exportWrittenPhonologicalZip(usedHand);
+  if (partId === 9) return exportOrationalPart9Zip(usedHand);
+  if (partId === 10) return exportOrationalPart10Zip(usedHand);
+  if (partId === 11) return exportOralParagraphsZip(usedHand);
+  if (repeatExports[partId]) return exportRepeatAudioZip(usedHand, ...repeatExports[partId]);
+  if (writingExports[partId]) return exportWritingImagesZip(...writingExports[partId]);
+  return false;
 }
 
 //SEMANTIC MATCH (Parte 2)
@@ -695,7 +620,7 @@ function runSemanticMatch(step) {
     btnBack.alt = "Volver";
     btnBack.style.position = "absolute";
     btnBack.style.left = "14px";
-    btnBack.style.bottom = "84px";
+    btnBack.style.bottom = "14px";
     btnBack.style.width = "56px";
     btnBack.style.height = "56px";
     btnBack.style.cursor = "pointer";
@@ -1206,8 +1131,7 @@ function runVerbalFluency(step) {
     { type: "test", text: "Animales", audio: step.animalesAudio, topBar: "E 1/2" },
     { type: "instruction", audio: step.instr2Audio, topBar: "Instrucción" },
     { type: "practice", text: "b__________", audio: step.letraBAudio, topBar: "P 2/2" },
-    { type: "test", text: "s______", audio: step.letraSAudio, topBar: "E 2/2" },
-    { type: "thanks", topBar: "Fin" }
+    { type: "test", text: "s______", audio: step.letraSAudio, topBar: "E 2/2" }
   ];
 
   let index = 0;
@@ -1580,10 +1504,6 @@ function runVerbalFluency(step) {
       if (prepared) await recorder.close();
       videoRecorder.stopStream();
       cameraPrepared = false;
-      const exported = await exportVerbalFluencyAudioZip();
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
       finishCurrentPart();
       return;
     }
@@ -2031,11 +1951,12 @@ function runVideoRecordTrials(step) {
   }
 
   function setRecordingUI() {
-    if (vrControls) vrControls.style.display = "flex";
+    if (vrControls) vrControls.style.display = "none";
     vBtnRec.style.display = "none";
-    vBtnStop.style.display = "block";
-    vBtnRecording.style.display = "block";
+    vBtnStop.style.display = "none";
+    vBtnRecording.style.display = "none";
     isRecording = true;
+    btnNext.style.display = "block";
   }
 
   async function startStreamTo(el) {
@@ -2097,7 +2018,6 @@ function runVideoRecordTrials(step) {
       return;
     }
 
-    await startStreamTo(vrPreview);
     await recorder.startRecording();
     didRecordThisScreen = false;
     setRecordingUI();
@@ -2161,10 +2081,10 @@ function runVideoRecordTrials(step) {
   function setAudioButtonPosition() {
     btnAudio.style.display = "block";
     btnAudio.style.position = "fixed";
-    btnAudio.style.left = "14px";
-    btnAudio.style.bottom = "95px";
-    btnAudio.style.top = "auto";
-    btnAudio.style.right = "auto";
+    btnAudio.style.left = "auto";
+    btnAudio.style.bottom = "auto";
+    btnAudio.style.top = "72px";
+    btnAudio.style.right = "14px";
     btnAudio.style.transform = "none";
     btnAudio.style.zIndex = "80";
   }
@@ -2221,7 +2141,7 @@ function runVideoRecordTrials(step) {
     vrControls.style.top = "520px";
     vrControls.style.transform = "translateX(50%)";
     vrStimImageWrap.style.display = "flex";
-    vrSmallPreviewWrap.style.display = "none";
+    vrSmallPreviewWrap.style.display = noCameraMode ? "none" : "block";
 
     setAudioButtonPosition();
     instructionAudio.src = step.instructionAudio || "";
@@ -2251,8 +2171,11 @@ function runVideoRecordTrials(step) {
     instructionAudio.onended = async () => {
       btnAudio.style.display = "none";
       vrStimImageWrap.style.display = "flex";
-      vrPreviewWrap.style.display = "flex";
       try {
+        if (!noCameraMode) {
+          vrSmallPreviewWrap.style.display = "block";
+          await startStreamTo(vrSmallPreview);
+        }
         await startRecording();
       } catch (e) {
         enableNoCameraMode(e);
@@ -2269,6 +2192,8 @@ function runVideoRecordTrials(step) {
   };
 
   btnNext.onclick = async () => {
+    if (btnNext.dataset.busy === "1") return;
+    btnNext.dataset.busy = "1";
     stopInstructionAudio();
     if (isRecording || noCameraMode) {
       await stopRecordingAndSave();
@@ -2277,19 +2202,19 @@ function runVideoRecordTrials(step) {
     screenIndex++;
 
     if (screenIndex >= totalScreens) {
+      btnNext.style.display = "none";
+      btnAudio.style.display = "none";
+      vrStimWrap.style.display = "none";
+      vrPreviewWrap.style.display = "none";
       setPartProgress(partId, { status: "done", screenIndex: totalScreens - 1 });
       recorder.stopStream();
-      btnAudio.style.display = "none";
-      const exported = await exportPantomimeZip();
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
       finishCurrentPart();
       return;
     }
 
     setPartProgress(partId, { status: "in_progress", screenIndex });
     await render();
+    btnNext.dataset.busy = "0";
   };
 
   render().catch(showVideoDeviceError);
@@ -4744,41 +4669,6 @@ function runRepeatAudioRecord(step) {
       screenIndex: Math.max(0, totalScreens - 1)
     });
 
-    if (partId === 12) {
-      const exported = await exportRepeatAudioZip("", 12, 30, "Repeticion_de_palabras");
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
-    }
-
-    if (partId === 13) {
-      const exported = await exportRepeatAudioZip("", 13, 31, "Repeticion_de_palabras_complejas");
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
-    }
-
-    if (partId === 14) {
-      const exported = await exportRepeatAudioZip("", 14, 32, "Repeticion_de_no_palabras");
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
-    }
-
-    if (partId === 15) {
-      const exported = await exportRepeatAudioZip("", 15, 33, "Repeticion_de_digitos");
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
-    }
-
-    if (partId === 16) {
-      const exported = await exportRepeatAudioZip("", 16, 34, "Repeticion_de_oraciones");
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
-    }
-
     finishCurrentPart();
   }
 
@@ -5470,11 +5360,6 @@ function runImageInstrAutoRecord(step) {
       cameraWrap.remove();
 
       clearPartProgress(partId);
-      const exported = await exportRepeatAudioZip("", 17, 35, "Denominacion_de_objetos");
-      if (exported) {
-        await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      }
-      clearPartData(partId);
       finishCurrentPart();
       return;
     }
@@ -5743,10 +5628,6 @@ function runImageAutoRecordSimple(step) {
         videoRecorder.stopStream();
         cameraPrepared = false;
         cameraWrap.remove();
-        const exported = await exportRepeatAudioZip("", 18, 36, "Denominacion_de_acciones");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
         finishCurrentPart();
         return;
       }
@@ -5983,11 +5864,6 @@ async function runAudioRecordImage(step) {
 
     setPartProgress(partId, { status: "done" });
     clearPartProgress(partId);
-    const exported = await exportRepeatAudioZip("", 19, 37, "Descripcion_oral_de_una_imagen");
-    if (exported) {
-      await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-    }
-    clearPartData(partId);
     finishCurrentPart();
 
   };
@@ -6154,12 +6030,9 @@ async function runOralImageDescription(step) {
       arImage.style.display = "block";
       arImage.src = step.image;
       if (!isRecording) await startCapture();
-    } else {
-      topBar.textContent = "";
-      finishMessage.style.display = "block";
     }
 
-    setPartProgress(partId, { status: "in_progress", screenIndex, totalScreens: 3 });
+    setPartProgress(partId, { status: "in_progress", screenIndex, totalScreens: 2 });
   }
 
   btnNext.onclick = async () => {
@@ -6176,20 +6049,13 @@ async function runOralImageDescription(step) {
       if (screenIndex === 1) {
         arImageWrap.style.display = "none";
         await stopAndSave();
-        screenIndex = 2;
-        await render();
-        return;
+        btnNext.style.display = "none";
+        setPartProgress(partId, { status: "done", screenIndex: 1 });
+        await recorder.close();
+        videoRecorder.stopStream();
+        cameraWrap.remove();
+        finishCurrentPart();
       }
-
-      btnNext.style.display = "none";
-      setPartProgress(partId, { status: "done", screenIndex: 2 });
-      await recorder.close();
-      videoRecorder.stopStream();
-      cameraWrap.remove();
-      const exported = await exportRepeatAudioZip("", 19, 37, "Descripcion_oral_de_una_imagen");
-      if (exported) await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-      clearPartData(partId);
-      finishCurrentPart();
     } finally {
       isTransitioning = false;
     }
@@ -6561,34 +6427,6 @@ async function runAudioRecordWords(step) {
         cameraWrap.remove();
       }
 
-      if (partId === 20) {
-        const exported = await exportRepeatAudioZip("", 20, 38, "Lectura_de_palabras_aisladas");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 21) {
-        const exported = await exportRepeatAudioZip("", 21, 39, "Lectura_de_palabras_complejas");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 22) {
-        const exported = await exportRepeatAudioZip("", 22, 40, "Lectura_de_palabras_funcionales");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
-      if (partId === 23) {
-        const exported = await exportRepeatAudioZip("", 23, 41, "Lectura_de_no_palabras");
-        if (exported) {
-          await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-        }
-      }
-
       finishCurrentPart();
       return;
     }
@@ -6825,22 +6663,6 @@ function runWritingCanvasFlow(step, config = {}) {
     });
   }
 
-  async function exportCurrentWritingZip() {
-    const exportMap = {
-      24: { testNumber: 42, label: "Copia" },
-      25: { testNumber: 43, label: "Etiquetado_de_imagenes" },
-      26: { testNumber: 44, label: "Escritura_al_dictado" },
-      27: { testNumber: 45, label: "Descripcion_escrita_de_una_imagen" }
-    };
-    const config = exportMap[partId];
-    if (!config) return;
-
-    const exported = await exportWritingImagesZip(partId, config.testNumber, config.label);
-    if (exported) {
-      await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-    }
-  }
-
   function loadImage(src) {
     return new Promise((resolve) => {
       if (!src) {
@@ -6910,9 +6732,6 @@ function runWritingCanvasFlow(step, config = {}) {
     screenIndex++;
     if (screenIndex >= screens.length) {
       setPartProgress(partId, { status: "done", screenIndex: screens.length - 1 });
-      if (partId !== 24 && partId !== 25 && partId !== 26) {
-        await exportCurrentWritingZip();
-      }
       finishCurrentPart();
       return;
     }
@@ -7470,10 +7289,6 @@ function runTextImage(step) {
     }
     setPartProgress(partId, { status: "done" });
     stopAllAudios();
-    const exported = await exportWritingImagesZip(partId, 45, "Descripcion_escrita_de_una_imagen");
-    if (exported) {
-      await wait(ZIP_DOWNLOAD_CLOSE_DELAY_MS);
-    }
     finishCurrentPart();
   };
 }
