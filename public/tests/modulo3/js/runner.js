@@ -52,8 +52,9 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
   const instructionView = document.getElementById("p1t1-screen-instruction");
   const wordView = document.getElementById("p1t1-screen-word");
   const recordView = document.getElementById("p1t1-screen-record");
+  const completeView = document.getElementById("p1t1-screen-complete");
 
-  if (!section || !instructionView || !wordView || !recordView) {
+  if (!section || !instructionView || !wordView || !recordView || !completeView) {
     return;
   }
 
@@ -77,6 +78,8 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
   let mediaStream = null;
   let mediaRecorder = null;
   let recorderChunks = [];
+  let showingCompleteScreen = false;
+  let finishing = false;
   const recordedVideos = [];
   const summaryRows = [];
 
@@ -90,6 +93,17 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
     stopAudio(audioPlayer);
     await stopRecorder(true);
 
+    if (showingCompleteScreen) {
+      if (finishing) return;
+      finishing = true;
+      nextBtn.classList.add("is-disabled");
+      await exportProcesosMotoresBasicosZip(recordedVideos, summaryRows);
+      setTimeout(() => {
+        onComplete();
+      }, 3000);
+      return;
+    }
+
     if (currentScreenIndex < screens.length - 1) {
       currentScreenIndex += 1;
       await renderScreen();
@@ -102,10 +116,15 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
       camera.srcObject = null;
     }
 
-    await exportProcesosMotoresBasicosZip(recordedVideos, summaryRows);
-    setTimeout(() => {
-      onComplete();
-    }, 3000);
+    showingCompleteScreen = true;
+    instructionView.classList.remove("is-active");
+    wordView.classList.remove("is-active");
+    recordView.classList.remove("is-active");
+    completeView.classList.add("is-active");
+    setScreenCounter("");
+    fullscreenBtn.style.display = "none";
+    audioBtn.style.display = "none";
+    showNext(nextBtn, true);
   });
 
   fullscreenBtn.addEventListener("click", async () => {
@@ -159,6 +178,7 @@ function setupPart1Test1(testConfig, onComplete = closeCurrentWindow) {
     instructionView.classList.remove("is-active");
     wordView.classList.remove("is-active");
     recordView.classList.remove("is-active");
+    completeView.classList.remove("is-active");
 
     fullscreenBtn.style.display = "none";
     audioBtn.style.display = "none";
@@ -778,8 +798,9 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   const section = document.getElementById("part-1-test-2");
   const titleView = document.getElementById("p1t2-screen-title");
   const audioView = document.getElementById("p1t2-screen-audios");
+  const completeView = document.getElementById("p1t2-screen-complete");
 
-  if (!section || !titleView || !audioView) {
+  if (!section || !titleView || !audioView || !completeView) {
     return;
   }
 
@@ -807,6 +828,8 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
   let activeAudioSlot = null;
   let selectedAudioSlot = null;
   let endCountdownTimer = null;
+  let showingCompleteScreen = false;
+  let finishing = false;
   const recordedAudios = [];
   const takeCounts = {};
   const sectionCounters = buildSectionCounters(screens);
@@ -835,16 +858,30 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
 
     await stopCurrentAudioRecording(true);
 
+    if (showingCompleteScreen) {
+      if (finishing) return;
+      finishing = true;
+      nextBtn.classList.add("is-disabled");
+      await exportPart1Test2Zip(recordedAudios);
+      setTimeout(() => {
+        onComplete();
+      }, 3000);
+      return;
+    }
+
     if (currentScreenIndex < screens.length - 1) {
       currentScreenIndex += 1;
       renderScreen();
       return;
     }
 
-    await exportPart1Test2Zip(recordedAudios);
-    setTimeout(() => {
-      onComplete();
-    }, 3000);
+    showingCompleteScreen = true;
+    titleView.classList.remove("is-active");
+    audioView.classList.remove("is-active");
+    completeView.classList.add("is-active");
+    setScreenCounter("");
+    fullscreenBtn.style.display = "none";
+    showNext(nextBtn, true);
   });
 
   stopBtn.addEventListener("click", async () => {
@@ -909,6 +946,7 @@ function setupPart1Test2(testConfig, onComplete = closeCurrentWindow) {
 
     titleView.classList.remove("is-active");
     audioView.classList.remove("is-active");
+    completeView.classList.remove("is-active");
     audio1Btn.classList.remove("is-disabled");
     audio2Btn.classList.add("is-disabled");
     if (audio1Row) audio1Row.style.display = "";
@@ -1095,8 +1133,8 @@ function runEvaluacionMotoraHabla() {
   let currentSubtestSummaryStart = 0;
 
   nextBtn.addEventListener("click", async () => {
-    if (currentMode === "downloaded") {
-      renderMenu();
+    if (currentMode === "complete") {
+      await finishCurrentSubtest(nextBtn);
       return;
     }
 
@@ -1188,43 +1226,30 @@ function runEvaluacionMotoraHabla() {
     stopAudio(audioPlayer);
     resetRecordControls();
     recordControls.style.display = "none";
-    showNext(nextBtn, false);
+    showNext(nextBtn, true);
 
-    const currentSection = activeScreens[0]?.section || "";
-    titleEl.textContent = ["Volumen creciente", "Habla automática", "Diadococinesia", "Lectura", "Diptongos", "Palabras polisilábicas", "Palabras con longitud creciente", "Pseudopalabras", "Repetición de frases", "Lectura de frases"].includes(currentSection)
-      ? "¡Ha completado esta tarea con éxito! ¡Muchas gracias!"
-      : "Subtest terminado";
+    titleEl.textContent = "¡Ha completado esta tarea con éxito! ¡Muchas gracias!";
     titleEl.style.display = "block";
     labelEl.style.display = "none";
     textEl.style.display = "none";
     audiosEl.innerHTML = "";
-    audiosEl.className = "motor-menu is-task-finish";
-
-    const finishButton = document.createElement("button");
-    finishButton.type = "button";
-    finishButton.textContent = "Terminar tarea";
-    finishButton.addEventListener("click", finishCurrentSubtest);
-    audiosEl.appendChild(finishButton);
+    audiosEl.className = "motor-menu";
   }
 
-  async function finishCurrentSubtest(event) {
-    const finishButton = event?.currentTarget;
-    if (finishButton) finishButton.disabled = true;
+  async function finishCurrentSubtest(finishArrow) {
+    if (currentMode !== "complete") return;
+    currentMode = "exporting";
+    if (finishArrow) finishArrow.classList.add("is-disabled");
+    showNext(nextBtn, false);
     stopAudio(audioPlayer);
     await stopRecording(true);
     const taskAudios = audios.slice(currentSubtestAudioStart);
     const taskRows = summaryRows.slice(currentSubtestSummaryStart);
     await exportEvaluacionMotoraHablaZip(taskAudios, taskRows);
 
-    currentMode = "downloaded";
-    setScreenCounter("");
-    titleEl.textContent = "Tarea finalizada";
-    titleEl.style.display = "block";
-    labelEl.style.display = "none";
-    textEl.style.display = "none";
-    audiosEl.innerHTML = "";
-    audiosEl.className = "motor-menu";
-    showNext(nextBtn, true);
+    setTimeout(() => {
+      closeCurrentWindow();
+    }, 3000);
   }
 
   async function renderScreen() {
