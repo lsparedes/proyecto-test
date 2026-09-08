@@ -23,7 +23,7 @@ let clicks = [];
 let recorder;
 let chunks = [];
 let practiceClicks = [];
-let startItemTime, endTime, totalStartTime;
+let startItemTime, endTime, totalStartTime, taskEndTime;
 let originalCanvasSize = { width: 2105, height: 1489 };
 let reviewShowAll = false;
 let clickResults = [];
@@ -528,6 +528,9 @@ testButton.addEventListener('click', () => {
 });
 
 nextButton.addEventListener('click', () => {
+    // El tiempo de ejecución termina cuando el participante finaliza la tarea,
+    // no después de que el examinador selecciona la mano y revisa los puntos.
+    if (!taskEndTime) taskEndTime = new Date();
     fin.style.display = 'block';
     selectHandContainer.style.display = "block";
     mainScreen.style.display = 'none';
@@ -658,7 +661,7 @@ function downloadVideo(callback) {
 
 function prepararResultadosParaRevision() {
     const umbralA = 40;        // más tolerancia para A
-    const umbralOtras = 1;    // menos tolerancia para letras incorrectas
+    const umbralOtras = 40;    // misma tolerancia espacial para letras no objetivo
     const margenDominio = 10;   // la A debe ganarle claramente a la otra letra
 
     const usados = new Set();
@@ -712,11 +715,14 @@ function prepararResultadosParaRevision() {
             if (usados.has(nearestAIndex)) {
                 isDuplicate = true;
                 isCorrectInitial = false; // no cuenta como nuevo acierto
+                isCommission = true;
             } else {
                 usados.add(nearestAIndex);
                 isCorrectInitial = true;
             }
-        } else if (nearOther) {
+        } else {
+            // Todo toque que no identifica una A nueva es un falso positivo.
+            // Las repeticiones sobre una A se conservan aparte como duplicados.
             isCommission = true;
         }
 
@@ -838,6 +844,29 @@ function validateClicks() {
 
     // 👉 1) Guardamos el estado ORIGINAL del canvas (sin corrección)
     const originalImageDataURL = imageCanvas.toDataURL('image/png');
+
+    // Una corrección manual debe quedar asociada a una A concreta. Además, una
+    // misma A solo puede aportar un acierto, aunque haya recibido varios toques.
+    const targetsContados = new Set();
+    clickResults.forEach((result) => {
+        if (!result.isCorrect) return;
+
+        const targetIndex = Number.isInteger(result.targetIndex)
+            ? result.targetIndex
+            : result.nearestAIndex;
+
+        if (!Number.isInteger(targetIndex) || targetIndex < 0 || targetsContados.has(targetIndex)) {
+            result.isCorrect = false;
+            result.isDuplicate = Number.isInteger(targetIndex) && targetsContados.has(targetIndex);
+            result.isCommission = true;
+            return;
+        }
+
+        result.targetIndex = targetIndex;
+        result.isCommission = false;
+        result.isDuplicate = false;
+        targetsContados.add(targetIndex);
+    });
 
     let correctClicks = 0;
     let totalErrors = 0;
@@ -966,11 +995,11 @@ function validateClicks() {
         if (meanX > meanY) {
             return zigzagX
                 ? "B. Zigzag Horizontal (fila a fila alternando)"
-                : "A. Horizontal (fila a fila izquierda a derecha)";
+                : `A. Horizontal (${meanSigned(xDiffs) >= 0 ? 'predominio izquierda a derecha' : 'predominio derecha a izquierda'})`;
         } else {
             return zigzagY
                 ? "D. Zigzag Vertical (columna a columna alternando)"
-                : "C. Vertical (columna a columna de arriba a abajo)";
+                : `C. Vertical (${meanSigned(yDiffs) >= 0 ? 'predominio arriba a abajo' : 'predominio abajo a arriba'})`;
         }
     }
 
@@ -993,18 +1022,19 @@ function validateClicks() {
         }
     });
 
-    endTime = new Date();
-    const rawTestDuration = (endTime - startItemTime);
+    endTime = taskEndTime || new Date();
+    const rawTestDuration = Math.max(0, endTime - startItemTime);
+    const testDurationSeconds = rawTestDuration / 1000;
 
-    const testDuration = rawTestDuration.toFixed(3).replace('.', ',');
-    let searchSpeed = rawTestDuration > 0 ? (correctClicks / rawTestDuration) * 1000 : 0;
+    const testDuration = testDurationSeconds.toFixed(3).replace('.', ',');
+    let searchSpeed = testDurationSeconds > 0 ? correctClicks / testDurationSeconds : 0;
     const searchSpeedFormatted = searchSpeed.toLocaleString('es-CL', {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
 
     const normalizedCenterX = (centerX - (imageWidth / 2)) / (imageWidth / 2);
-    const CoC = Math.sign(normalizedCenterX) === -1 ? -1 : 1;
+    const CoC = normalizedCenterX.toFixed(3).replace('.', ',');
 
     const totalDuration = ((endTime - totalStartTime) / 1000).toFixed(3).replace('.', ',');
 
@@ -1014,8 +1044,8 @@ function validateClicks() {
     const year = String(fechaActual.getFullYear()).slice(-2);
     const fechaFormateada = `${day}${month}${year}`;
 
-    const searchDistancePromedio = promedio.length > 0
-        ? (searchDistance / promedio.length)
+    const searchDistancePromedio = promedio.length > 1
+        ? (searchDistance / (promedio.length - 1))
         : 0;
 
     const searchDistanceFormatted = searchDistancePromedio.toLocaleString('es-CL', {

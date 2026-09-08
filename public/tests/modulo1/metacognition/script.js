@@ -64,11 +64,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
   let DotDiff = 15; // Diferencia inicial entre cantidades de colores
+  let currentDotDifference = DotDiff;
 
 
   let ajusteDificultad = 1;
   let correctStreak = 0; // Variable global para contar respuestas correctas consecutivas
   let startTimeTotal = new Date();
+  let taskEndTime = null;
   let startTime;
   let timeColor;
   let timeConfidence;
@@ -203,11 +205,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (respuesta === true) { // Respuesta correcta
       correctStreak++;
       if (correctStreak === 2) {
-        if (DotDiff > 1) DotDiff--; // Aumenta dificultad
+        // Con 65 puntos, la diferencia efectiva siempre es impar. Cambiar de
+        // dos en dos garantiza que cada ajuste modifique realmente el estímulo.
+        DotDiff = Math.max(1, DotDiff - 2); // Aumenta dificultad
         correctStreak = 0;
       }
     } else {
-      DotDiff++; // Disminuye dificultad
+      DotDiff = Math.min(63, DotDiff + 2); // Disminuye dificultad, dejando al menos un punto minoritario
       correctStreak = 0;
     }
   }
@@ -220,6 +224,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let numPuntosMayor = Math.ceil((totalDots + DotDiff) / 2);
     let numPuntosMenor = totalDots - numPuntosMayor;
+    currentDotDifference = numPuntosMayor - numPuntosMenor;
 
     const colors = [];
     for (let i = 0; i < numPuntosMayor; i++) colors.push(colorMayor);
@@ -263,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const confidence = confidenceSlider.value;
     const timeColFormatted = timeColor;
     const timeConfFormatted = timeConfidence;
-    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: DotDiff, timeCol: timeColFormatted, timeConf: timeConfFormatted, timeP: 'N/A', RedDotSide: RedDotSide });
+    results.push({ block: blockCount, trial: trialCount, correctColor, answer, confidence, isCorrect, diferencia: currentDotDifference, timeCol: timeColFormatted, timeConf: timeConfFormatted, timeP: 'N/A', RedDotSide: RedDotSide });
     ajustarDificultad(isCorrect);
   }
 
@@ -560,6 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Funcion para mostrar la pantalla de seleccion de mano
   function showHandSelection() {
+    if (!taskEndTime) taskEndTime = new Date();
     document.getElementById("preEnd").style.display = 'block';
     selectHandContainer.style.display = "block";
   }
@@ -690,7 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const inicialesExaminador = userInfo?.initials || `${userInfo?.name || ""} ${userInfo?.last_name || ""}`.trim().split(/\s+/).filter(Boolean).map(part => part.charAt(0).toUpperCase()).join("") || "EX";
 
     // Crear el contenido del archivo de métricas
-    const totalTime = ((new Date() - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
+    const totalTime = (((taskEndTime || new Date()) - startTimeTotal) / 1000).toFixed(3).replace('.', ',');
 
     const txtContent = [
       ["TotTime", "Hand", "Examinador"],
@@ -703,32 +709,6 @@ document.addEventListener('DOMContentLoaded', () => {
       filename: `${idParticipante}_MetaCog_unival.csv`
     };
   }
-
-  setTimeout(() => {
-    if (!finished) {
-      // Oculta todo lo relacionado al test
-      practiceContainer.style.display = 'none';
-      testContainer.style.display = 'none';
-      questionScreen.style.display = 'none';
-      confidenceScreen.style.display = 'none';
-      feedbackScreen.style.display = 'none';
-      blockFinishScreen.style.display = 'none';
-      practiceFinishScreen.style.display = 'none';
-      demoFinishScreen.style.display = 'none';
-      endScreen.style.display = 'none';
-      instructions.style.display = 'none';
-
-      // Mostrar selección de mano
-      showHandSelection();
-
-      // Asignar una mano por defecto si no se ha seleccionado
-      if (!selectedHand) selectedHand = "no seleccionada";
-
-      // Descargar resultados
-      downloadResultsAsZip(results, startTimeTotal, selectedHand);
-    }
-  }, 600000); // 10 minutos en milisegundos
-
 
   let finished = false;
 

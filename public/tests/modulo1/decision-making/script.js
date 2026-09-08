@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentBlock = 0;
     let selectionTimeout;
     let totalStartTime = Date.now(); // Start the total time counter
+    let taskEndTime = null;
     let globalTrialCount = 0; // nuevo contador continuo para E1...E60
 
     let caseOption = Math.random() < 0.5 ? 'A' : 'B';
@@ -232,15 +233,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Registrar el ensayo omitido
         results.push([
             practiceMode ? 'Practica' : currentBlock,
-            currentTrial + 1,
+            practiceMode ? currentTrial + 1 : globalTrialCount + 1,
             trials[currentTrial].rightReward ? 'Ganancia' : 'Perdida',
             trials[currentTrial].leftReward ? 'Ganancia' : 'Perdida',
             'Omitido',
-            '',
-            ''
+            0,
+            '5000,000'
         ]);
 
         currentTrial++; // Avanzar al siguiente ensayo antes de mostrar el siguiente
+        if (!practiceMode) globalTrialCount++;
 
         setTimeout(() => {
             skippedScreen.style.display = 'none'; // Ocultar "omitido" después de 1 segundo
@@ -454,7 +456,7 @@ function generatePracticeTrials() {
         csvContent += filteredResults.map(e => [...e, initials].join(";")).join("\n"); // Añadir iniciales en cada fila
 
         // Generar el contenido del archivo TXT
-        const totalTaskTime = ((Date.now() - totalStartTime) / 1000).toFixed(3).replace('.', ',');
+        const totalTaskTime = (((taskEndTime || Date.now()) - totalStartTime) / 1000).toFixed(3).replace('.', ',');
         let txtContent = [["TotTime", "Hand", "Examinador"], [totalTaskTime, selectedHand, initials]].map(e => e.join(";")).join("\n");
 
         // Obtener la fecha actual para el nombre del archivo
@@ -502,6 +504,7 @@ function generatePracticeTrials() {
 
     // Funcion para mostrar la pantalla de seleccion de mano
     function showHandSelection() {
+        if (!taskEndTime) taskEndTime = Date.now();
         document.getElementById("preEnd").style.display = 'block';
         selectHandContainer.style.display = "block";
     }
