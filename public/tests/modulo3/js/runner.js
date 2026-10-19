@@ -788,7 +788,9 @@ async function getExaminerThreeInitials(fallback) {
       .map((part) => part.charAt(0).toUpperCase())
       .join("");
 
-    return initials || user?.initials || fallback;
+    // Prioriza las iniciales NAA que entrega el servidor (primer nombre + primer y segundo apellido);
+    // el calculo local queda solo como respaldo.
+    return user?.initials || initials || fallback;
   } catch (_) {
     return fallback;
   }

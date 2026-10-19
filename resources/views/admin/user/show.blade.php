@@ -34,10 +34,11 @@
                                         <img src="{{ asset('assets/img/default-avatar.png') }}" alt="image"
                                             class="avatar">
                                         <h4 class="title mt-3">{{ $user->name }}</h4>
-                                        <h4 class="title mt-3">{{ $user->last_name }}</h4>
+                                        <h4 class="title mt-3">{{ trim($user->last_name . ' ' . $user->second_last_name) }}</h4>
                                     </a>
                                     <p class="description">
                                         - Email: {{ $user->email }} <br>
+                                        - Iniciales (NAA): {{ $user->examinerInitials() }} <br>
                                         - Fecha creacion: {{ $user->created_at->toFormattedDateString() }}
                                     </p>
                                 </div>

@@ -26,8 +26,19 @@
                         <input type="text" name="name" value="{{ $user->name }}" class="form-control">
                     </div>
                     <div class="mb-3">
-                        <label for="last_name" class="form-label">Apellido:</label>
-                        <input type="text" name="last_name" value="{{ $user->last_name }}" class="form-control" required>
+                        <label for="last_name" class="form-label">Primer apellido:</label>
+                        <input type="text" name="last_name" id="last_name" value="{{ old('last_name', $user->last_name) }}" class="form-control" maxlength="255" required>
+                        @error('last_name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="second_last_name" class="form-label">Segundo apellido:</label>
+                        <input type="text" name="second_last_name" id="second_last_name" value="{{ old('second_last_name', $user->second_last_name) }}" class="form-control" maxlength="255">
+                        @error('second_last_name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">Iniciales actuales del examinador en las descargas (NAA): {{ $user->examinerInitials() }}</div>
                     </div>
                     <div class="mb-3">
                         <label for="email" class="form-label">Correo Electrónico:</label>

@@ -24,8 +24,19 @@
                         <input type="text" name="name" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="last_name" class="form-label">Apellido:</label>
-                        <input type="text" name="last_name" class="form-control" required>
+                        <label for="last_name" class="form-label">Primer apellido:</label>
+                        <input type="text" name="last_name" id="last_name" value="{{ old('last_name') }}" class="form-control" maxlength="255" required>
+                        @error('last_name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="second_last_name" class="form-label">Segundo apellido:</label>
+                        <input type="text" name="second_last_name" id="second_last_name" value="{{ old('second_last_name') }}" class="form-control" maxlength="255">
+                        @error('second_last_name')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text">Las descargas usan las iniciales del examinador (NAA): primer nombre, primer apellido y segundo apellido.</div>
                     </div>
 
                     <div class="mb-3">

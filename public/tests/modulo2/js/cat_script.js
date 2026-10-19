@@ -20,14 +20,18 @@ export const CAT = {
                 {
                     type: "line_bisection",
 
-                    // screen 0 (Demostración)
+                    // P1 (práctica): audios de instrucción a. y b., uno bajo el otro
                     demoAudios: [
                         "/tests/modulo2/assets/Audio/Test_1/Intruccion/audio1.wav",
                         "/tests/modulo2/assets/Audio/Test_1/Prueba/audio2.wav"
                     ],
+                    // E1
                     patientAudio: "/tests/modulo2/assets/Audio/Test_1/Ensayo/audio3.wav",
 
-                    // Imagen base
+                    // Lámina de práctica (P1): no repite las líneas del ensayo
+                    practiceImage: "assets/parte1/lineas_practica.png",
+
+                    // Imagen base (E1)
                     baseImage: "assets/parte1/lineas.png",
 
                     // Imagen de escala
@@ -339,41 +343,45 @@ export const CAT = {
                     firstTrial: 1,
                     lastTrial: 16,
                     filePattern: "{t}-{o}.png", // fallback para nombres antiguos
+                    // Orden igual al de la PPT (CAT p. 57-72): sup-izq (A), sup-der (B), inf-izq (C), inf-der (D).
                     imageFiles: {
                         1: ["1-diamante.png", "1-margarita.png", "1-roca.png", "1-rosa.png"],
-                        2: ["2-capa.png", "2-casa.png", "2-chaqueta.png", "2-edificio.png"],
-                        3: ["3-bala.png", "3-pala.png", "3-pistola.png", "3-rastrillo.png"],
-                        4: ["4-astas.png", "4-cuerno.png", "4-cuervo.png", "4-paloma.png"],
-                        5: ["5-hacha.png", "5-saturno.png", "5-sierra.png", "5-tierra.png"],
-                        6: ["6-bota.png", "6-gota.png", "6-grifo.png", "6-sandalia.png"],
+                        2: ["2-casa.png", "2-capa.png", "2-edificio.png", "2-chaqueta.png"],
+                        3: ["3-bala.png", "3-pistola.png", "3-pala.png", "3-rastrillo.png"],
+                        4: ["4-astas.png", "4-cuerno.png", "4-paloma.png", "4-cuervo.png"],
+                        5: ["5-tierra.png", "5-sierra.png", "5-saturno.png", "5-hacha.png"],
+                        6: ["6-grifo.png", "6-bota.png", "6-sandalia.png", "6-gota.png"],
                         7: ["7-copa.png", "7-helado.png", "7-sopa.png", "7-vaso.png"],
-                        8: ["8-hoja.png", "8-lagartija.png", "8-rama.png", "8-rana.png"],
-                        9: ["9-boca.png", "9-delfin.png", "9-foca.png", "9-nariz.png"],
-                        10: ["10-gallina.png", "10-gato.png", "10-pato.png", "10-perro.png"],
+                        8: ["8-hoja.png", "8-rana.png", "8-lagartija.png", "8-rama.png"],
+                        9: ["9-foca.png", "9-delfin.png", "9-nariz.png", "9-boca.png"],
+                        10: ["10-perro.png", "10-gato.png", "10-gallina.png", "10-pato.png"],
                         11: ["11-oreja.png", "11-oveja.png", "11-pendiente.png", "11-vaca.png"],
-                        12: ["12-cuna.png", "12-cura.png", "12-hamaca.png", "12-iglesia.png"],
-                        13: ["13-maleta.png", "13-mochila.png", "13-paleta.png", "13-pincel.png"],
-                        14: ["14-botella.png", "14-conejo.png", "14-rata.png", "14-vaso.png"],
-                        15: ["15-cigarro.png", "15-muro.png", "15-puro.png", "15-valla.png"],
-                        16: ["16-chimenea.png", "16-fuego.png", "16-juego.png", "16-pelota.png"],
+                        12: ["12-cura.png", "12-hamaca.png", "12-iglesia.png", "12-cuna.png"],
+                        13: ["13-pincel.png", "13-maleta.png", "13-paleta.png", "13-mochila.png"],
+                        14: ["14-conejo.png", "14-botella.png", "14-rata.png", "14-vaso.png"], // 14-vaso.png muestra una lata
+                        15: ["15-puro.png", "15-muro.png", "15-cigarro.png", "15-valla.png"],
+                        16: ["16-juego.png", "16-fuego.png", "16-chimenea.png", "16-pelota.png"],
                     },
+                    // Indice (0..3) de la imagen objetivo que nombra el audio de cada pantalla, segun el orden anterior:
+                    // 1 rosa, 2 casa, 3 pala, 4 cuerno, 5 sierra, 6 bota, 7 copa, 8 rana,
+                    // 9 foca, 10 gato, 11 oveja, 12 cuna, 13 maleta, 14 rata, 15 muro, 16 juego.
                     correctIndexes: {
                         1: 3,
                         2: 0,
-                        3: 0,
+                        3: 2,
                         4: 1,
-                        5: 2,
-                        6: 0,
+                        5: 1,
+                        6: 1,
                         7: 0,
-                        8: 2,
-                        9: 2,
+                        8: 1,
+                        9: 0,
                         10: 1,
-                        11: 0,
-                        12: 0,
-                        13: 0,
-                        14: 3,
+                        11: 1,
+                        12: 3,
+                        13: 1,
+                        14: 2,
                         15: 1,
-                        16: 1,
+                        16: 0,
                     },
                     trialAudioStart: 4,
                     // Audios (tú los enlazas después)

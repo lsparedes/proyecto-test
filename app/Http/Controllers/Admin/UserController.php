@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Schema;
 
 class UserController extends Controller
 {
@@ -32,7 +33,7 @@ class UserController extends Controller
 
     public function update(UserEditRequest $request, User $user)
     {
-        $data = $request->only('name', 'last_name', 'email');
+        $data = $this->withoutPendingColumns($request->only('name', 'last_name', 'second_last_name', 'email'));
         $password = $request->input('password');
         if ($password) {
             $data['password'] = bcrypt($password);
@@ -50,12 +51,13 @@ class UserController extends Controller
     {
         $password = $this->generateRandomPassword();
 
-        $user = User::create([
+        $user = User::create($this->withoutPendingColumns([
             'name' => $request->input('name'),
             'last_name' => $request->input('last_name'),
+            'second_last_name' => $request->input('second_last_name'),
             'email' => $request->input('email'),
             'password' => bcrypt($password),
-        ]);
+        ]));
 
         $roles = $request->input('roles', []);
         $user->syncRoles($roles);
@@ -107,5 +109,18 @@ class UserController extends Controller
         Mail::send('emails.welcome', ['email' => $user->email, 'password' => $password], function ($message) use ($user) {
             $message->to($user->email)->subject('¡Bienvenido a la plataforma!');
         });
+    }
+
+    /**
+     * Mientras no se ejecute la migración del segundo apellido (users.second_last_name) el campo se
+     * ignora, para que crear o editar usuarios siga funcionando.
+     */
+    private function withoutPendingColumns(array $data)
+    {
+        if (array_key_exists('second_last_name', $data) && !Schema::hasColumn('users', 'second_last_name')) {
+            unset($data['second_last_name']);
+        }
+
+        return $data;
     }
 }

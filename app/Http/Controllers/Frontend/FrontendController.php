@@ -53,17 +53,12 @@ class FrontendController extends Controller
             return response()->json(['error' => 'Usuario no autenticado'], 401);
         }
 
-        $fullName = trim($user->name . ' ' . $user->last_name);
-        $initials = collect(preg_split('/\s+/', $fullName, -1, PREG_SPLIT_NO_EMPTY))
-            ->map(function ($part) {
-                return mb_strtoupper(mb_substr($part, 0, 1));
-            })
-            ->implode('');
-
         return response()->json([
             'name' => $user->name,
             'last_name' => $user->last_name,
-            'initials' => $initials,
+            'second_last_name' => $user->second_last_name,
+            // Iniciales NAA (primer nombre + primer y segundo apellido) usadas en los nombres de las descargas
+            'initials' => $user->examinerInitials(),
             'role' => $user->roles->pluck('name')->first(),
         ]);
     }

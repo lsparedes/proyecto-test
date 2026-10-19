@@ -42,7 +42,6 @@ const layoutImageRecordSimple = document.getElementById("layoutImageRecordSimple
 
 const layoutFluency = document.getElementById("layoutFluency");
 
-const layoutLineBisectionInstructions = document.getElementById("layoutLineBisectionInstructions");
 const layoutLineBisection = document.getElementById("layoutLineBisection");
 const handFinishScreen = document.getElementById("handFinishScreen");
 const selectHandContainer = document.getElementById("selectHand");
@@ -171,7 +170,6 @@ function showLayout(which) {
   layoutImageInstrRecord.style.display = (which === "img_instr_record") ? "block" : "none";
   layoutImageRecordSimple.style.display = (which === "img_record_simple") ? "block" : "none";
   layoutFluency.style.display = (which === "fluency") ? "block" : "none";
-  layoutLineBisectionInstructions.style.display = (which === "line_bisection_instructions") ? "block" : "none";
   layoutLineBisection.style.display = (which === "line_bisection") ? "block" : "none";
 }
 
@@ -690,7 +688,16 @@ function runSemanticMatch(step) {
   let selectedIndex = null;
   let trialStartedAt = 0;
   let selectedRt = null;
+  let correctedAnswer = false; // Acc: el participante marco una segunda respuesta en el item
   const panResponses = [];
+  // Al reanudar se recuperan las respuestas ya guardadas: no se pierden del CSV y la regla Acc
+  // (volver con la flecha atras y marcar otra opcion) sigue funcionando.
+  if (resume) {
+    (getPartData(partId).semanticPanResponses || []).forEach((row) => {
+      const index = SEMANTIC_PAN_ITEMS.findIndex((meta) => meta.item === row.numero_item);
+      if (index >= 0) panResponses[index] = row;
+    });
+  }
 
   function hideInstructionAudio() {
     if (btnAudio) btnAudio.style.display = "none";
@@ -739,6 +746,7 @@ function runSemanticMatch(step) {
     btnNext.style.display = "none";
     selectedIndex = null;
     selectedRt = null;
+    correctedAnswer = false;
   }
 
   function updateTopBar() {
@@ -825,6 +833,9 @@ function runSemanticMatch(step) {
   optBoxes.forEach(box => {
     box.onclick = () => {
       const idx = Number(box.dataset.opt);
+      if (selectedIndex !== null && selectedIndex !== idx) {
+        correctedAnswer = true;
+      }
       selectedIndex = idx;
       if (!Number.isFinite(selectedRt)) {
         selectedRt = Math.round(performance.now() - trialStartedAt);
@@ -873,7 +884,12 @@ function runSemanticMatch(step) {
     hideInstructionAudio();
 
     const currentTrial = trials[trialIndex];
-    panResponses[trialIndex] = buildSemanticPanResult(currentTrial, trialIndex, selectedIndex, selectedRt);
+    // Acc tambien si se volvio a este item con la flecha atras y se marco otra opcion.
+    const previousResponse = panResponses[trialIndex];
+    const autocorrected = correctedAnswer
+      || previousResponse?.modo_respuesta === "Acc"
+      || (Boolean(previousResponse) && previousResponse.respuesta_participante !== optionLetter(selectedIndex));
+    panResponses[trialIndex] = buildSemanticPanResult(currentTrial, trialIndex, selectedIndex, selectedRt, autocorrected);
     setPartData(partId, {
       semanticPanResponses: panResponses.filter(Boolean)
     });
@@ -923,7 +939,7 @@ function getPanCategory(meta, selectedIndex) {
   return "distractor no relacionado";
 }
 
-function buildSemanticPanResult(trial, trialIndex, selectedIndex, rt) {
+function buildSemanticPanResult(trial, trialIndex, selectedIndex, rt, autocorrected = false) {
   const meta = SEMANTIC_PAN_ITEMS[trialIndex] || {};
   const category = getPanCategory(meta, selectedIndex);
 
@@ -932,6 +948,8 @@ function buildSemanticPanResult(trial, trialIndex, selectedIndex, rt) {
     respuesta_correcta: optionLetter(meta.correct),
     respuesta_participante: optionLetter(selectedIndex),
     RT: Number.isFinite(rt) ? rt : "",
+    // Modo de respuesta con la nomenclatura de las partes 7-10: Acc = marco una segunda respuesta.
+    modo_respuesta: autocorrected ? "Acc" : "",
     target_mostrado: meta.target || trial?.center || "",
     opcion_seleccionada: optionLetter(selectedIndex),
     imagen_seleccionada: trial?.options?.[selectedIndex] || "",
@@ -1941,6 +1959,9 @@ function runVideoRecordTrials(step) {
   let didRecordThisScreen = false;
   let audioPlayed = false;
   let noCameraMode = false;
+  const ARROW_DELAY_MS = 800;   // espera mínima antes de aceptar la flecha tras iniciar un video
+  let recordingStartedAt = 0;
+  let arrowDelayTimer = null;
 
   function setIdleUI() {
     if (vrControls) vrControls.style.display = "none";
@@ -1948,6 +1969,7 @@ function runVideoRecordTrials(step) {
     vBtnStop.style.display = "none";
     vBtnRecording.style.display = "none";
     isRecording = false;
+    clearTimeout(arrowDelayTimer);
   }
 
   function setRecordingUI() {
@@ -1956,7 +1978,13 @@ function runVideoRecordTrials(step) {
     vBtnStop.style.display = "none";
     vBtnRecording.style.display = "none";
     isRecording = true;
-    btnNext.style.display = "block";
+    // El video siguiente parte de inmediato; la flecha se muestra tras un breve lapso para que
+    // un doble toque no corte el video recién iniciado y salte la lámina.
+    recordingStartedAt = performance.now();
+    clearTimeout(arrowDelayTimer);
+    arrowDelayTimer = setTimeout(() => {
+      if (isRecording) btnNext.style.display = "block";
+    }, ARROW_DELAY_MS);
   }
 
   async function startStreamTo(el) {
@@ -2049,8 +2077,26 @@ function runVideoRecordTrials(step) {
       takes[String(stimIndex)] = { key, image: imageName };
       setPartData(partId, { takes });
     }
+  }
 
-    recorder.stopStream();
+  // Inicia la grabacion de la pantalla actual. La camara (stream) queda abierta entre
+  // pantallas: al tocar la flecha solo se corta el video y el siguiente parte de inmediato.
+  // El stream se libera al finalizar la parte (o al pasar a modo sin camara).
+  async function startScreenRecording() {
+    try {
+      if (!noCameraMode) {
+        // Si la cámara se desconectó durante la parte, se vuelve a solicitar (si falla, modo sin cámara).
+        const stream = recorder.stream;
+        if (stream && !stream.getVideoTracks().some((track) => track.readyState === "live")) {
+          recorder.stopStream();
+        }
+        vrSmallPreviewWrap.style.display = "block";
+        await startStreamTo(vrSmallPreview);
+      }
+      await startRecording();
+    } catch (e) {
+      enableNoCameraMode(e);
+    }
   }
 
   function updateTopBar() {
@@ -2094,7 +2140,6 @@ function runVideoRecordTrials(step) {
     setPartProgress(partId, { screenIndex });
     audioPlayed = false;
     stopInstructionAudio();
-    recorder.stopStream();
 
     if (screenIndex === 0) {
       vrStimWrap.style.display = "none";
@@ -2143,9 +2188,17 @@ function runVideoRecordTrials(step) {
     vrStimImageWrap.style.display = "flex";
     vrSmallPreviewWrap.style.display = noCameraMode ? "none" : "block";
 
-    setAudioButtonPosition();
-    instructionAudio.src = step.instructionAudio || "";
-    instructionAudio.load();
+    // Instruccion de audio solo en el ejemplo (P1, pluma); en E1..E6 no se muestra.
+    const isPracticeScreen = screenIndex <= practiceCount;
+
+    if (isPracticeScreen) {
+      setAudioButtonPosition();
+      instructionAudio.src = step.instructionAudio || "";
+      instructionAudio.load();
+    } else {
+      btnAudio.style.display = "none";
+      btnAudio.onclick = null;
+    }
 
     if (!images[screenIndex - 1]) {
       console.warn(`No existe imagen para screenIndex=${screenIndex}`);
@@ -2156,6 +2209,13 @@ function runVideoRecordTrials(step) {
 
     setIdleUI();
     btnNext.style.display = "none";
+
+    // E1..E6: el video inicia apenas se muestra la imagen, sin reproducir la instruccion.
+    // La flecha aparece cuando la grabacion esta activa y al tocarla corta este video.
+    if (!isPracticeScreen) {
+      await startScreenRecording();
+      return;
+    }
 
     btnAudio.onclick = async () => {
       if (!instructionAudio.src || audioPlayed) return;
@@ -2168,18 +2228,11 @@ function runVideoRecordTrials(step) {
       }
     };
 
+    // P1: la grabacion comienza cuando termina el audio de instruccion.
     instructionAudio.onended = async () => {
       btnAudio.style.display = "none";
       vrStimImageWrap.style.display = "flex";
-      try {
-        if (!noCameraMode) {
-          vrSmallPreviewWrap.style.display = "block";
-          await startStreamTo(vrSmallPreview);
-        }
-        await startRecording();
-      } catch (e) {
-        enableNoCameraMode(e);
-      }
+      await startScreenRecording();
     };
   }
 
@@ -2193,7 +2246,10 @@ function runVideoRecordTrials(step) {
 
   btnNext.onclick = async () => {
     if (btnNext.dataset.busy === "1") return;
+    // Se ignora un toque inmediatamente posterior al inicio del video (doble toque).
+    if (isRecording && performance.now() - recordingStartedAt < ARROW_DELAY_MS) return;
     btnNext.dataset.busy = "1";
+    btnNext.style.display = "none";
     stopInstructionAudio();
     if (isRecording || noCameraMode) {
       await stopRecordingAndSave();
@@ -2738,11 +2794,14 @@ function runAudioMCQ4WordsOnScreen(step) {
     document.getElementById("img3"),
   ];
 
+  // Grilla 2x2 como en el prototipo (ppt): cada imagen ocupa ~34% del ancho y ~38% del alto de la
+  // pantalla, con la palabra al centro. El tamaño es relativo al viewport y conserva la proporción de
+  // las láminas (~1,55:1), así no sale de la pantalla ni queda bajo la flecha o el audio.
   const part8OptionPositions = [
-    { left: "25%", top: "27%" },
-    { left: "75%", top: "27%" },
-    { left: "25%", top: "70%" },
-    { left: "75%", top: "70%" },
+    { left: "27.5%", top: "21.5%" },
+    { left: "72.5%", top: "21.5%" },
+    { left: "27.5%", top: "78.5%" },
+    { left: "72.5%", top: "78.5%" },
   ];
 
   optBoxes.forEach((box, boxIndex) => {
@@ -2751,12 +2810,13 @@ function runAudioMCQ4WordsOnScreen(step) {
     box.style.right = "auto";
     box.style.bottom = "auto";
     box.style.transform = "translate(-50%, -50%)";
-    box.style.width = "min(34vw, 360px)";
-    box.style.height = "min(25vh, 240px)";
-    box.style.padding = "8px";
+    box.style.width = "min(34vw, 59vh)";
+    box.style.height = "min(22vw, 38vh)";
+    box.style.padding = "0";
   });
   function applyPart8ImageStyle(imgEl, selected = false) {
     if (!imgEl) return;
+    imgEl.style.boxSizing = "border-box"; // el marco negro de 2px queda dentro de la caja
     imgEl.style.maxWidth = "100%";
     imgEl.style.maxHeight = "100%";
     imgEl.style.width = "100%";
@@ -2805,6 +2865,29 @@ function runAudioMCQ4WordsOnScreen(step) {
   let trialStartTime = 0;
   let selectionRT = "";
   let correctedAnswer = false;
+  // Demora (D): en P1 y E1 el examinador puede reproducir el audio de la consigna. Si se reproduce,
+  // la D (>= 6 s) se cuenta desde que TERMINA el audio (mismo criterio que la oración en la parte 9);
+  // si no se reproduce, desde que aparece la lámina. El RT del CSV se sigue midiendo desde la lámina.
+  let audioEndTime = 0;        // performance.now() al terminar el audio en esta lámina (0 = no terminó)
+  let audioPlaying = false;    // el audio se está reproduciendo
+  let audioScreenIndex = null; // lámina en la que se inició la reproducción
+  let delayLatencyMs = "";     // ms usados para decidir D
+
+  if (instructionAudio) {
+    instructionAudio.addEventListener("play", () => {
+      audioPlaying = true;
+      audioScreenIndex = screenIndex;
+    });
+    ["pause", "emptied", "error"].forEach((eventName) => {
+      instructionAudio.addEventListener(eventName, () => {
+        audioPlaying = false;
+      });
+    });
+    instructionAudio.addEventListener("ended", () => {
+      audioPlaying = false;
+      if (audioScreenIndex === screenIndex) audioEndTime = performance.now();
+    });
+  }
 
   function fileFor(t, o) {
     const mappedFile = WRITTEN_PHONOLOGICAL_IMAGE_OPTIONS[t]?.[o - 1];
@@ -2827,7 +2910,8 @@ function runAudioMCQ4WordsOnScreen(step) {
         return writtenPhonologicalCategory(meta, wordFromSelectedImage(imagePath)) === "correcta";
       });
     const responseModes = [];
-    if (Number(selectionRT) >= 6000) responseModes.push("D");
+    // D: >= 6 s desde que aparece la lámina, o desde que termina el audio si se reprodujo (P1/E1).
+    if (Number(delayLatencyMs) >= 6000) responseModes.push("D");
     if (correctedAnswer) responseModes.push("Acc");
 
     return {
@@ -2839,7 +2923,8 @@ function runAudioMCQ4WordsOnScreen(step) {
       selectedCategory,
       RT: selectionRT,
       responseMode: responseModes.join("+"),
-      assignedScore: selectedCategory === "correcta" ? 2 : 0,
+      // CAT: 2 = correcta inmediata; 1 = correcta con modo de respuesta (D y/o Acc); 0 = incorrecta.
+      assignedScore: selectedCategory !== "correcta" ? 0 : (responseModes.length ? 1 : 2),
       phonologicalDistinctiveFeatures: selectedCategory === "distractor fonológico" ? meta.features : "",
       phonologicalPosition: selectedCategory === "distractor fonológico" ? meta.position : "",
       usedHand: getPartData(partId).usedHand || ""
@@ -2859,8 +2944,10 @@ function runAudioMCQ4WordsOnScreen(step) {
 
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
+    // Igual que la ppt y el CSV: pantalla 1 = ejemplo (P1); pantallas 2..16 = ítems E1..E15.
     if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucción`;
-    else topBar.textContent = `${partLabel} · E ${screenIndex}/16`;
+    else if (screenIndex === 1) topBar.textContent = `${partLabel} · P 1/1`;
+    else topBar.textContent = `${partLabel} · E ${screenIndex - 1}/${lastTrial - 1}`;
   }
 
   function positionCornerAudio() {
@@ -2928,6 +3015,8 @@ function runAudioMCQ4WordsOnScreen(step) {
     trialStartTime = performance.now();
     selectionRT = "";
     correctedAnswer = false;
+    audioEndTime = 0;
+    delayLatencyMs = "";
 
     mountAudioForTrial(t);
   }
@@ -2942,7 +3031,13 @@ function runAudioMCQ4WordsOnScreen(step) {
       }
       selectedIndex = idx;
       if (selectionRT === "" && trialStartTime) {
-        selectionRT = Math.round(performance.now() - trialStartTime);
+        const selectionTime = performance.now();
+        selectionRT = Math.round(selectionTime - trialStartTime);
+        // Latencia para D: 0 si responde mientras suena el audio de esta lámina; desde el fin del
+        // audio si se reprodujo; si no, el mismo RT (desde que aparece la lámina).
+        delayLatencyMs = (audioPlaying && audioScreenIndex === screenIndex)
+          ? 0
+          : (audioEndTime ? Math.round(selectionTime - audioEndTime) : selectionRT);
       }
 
       optBoxes.forEach((b, imgIndex) => {
@@ -3093,6 +3188,27 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
   let audioPlayCount = 0;
   let repeatedAudio = false;
   let correctedAnswer = false;
+  // Demora (D): se cuenta desde que TERMINA la oración (última reproducción completa
+  // antes de la primera selección), no desde que aparece la lámina.
+  let sentenceEndTime = 0;     // performance.now() al terminar la oración (0 = aún no termina)
+  let sentencePlaying = false; // la oración se está reproduciendo
+  let sentenceLatencyMs = "";  // ms entre el fin de la oración y la primera selección
+
+  // P1 y E1..E16 reproducen la oración en instructionAudio (ver render()).
+  if (instructionAudio) {
+    instructionAudio.addEventListener("play", () => {
+      if (screenIndex !== 0) sentencePlaying = true;
+    });
+    ["pause", "emptied", "error"].forEach((eventName) => {
+      instructionAudio.addEventListener(eventName, () => {
+        sentencePlaying = false;
+      });
+    });
+    instructionAudio.addEventListener("ended", () => {
+      sentencePlaying = false;
+      if (screenIndex !== 0) sentenceEndTime = performance.now();
+    });
+  }
 
   function ensurePart9VoiceLabel(id, imageSrc, title) {
     let label = document.getElementById(id);
@@ -3107,7 +3223,7 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       label.textContent = "";
       label.style.position = "absolute";
       label.style.left = "50%";
-      label.style.top = "calc(50% + 82px)";
+      label.style.top = "50%";
       label.style.width = "90px";
       label.style.height = "90px";
       label.style.border = "none";
@@ -3126,7 +3242,10 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     introVoiceLabels.forEach((label, index) => {
       if (!label) return;
       label.style.display = visible ? "flex" : "none";
-      label.style.transform = index === 0 ? "translate(-101px, 0)" : "translate(59px, 0)";
+      // Misma fila y mismo centro vertical que su audio (.twoCenterAudios en run.html):
+      // símbolo en [50% - 94px, 50% - 4px], audio en [50% + 4px, 50% + 94px].
+      label.style.top = index === 0 ? "calc(50% - 120px)" : "calc(50% + 20px)";
+      label.style.transform = "translate(-94px, 0)";
     });
   }
 
@@ -3142,7 +3261,8 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     const selectedLetter = optionLetter(currentSelectedIndex);
     const isCorrect = currentSelectedIndex === meta.correctIndex;
     const responseModes = [];
-    if (Number(selectionRT) >= 6000) responseModes.push("D");
+    // D: respuesta >= 6 s contados desde que termina la oración
+    if (Number(sentenceLatencyMs) >= 6000) responseModes.push("D");
     if (repeatedAudio) responseModes.push("R");
     if (correctedAnswer) responseModes.push("Acc");
 
@@ -3271,6 +3391,9 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
     repeatedAudio = false;
     correctedAnswer = false;
     selectionRT = "";
+    sentenceEndTime = 0;
+    sentencePlaying = false;
+    sentenceLatencyMs = "";
 
     document.body.classList.remove("twoCenterAudios");
     setPart9IntroVoiceLabelsVisible(false);
@@ -3350,7 +3473,13 @@ function runAudioMCQ4TrialsWithDualIntro(step) {
       }
       selectedIndex = idx;
       if (selectionRT === "" && trialStartTime) {
-        selectionRT = Math.round(performance.now() - trialStartTime);
+        const selectionTime = performance.now();
+        selectionRT = Math.round(selectionTime - trialStartTime);
+        // Latencia desde el fin de la oración: 0 si responde mientras la oración suena;
+        // si la oración no se reprodujo, se usa el tiempo desde que aparece la lámina.
+        sentenceLatencyMs = sentencePlaying
+          ? 0
+          : (sentenceEndTime ? Math.round(selectionTime - sentenceEndTime) : selectionRT);
       }
 
       optBoxes.forEach((b, imgIndex) => {
@@ -3443,17 +3572,21 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
   centerWord.style.top = "50%";
   centerWord.style.left = "50%";
   centerWord.style.transform = "translate(-50%, -50%)";
-  centerWord.style.fontSize = "52px";
+  // 52px desde 1366px de ancho; en pantallas más angostas se reduce para que la oración más
+  // larga siga en una sola línea y no se superponga con las imágenes ampliadas.
+  centerWord.style.fontSize = "min(52px, 3.8vw)";
   centerWord.style.maxWidth = "80vw";
   centerWord.style.width = "max-content";
   centerWord.style.textAlign = "center";
   centerWord.style.zIndex = "60";
 
+  // Grilla 2x2 como en el prototipo (ppt): imágenes de ~38% del alto de pantalla y oración al centro.
+  // Columnas al 30%/70% (como la ppt) para no invadir los íconos de audio/género de P1 ni la flecha.
   const part10OptionPositions = [
-    { left: "25%", top: "25%" },
-    { left: "75%", top: "25%" },
-    { left: "25%", top: "72%" },
-    { left: "75%", top: "72%" },
+    { left: "30%", top: "22%" },
+    { left: "70%", top: "22%" },
+    { left: "30%", top: "78%" },
+    { left: "70%", top: "78%" },
   ];
 
   optBoxes.forEach((box, boxIndex) => {
@@ -3463,8 +3596,8 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
     box.style.right = "auto";
     box.style.bottom = "auto";
     box.style.transform = "translate(-50%, -50%)";
-    box.style.width = "min(40vw, 400px)";
-    box.style.height = "min(26vh, 260px)";
+    box.style.width = "32vw";
+    box.style.height = "38vh";
     box.style.padding = "0";
     box.style.border = "none";
     box.style.background = "transparent";
@@ -3598,7 +3731,8 @@ function runMCQ4SentenceCenterWithAudioPractice(step) {
       isCorrect,
       RT: selectionRT,
       responseMode: responseModes.join("+"),
-      assignedScore: meta.itemNumber === "Ej." ? 0 : (isCorrect ? 2 : 0),
+      // CAT: 2 = correcta inmediata; 1 = correcta con modo de respuesta (D y/o Acc); 0 = incorrecta.
+      assignedScore: meta.itemNumber === "Ej." || !isCorrect ? 0 : (responseModes.length ? 1 : 2),
       usedHand: getPartData(partId).usedHand || ""
     };
   }
@@ -4226,6 +4360,8 @@ function runRepeatAudioRecord(step) {
   const introA1 = step.introAudios?.[0] ?? null;
   const introA2 = step.introAudios?.[1] ?? null;
   const startBeep = (partId === 15 || partId === 16) ? new Audio("/tests/modulo2/assets/beep.wav") : null;
+  // Partes 15 y 16: la grabación de audio y video comienza con la alarma (beep), no antes.
+  const captureFromBeep = startBeep !== null;
   const repeatIntroGenderIcons = (partId === 12 || partId === 15 || partId === 16)
     ? [
       ensureRepeatIntroGenderIcon("repeatIntroFemale", "femenino.jpg", "Audio femenino"),
@@ -4242,6 +4378,8 @@ function runRepeatAudioRecord(step) {
   let isClosing = false;
   let hasRecordedCurrentScreen = false;
   let captureLeadTimer = null;
+  let beepCaptureStart = null; // inicio de grabación en curso para la alarma (partes 15 y 16)
+  let abandonedBeepCapture = null; // inicio que tardó más de 3 s y se dejó de esperar (se descarta al completarse)
 
   function ensureRepeatCameraWrap() {
     let wrap = document.getElementById("repeatCameraWrap");
@@ -4579,6 +4717,30 @@ function runRepeatAudioRecord(step) {
     console.log("recRow display:", recRow.style.display);
   }
 
+  // Partes 15 y 16: si la grabación de la alarma aún se está iniciando, se cancela su beep y se espera
+  // (máx. 3 s) a que quede activa, para guardarla en la pantalla que corresponde.
+  async function settleBeepCaptureStart() {
+    const pending = beepCaptureStart;
+    beepCaptureStart = null;
+    if (!pending) return;
+    const settled = await Promise.race([
+      pending.then(() => true),
+      new Promise((resolve) => setTimeout(() => resolve(false), 3000))
+    ]);
+    // Inicio muy lento (> 3 s): esa grabación tardía no corresponde a la pantalla actual y se descarta.
+    if (!settled) abandonedBeepCapture = pending;
+  }
+
+  // Detiene la captura en curso sin guardarla (grabación de la alarma que se inició demasiado tarde).
+  async function discardCapture() {
+    try { await recorder.stop(); } catch (e) { }
+    try {
+      if (videoRecorder.recording) await videoRecorder.stopRecording();
+    } catch (e) { }
+    isCapturing = false;
+    hideRecUI();
+  }
+
   async function stopAndSave() {
     if (!isCapturing) return false;
 
@@ -4760,17 +4922,47 @@ function runRepeatAudioRecord(step) {
       }
 
       try {
+        if (beepCaptureStart) await settleBeepCaptureStart();
         if (isCapturing) {
           await stopAndSave();
         }
 
         await ensurePrepared();
+        // Partes 15 y 16: la cámara se prepara antes del estímulo (un permiso o error aparece aquí, no en la
+        // alarma), así la grabación arranca de inmediato cuando suena la alarma.
+        if (captureFromBeep) await ensureCameraPrepared();
 
         stopAllAudios();
         clearPromptAudio();
 
         promptAudio.onended = async () => {
           if (startBeep) {
+            // Partes 15 y 16: la grabación (audio + video) se inicia con la alarma; el beep suena apenas la captura está activa.
+            if (!isCapturing) {
+              console.log("audio terminado -> startCapture() junto con la alarma");
+              let captureError = null;
+              const captureStart = startCapture(false).catch((err) => {
+                captureError = err;
+              });
+              beepCaptureStart = captureStart;
+              await captureStart;
+              if (beepCaptureStart !== captureStart) {
+                // Se avanzó o se repitió el estímulo mientras se iniciaba la grabación. Si el inicio
+                // tardó más de 3 s, la captura quedó abierta tarde: se detiene sin guardarla.
+                if (abandonedBeepCapture === captureStart) {
+                  abandonedBeepCapture = null;
+                  if (isCapturing) await discardCapture();
+                }
+                return;
+              }
+              beepCaptureStart = null;
+              if (captureError) {
+                // Sin grabación activa no suena la alarma (indicaría que se está grabando).
+                console.error("No se pudo iniciar la grabación con la alarma:", captureError);
+                showMicError(captureError);
+                return;
+              }
+            }
             try {
               startBeep.currentTime = 0;
               await new Promise((resolve) => {
@@ -4798,6 +4990,7 @@ function runRepeatAudioRecord(step) {
         const scheduleEarlyCapture = () => {
           clearTimeout(captureLeadTimer);
           captureLeadTimer = null;
+          if (captureFromBeep) return; // Partes 15 y 16: sin inicio anticipado, se graba desde la alarma.
 
           const durationMs = Number.isFinite(promptAudio.duration) ? promptAudio.duration * 1000 : 0;
           if (durationMs > 3500) {
@@ -4815,7 +5008,7 @@ function runRepeatAudioRecord(step) {
         promptAudio.onloadedmetadata = scheduleEarlyCapture;
         promptAudio.ontimeupdate = async () => {
           const duration = Number(promptAudio.duration);
-          if (!Number.isFinite(duration) || duration <= 0 || isCapturing) return;
+          if (captureFromBeep || !Number.isFinite(duration) || duration <= 0 || isCapturing) return;
           if ((duration - promptAudio.currentTime) <= 3) {
             clearTimeout(captureLeadTimer);
             captureLeadTimer = null;
@@ -4828,7 +5021,7 @@ function runRepeatAudioRecord(step) {
         promptAudio.load();
         promptAudio.currentTime = 0;
         scheduleEarlyCapture();
-        if (partId !== 16) {
+        if (!captureFromBeep) {
           await startCapture(false);
         }
         await promptAudio.play();
@@ -4848,6 +5041,8 @@ function runRepeatAudioRecord(step) {
     clearPromptAudio();
     btnPlay.style.display = "none";
     recRow.style.display = "none";
+
+    if (beepCaptureStart) await settleBeepCaptureStart();
 
     // si está grabando, detener, guardar y avanzar inmediatamente
     if (isCapturing) {
@@ -5440,7 +5635,8 @@ function runImageAutoRecordSimple(step) {
       "border:2px solid #222", "border-radius:8px", "z-index:9000",
       `width:${setupMode ? "min(46vw, 520px)" : "120px"}`,
       `height:${setupMode ? "min(52vh, 390px)" : "90px"}`,
-      `top:${setupMode ? "50%" : "110px"}`,
+      // Bajo el ícono de audio (#t18InstrAudio: top 70px + alto 56px) con 12px de separación, como en las Partes 3 y 17
+      `top:${setupMode ? "50%" : "138px"}`,
       `left:${setupMode ? "50%" : "auto"}`,
       `right:${setupMode ? "auto" : "14px"}`,
       `transform:${setupMode ? "translate(-50%, -50%)" : "none"}`
@@ -5590,6 +5786,7 @@ function runImageAutoRecordSimple(step) {
     }
 
     await loadImage(imageFile(n));
+    imgEl.style.display = "block";
 
     if (n < last) {
       preloadImage(imageFile(n + 1));
@@ -6079,6 +6276,13 @@ async function runAudioRecordWords(step) {
   const screenEl = document.getElementById("screen");
   const enhancedWordReading = partId >= 20 && partId <= 23;
   const hasInstructionScreen = enhancedWordReading && !!step.instructionAudio;
+  // Partes 21-23: la instrucción no se graba; cada palabra es una toma nueva (audio + video con
+  // sonido) que comienza al mostrarse la palabra y termina al presionar la flecha.
+  // La parte 20 conserva su comportamiento (su primera toma incluye la instrucción).
+  const perWordTakes = partId >= 21 && partId <= 23;
+  // Margen tras la flecha para recibir el audio que aún está en el búfer del ScriptProcessor
+  // (4096 muestras, ~85-93 ms) más la latencia del micrófono; sin él se corta el final de la palabra.
+  const WORD_TAKE_TAIL_MS = 500;
 
   arImageWrap.style.display = "none";
   arWordWrap.style.display = "flex";
@@ -6128,6 +6332,7 @@ async function runAudioRecordWords(step) {
   let isRecording = false;
   let preparePromise = null;
   let cameraReady = false;
+  let isAdvancing = false;
 
   const cameraWrap = document.createElement("div");
   const cameraPreview = document.createElement("video");
@@ -6229,7 +6434,8 @@ async function runAudioRecordWords(step) {
       });
     }
     await preparePromise;
-    if (enhancedWordReading && wordInstructionAudio) {
+    // Solo la parte 20 mezcla el audio de instrucción en la grabación.
+    if (enhancedWordReading && !perWordTakes && wordInstructionAudio) {
       recorder.connectAudioElement(wordInstructionAudio);
     }
     return;
@@ -6254,6 +6460,16 @@ async function runAudioRecordWords(step) {
     return cameraReady;
   }
 
+  // Partes 21-23: el video lleva la misma pista de micrófono que usa el WAV
+  // (no se abre el micrófono una segunda vez; ver comentario en ensurePrepared).
+  function attachMicToWordVideo() {
+    if (!perWordTakes) return;
+    const videoStream = videoRecorder.stream;
+    const micTrack = recorder.stream?.getAudioTracks?.()[0];
+    if (!videoStream || !micTrack || videoStream.getAudioTracks().length) return;
+    videoStream.addTrack(micTrack);
+  }
+
   async function startRecAuto() {
     try {
       if (isRecording) {
@@ -6262,6 +6478,12 @@ async function runAudioRecordWords(step) {
       }
       await ensurePrepared();
       await ensureWordCamera();
+      if (perWordTakes) {
+        attachMicToWordVideo();
+        // El AudioContext pudo crearse en la lámina de instrucción (antes de un clic):
+        // se reanuda sin bloquear para que la toma no quede vacía.
+        if (recorder.audioContext?.state === "suspended") recorder.audioContext.resume().catch(() => {});
+      }
       recorder.beginCapture();
       if (enhancedWordReading && cameraReady) await videoRecorder.startRecording();
       isRecording = true;
@@ -6278,6 +6500,7 @@ async function runAudioRecordWords(step) {
 
     try {
       isRecording = false;
+      if (perWordTakes) await wait(WORD_TAKE_TAIL_MS);
       const blob = await recorder.stop();
       const videoBlob = enhancedWordReading && videoRecorder.recording
         ? await videoRecorder.stopRecording()
@@ -6349,7 +6572,8 @@ async function runAudioRecordWords(step) {
         try {
           wordInstructionAudio.pause();
           wordInstructionAudio.currentTime = 0;
-          if (!isRecording) await startRecAuto();
+          // Parte 20: la grabación parte con la instrucción. Partes 21-23: la instrucción no se graba.
+          if (!perWordTakes && !isRecording) await startRecAuto();
           await wordInstructionAudio.play();
         } catch (err) {
           console.error("No se pudo reproducir la instrucción:", err);
@@ -6357,6 +6581,15 @@ async function runAudioRecordWords(step) {
       };
       setIdleUI();
       await ensureWordCamera();
+      if (perWordTakes) {
+        // Micrófono listo (sin grabar) para que la toma de E1 comience apenas aparece la palabra.
+        try {
+          await ensurePrepared();
+          attachMicToWordVideo();
+        } catch (err) {
+          console.warn("No se pudo preparar el micrófono en la instrucción:", err);
+        }
+      }
       setPartProgress(partId, { screenIndex, totalScreens, instructionScreen: true });
       return;
     }
@@ -6382,7 +6615,7 @@ async function runAudioRecordWords(step) {
     await stopRecAndSaveCurrent();
   };
 
-  btnNext.onclick = async () => {
+  async function goToNextScreen() {
     if (instructionScreen) {
       stopInstructionAudioOnly();
       instructionScreen = false;
@@ -6392,7 +6625,8 @@ async function runAudioRecordWords(step) {
 
     stopInstructionAudioOnly();
 
-    if (enhancedWordReading && screenIndex === totalScreens - 1) {
+    // Partes 21-23: la palabra se retira al presionar la flecha mientras se cierra su toma.
+    if (enhancedWordReading && (perWordTakes || screenIndex === totalScreens - 1)) {
       arWordWrap.style.display = "none";
     }
 
@@ -6437,9 +6671,31 @@ async function runAudioRecordWords(step) {
     });
 
     await renderScreen();
+  }
+
+  btnNext.onclick = async () => {
+    if (!perWordTakes) return goToNextScreen();
+    // Partes 21-23: se ignoran clics repetidos mientras se cierra y guarda la toma actual.
+    if (isAdvancing) return;
+    isAdvancing = true;
+    try {
+      await goToNextScreen();
+    } finally {
+      isAdvancing = false;
+    }
   };
 
-  await renderScreen();
+  if (!perWordTakes) {
+    await renderScreen();
+    return;
+  }
+  // Partes 21-23: al reanudar, la primera pantalla ya inicia la toma; la flecha espera a que termine.
+  isAdvancing = true;
+  try {
+    await renderScreen();
+  } finally {
+    isAdvancing = false;
+  }
 }
 
 function runWritingCanvasFlow(step, config = {}) {
@@ -6462,12 +6718,38 @@ function runWritingCanvasFlow(step, config = {}) {
   btnFullscreen.src = document.fullscreenElement ? "minimize.png" : "full-screen.png";
   btnNext.style.display = "block";
 
+  let canvasCssWidth = 0;
+  let canvasCssHeight = 0;
+
   function setCanvasSize() {
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
     canvas.width = Math.floor(rect.width * dpr);
     canvas.height = Math.floor(rect.height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    canvasCssWidth = rect.width;
+    canvasCssHeight = rect.height;
+  }
+
+  // Al cambiar el tamaño de la ventana (p. ej. al activar pantalla completa en la
+  // primera pantalla) hay que redimensionar el bitmap del canvas. Si solo se redibuja,
+  // el navegador estira el bitmap y el trazo queda desplazado del lápiz y de la línea.
+  function handleCanvasResize() {
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
+    const prevWidth = canvasCssWidth;
+    const prevHeight = canvasCssHeight;
+    setCanvasSize();
+    if (prevWidth && prevHeight && (prevWidth !== canvasCssWidth || prevHeight !== canvasCssHeight)) {
+      const scaleX = canvasCssWidth / prevWidth;
+      const scaleY = canvasCssHeight / prevHeight;
+      strokes = strokes.map((stroke) => stroke.map((point) => ({
+        ...point,
+        x: point.x * scaleX,
+        y: point.y * scaleY
+      })));
+    }
+    renderCanvas();
   }
 
   function drawLine(y) {
@@ -6739,7 +7021,7 @@ function runWritingCanvasFlow(step, config = {}) {
     await renderScreen();
   };
 
-  window.addEventListener("resize", renderCanvas);
+  window.addEventListener("resize", handleCanvasResize);
   renderScreen();
 }
 
@@ -6755,7 +7037,18 @@ function runCopyCanvas(step) {
         writingLines: [0.48]
       },
       {
+        // Se exporta como 2_letters_copy: copia de letras mayúsculas.
         label: "P 2/4",
+        mode: "copy_prompt",
+        layout: "letter_columns",
+        promptFont: "700 52px Arial, sans-serif",
+        letters: ["T", "C", "H", "A", "Y"],
+        letterY: 0.24,
+        lineY: 0.43
+      },
+      {
+        // Se exporta como 3_letters_upper: minúsculas a escribir en mayúsculas (audio "Mayúsculas").
+        label: "P 3/4",
         mode: "copy_prompt",
         audio: "/tests/modulo2/assets/Audio/Test_24/Instruccion/audio2.wav",
         audioPosition: "top-right",
@@ -6764,15 +7057,6 @@ function runCopyCanvas(step) {
         letters: ["d", "e", "r", "b", "f", "g"],
         letterLabels: ["Ejemplo"],
         labelY: 0.14,
-        letterY: 0.24,
-        lineY: 0.43
-      },
-      {
-        label: "P 3/4",
-        mode: "copy_prompt",
-        layout: "letter_columns",
-        promptFont: "700 52px Arial, sans-serif",
-        letters: ["T", "C", "H", "A", "Y"],
         letterY: 0.24,
         lineY: 0.43
       },
@@ -7298,18 +7582,19 @@ function runLineBisection(step) {
     clearPartData(partId);
   }
 
-  // 3 pantallas:
-  // 0 = instrucciones (texto + 2 audios)
-  // 1 = demostración / práctica (dibujo)
-  // 2 = paciente (1 audio + dibujo)
-  const totalScreens = 3;
+  // 2 pantallas (se eliminó la lámina de instrucción escrita):
+  // 0 = P1 práctica (audios de instrucción a. y b. + dibujo sobre la lámina de práctica)
+  // 1 = E1 paciente (1 audio + dibujo sobre lineas.png)
+  const totalScreens = 2;
 
   // === progreso / resume ===
   const saved = getPartProgress(partId);
   let screenIndex = 0;
 
   if (resume && saved?.status === "in_progress" && Number.isFinite(saved.screenIndex)) {
-    screenIndex = Math.min(Math.max(saved.screenIndex, 0), totalScreens - 1);
+    // Progreso guardado con el flujo anterior de 3 pantallas (0 = instrucciones escritas).
+    const legacyOffset = saved.totalScreens === 3 ? 1 : 0;
+    screenIndex = Math.min(Math.max(saved.screenIndex - legacyOffset, 0), totalScreens - 1);
   }
 
   setPartProgress(partId, {
@@ -7338,14 +7623,20 @@ function runLineBisection(step) {
   const canvas = document.getElementById("lbCanvas");
   const ctx = canvas.getContext("2d");
 
-  // imagen base
+  // imagen base (E1) e imagen de práctica (P1)
   const img = new Image();
   img.src = step.baseImage;
 
+  const practiceImg = new Image();
+  practiceImg.src = step.practiceImage || step.baseImage;
+
+  // Coordenadas en px nativos de lineas.png (915x375). Al quitar "TOP" la imagen se recortó 104 px
+  // por arriba, por eso las Y bajan 104 px (antes 228.5 / 313.5 / 404.5). El eje X no cambió;
+  // centerX = marca central de escala.png (plantilla de puntuación, 1 unidad = 33.25-33.5 px).
   const lineBisectionReference = [
-    { lineNumber: 1, y: 228.5, startX: 238, endX: 645, centerX: 441.5, unitPx: 33.5 },
-    { lineNumber: 2, y: 313.5, startX: 6, endX: 343, centerX: 174.5, unitPx: 33.25 },
-    { lineNumber: 3, y: 404.5, startX: 245, endX: 910, centerX: 577.5, unitPx: 33.25 }
+    { lineNumber: 1, y: 124.5, startX: 238, endX: 645, centerX: 442, unitPx: 33.5 },
+    { lineNumber: 2, y: 209.5, startX: 6, endX: 343, centerX: 175.5, unitPx: 33.25 },
+    { lineNumber: 3, y: 300.5, startX: 245, endX: 910, centerX: 577.5, unitPx: 33.25 }
   ];
 
   // trazos separados
@@ -7359,9 +7650,15 @@ function runLineBisection(step) {
   }
 
   function getCurrentStrokes() {
-    if (screenIndex === 1) return demoStrokes;
-    if (screenIndex === 2) return patientStrokes;
+    if (screenIndex === 0) return demoStrokes;
+    if (screenIndex === 1) return patientStrokes;
     return [];
+  }
+
+  function getCurrentImage() {
+    // P1 usa la lámina de práctica; si no cargó, se usa la imagen base.
+    if (screenIndex === 0 && practiceImg.complete && practiceImg.naturalWidth > 0) return practiceImg;
+    return img;
   }
 
   function setCanvasSize() {
@@ -7371,7 +7668,7 @@ function runLineBisection(step) {
 
   function drawBase() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(getCurrentImage(), 0, 0, canvas.width, canvas.height);
   }
 
   function drawStrokes() {
@@ -7398,11 +7695,59 @@ function runLineBisection(step) {
     drawStrokes();
   }
 
-  function canvasPointToImagePoint(point) {
+  function canvasPointToImagePoint(point, baseImage = img) {
     return {
-      x: (point.x / canvas.width) * img.naturalWidth,
-      y: (point.y / canvas.height) * img.naturalHeight
+      x: (point.x / canvas.width) * baseImage.naturalWidth,
+      y: (point.y / canvas.height) * baseImage.naturalHeight
     };
+  }
+
+  // Si cambia el tamaño del canvas (pantalla completa / ventana) los trazos se reescalan
+  // para que sigan sobre el mismo punto de la imagen.
+  function rescaleStrokes(previousWidth, previousHeight) {
+    if (!previousWidth || !previousHeight) return;
+    const scaleX = canvas.width / previousWidth;
+    const scaleY = canvas.height / previousHeight;
+    if (scaleX === 1 && scaleY === 1) return;
+
+    for (const stroke of [...demoStrokes, ...patientStrokes]) {
+      for (const point of stroke || []) {
+        point.x *= scaleX;
+        point.y *= scaleY;
+      }
+    }
+  }
+
+  // Captura descargable a escala real: resolución nativa de la imagen (lineas.png = 915x375),
+  // sin deformar, para superponer escala.png 1:1 y medir.
+  function renderNativeSnapshot(baseImage, strokes) {
+    const snapshot = document.createElement("canvas");
+    snapshot.width = baseImage.naturalWidth;
+    snapshot.height = baseImage.naturalHeight;
+    const snapshotCtx = snapshot.getContext("2d");
+
+    snapshotCtx.fillStyle = "#fff";
+    snapshotCtx.fillRect(0, 0, snapshot.width, snapshot.height);
+    snapshotCtx.drawImage(baseImage, 0, 0, snapshot.width, snapshot.height);
+
+    snapshotCtx.strokeStyle = "#000";
+    snapshotCtx.lineWidth = 2;
+    snapshotCtx.lineCap = "round";
+    snapshotCtx.lineJoin = "round";
+
+    for (const stroke of strokes) {
+      if (!stroke || stroke.length < 2) continue;
+      const start = canvasPointToImagePoint(stroke[0], baseImage);
+      snapshotCtx.beginPath();
+      snapshotCtx.moveTo(start.x, start.y);
+      for (let i = 1; i < stroke.length; i++) {
+        const point = canvasPointToImagePoint(stroke[i], baseImage);
+        snapshotCtx.lineTo(point.x, point.y);
+      }
+      snapshotCtx.stroke();
+    }
+
+    return snapshot.toDataURL("image/png");
   }
 
   function median(values) {
@@ -7453,8 +7798,9 @@ function runLineBisection(step) {
       const deviationUnits = hasCut ? deviationPx / line.unitPx : null;
       const direction = hasCut && deviationUnits !== 0 ? Math.sign(deviationUnits) : 0;
       const absDeviation = hasCut ? Math.abs(deviationUnits) : null;
+      // Zonas de escala.png: 0 hasta 0.5 u, ±1 de 0.5 a 1 u y ±2 desde 1 u (marcas a ±16.5, ±33.5 y ±67 px).
       const scaleScore = hasCut
-        ? (absDeviation <= 0.5 ? 0 : direction * (absDeviation <= 1.5 ? 1 : 2))
+        ? (absDeviation <= 0.5 ? 0 : direction * (absDeviation <= 1 ? 1 : 2))
         : null;
       const isExact = hasCut && scaleScore === 0;
 
@@ -7548,9 +7894,8 @@ function runLineBisection(step) {
 
   function updateTopBar() {
     const partLabel = `Parte ${String(partId).padStart(2, "0")}`;
-    if (screenIndex === 0) topBar.textContent = `${partLabel} · Instrucciones`;
-    if (screenIndex === 1) topBar.textContent = `${partLabel} · P1`;
-    if (screenIndex === 2) topBar.textContent = `${partLabel} · E1`;
+    if (screenIndex === 0) topBar.textContent = `${partLabel} · P1`;
+    if (screenIndex === 1) topBar.textContent = `${partLabel} · E1`;
   }
 
   function hideCornerAudios() {
@@ -7587,6 +7932,27 @@ function runLineBisection(step) {
     }
   }
 
+  function showPracticeAudios() {
+    // P1: audios de instrucción a. y b. del mismo tamaño, uno bajo el otro (esquina superior derecha).
+    showLineBisectionAudio(step.demoAudios?.[0]);
+
+    setupAudio(btnAudio2, instructionAudio2, step.demoAudios?.[1] ?? null, { forceShow: true });
+
+    if (btnAudio2) {
+      btnAudio2.style.display = "block";
+      btnAudio2.style.position = "fixed";
+      btnAudio2.style.left = "auto";
+      btnAudio2.style.bottom = "auto";
+      btnAudio2.style.top = "120px";
+      btnAudio2.style.right = "20px";
+      btnAudio2.style.width = "90px";
+      btnAudio2.style.height = "90px";
+      btnAudio2.style.objectFit = "contain";
+      btnAudio2.style.transform = "none";
+      btnAudio2.style.zIndex = "9999";
+    }
+  }
+
   function showPatientAudio() {
     showLineBisectionAudio(step.patientAudio);
   }
@@ -7596,21 +7962,14 @@ function runLineBisection(step) {
     setPartProgress(partId, { screenIndex });
 
     if (screenIndex === 0) {
-      showLayout("line_bisection_instructions");
-      enableDrawing(false);
-      showLineBisectionAudio(step.demoAudios?.[0]);
+      showLayout("line_bisection");
+      renderCanvas();
+      enableDrawing(true);
+      showPracticeAudios();
       return;
     }
 
     if (screenIndex === 1) {
-      showLayout("line_bisection");
-      renderCanvas();
-      enableDrawing(true);
-      showLineBisectionAudio(step.demoAudios?.[1]);
-      return;
-    }
-
-    if (screenIndex === 2) {
       showLayout("line_bisection");
       renderCanvas();
       enableDrawing(true);
@@ -7627,7 +7986,7 @@ function runLineBisection(step) {
       baseImage: step.baseImage,
       scaleImage: step.scaleImage || null,
       patientStrokes,
-      patientImage: canvas.toDataURL("image/png"),
+      patientImage: renderNativeSnapshot(img, patientStrokes),
       lineBisectionResults,
       canvasWidth: canvas.width,
       canvasHeight: canvas.height,
@@ -7639,16 +7998,16 @@ function runLineBisection(step) {
     const data = getPartData(partId) || {};
     setPartData(partId, {
       ...data,
-      practiceImage: canvas.toDataURL("image/png")
+      practiceImage: renderNativeSnapshot(getCurrentImage(), demoStrokes)
     });
   }
 
   btnNext.onclick = async () => {
-    if (screenIndex === 2) {
+    if (screenIndex === 1) {
       savePatientData();
     }
 
-    if (screenIndex === 1) {
+    if (screenIndex === 0) {
       savePracticeImage();
       demoStrokes = [];
     }
@@ -7656,7 +8015,7 @@ function runLineBisection(step) {
     screenIndex++;
 
     if (screenIndex >= totalScreens) {
-      if ((screenIndex - 1) === 2) {
+      if ((screenIndex - 1) === 1) {
         savePatientData();
       }
 
@@ -7679,14 +8038,25 @@ function runLineBisection(step) {
   };
 
   window.addEventListener("resize", () => {
+    const previousWidth = canvas.width;
+    const previousHeight = canvas.height;
     setCanvasSize();
+    rescaleStrokes(previousWidth, previousHeight);
     renderCanvas();
   });
 
-  img.onload = () => {
+  // Se espera la imagen base y la de práctica antes de mostrar la primera pantalla.
+  let pendingImages = 2;
+  const onImageReady = () => {
+    pendingImages--;
+    if (pendingImages > 0) return;
     setCanvasSize();
     renderScreen();
   };
+
+  img.onload = onImageReady;
+  practiceImg.onload = onImageReady;
+  practiceImg.onerror = onImageReady;
 }
 
 function clearPartProgress(partId) {

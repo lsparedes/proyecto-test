@@ -2,6 +2,7 @@ import { CAT } from "./cat_script.js";
 import { getPartData, getResultsByPart } from "./storage.js";
 import { getAudioBlob } from "./audio_store_idb.js";
 import { getBlob } from "./blob_store_idb.js";
+import { makeWebmSeekable } from "./webm_seekable.js";
 
 function sanitizeFilename(name) {
   return (name || "")
@@ -199,6 +200,7 @@ export async function exportSemanticPanZip(usedHand = "") {
     "Respuesta correcta": row.respuesta_correcta,
     "Respuesta del participante": row.respuesta_participante,
     "RT": row.RT,
+    "Modo de respuesta": row.modo_respuesta || "",
     "Puntaje": row.puntaje,
     "Mano seleccionada": hand
   }));
@@ -269,7 +271,7 @@ export async function exportVerbalFluencyAudioZip() {
     const blob = await getBlob(entry.key);
     if (!blob) continue;
 
-    zip.file(`${officialName(entry)}.webm`, blob);
+    zip.file(`${officialName(entry)}.webm`, await makeWebmSeekable(blob));
     addedFiles++;
   }
 
@@ -356,7 +358,7 @@ export async function exportRepeatAudioZip(usedHand = "", targetPartId = 12, tes
       : (screenAlignedParts.has(Number(targetPartId)) ? screenIndex : screenIndex + 1);
     const label = platformAudioName(targetPartId, ordinal, video.label || `pantalla_${ordinal}`);
     const takeSuffix = Number(video.takeNumber || 1) > 1 ? `_${Number(video.takeNumber)}` : "";
-    zip.file(`${label}${takeSuffix}.webm`, blob);
+    zip.file(`${label}${takeSuffix}.webm`, await makeWebmSeekable(blob));
     addedFiles++;
   }
 
@@ -609,6 +611,12 @@ export async function exportLineBisectionZip(usedHand = "") {
   return true;
 }
 
+// Memoria a corto plazo guarda la opcion como numero 1-4 ({t}-{o}.png); en el CSV se informa como
+// letra segun su posicion en pantalla: A sup-izq, B sup-der, C inf-izq, D inf-der.
+function shortTermMemoryOptionLetter(optionNumber) {
+  return ["A", "B", "C", "D"][Number(optionNumber) - 1] || "";
+}
+
 export async function exportShortTermMemoryZip(usedHand = "") {
   if (typeof XLSX === "undefined" || typeof JSZip === "undefined") {
     console.error("XLSX o JSZip no estan disponibles para exportar Memoria a corto plazo.");
@@ -624,8 +632,8 @@ export async function exportShortTermMemoryZip(usedHand = "") {
   // (eliminar el resto de columnas).
   const rows = (partData.shortTermMemoryResponses || []).map((row) => ({
     "N° Ítem": row.numero_item,
-    "Respuesta correcta": row.opcion_correcta,
-    "Respuesta participante": row.opcion_seleccionada,
+    "Respuesta correcta": shortTermMemoryOptionLetter(row.opcion_correcta),
+    "Respuesta participante": shortTermMemoryOptionLetter(row.opcion_seleccionada),
     "RT": row.RT,
     "Puntaje": row.puntaje
   }));
@@ -670,22 +678,10 @@ export async function exportPantomimeZip() {
   const takes = partData.takes || {};
   const correctAnswers = ["pluma", "pinza", "peine", "taza", "tijeras", "cepillo", "brocha"];
 
-  const responseRows = correctAnswers.map((answer, index) => {
-    const take = takes[String(index + 1)] || {};
-
-    return {
-      "Respuesta correcta": answer,
-      "Puntuacion": "",
-      "Modo de Respuesta": take.sin_camara ? "Sin camara" : "Video",
-      "Comentarios": ""
-    };
-  });
-
-  const csvContent = toCSV(responseRows);
-
+  // Feedback 16-09-26: sin CSV/Excel (no entregaba informacion). El ZIP contiene solo
+  // los videos P1, E1..E6 (o el aviso _SIN_CAMARA de cada pantalla).
   const baseName = platformZipBase(5, participantId, userInitials);
   const zip = new JSZip();
-  zip.file(`${platformResultFile(5, participantId)}.csv`, csvContent);
 
   const sortedTakes = Object.entries(takes)
     .sort(([a], [b]) => Number(a) - Number(b));
@@ -710,7 +706,7 @@ export async function exportPantomimeZip() {
     if (!blob) continue;
 
     // Sin subcarpetas dentro del ZIP (nomenclatura): video en la raiz
-    zip.file(`${screenLabel}.webm`, blob);
+    zip.file(`${screenLabel}.webm`, await makeWebmSeekable(blob));
   }
 
   const zipBlob = await zip.generateAsync({ type: "blob" });

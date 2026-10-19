@@ -411,15 +411,15 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: 92vw;
-      max-width: 1320px;
+      /* 150px libres por lado: cámara sup. der. (124px + 14px) y botones de esquina */
+      width: calc(100vw - 300px);
       display: flex;
       justify-content: center;
     }
 
     #arImage {
       max-width: 100%;
-      max-height: 78vh;
+      max-height: 90vh;
       object-fit: contain;
     }
 
@@ -547,13 +547,14 @@
       padding: 6px 12px;
     }
 
-    /* Centrar 2 audios uno al lado del otro (Test 9 pantalla 1) */
+    /* Test 9 pantalla 1: 2 audios uno bajo el otro (como el prototipo). El símbolo
+       femenino/masculino va a la izquierda de cada audio, en la misma fila (runner.js) */
     .twoCenterAudios #btnAudioCenter {
-      transform: translate(-140px, -50%) !important;
+      transform: translate(4px, -120px) !important;
     }
 
     .twoCenterAudios #btnAudioCenter2 {
-      transform: translate(20px, -50%) !important;
+      transform: translate(4px, 20px) !important;
     }
 
     /* ===== Audios centrados apilados ===== */
@@ -839,6 +840,7 @@
       touch-action: none;
     }
 
+    /* Lámina de instrucción escrita (sin uso; se conserva por compatibilidad, ver markup) */
     #layoutLineBisectionInstructions {
       position: absolute;
       inset: 0;
@@ -970,7 +972,8 @@
     <!-- Flecha siguiente -->
     <img id="btnNext" class="cornerBtn" src="flecha.png" alt="Siguiente" />
 
-    <!-- ====== LAYOUT TEST 1: Bisección de líneas (paciente) ====== -->
+    <!-- Lámina de instrucción escrita de la Parte 1: ya no se muestra (feedback 16-09-26). Se conserva
+         oculta para que una versión en caché de runner.js (que aún la referencia) no falle. -->
     <div id="layoutLineBisectionInstructions" style="display:none;">
       <div id="lineBisectionInstructionText">
         <p>Quiero que corte estas líneas por la mitad, así. ¿Ve que ahora la línea está dividida en dos? Intente lo mismo con esta línea.</p>
@@ -978,6 +981,7 @@
       </div>
     </div>
 
+    <!-- ====== LAYOUT TEST 1: Bisección de líneas (P1 práctica / E1 paciente) ====== -->
     <div id="layoutLineBisection" style="display:none;">
       <canvas id="lbCanvas"></canvas>
     </div>
