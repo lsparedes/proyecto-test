@@ -7055,8 +7055,6 @@ function runCopyCanvas(step) {
         layout: "letter_columns",
         promptFont: "700 52px Arial, sans-serif",
         letters: ["d", "e", "r", "b", "f", "g"],
-        letterLabels: ["Ejemplo"],
-        labelY: 0.14,
         letterY: 0.24,
         lineY: 0.43
       },
